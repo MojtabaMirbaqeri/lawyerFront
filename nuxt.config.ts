@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   modules: ["@nuxt/eslint", "@nuxt/icon", "@nuxt/image", "@nuxt/ui", "@pinia/nuxt"],
-  css: ["@/assets/css/main.css"],
+  css: ["@/assets/css/main.css", "@/assets/Webfonts/fontiran.css"],
   ui: {
     colorMode: false,
   },

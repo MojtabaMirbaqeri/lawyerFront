@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="relative">
+    <NavigationBar />
     <slot />
   </div>
 </template>
