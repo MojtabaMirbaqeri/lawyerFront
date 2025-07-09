@@ -8,5 +8,9 @@
 
 body {
   font-family: Rokh !important;
-  @apply text-secondary! ;
+  @apply text-secondary!;
+}
+
+* {
+  direction: rtl !important;
 }
