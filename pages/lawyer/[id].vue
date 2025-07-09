@@ -1,5 +1,9 @@
 <template>
-  <div>Lawyer</div>
+  <section>
+    <div class="container">
+      Lawyer
+    </div>
+  </section>
 </template>
 
 <script setup>
