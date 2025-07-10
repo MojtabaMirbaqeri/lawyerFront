@@ -1,0 +1,61 @@
+<template>
+  <section>
+    <div class="container">
+      <div class="bg-white flex flex-col gap-3 p-4 rounded-[14px]">
+        <div class="right flex items-center gap-2">
+          <div class="avatar max-w-16 w-full">
+            <UChip
+              inset
+              class="size-full"
+              :show="show"
+              position="bottom-right"
+              :ui="{ base: 'bg-blue-400 size-3 right-[10%]' }"
+            >
+              <UAvatar class="w-full h-full" :src="avatar" />
+            </UChip>
+          </div>
+          <div class="person-detail w-full">
+            <div class="fullname flex justify-between">
+              {{ fullname }}
+              <UiBadage v-if="active" value="فعال" icon="mynaui:clock-square-solid" />
+            </div>
+            <div class="education">{{ education }}</div>
+            <div class="experience">تجربه: {{ experience }} سال</div>
+          </div>
+        </div>
+        <div class="left flex flex-col gap-3">
+          <div class="top flex gap-2">
+            <UiBadage
+              class="text-[#feb900] bg-[#fff9e7]"
+              icon-size="text-[14px]!"
+              :value="rate"
+              icon="ic:round-star"
+            />
+            <UiBadage
+              class=""
+              :value="`${visit} ویزیت آنلاین`"
+              icon="solar:chat-dots-bold"
+            />
+            <UiBadage
+              class="bg-[#f4f5f7] text-[#4f6470]"
+              :value="city"
+              icon="material-symbols:location-on-rounded"
+            />
+          </div>
+        </div>
+        <div class="buttons flex gap-2">
+          <UiMainBtn>دیدگاه دیگران</UiMainBtn>
+          <UiMainBtn>اشتراک گذاری</UiMainBtn>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script setup>
+const show = ref(true);
+
+defineProps(['avatar','education','experience','visit','rate','city','active','fullname'])
+</script>
+
+<style></style>
