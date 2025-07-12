@@ -16,11 +16,15 @@
 
 @layer components{
   .main-btn{
-    @apply bg-[#f4f5f7] py-1.5 px-4 rounded-[6px] border border-primary/60
+    @apply bg-[#f4f5f7] py-1.5 px-4 rounded-[6px] border border-primary/60 cursor-pointer
   }
 
   .sec-header{
-    @apply text-base md:text-[20px] text-content
+    @apply text-[18px] md:text-[20px] text-content font-semibold
+  }
+
+  .filter-blue{
+    filter: saturate() sepia() hue-rotate(158deg) saturate(300%) brightness();
   }
 }
 

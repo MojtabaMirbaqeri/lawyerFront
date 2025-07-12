@@ -15,7 +15,7 @@
             </UChip>
           </div>
           <div class="person-detail w-full">
-            <div class="fullname flex justify-between">
+            <div class="fullname font-semibold flex justify-between lg:justify-start lg:gap-2">
               {{ fullname }}
               <UiBadage v-if="active" value="فعال" icon="mynaui:clock-square-solid" />
             </div>
