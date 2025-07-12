@@ -4,26 +4,31 @@
 :root {
   --ui-primary: var(--color-blue-500);
   --ui-secondary: black;
-  --ui-gray : #4F6470;
-  --ui-content : #042f48;
+  --ui-gray: #4f6470;
+  --ui-content: #042f48;
 }
 
-@theme{
-  --color-gray : var(--ui-gray);
-  --color-primary : var(--ui-primary);
-  --color-content : var(--ui-content);
+@theme {
+  --color-gray: var(--ui-gray);
+  --color-primary: var(--ui-primary);
+  --color-content: var(--ui-content);
 }
 
-@layer components{
-  .main-btn{
-    @apply bg-[#f4f5f7] py-1.5 px-4 rounded-[6px] border border-primary/60 cursor-pointer
+@layer components {
+  .main-btn {
+    @apply bg-[#f4f5f7] py-1.5 px-4 rounded-[6px] border border-primary/60;
   }
 
-  .sec-header{
-    @apply text-[18px] md:text-[20px] text-content font-semibold
+  .sec-header {
+    @apply text-base md:text-[20px] text-content;
   }
 
-  .filter-blue{
+  .primary-box {
+    @apply bg-white rounded-2xl py-2.5 px-4;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+  
+  .filter-blue {
     filter: saturate() sepia() hue-rotate(158deg) saturate(300%) brightness();
   }
 }
@@ -31,11 +36,17 @@
 @utility container {
   margin-inline: auto;
   padding-inline: 1rem;
-  padding-block:0.5rem;
+  padding-block: 0.5rem;
   max-width: 640px;
 
   @variant md {
     max-width: 767px;
+    padding-inline: 2rem;
+  }
+
+  @variant lg {
+    max-width: 1024px;
+    padding-inline: 2.5rem;
   }
 
   @variant xl {
@@ -46,7 +57,7 @@
 body {
   font-family: Rokh !important;
   background-color: #f8fafd !important;
-  @apply font-medium text-content font-medium;
+  @apply font-medium text-content;
 }
 
 * {

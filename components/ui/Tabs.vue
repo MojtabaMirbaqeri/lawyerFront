@@ -1,5 +1,6 @@
 <template>
   <UTabs
+    v-model="selectedTab"
     color="primary"
     variant="link"
     :content="content"
@@ -7,7 +8,7 @@
     :ui="{
       list: `tabs-list primary-box overflow-hidden border-b-0 justify-center sm:justify-start sm:px-4 items-center py-1.5`,
       indicator: 'h-1.5 bottom-auto bottom-[-2px] ',
-      trigger: 'font-semibold',
+      trigger: 'font-semibold cursor-pointer',
     }"
   >
     <template #content>
@@ -24,6 +25,9 @@ defineProps({
   content: {
     type: Boolean,
   },
+});
+const selectedTab = defineModel({
+  type: String,
 });
 </script>
 <style>

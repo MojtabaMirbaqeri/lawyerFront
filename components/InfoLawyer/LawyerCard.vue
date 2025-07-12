@@ -17,7 +17,11 @@
           <div class="person-detail w-full">
             <div class="fullname font-semibold flex justify-between lg:justify-start lg:gap-2">
               {{ fullname }}
-              <UiBadage v-if="active" value="فعال" icon="mynaui:clock-square-solid" />
+              <UIBadge
+                v-if="active"
+                value="فعال"
+                icon="mynaui:clock-square-solid"
+              />
             </div>
             <div class="education">{{ education }}</div>
             <div class="experience">تجربه: {{ experience }} سال</div>
@@ -25,26 +29,26 @@
         </div>
         <div class="left flex flex-col lg:items-end gap-3">
           <div class="top flex gap-2">
-            <UiBadage
+            <UIBadge
               class="text-[#feb900] bg-[#fff9e7]"
               icon-size="text-[14px]!"
               :value="rate"
               icon="ic:round-star"
             />
-            <UiBadage
+            <UIBadge
               class=""
               :value="`${visit} ویزیت آنلاین`"
               icon="solar:chat-dots-bold"
             />
-            <UiBadage
+            <UIBadge
               class="bg-[#f4f5f7] text-[#4f6470]"
               :value="city"
               icon="material-symbols:location-on-rounded"
             />
           </div>
           <div class="buttons flex gap-2">
-            <UiMainBtn>دیدگاه دیگران</UiMainBtn>
-            <UiMainBtn>اشتراک گذاری</UiMainBtn>
+            <UIMainBtn>دیدگاه دیگران</UIMainBtn>
+            <UIMainBtn>اشتراک گذاری</UIMainBtn>
           </div>
         </div>
       </div>
@@ -55,7 +59,16 @@
 <script setup>
 const show = ref(true);
 
-defineProps(['avatar','education','experience','visit','rate','city','active','fullname'])
+defineProps([
+  "avatar",
+  "education",
+  "experience",
+  "visit",
+  "rate",
+  "city",
+  "active",
+  "fullname",
+]);
 </script>
 
 <style></style>
