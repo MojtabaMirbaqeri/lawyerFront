@@ -78,7 +78,4 @@ header {
 .latest-visit {
   @apply w-max mx-auto p-1 px-1.5 flex items-center gap-1.5 text-sm leading-3 rounded-full border border-dashed border-white;
 }
-
-
-
 </style>
