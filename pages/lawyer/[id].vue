@@ -21,14 +21,17 @@
         experience="8"
         rate="4.9"
         city="بابل"
+        visit="2456"
       />
+
+      <info-lawyer-WhyOnlineVisit />
+      <info-lawyer-comment />
     </div>
     <div class="lrft">ll</div>
   </main>
 </template>
 
 <script setup>
-import { UIBreadCrumb } from "#components";
 </script>
 
 <style scoped></style>
