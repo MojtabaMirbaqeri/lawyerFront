@@ -6,7 +6,7 @@
       :class="[baseClass, modelValue === item.value ? activeClass : '']"
       @click="() => (modelValue = item.value)"
     >
-      <slot></slot>
+      {{ item.label }}
     </button>
   </div>
 </template>
