@@ -26,7 +26,9 @@ defineProps({
     type: Boolean,
   },
 });
-const selectedTab = defineModel({ type: String });
+const selectedTab = defineModel({
+  type: String,
+});
 </script>
 <style>
 @reference "tailwindcss";
