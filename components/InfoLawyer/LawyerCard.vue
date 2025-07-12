@@ -1,9 +1,9 @@
 <template>
   <section>
     <div class="container">
-      <div class="bg-white flex flex-col gap-3 p-4 rounded-[14px]">
-        <div class="right flex items-center gap-2">
-          <div class="avatar max-w-16 w-full">
+      <div class="bg-white flex flex-col lg:flex-row justify-between gap-3 p-4 rounded-[14px]">
+        <div class="right lg:w-[50%] flex items-center gap-2">
+          <div class="avatar max-w-[74px] w-full">
             <UChip
               inset
               class="size-full"
@@ -23,7 +23,7 @@
             <div class="experience">تجربه: {{ experience }} سال</div>
           </div>
         </div>
-        <div class="left flex flex-col gap-3">
+        <div class="left flex flex-col lg:items-end gap-3">
           <div class="top flex gap-2">
             <UiBadage
               class="text-[#feb900] bg-[#fff9e7]"
@@ -42,10 +42,10 @@
               icon="material-symbols:location-on-rounded"
             />
           </div>
-        </div>
-        <div class="buttons flex gap-2">
-          <UiMainBtn>دیدگاه دیگران</UiMainBtn>
-          <UiMainBtn>اشتراک گذاری</UiMainBtn>
+          <div class="buttons flex gap-2">
+            <UiMainBtn>دیدگاه دیگران</UiMainBtn>
+            <UiMainBtn>اشتراک گذاری</UiMainBtn>
+          </div>
         </div>
       </div>
     </div>
