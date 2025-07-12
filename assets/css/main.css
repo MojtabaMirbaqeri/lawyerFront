@@ -34,7 +34,7 @@
   padding-block:0.5rem;
   max-width: 640px;
 
-  @variant md{
+  @variant md {
     max-width: 767px;
   }
 
@@ -46,7 +46,7 @@
 body {
   font-family: Rokh !important;
   background-color: #f8fafd !important;
-  @apply font-medium text-content;
+  @apply font-medium text-content font-medium;
 }
 
 * {
