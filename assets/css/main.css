@@ -16,7 +16,7 @@
 
 @layer components {
   .main-btn {
-    @apply bg-[#f4f5f7] py-1.5 px-4 rounded-[6px] border border-primary/60;
+    @apply bg-[#f4f5f7] cursor-pointer py-1.5 px-4 rounded-[6px] border border-primary/60;
   }
 
   .sec-header {
