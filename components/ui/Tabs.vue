@@ -48,12 +48,3 @@ const selectedTab = defineModel({
 });
 
 </script>
-
-<style >
-@import "leaflet/dist/leaflet.css";
-@reference "tailwindcss";
-.tabs-list::before {
-  @apply hidden sm:block h-full text-sm pe-4 text-[var(--ui-gray)];
-  content: "مرتب سازی بر اساس:";
-}
-</style>

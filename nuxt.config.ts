@@ -17,5 +17,12 @@ export default defineNuxtConfig({
   },
     leaflet: {
     markerCluster: true
-  }
+  },
+    icon: {
+    clientBundle: {
+      scan: true,
+
+      sizeLimitKb: 256,
+    },
+  },
 });

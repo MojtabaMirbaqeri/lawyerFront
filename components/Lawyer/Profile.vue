@@ -1,6 +1,6 @@
 <template>
-  <div class="right lg:w-[50%] flex items-center gap-2">
-    <div class="avatar max-w-[74px] w-full">
+  <div class="right lg:w-[50%] flex items-center gap-2" :class="[ui?.base]">
+    <div class="avatar max-w-[74px] w-full" :class="[ui?.avatar]">
       <UChip
         inset
         class="size-full"
@@ -14,9 +14,17 @@
     <div class="person-detail w-full">
       <div
         class="fullname font-semibold flex justify-between lg:justify-start lg:gap-2"
+        :class="[ui?.name]"
       >
         {{ fullname }}
-        <UIBadge v-if="active" value="فعال" icon="mynaui:clock-square-solid" />
+        <div class="flex items-center gap-1">
+          <slot name="badges" />
+          <UIBadge
+            v-if="active"
+            value="فعال"
+            icon="mynaui:clock-square-solid"
+          />
+        </div>
       </div>
       <div class="education">{{ education }}</div>
       <div class="experience">تجربه: {{ experience }} سال</div>
@@ -25,7 +33,15 @@
 </template>
 
 <script setup>
-defineProps(["avatar", "education", "experience", "fullname"]);
+defineProps([
+  "avatar",
+  "education",
+  "experience",
+  "fullname",
+  "active",
+  "show",
+  "ui",
+]);
 </script>
 
 <style>

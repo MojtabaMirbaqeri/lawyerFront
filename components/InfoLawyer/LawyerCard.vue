@@ -1,7 +1,9 @@
 <template>
   <section>
-    <div class="">
-      <div class="bg-white flex flex-col lg:flex-row justify-between gap-3 p-4 rounded-[14px]">
+    <div class="container">
+      <div
+        class="bg-white flex flex-col lg:flex-row justify-between gap-3 p-4 rounded-[14px]"
+      >
         <div class="right lg:w-[50%] flex items-center gap-2">
           <div class="avatar max-w-[74px] w-full">
             <UChip
@@ -15,7 +17,9 @@
             </UChip>
           </div>
           <div class="person-detail w-full">
-            <div class="fullname font-semibold flex justify-between lg:justify-start lg:gap-2">
+            <div
+              class="fullname font-semibold flex justify-between lg:justify-start lg:gap-2"
+            >
               {{ fullname }}
               <UIBadge
                 v-if="active"
