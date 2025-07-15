@@ -9,7 +9,9 @@
               color="neutral"
               variant="subtle"
               class="w-full mb-4 outline-0"
-              :ui="{base:'focus-visible:ring-ring-color focus-visible:ring-1'}"
+              :ui="{
+                base: 'focus-visible:ring-ring-color focus-visible:ring-1',
+              }"
               placeholder="نظر خود را درباره ی وکیل مورد نظر بنویسید..."
               :maxrows="6"
               v-model="userComment"
@@ -34,7 +36,7 @@
                   ? comment.dis.slice(0, 135) + "..."
                   : comment.dis
               }}
-              <UiDrawer v-if="comment.dis.length > 135">
+              <UIDrawer v-if="comment.dis.length > 135">
                 <template #button>
                   <UButton
                     label="مشاهده ی بیشتر"
@@ -46,7 +48,7 @@
                 <template #default>
                   {{ comment.dis }}
                 </template>
-              </UiDrawer>
+              </UIDrawer>
             </div>
             <div
               v-if="Object.keys(comment.replay).length > 0"
