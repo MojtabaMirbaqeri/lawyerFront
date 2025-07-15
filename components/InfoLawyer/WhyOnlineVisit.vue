@@ -1,6 +1,6 @@
 <template>
   <section>
-      <div class="container">
+      <div class="">
         <h2 class="sec-header">چرا مشاره آنلاین؟</h2>
         <div class="options flex flex-col gap-3 mt-5">
             <div class="option flex gap-2 items-center" v-for="option in options" :key="option">

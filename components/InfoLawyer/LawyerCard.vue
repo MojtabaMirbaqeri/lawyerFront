@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="container">
+    <div class="">
       <div class="bg-white flex flex-col lg:flex-row justify-between gap-3 p-4 rounded-[14px]">
         <div class="right lg:w-[50%] flex items-center gap-2">
           <div class="avatar max-w-[74px] w-full">

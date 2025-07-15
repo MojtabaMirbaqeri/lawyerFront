@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="container">
+    <div class="">
       <div class="bg-white rounded-[14px] p-7">
         <div class="flex flex-col gap-3">
           <span class="title">امتیاز و دیدگاه کاربران</span>
@@ -9,12 +9,15 @@
               color="neutral"
               variant="subtle"
               class="w-full mb-4 outline-0"
-              :ui="{base:'focus-visible:ring-ring-color focus-visible:ring-1'}"
+              :ui="{
+                base: 'focus-visible:ring-ring-color focus-visible:ring-1',
+              }"
               placeholder="نظر خود را درباره ی وکیل مورد نظر بنویسید..."
               :maxrows="6"
               v-model="userComment"
               autoresize=""
             />
+            <UIMainBtn class="mb-4"> ثبت نظر </UIMainBtn>
           </div>
         </div>
         <USeparator />
@@ -34,7 +37,7 @@
                   ? comment.dis.slice(0, 135) + "..."
                   : comment.dis
               }}
-              <UiDrawer v-if="comment.dis.length > 135">
+              <UIDrawer v-if="comment.dis.length > 135">
                 <template #button>
                   <UButton
                     label="مشاهده ی بیشتر"
@@ -46,7 +49,27 @@
                 <template #default>
                   {{ comment.dis }}
                 </template>
-              </UiDrawer>
+              </UIDrawer>
+            </div>
+            <div
+              class="lawyer-input-comment"
+              v-if="Object.keys(comment.replay).length <= 0"
+            >
+              <div class="">
+                <UTextarea
+                  color="neutral"
+                  variant="subtle"
+                  class="w-full mb-4 outline-0"
+                  :ui="{
+                    base: 'focus-visible:ring-ring-color focus-visible:ring-1',
+                  }"
+                  placeholder="نظر خود را درباره ی نظر کاربر مورد نظر بنویسید..."
+                  :maxrows="6"
+                  v-model="userComment"
+                  autoresize=""
+                />
+                <UIMainBtn class="mb-4"> ثبت نظر </UIMainBtn>
+              </div>
             </div>
             <div
               v-if="Object.keys(comment.replay).length > 0"

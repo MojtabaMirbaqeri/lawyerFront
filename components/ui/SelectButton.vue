@@ -4,7 +4,8 @@
       v-for="item in items"
       :key="item.id"
       class="flex items-center gap-1"
-      :class="[baseClass, isSelected(item.id) ? activeClass : '']"
+      :class="[baseClass, isSelected(item.id) ? activeClass : '' , item.disabled ? 'holiday' : '' , item.nonworking ? 'nonworking' : '']"
+      :disabled="item.disabled || item.nonworking"
       @click="handleClick(item.id)"
     >
       <UIcon
@@ -19,6 +20,8 @@
 
 <script setup>
 const modelValue = defineModel({ type: [String, Array] });
+
+
 
 const props = defineProps({
   items: {
@@ -40,6 +43,9 @@ const props = defineProps({
     default: false,
   },
 });
+
+// console.log(items);
+
 
 const isSelected = (id) => {
   return props.multiple
@@ -63,3 +69,18 @@ const handleClick = (id) => {
   }
 };
 </script>
+
+<style scoped>
+.holiday {
+  background-color: #ffe5e5;
+  color: red;
+  cursor: not-allowed;
+}
+
+.nonworking {
+  background-color: #eef1ff;
+  color: #666;
+  border-color: #ccd;
+  cursor: not-allowed;
+}
+</style>
