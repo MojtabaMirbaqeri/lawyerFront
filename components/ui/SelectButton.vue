@@ -4,7 +4,7 @@
       v-for="item in items"
       :key="item.id"
       class="flex items-center gap-1"
-      :class="[baseClass, isSelected(item.id) ? activeClass : '' , item.disabled ? 'holiday' : '' , item.nonworking ? 'nonworking' : '']"
+      :class="[baseClass, isSelected(item.id) ? activeClass : '' , item.disabled ? 'disable' : '' , item.nonworking ? 'nonworking' : '']"
       :disabled="item.disabled || item.nonworking"
       @click="handleClick(item.id)"
     >
@@ -67,18 +67,15 @@ const handleClick = (id) => {
   } else {
     modelValue.value = id;
   }
+
 };
 </script>
 
 <style scoped>
-.holiday {
-  background-color: #ffe5e5;
-  color: red;
-  cursor: not-allowed;
-}
+@reference "tailwindcss";
 
-.nonworking {
-  background-color: #eef1ff;
+.disable {
+  @apply bg-gray-100 opacity-60;
   color: #666;
   border-color: #ccd;
   cursor: not-allowed;
