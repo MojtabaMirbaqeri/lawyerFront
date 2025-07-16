@@ -8,7 +8,7 @@
 import { computed } from "vue";
 
 const props = defineProps({
-  value: [String,Number],
+  value: [String, Number],
   customClass: String,
   icon: String,
   iconSize: String,
@@ -18,21 +18,20 @@ const props = defineProps({
   },
 });
 
-// تعریف کلاس‌های آماده برای variants
+
 const variantClasses = {
   yellow: "text-[#feb900] bg-[#fff9e7]",
   blue: "text-blue-500 bg-blue-100",
   gray: "text-black !bg-gray-100",
 };
 
-// کلاس پایه مشترک
+
 const baseClass = "font-bold w-fit flex items-center rounded-full";
 
-// محاسبه کلاس نهایی
 const badgeClass = computed(() => {
-  if (props.customClass) return `${baseClass} ${props.customClass}`;
-
   const variant = props.variant || "blue";
-  return `${baseClass} ${variantClasses[variant] || ""}`;
+  const variantClass = variantClasses[variant] || "";
+  const custom = props.customClass || "";
+  return `${baseClass} ${variantClass} ${custom}`.trim();
 });
 </script>
