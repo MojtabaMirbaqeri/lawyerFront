@@ -20,7 +20,7 @@
   }
 
   .sec-header {
-    @apply text-base md:text-[20px] text-content;
+    @apply  text-[20px] lg:text-2xl text-content font-bold;
   }
 
   .primary-box {

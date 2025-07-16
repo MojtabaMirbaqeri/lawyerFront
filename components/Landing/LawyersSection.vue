@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="space-y-4">
     <div class="space-y-4 xl:space-y-5">
       <div class="space-y-4">
         <UIDrawer
