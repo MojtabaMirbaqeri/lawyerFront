@@ -1,77 +1,134 @@
 <template>
-  <div class="booking">
+  <div class="container bg-white h-[100vh] flex flex-col gap-8">
     <h1>رزرو نوبت مشاوره</h1>
 
     <div class="dates">
-      <UISelectButton v-model="activeDay" :items="dateButtons" />
+      <reserve-select-btn
+        v-model="activeDay"
+        :items="dateButtons"
+        option-label="title"
+        option-value="id"
+      />
     </div>
 
     <div class="controls">
       <span>مدت زمان جلسه:</span>
-      <button
-        v-for="d in [30, 60, 90]"
-        :key="d"
-        class="duration-btn"
-        :class="{ active: selectedDuration === d }"
-        @click="setDuration(d)"
-      >
-        {{ durationLabel(d) }}
-      </button>
+      <UISelectButton
+        base-class="rounded-[5px]! px-4 py-2 rounded-full border border-gray-300 text-sm lg:text-base transition cursor-pointer"
+        :items="times"
+        v-model="deftime"
+      />
     </div>
 
-    <div class="slots">
-      <button
-        v-for="slot in timeSlots"
-        :key="slot.label"
-        :class="{ disabled: slot.disabled }"
-      >
-        {{ slot.label }}
-      </button>
+    <div class="slots flex flex-col">
+      <span>انتخاب زمان جلسه:</span>
+      <UISelectButton v-model="defVisitTime" :items="timeSlots" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
+
+// روزهای کاری وکیل به همراه ساعت شروع و پایان مخصوص هر روز
+const availableDays = {
+  0: { start: "10:00", end: "14:00" }, // شنبه
+  2: { start: "12:00", end: "16:00" }, // دوشنبه
+  4: { start: "13:00", end: "18:00" }, // چهارشنبه
+};
+
+const defVisitTime = ref(null);
 
 
-const shiftStart = toMinutes("12:00");
-const shiftEnd = toMinutes("18:00");
 
-// تقویم شمسی: شنبه = 0، جمعه = 6
-const availableDays = [0, 2, 4]; // شنبه، دوشنبه، چهارشنبه
-
-const activeDay = ref()
-
-const selectedDate = ref(null);
+// مدت جلسه انتخاب‌شده
+const deftime = ref("30");
 const selectedDuration = ref(30);
-const holidayDates = ref([]);
+watch(deftime, (val) => {
+  selectedDuration.value = parseInt(val);
+});
 
-const bookings = ref([
-  { date: "2025-07-14", start: toMinutes("17:30"), end: toMinutes("18:00") },
+// گزینه‌های مدت جلسه
+const times = [
+  { id: "30", title: "۳۰ دقیقه" },
+  { id: "60", title: "۱ ساعت" },
+  { id: "90", title: "۱ ساعت و نیم" },
+];
+
+const activeDay = ref(null);
+const selectedDate = ref(null);
+const holidayDates = ref([]);
+const dateButtons = ref([]);
+
+const bookingData = ref([
+  {
+    lawyer_id: 4,
+    type: "phone",
+    date: "2025-07-16",
+    time: "14:00:00",
+    duration: 60,
+    description: "سوال حقوقی درباره ارث",
+  },
+  {
+    lawyer_id: 4,
+    type: "phone",
+    date: "2025-07-19",
+    time: "12:00:00",
+    duration: 30,
+    description: "سوال حقوقی درباره ارث",
+  },
+  {
+    lawyer_id: 4,
+    type: "phone",
+    date: "2025-07-16",
+    time: "15:00:00",
+    duration: 90,
+    description: "سوال حقوقی درباره ارث",
+  },
+  {
+    lawyer_id: 4,
+    type: "phone",
+    date: "2025-07-19",
+    time: "13:00:00",
+    duration: 60,
+    description: "سوال حقوقی درباره ارث",
+  },
 ]);
 
-const dateButtons = ref([]);
+function addTimeAndDuration(timeStr, durationMinutes) {
+  const [h, m, s] = timeStr.split(":").map(Number);
+  const totalMinutes = h * 60 + m + durationMinutes;
+
+  const newHour = Math.floor(totalMinutes / 60);
+  const newMinute = totalMinutes % 60;
+
+  return (
+    String(newHour).padStart(2, "0") + ":" + String(newMinute).padStart(2, "0")
+  );
+}
+
+// رزروهای ثبت‌شده
+const bookings = ref(
+  bookingData.value.map((b) => {
+    return {
+      date: b.date,
+      start: toMinutes(b.time),
+      end: toMinutes(addTimeAndDuration(b.time, b.duration)),
+    };
+  })
+);
 
 onMounted(() => {
   fetchHolidays();
 });
 
-function setDuration(mins) {
-  selectedDuration.value = mins;
-}
+watch(activeDay, (newVal) => {
+  const found = dateButtons.value.find((btn) => btn.id === newVal);
+  if (found) selectedDate.value = found.iso;
+  console.log(newVal);
+});
 
-function durationLabel(d) {
-  if (d === 30) return "۳۰ دقیقه";
-  if (d === 60) return "۱ ساعت";
-  if (d === 90) return "۱ ساعت و نیم";
-  return d + " دقیقه";
-}
-
-function selectDate(iso) {
-  selectedDate.value = iso;
-}
-
+// دریافت لیست تعطیلات رسمی از API باد صبا
 function fetchHolidays() {
   const today = new Date();
   const { jy, jm } = gregorianToJalali(
@@ -91,6 +148,7 @@ function fetchHolidays() {
     });
 }
 
+// تولید دکمه‌های انتخاب روز
 function generateDateButtons() {
   const today = new Date();
   dateButtons.value = [];
@@ -101,36 +159,45 @@ function generateDateButtons() {
     const iso = date.toISOString().split("T")[0];
     const weekdayIndex = getShamsiWeekdayIndex(date);
     const isHoliday = holidayDates.value.includes(iso) || weekdayIndex === 6;
-    const isWorkingDay = availableDays.includes(weekdayIndex);
-
-    
+    const isWorkingDay = availableDays.hasOwnProperty(weekdayIndex);
 
     dateButtons.value.push({
       iso,
-      title: formatJalali(date),
-      shamsi: fullJalaliDate(date),
+      title: formatJalali(date), // مثال: شنبه 25 تیر
+      shamsi: fullJalaliDate(date), // مثال: 1404/04/25
       disabled: isHoliday,
       nonworking: !isWorkingDay && !isHoliday,
-      id:formatJalali(date)
+      id: fullJalaliDate(date),
+      weekdayIndex,
     });
-
-    console.log(dateButtons.value);
-    
   }
-  const filterActiveDays = dateButtons.value.filter(day => {
-    return day.nonworking === false
-  })
-   activeDay.value =filterActiveDays[0].id
+
+  const filtered = dateButtons.value.filter((day) => !day.nonworking);
+  if (filtered.length > 0) {
+    activeDay.value = filtered[0].id;
+    selectedDate.value = filtered[0].iso;
+  }
 }
 
 
-
+// تولید اسلات‌های زمانی
 const timeSlots = computed(() => {
   if (!selectedDate.value) return [];
+
+  const btn = dateButtons.value.find((b) => b.id === activeDay.value);
+  if (!btn) return [];
+
+  const weekdayIndex = btn.weekdayIndex;
+  const config = availableDays[weekdayIndex];
+  if (!config) return [];
+
+  const startTime = toMinutes(config.start);
+  const endTime = toMinutes(config.end);
   const slots = [];
+
   for (
-    let start = shiftStart;
-    start + selectedDuration.value <= shiftEnd;
+    let start = startTime;
+    start + selectedDuration.value <= endTime;
     start += 30
   ) {
     const end = start + selectedDuration.value;
@@ -139,11 +206,20 @@ const timeSlots = computed(() => {
         b.date === selectedDate.value && overlap(start, end, b.start, b.end)
     );
     slots.push({
-      label: `${formatTime(start)} - ${formatTime(end)}`,
+      title: `${formatTime(start)} - ${formatTime(end)}`,
       disabled: !isFree,
+      id: formatTime(start),
     });
   }
+
   return slots;
+});
+
+watchEffect(() => {
+  const available = timeSlots.value.filter((t) => !t.disabled);
+  if (available.length > 0) {
+    defVisitTime.value = available[0].id;
+  }
 });
 
 /* Helpers */
@@ -167,18 +243,14 @@ function overlap(aS, aE, bS, bE) {
 function formatJalali(d) {
   return new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
     weekday: "short",
-    day: "2-digit",
-    month: "2-digit",
   }).format(d);
 }
 
 function fullJalaliDate(d) {
-  return new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
-    weekday: "long",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(d);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 const SHAMSI_WEEKDAYS = {
@@ -227,14 +299,7 @@ function gregorianToJalali(gy, gm, gd) {
 </script>
 
 <style scoped>
-.booking {
-  padding: 20px;
-}
-.controls {
-  margin-bottom: 20px;
-}
 .controls button {
-  margin-right: 8px;
   padding: 8px 12px;
   cursor: pointer;
 }
@@ -246,7 +311,6 @@ function gregorianToJalali(gy, gm, gd) {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 16px;
 }
 .slots button {
   padding: 8px 12px;
@@ -259,32 +323,5 @@ function gregorianToJalali(gy, gm, gd) {
   border-color: #ddd;
   color: #888;
   cursor: not-allowed;
-}
-.dates {
-  margin-bottom: 20px;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.dates button {
-  padding: 6px 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.dates button.holiday {
-  background-color: #ffe5e5;
-  color: red;
-  cursor: not-allowed;
-}
-.dates button.nonworking {
-  background-color: #eef1ff;
-  color: #666;
-  border-color: #ccd;
-  cursor: not-allowed;
-}
-.dates button.active {
-  background-color: #28a745;
-  color: #fff;
 }
 </style>
