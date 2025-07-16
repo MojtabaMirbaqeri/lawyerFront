@@ -34,18 +34,17 @@
         <div class="left flex flex-col lg:items-end gap-3">
           <div class="top flex gap-2">
             <UIBadge
-              class="text-[#feb900] bg-[#fff9e7]"
+              variant="yellow"
               icon-size="text-[14px]!"
               :value="rate"
               icon="ic:round-star"
             />
             <UIBadge
-              class=""
               :value="`${visit} ویزیت آنلاین`"
               icon="solar:chat-dots-bold"
             />
             <UIBadge
-              class="bg-[#f4f5f7] text-[#4f6470]"
+              variant="gray"
               :value="city"
               icon="material-symbols:location-on-rounded"
             />
