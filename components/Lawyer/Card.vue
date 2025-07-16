@@ -15,27 +15,30 @@
     >
       <template #badges>
         <UIBadge
-          class="text-[#feb900] bg-[#fff9e7]"
+          variant="yellow"
           icon-size="size-5!"
           :value="4.8"
           icon="ic:round-star"
         />
       </template>
     </LawyerProfile>
-    <div class="flex flex-col sm:flex-row justify-between">
+    <div class="flex flex-col gap-2 sm:flex-row justify-between">
       <div class="flex gap-2">
         <UIBadge
-          class="text-black! bg-gray-100! font-semibold"
+          custom-class="font-semibold"
+          variant="gray"
           value="حضوری"
           icon="hugeicons:building-06"
         />
         <UIBadge
-          class="text-black! bg-gray-100! font-semibold"
+          custom-class="font-semibold"
+          variant="gray"
           value="تلفنی"
           icon="hugeicons:telephone"
         />
         <UIBadge
-          class="text-black! bg-gray-100! font-semibold"
+          custom-class="font-semibold"
+          variant="gray"
           value="متنی"
           icon="hugeicons:message-multiple-02"
         />

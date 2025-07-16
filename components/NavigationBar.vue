@@ -1,7 +1,7 @@
 <template>
   <div id="navBar">
     <div class="container">
-      <UIcon name="heroicons:bars-3-solid" class="size-7!" />
+      <UIcon name="heroicons:bars-3-solid" class="size-7! lg:hidden!" />
       <NuxtImg src="/images/logo.png" class="h-7" />
       <NuxtLink to="#" class="ms-auto">
         <UButton
