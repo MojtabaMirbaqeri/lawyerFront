@@ -1,29 +1,32 @@
 <template>
-  <div class="container bg-white h-[100vh] flex flex-col gap-8">
-    <h1>رزرو نوبت مشاوره</h1>
+  <div class="container pt-5">
+    <!-- <h1 class="">رزرو نوبت مشاوره</h1> -->
 
-    <div class="dates">
-      <reserve-select-btn
-        v-model="activeDay"
-        :items="dateButtons"
-        option-label="title"
-        option-value="id"
-      />
+    <div class="primary-box flex flex-col gap-8 p-5 shadow-none! right w-[80%]">
+      <div class="dates">
+        <reserve-select-btn
+          v-model="activeDay"
+          :items="dateButtons"
+          option-label="title"
+          option-value="id"
+        />
+      </div>
+  
+      <div class="controls">
+        <span class="sec-header">مدت زمان جلسه:</span>
+        <UISelectButton
+          base-class="rounded-[5px]! px-4 py-2 rounded-full border border-gray-300 text-sm lg:text-base transition cursor-pointer"
+          :items="times"
+          v-model="deftime"
+        />
+      </div>
+  
+      <div class="slots flex flex-col">
+        <span class="sec-header">انتخاب زمان جلسه:</span>
+        <UISelectButton v-model="defVisitTime" :items="timeSlots" />
+      </div>
     </div>
 
-    <div class="controls">
-      <span>مدت زمان جلسه:</span>
-      <UISelectButton
-        base-class="rounded-[5px]! px-4 py-2 rounded-full border border-gray-300 text-sm lg:text-base transition cursor-pointer"
-        :items="times"
-        v-model="deftime"
-      />
-    </div>
-
-    <div class="slots flex flex-col">
-      <span>انتخاب زمان جلسه:</span>
-      <UISelectButton v-model="defVisitTime" :items="timeSlots" />
-    </div>
   </div>
 </template>
 
@@ -172,7 +175,7 @@ function generateDateButtons() {
     });
   }
 
-  const filtered = dateButtons.value.filter((day) => !day.nonworking);
+  const filtered = dateButtons.value.filter((day) => !day.nonworking && !day.disabled);
   if (filtered.length > 0) {
     activeDay.value = filtered[0].id;
     selectedDate.value = filtered[0].iso;
