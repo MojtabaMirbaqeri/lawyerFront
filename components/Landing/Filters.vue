@@ -8,7 +8,7 @@
       <div>
         <h3>شیوه ویزیت</h3>
         <div>
-          <UISelectButton
+          <UICSelectButton
             v-model="filtersVal.visitType"
             :items="filtersItems.visitTypes"
           />
@@ -17,7 +17,7 @@
       <div>
         <h3>جنسیت وکیل</h3>
         <div>
-          <UISelectButton
+          <UICSelectButton
             v-model="filtersVal.gender"
             :items="filtersItems.genders"
           />
@@ -27,7 +27,7 @@
         <div>
           <h3>تخصص ها</h3>
           <div>
-            <UISelectButton
+            <UICSelectButton
               v-model="filtersVal.specialty"
               :items="filtersItems.specialties.slice(0, 5)"
             />
