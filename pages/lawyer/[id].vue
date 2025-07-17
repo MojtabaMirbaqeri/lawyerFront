@@ -1,6 +1,6 @@
 <template>
   <main>
-    <UIBreadCrumb
+    <UICBreadCrumb
       :items="[
         {
           label: 'خانه',

@@ -1,5 +1,7 @@
 <template>
-  <div class="flex flex-col w-full flex-wrap justify-start items-start gap-x-2 gap-y-3">
+  <div
+    class="flex flex-col w-full flex-wrap justify-start items-start gap-x-2 gap-y-3"
+  >
     <button
       v-for="item in items"
       :key="item.id"
@@ -9,11 +11,11 @@
     >
       <div class="w-full items-center flex gap-3">
         <div class="">
-            <UIcon :name="item.icon" class="size-6!"/>
+          <UIcon :name="item.icon" class="size-6!" />
         </div>
         <div class="title-price text-base w-full flex justify-between">
-            <div class="title ">{{ item.title }}</div>
-            <div class="price">{{ item.price }} تومان</div>
+          <div class="title">{{ item.title }}</div>
+          <div class="price">{{ item.price }} تومان</div>
         </div>
       </div>
     </button>

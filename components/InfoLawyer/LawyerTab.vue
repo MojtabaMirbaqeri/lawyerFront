@@ -1,7 +1,12 @@
 <template>
   <section>
     <div class="">
-      <UITabs class="lg:w-[601px] xl:w-[683px]" :content="true" v-model="setdef" :items="items" />
+      <UICTabs
+        class="lg:w-[601px] xl:w-[683px]"
+        :content="true"
+        v-model="setdef"
+        :items="items"
+      />
     </div>
   </section>
 </template>

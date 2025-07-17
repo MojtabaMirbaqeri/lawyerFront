@@ -13,7 +13,7 @@
 
     <div class="controls">
       <span>مدت زمان جلسه:</span>
-      <UISelectButton
+      <UICSelectButton
         base-class="rounded-[5px]! px-4 py-2 rounded-full border border-gray-300 text-sm lg:text-base transition cursor-pointer"
         :items="times"
         v-model="deftime"
@@ -22,7 +22,7 @@
 
     <div class="slots flex flex-col">
       <span>انتخاب زمان جلسه:</span>
-      <UISelectButton v-model="defVisitTime" :items="timeSlots" />
+      <UICSelectButton v-model="defVisitTime" :items="timeSlots" />
     </div>
   </div>
 </template>
@@ -38,8 +38,6 @@ const availableDays = {
 };
 
 const defVisitTime = ref(null);
-
-
 
 // مدت جلسه انتخاب‌شده
 const deftime = ref("30");
@@ -178,7 +176,6 @@ function generateDateButtons() {
     selectedDate.value = filtered[0].iso;
   }
 }
-
 
 // تولید اسلات‌های زمانی
 const timeSlots = computed(() => {

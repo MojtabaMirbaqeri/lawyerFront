@@ -23,10 +23,12 @@
           <div class="title">{{ items[activeBtn - 1].title }}</div>
           <div class="price">{{ items[activeBtn - 1].price }}</div>
         </div>
-        <UISecondaryBtn @click="navigateTo('/reserve/4')" class="flex items-center justify-center"
+        <UICSecondaryBtn
+          @click="navigateTo('/reserve/4')"
+          class="flex items-center justify-center"
           ><span class="text-center text-base"
             >ادامه فرآیند</span
-          ></UISecondaryBtn
+          ></UICSecondaryBtn
         >
       </div>
     </div>
@@ -58,7 +60,9 @@ const items = ref([
 const activeBtn = ref("1");
 
 onMounted(async () => {
-  const res = await fetch("https://badesaba.ir/api/site/getDataCalendar/4/1404");
+  const res = await fetch(
+    "https://badesaba.ir/api/site/getDataCalendar/4/1404"
+  );
   const data = await res.json();
 
   // فقط روزهایی که حداقل یکی از eventهاشون تعطیله
@@ -68,7 +72,6 @@ onMounted(async () => {
 
   console.log(holidays);
 });
-
 </script>
 
 <style scoped>

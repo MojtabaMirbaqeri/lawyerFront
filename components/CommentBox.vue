@@ -14,13 +14,13 @@
         </div>
       </div>
       <div class="badge-group">
-        <UIBadge
+        <UICBadge
           variant="yellow"
           icon-size="size-5!"
           :value="4.8"
           icon="ic:round-star"
         />
-        <UIBadge variant="gray" value="۳ روز پیش" />
+        <UICBadge variant="gray" value="۳ روز پیش" />
       </div>
     </div>
 
@@ -31,7 +31,7 @@
             ? commentDetail.comment.slice(0, 160) + "..."
             : commentDetail.comment
         }}
-        <UIDrawer v-if="commentDetail.comment.length > 160">
+        <UICDrawer v-if="commentDetail.comment.length > 160" title="read more">
           <template #button>
             <UButton
               label="مشاهده ی بیشتر"
@@ -43,7 +43,7 @@
           <template #default>
             {{ commentDetail.comment }}
           </template>
-        </UIDrawer>
+        </UICDrawer>
       </p>
     </div>
 

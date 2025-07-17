@@ -2,14 +2,14 @@
   <section class="space-y-4">
     <div class="space-y-4 xl:space-y-5">
       <div class="space-y-4">
-        <UIDrawer
-          title="lawyerTypes"
+        <UICDrawer
+          title="lawyer types"
           description="Categorization of lawyers by type"
         >
           <template #button>
-            <UISecondaryBtn>
+            <UICSecondaryBtn>
               مشاهده همه <UIcon name="proicons:chevron-left" />
-            </UISecondaryBtn>
+            </UICSecondaryBtn>
           </template>
           <template #default>
             <div class="flex flex-col gap-2 text-black">
@@ -28,13 +28,13 @@
               </div>
             </div>
           </template>
-        </UIDrawer>
-        <UISelectButton
+        </UICDrawer>
+        <UICSelectButton
           v-model="selectedLawyerType"
           :items="lawyerTypes.slice(0, 6)"
         />
       </div>
-      <UIDrawer
+      <UICDrawer
         title="filters"
         description="filter laywers"
         class="overflow-y-auto!"
@@ -50,12 +50,12 @@
           </div>
         </template>
         <template #default><LandingFilters /></template>
-      </UIDrawer>
+      </UICDrawer>
     </div>
     <div class="lg:flex gap-4 xl:gap-5 items-start">
       <LandingSidebar class="hidden lg:block sticky top-[90px]" />
       <main class="space-y-4 grow">
-        <UITabs
+        <UICTabs
           v-model="selectedTab"
           :content="false"
           :items="tabItems"
@@ -66,7 +66,7 @@
             <LawyerCard />
           </NuxtLink>
         </div>
-        <UIPagination class="w-fit! mx-auto" />
+        <UICPagination class="w-fit! mx-auto" />
       </main>
     </div>
   </section>
