@@ -78,11 +78,11 @@ const filtersItems = {
     },
   ],
   genders: [
-    { title: "مرد", id: "male", icon: "hugeicons:male-02" },
+    { title: "مرد", id: "male", icon: "custom:male" },
     {
       title: "زن",
       id: "female",
-      icon: "hugeicons:female-02",
+      icon: "custom:female",
     },
   ],
   types: [

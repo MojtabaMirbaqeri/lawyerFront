@@ -15,14 +15,20 @@ export default defineNuxtConfig({
   ui: {
     colorMode: false,
   },
-    leaflet: {
-    markerCluster: true
+  leaflet: {
+    markerCluster: true,
   },
-    icon: {
+  icon: {
     clientBundle: {
       scan: true,
 
       sizeLimitKb: 256,
     },
+    customCollections: [
+      {
+        prefix: "custom",
+        dir: "./assets/icons",
+      },
+    ],
   },
 });
