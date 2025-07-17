@@ -14,7 +14,7 @@
       }"
     >
       <template #badges>
-        <UIBadge
+        <UICBadge
           variant="yellow"
           icon-size="size-5!"
           :value="4.8"
@@ -24,19 +24,19 @@
     </LawyerProfile>
     <div class="flex flex-col gap-2 sm:flex-row justify-between">
       <div class="flex gap-2">
-        <UIBadge
+        <UICBadge
           custom-class="font-semibold"
           variant="gray"
           value="حضوری"
           icon="hugeicons:building-06"
         />
-        <UIBadge
+        <UICBadge
           custom-class="font-semibold"
           variant="gray"
           value="تلفنی"
           icon="hugeicons:telephone"
         />
-        <UIBadge
+        <UICBadge
           custom-class="font-semibold"
           variant="gray"
           value="متنی"

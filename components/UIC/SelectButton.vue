@@ -1,15 +1,10 @@
 <template>
-  <div class="flex flex-wrap justify-start items-stretch gap-x-2 gap-y-3">
+  <div class="flex flex-wrap justify-start items-start gap-x-2 gap-y-3">
     <button
       v-for="item in items"
       :key="item.id"
       class="flex items-center gap-1"
-      :class="[
-        baseClass,
-        isSelected(item.id) ? activeClass : '',
-        item.disabled ? 'holiday' : '',
-        item.nonworking ? 'nonworking' : '',
-      ]"
+      :class="[baseClass, isSelected(item.id) ? activeClass : '' , item.disabled ? 'disable' : '' , item.nonworking ? 'nonworking' : '']"
       :disabled="item.disabled || item.nonworking"
       @click="handleClick(item.id)"
     >
@@ -18,25 +13,15 @@
         :name="item.icon"
         :class="['size-4!', item.iconClass]"
       />
-      <div class="flex flex-col gap-1">
-        <span class="text-xs">
-          {{ item.title }}
-        </span>
-        <span class="font-bold text-base">
-          {{ new Date(item.shamsi).toLocaleDateString("fa").split("/")[2] }}
-        </span>
-        <div class="text-xs!">
-          <span v-if="item.nonworking"> روز غیر کاری </span>
-          <span v-else-if="!item.nonworking && !item.disabled"> روز کاری </span>
-          <span v-else> تعطیل </span>
-        </div>
-      </div>
+      {{ item.title }}
     </button>
   </div>
 </template>
 
 <script setup>
 const modelValue = defineModel({ type: [String, Array] });
+
+
 
 const props = defineProps({
   items: {
@@ -47,11 +32,11 @@ const props = defineProps({
   baseClass: {
     type: String,
     default:
-      "px-4 py-2 w-[85px] rounded-[8px] text-[14px]! flex justify-center items-center border border-gray-300 text-sm lg:text-base transition cursor-pointer",
+      "px-4 py-2 rounded-full border border-gray-300 text-sm lg:text-base transition cursor-pointer",
   },
   activeClass: {
     type: String,
-    default: "text-primary! border-primary!",
+    default: "bg-primary! border-transparent! text-white!",
   },
   multiple: {
     type: Boolean,
@@ -60,6 +45,7 @@ const props = defineProps({
 });
 
 // console.log(items);
+
 
 const isSelected = (id) => {
   return props.multiple
@@ -81,18 +67,14 @@ const handleClick = (id) => {
   } else {
     modelValue.value = id;
   }
+
 };
 </script>
 
 <style scoped>
 @reference "tailwindcss";
-.holiday {
-  background-color: #ffe5e5;
-  color: red;
-  cursor: not-allowed;
-}
 
-.nonworking {
+.disable {
   @apply bg-gray-100 opacity-60;
   color: #666;
   border-color: #ccd;

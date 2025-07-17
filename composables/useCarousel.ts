@@ -99,11 +99,12 @@ const [useProvideCarousel, useInjectCarousel] = createInjectionState(
 );
 
 /**
- * A composable function to be used within a <UiCarousel /> component
+ * A composable function to be used within a <UICCarousel /> component
  */
 function useCarousel() {
   const carouselState = useInjectCarousel();
-  if (!carouselState) throw new Error("useCarousel must be used within a <UiCarousel />");
+  if (!carouselState)
+    throw new Error("useCarousel must be used within a <UICCarousel />");
   return carouselState;
 }
 

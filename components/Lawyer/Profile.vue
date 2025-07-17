@@ -19,7 +19,7 @@
         {{ fullname }}
         <div class="flex items-center gap-1">
           <slot name="badges" />
-          <UIBadge
+          <UICBadge
             v-if="active"
             value="فعال"
             icon="mynaui:clock-square-solid"

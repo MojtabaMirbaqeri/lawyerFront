@@ -1,7 +1,7 @@
 <template>
   <main>
     <LandingHeader />
-    <UIBreadCrumb
+    <UICBreadCrumb
       :items="[
         {
           label: 'خانه',

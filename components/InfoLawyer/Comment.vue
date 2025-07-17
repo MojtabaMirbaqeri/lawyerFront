@@ -17,7 +17,7 @@
               v-model="userComment"
               autoresize=""
             />
-            <UIMainBtn class="mb-4"> ثبت نظر </UIMainBtn>
+            <UICMainBtn class="mb-4"> ثبت نظر </UICMainBtn>
           </div>
         </div>
         <USeparator />
@@ -37,7 +37,7 @@
                   ? comment.dis.slice(0, 135) + "..."
                   : comment.dis
               }}
-              <UIDrawer v-if="comment.dis.length > 135">
+              <UICDrawer v-if="comment.dis.length > 135" title="more">
                 <template #button>
                   <UButton
                     label="مشاهده ی بیشتر"
@@ -49,7 +49,7 @@
                 <template #default>
                   {{ comment.dis }}
                 </template>
-              </UIDrawer>
+              </UICDrawer>
             </div>
             <div
               class="lawyer-input-comment"
@@ -68,7 +68,7 @@
                   v-model="userComment"
                   autoresize=""
                 />
-                <UIMainBtn class="mb-4"> ثبت نظر </UIMainBtn>
+                <UICMainBtn class="mb-4"> ثبت نظر </UICMainBtn>
               </div>
             </div>
             <div

@@ -21,7 +21,7 @@
               class="fullname font-semibold flex justify-between lg:justify-start lg:gap-2"
             >
               {{ fullname }}
-              <UIBadge
+              <UICBadge
                 v-if="active"
                 value="فعال"
                 icon="mynaui:clock-square-solid"
@@ -33,25 +33,25 @@
         </div>
         <div class="left flex flex-col lg:items-end gap-3">
           <div class="top flex gap-2">
-            <UIBadge
+            <UICBadge
               variant="yellow"
               icon-size="text-[14px]!"
               :value="rate"
               icon="ic:round-star"
             />
-            <UIBadge
+            <UICBadge
               :value="`${visit} ویزیت آنلاین`"
               icon="solar:chat-dots-bold"
             />
-            <UIBadge
+            <UICBadge
               variant="gray"
               :value="city"
               icon="material-symbols:location-on-rounded"
             />
           </div>
           <div class="buttons flex gap-2">
-            <UIMainBtn>دیدگاه دیگران</UIMainBtn>
-            <UIMainBtn>اشتراک گذاری</UIMainBtn>
+            <UICMainBtn>دیدگاه دیگران</UICMainBtn>
+            <UICMainBtn>اشتراک گذاری</UICMainBtn>
           </div>
         </div>
       </div>
