@@ -39,7 +39,7 @@
         <UICBadge
           custom-class="font-semibold"
           variant="gray"
-          value="متنی"
+          value="چت آنلاین"
           icon="hugeicons:message-multiple-02"
         />
       </div>

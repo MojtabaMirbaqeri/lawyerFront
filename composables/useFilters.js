@@ -1,66 +1,5 @@
-<template>
-  <div class="filters-con">
-    <div class="header py-2.5 bg-gray-100 px-1.5 rounded-md">
-      <UIcon name="system-uicons:filtering" class="size-6! text-primary" />
-      <h3>فیلتر ها</h3>
-    </div>
-    <div class="body">
-      <div>
-        <h3>شیوه ویزیت</h3>
-        <div>
-          <UICSelectButton
-            v-model="filtersVal.visitType"
-            :items="filtersItems.visitTypes"
-          />
-        </div>
-      </div>
-      <div>
-        <h3>جنسیت وکیل</h3>
-        <div>
-          <UICSelectButton
-            v-model="filtersVal.gender"
-            :items="filtersItems.genders"
-          />
-        </div>
-      </div>
-      <div class="space-y-4">
-        <div>
-          <h3>تخصص ها</h3>
-          <div>
-            <UICSelectButton
-              v-model="filtersVal.specialty"
-              :items="filtersItems.specialties.slice(0, 5)"
-            />
-          </div>
-        </div>
-        <div>
-          <h3 class="text-sm font-medium! ps-2">- سایر تخصص ها</h3>
-          <div>
-            <USelectMenu
-              v-model="filtersVal.specialty"
-              :items="filtersItems.specialties"
-              value-key="id"
-              label-key="title"
-              :ui="{
-                base: 'text-base rounded-full w-full py-2 cursor-pointer',
-                leadingIcon: 'text-primary size-5!',
-                trailingIcon: 'size-5!',
-              }"
-              placeholder="تخصص مورد نظر خود را انتخاب کنید"
-              icon="hugeicons:target-02"
-              :search-input="{
-                placeholder: 'جستجو...',
-              }"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-<script setup>
-const filtersItems = {
-  visitTypes: [
+export function useFilters() {
+  const visitTypes = [
     {
       title: "حضوری",
       id: "inperson",
@@ -76,16 +15,16 @@ const filtersItems = {
       id: "chat",
       icon: "hugeicons:message-multiple-02",
     },
-  ],
-  genders: [
+  ];
+  const genders = [
     { title: "مرد", id: "male", icon: "custom:male" },
     {
       title: "زن",
       id: "female",
       icon: "custom:female",
     },
-  ],
-  types: [
+  ];
+  const lawyerTypes = [
     {
       id: 0,
       title: "همه",
@@ -118,8 +57,8 @@ const filtersItems = {
       id: 7,
       title: "وکیل موضوع ماده 187",
     },
-  ],
-  specialties: [
+  ];
+  const lawyerSpecialties = [
     {
       id: 1,
       title: "وکیل ثبت احوال",
@@ -212,29 +151,11 @@ const filtersItems = {
       id: 23,
       title: "وکیل سربازی و نظام وظیفه",
     },
-  ],
-};
-const filtersVal = reactive({
-  visitType: null,
-  gender: null,
-  specialty: null,
-});
-</script>
-<style scoped>
-@reference "tailwindcss";
-.filters-con .body {
-  @apply divide-y divide-gray-300;
+  ];
+  return {
+    visitTypes,
+    genders,
+    lawyerTypes,
+    lawyerSpecialties,
+  };
 }
-.filters-con .header {
-  @apply flex items-center gap-2;
-}
-.filters-con .body > div {
-  @apply py-4;
-}
-.filters-con h3 {
-  @apply font-semibold text-black;
-}
-.filters-con .body h3 {
-  @apply mb-1.5;
-}
-</style>

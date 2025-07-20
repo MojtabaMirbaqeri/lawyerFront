@@ -78,7 +78,7 @@ const items = ref([
         value:'inperson'
     },
     {
-        label:'متنی',
+        label:'چت آنلاین',
         value:'chat'
     },
     {
