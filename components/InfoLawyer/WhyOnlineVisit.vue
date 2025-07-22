@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="container">
+    <div class="">
       <h2 class="sec-header">چرا مشاره آنلاین؟</h2>
       <div class="options flex flex-col gap-3 mt-5">
         <div
@@ -19,7 +19,7 @@
             <div class="title text-[14px] md:text-[16px] font-bold">
               {{ option.title }}
             </div>
-            <div class="dis text-[12px] md:text-[14px]">{{ option.dis }}</div>
+            <div class="dis text-[12px] md:text-[14px] max-w-[550px]">{{ option.dis }}</div>
           </div>
         </div>
       </div>
