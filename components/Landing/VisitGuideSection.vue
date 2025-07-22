@@ -1,6 +1,6 @@
 <template>
   <section id="visit-guide">
-    <div class="guide-con">
+    <div class="guide-con  bg-primary/5">
       <h2 class="sec-header mb-2 lg:mb-3">راهنمای ویزیت آنلاین</h2>
       <div class="space-y-2.5">
         <h2>
@@ -33,7 +33,7 @@
           }"
         >
           <template #leading="{ item }">
-            <div class="size-9 lg:size-10 relative rounded-full bg-primary/10">
+            <div class="size-9 lg:size-10 relative rounded-full bg-primary/12">
               <UIcon
                 :name="item?.icon"
                 class="absolute -translate-1/2 top-1/2 end-1/2 size-4.5! lg:size-5!"
@@ -106,6 +106,6 @@ const items = ref([
 #visit-guide {
 }
 .guide-con {
-  @apply rounded-2xl p-4 bg-blue-100/20 border border-gray-200 space-y-3;
+  @apply rounded-2xl p-4 border border-gray-200 space-y-3;
 }
 </style>
