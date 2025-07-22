@@ -56,19 +56,32 @@
               v-if="Object.keys(comment.replay).length <= 0"
             >
               <div class="">
-                <UTextarea
-                  color="neutral"
-                  variant="subtle"
-                  class="w-full mb-4 outline-0"
-                  :ui="{
-                    base: 'focus-visible:ring-ring-color focus-visible:ring-1',
-                  }"
-                  placeholder="نظر خود را درباره ی نظر کاربر مورد نظر بنویسید..."
-                  :maxrows="6"
-                  v-model="userComment"
-                  autoresize=""
-                />
-                <UICMainBtn class="mb-4"> ثبت نظر </UICMainBtn>
+                <UCollapsible class="flex flex-col gap-2 w-full">
+                  <UButton
+                    color="primary"
+                    variant="link"
+                    trailing-icon="quill:reply"
+                    class="text-right"
+                    :ui="{trailingIcon:'cursor-pointer size-5!'}"
+                    block
+                  />
+
+                  <template #content>
+                    <UTextarea
+                      color="neutral"
+                      variant="subtle"
+                      class="w-full mb-4 outline-0"
+                      :ui="{
+                        base: 'focus-visible:ring-ring-color focus-visible:ring-1',
+                      }"
+                      placeholder="نظر خود را درباره ی نظر کاربر مورد نظر بنویسید..."
+                      :maxrows="6"
+                      v-model="userComment"
+                      autoresize=""
+                    />
+                    <UICMainBtn class="mb-4"> ثبت نظر </UICMainBtn>
+                  </template>
+                </UCollapsible>
               </div>
             </div>
             <div
