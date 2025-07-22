@@ -20,7 +20,7 @@
   }
 
   .sec-header {
-    @apply  text-[20px] lg:text-2xl text-content font-bold;
+    @apply text-[20px] lg:text-2xl text-content font-bold;
   }
 
   .primary-box {
@@ -55,9 +55,9 @@
 }
 
 body {
-  font-family: Rokh !important;
+  font-family: IRANSansX !important;
   background-color: #f8fafd !important;
-  @apply font-medium text-content;
+  @apply text-content text-sm!;
 }
 
 * {
