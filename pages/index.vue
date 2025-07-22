@@ -13,6 +13,7 @@
       <LandingLawyersSection />
       <LandingCommentsSection />
       <LandingVisitGuideSection />
+      <LandingFaqSection />
       <div></div>
     </div>
   </main>
