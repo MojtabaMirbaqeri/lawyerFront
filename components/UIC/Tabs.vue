@@ -19,7 +19,7 @@
           <UIcon :name="item.iconTr" />
           <span>{{ item.label }}</span>
         </div>
-        <div class="dis text-justify">{{ item.dis }}</div>
+        <div class="dis text-justify whitespace-break-spaces">{{ item.dis }}</div>
       </div>
     </template>
     <template #position="{ item }">

@@ -4,14 +4,21 @@
       v-for="item in items"
       :key="item.id"
       class="flex items-center gap-1"
-      :class="[baseClass, isSelected(item.id) ? activeClass : '' , item.disabled ? 'disable' : '' , item.nonworking ? 'nonworking' : '']"
+      :class="
+        twMerge(
+          mergedUi.base,
+          isSelected(item.id) && mergedUi.active,
+          item.disabled && mergedUi.disabled,
+          item.nonworking && mergedUi.nonworking
+        )
+      "
       :disabled="item.disabled || item.nonworking"
       @click="handleClick(item.id)"
     >
       <UIcon
         v-if="item.icon"
         :name="item.icon"
-        :class="['size-4!', item.iconClass]"
+        :class="[mergedUi.icon, item.iconClass]"
       />
       {{ item.title }}
     </button>
@@ -19,24 +26,18 @@
 </template>
 
 <script setup>
+import { twMerge } from "tailwind-merge";
+
 const modelValue = defineModel({ type: [String, Array] });
-
-
 
 const props = defineProps({
   items: {
     type: Array,
     required: true,
-    //  { title: string, id: any, icon?: string }
   },
-  baseClass: {
-    type: String,
-    default:
-      "px-4 py-2 rounded-full border border-gray-300 text-sm lg:text-base transition cursor-pointer",
-  },
-  activeClass: {
-    type: String,
-    default: "bg-primary! border-transparent! text-white!",
+  ui: {
+    type: Object,
+    default: () => ({}),
   },
   multiple: {
     type: Boolean,
@@ -44,14 +45,31 @@ const props = defineProps({
   },
 });
 
-// console.log(items);
+// پیش‌فرض‌ها
+const defaultUi = {
+  base: "px-4 py-2 rounded-full border border-gray-300 text-sm lg:text-base transition cursor-pointer",
+  active: "bg-primary! border-transparent! text-white!",
+  disabled:
+    "bg-gray-100 opacity-60 text-gray-500 border-gray-200 cursor-not-allowed",
+  nonworking: "bg-yellow-50 text-yellow-700 border-yellow-300",
+  icon: "size-4!",
+};
 
+// مرج با props.ui
+const mergedUi = {
+  base: twMerge(defaultUi.base, props.ui.base),
+  active: twMerge(defaultUi.active, props.ui.active),
+  disabled: twMerge(defaultUi.disabled, props.ui.disabled),
+  nonworking: twMerge(defaultUi.nonworking, props.ui.nonworking),
+  icon: twMerge(defaultUi.icon, props.ui.icon),
+};
 
 const isSelected = (id) => {
   return props.multiple
     ? Array.isArray(modelValue.value) && modelValue.value.includes(id)
     : modelValue.value === id;
 };
+
 const handleClick = (id) => {
   if (props.multiple) {
     const current = Array.isArray(modelValue.value)
@@ -67,17 +85,5 @@ const handleClick = (id) => {
   } else {
     modelValue.value = id;
   }
-
 };
 </script>
-
-<style scoped>
-@reference "tailwindcss";
-
-.disable {
-  @apply bg-gray-100 opacity-60;
-  color: #666;
-  border-color: #ccd;
-  cursor: not-allowed;
-}
-</style>

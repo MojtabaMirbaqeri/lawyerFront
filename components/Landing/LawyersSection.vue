@@ -62,7 +62,7 @@
           class="sort-tabs"
         />
         <div class="lawyers-con">
-          <NuxtLink v-for="i in 15" :key="i" to="/lawyer/5">
+          <NuxtLink v-for="i in 10" :key="i" to="/lawyer/5">
             <LawyerCard />
           </NuxtLink>
         </div>
