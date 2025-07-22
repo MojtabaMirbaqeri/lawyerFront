@@ -31,6 +31,10 @@
   .filter-blue {
     filter: saturate() sepia() hue-rotate(158deg) saturate(300%) brightness();
   }
+
+  .paragraph {
+    @apply text-xs lg:text-sm;
+  }
 }
 
 @utility container {

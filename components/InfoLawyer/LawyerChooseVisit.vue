@@ -58,20 +58,6 @@ const items = ref([
 ]);
 
 const activeBtn = ref("1");
-
-onMounted(async () => {
-  const res = await fetch(
-    "https://badesaba.ir/api/site/getDataCalendar/4/1404"
-  );
-  const data = await res.json();
-
-  // فقط روزهایی که حداقل یکی از eventهاشون تعطیله
-  const holidays = data.filter((day) =>
-    day.events.some((event) => event.holiday === true)
-  );
-
-  console.log(holidays);
-});
 </script>
 
 <style scoped>

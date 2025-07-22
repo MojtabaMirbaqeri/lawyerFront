@@ -2,7 +2,11 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-05-15",
   devtools: { enabled: true },
-
+  runtimeConfig: {
+    public: {
+      apiEndpoint: process.env.API_EP,
+    },
+  },
   modules: [
     "@nuxt/eslint",
     "@nuxt/icon",
