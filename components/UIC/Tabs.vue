@@ -24,7 +24,7 @@
     </template>
     <template #position="{ item }">
       <div class="w-full h-[300px]">
-        <info-lawyer-pos :pos="[31.8900648, 54.3441156]" />
+        <info-lawyer-pos :pos="item.pos" />
       </div>
     </template>
     <template #visit="{ item }">

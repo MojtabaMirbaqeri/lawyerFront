@@ -13,7 +13,7 @@
               position="bottom-right"
               :ui="{ base: 'bg-blue-400 size-3 right-[10%]' }"
             >
-              <UAvatar class="w-full h-full" :src="avatar" />
+              <UAvatar class="w-full h-full" :src="avatar !== null ? avatar : '/images/null-avatar.png'" />
             </UChip>
           </div>
           <div class="person-detail w-full">
@@ -28,7 +28,7 @@
               />
             </div>
             <div class="education">{{ education }}</div>
-            <div class="experience">تجربه: {{ experience }} سال</div>
+            <div class="experience">تجربه: {{ experience !== null ? experience : 0 }} سال</div>
           </div>
         </div>
         <div class="left flex flex-col lg:items-end gap-3">
@@ -39,10 +39,10 @@
               :value="rate"
               icon="ic:round-star"
             />
-            <UICBadge
+            <!-- <UICBadge
               :value="`${visit} ویزیت آنلاین`"
               icon="solar:chat-dots-bold"
-            />
+            /> -->
             <UICBadge
               variant="gray"
               :value="city"
