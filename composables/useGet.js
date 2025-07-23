@@ -1,6 +1,8 @@
 export async function useGet(url, includeAuthHeader = false) {
   const endPoint = useRuntimeConfig().public.apiEndpoint;
   const jwtToken = useCookie("jwtToken");
+  console.log(jwtToken);
+  
 
   try {
     const response = await useFetch(endPoint + url, {
@@ -10,7 +12,7 @@ export async function useGet(url, includeAuthHeader = false) {
       },
     });
     return {
-      data: response.data.value.data,
+      data: response.data.value,
       status: response.status.value || true,
       pendeing: response.pending.value,
       refresh: response.refresh,
