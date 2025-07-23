@@ -22,7 +22,7 @@
                 <UInput v-model="state.code" class="w-full" />
               </UFormField>
 
-              <UButton class="w-20 justify-center" type="submit"> اعمال کد </UButton>
+              <UButton class="w-30 justify-center" type="submit"> اعمال کد </UButton>
             </UForm>
           </div>
         </template>
