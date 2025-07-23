@@ -12,6 +12,8 @@ export async function useGet(url, includeAuthHeader = false) {
     return {
       data: response.data.value.data,
       status: response.status.value || true,
+      pendeing: response.pending.value,
+      refresh: response.refresh,
     };
   } catch (error) {
     return {
