@@ -1,13 +1,8 @@
 <template>
   <UApp>
+    <NuxtLoadingIndicator :height="4"/>
     <NuxtLayout dir="rtl">
       <NuxtPage />
     </NuxtLayout>
   </UApp>
 </template>
-
-<script setup>
-
-const { data } = await useGet("lawyers");
-console.log(data);
-</script>
