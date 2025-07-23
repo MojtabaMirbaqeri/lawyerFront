@@ -14,7 +14,6 @@
       <LandingCommentsSection />
       <LandingVisitGuideSection />
       <LandingFaqSection />
-      <div></div>
     </div>
   </main>
 </template>

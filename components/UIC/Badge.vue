@@ -1,6 +1,6 @@
 <template>
   <UBadge :icon="icon" :ui="{ leadingIcon: iconSize }" :class="badgeClass">
-    <span class="text-[14px]">{{ value }}</span>
+    <span>{{ value }}</span>
   </UBadge>
 </template>
 
