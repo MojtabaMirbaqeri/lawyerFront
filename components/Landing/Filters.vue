@@ -72,7 +72,7 @@ const filtersItems = {
       icon: "hugeicons:telephone",
     },
     {
-      title: "چت آنلاین",
+      title: "چت",
       id: "chat",
       icon: "hugeicons:message-multiple-02",
     },
