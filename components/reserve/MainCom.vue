@@ -2,7 +2,7 @@
   <div class="container pt-5">
     <h1 v-if="step === 1" class="sec-header mb-3">رزرو نوبت مشاوره</h1>
 
-    <div class="flex gap-3 items-start">
+    <div class="flex lg:gap-3 items-start">
       <div class="shadow-none! w-full right">
         <div v-if="step === 1" class="step1 flex flex-col gap-3">
           <div class="primary-box flex flex-col gap-3 p-5">

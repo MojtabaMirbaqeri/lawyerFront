@@ -26,7 +26,7 @@
         <info-lawyer-WhyOnlineVisit />
         <InfoLawyerChooseVisit class="block lg:hidden" />
         <info-lawyer-tab :dis="lawyer.lawyer_info.about" :pos="[+lawyer.latitude,+lawyer.longitude]"/>
-        <info-lawyer-comment />
+        <info-lawyer-comment :lawyer-full-name="lawyer.lawyer_info.name+' '+lawyer.lawyer_info.family"/>
       </div>
       <div class="left w-[150%] hidden lg:block">
         <InfoLawyerChooseVisit class="sticky top-[90px]" />
@@ -38,7 +38,7 @@
 <script setup>
 const res = await useGet(`lawyers/${useRoute().params.id}`,"")
 const data = await res.data
-const lawyer = ref(data)
+const lawyer = ref(data.data)
 
 onMounted(() => {
   console.log(lawyer.value.id);
