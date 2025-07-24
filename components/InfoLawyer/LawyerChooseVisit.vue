@@ -51,7 +51,7 @@ const items = ref([
   },
   {
     id: "3",
-    title: "چت آنلاین",
+    title: "چت",
     price: "250,000",
     icon: "hugeicons:message-multiple-02",
   },

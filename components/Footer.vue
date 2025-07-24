@@ -1,38 +1,40 @@
 <template>
   <footer id="footer" class="bg-primary/90">
     <div class="footer-con">
-      <div
-        class="divide-y divide-gray-200 lg:divide-y-0 lg:flex flex-row items-center gap-12 lg:container lg:py-6"
-      >
-        <div class="partners lg:grow">
-          <div class="container lg:p-0!">
-            <div>
-              <div class="text-base">همراهان وکیلینجا:</div>
-            </div>
-            <div class="grow">
-              <div class="container partners-logos">
-                <NuxtImg
-                  v-for="partner in partners"
-                  :key="partner"
-                  :src="`/images/footer/${partner}`"
-                  class="h-6 lg:h-8"
-                />
+      <div class="lg:py-4">
+        <div
+          class="divide-y divide-gray-200 lg:divide-y-0 lg:flex flex-row items-center gap-12 lg:container"
+        >
+          <div class="partners lg:grow">
+            <div class="container lg:p-0!">
+              <div>
+                <div class="text-base">همراهان وکیلینجا:</div>
+              </div>
+              <div class="grow">
+                <div class="container partners-logos">
+                  <NuxtImg
+                    v-for="partner in partners"
+                    :key="partner"
+                    :src="`/images/footer/${partner}`"
+                    class="h-6 lg:h-8"
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div>
-          <div class="container help">
-            <h3 class="text-primary">نیاز به راهنمایی دارید؟</h3>
-            <NuxtLink to="tel:+982110014488" external>
-              <UICSecondaryBtn> 021-10014488 </UICSecondaryBtn>
-            </NuxtLink>
+          <div>
+            <div class="container help">
+              <h3 class="text-primary">نیاز به راهنمایی دارید؟</h3>
+              <NuxtLink to="tel:+982110014488" external>
+                <UICSecondaryBtn> 021-10014488 </UICSecondaryBtn>
+              </NuxtLink>
+            </div>
           </div>
         </div>
       </div>
       <div>
         <div
-          class="container flex flex-col lg:flex-row lg:items-start gap-2.5 py-7! lg:gap-8 lg:justify-between lg:py-12!"
+          class="container flex flex-col lg:flex-row lg:items-start gap-2.5 py-6! lg:gap-8 lg:justify-between lg:py-6!"
         >
           <div
             class="flex justify-between items-center lg:flex-col lg:items-start gap-4"
@@ -151,7 +153,7 @@ const licenses = [
 @reference "tailwindcss";
 
 #footer {
-  @apply text-sm lg:text-base;
+  @apply text-sm lg:text-base mt-14 lg:mt-20;
 }
 
 .container {
@@ -199,7 +201,7 @@ const licenses = [
 }
 
 .licenses {
-  @apply flex items-center gap-4 lg:gap-8 justify-center py-6 lg:py-8;
+  @apply flex items-center gap-4 lg:gap-8 justify-center py-4;
 }
 
 .licenses img {
