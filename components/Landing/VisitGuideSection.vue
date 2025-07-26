@@ -47,7 +47,9 @@
   </section>
 </template>
 <script setup>
-const { visitTypes } = useFilters();
+import { useFiltersStore } from '~/store/filters';
+
+const { visitTypes } = useFiltersStore();
 
 const filteredVisitTypes = visitTypes.filter((item) => item.id !== "inperson");
 const visitType = ref(filteredVisitTypes[1].id);

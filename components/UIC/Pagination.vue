@@ -1,5 +1,7 @@
 <script setup>
-const page = ref(1);
+const page = defineModel({ default: 1, type: Number });
+
+defineProps(["total", "pageSize"]);
 </script>
 
 <template>
@@ -7,8 +9,8 @@ const page = ref(1);
     v-model:page="page"
     :show-controls="true"
     show-edges
-    :total="80"
-    :items-per-page="15"
+    :total="total"
+    :items-per-page="pageSize"
     :sibling-count="1"
     :ui="{
       first: 'hidden',

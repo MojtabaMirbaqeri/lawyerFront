@@ -28,7 +28,7 @@
           <h3>تخصص ها</h3>
           <div>
             <UICSelectButton
-              v-model="filtersVal.specialty"
+              v-model="filtersVal.lawyerSpecialty"
               :items="filtersItems.specialties.slice(0, 5)"
             />
           </div>
@@ -37,12 +37,12 @@
           <h3 class="text-sm font-medium! ps-2">- سایر تخصص ها</h3>
           <div>
             <USelectMenu
-              v-model="filtersVal.specialty"
+              v-model="filtersVal.lawyerSpecialty"
               :items="filtersItems.specialties"
               value-key="id"
               label-key="title"
               :ui="{
-                base: 'text-base rounded-full w-full py-2 cursor-pointer',
+                base: ' rounded-full w-full py-2 cursor-pointer',
                 leadingIcon: 'text-primary size-5!',
                 trailingIcon: 'size-5!',
               }"
@@ -55,169 +55,41 @@
           </div>
         </div>
       </div>
+      <div class="pb-0!">
+        <UICSecondaryBtn
+          :disabled="!haveFiltersChanged"
+          class="w-full rounded-lg! py-2.5!"
+          @click="applyFilters()"
+        >
+          اعمال فیلترها
+        </UICSecondaryBtn>
+      </div>
     </div>
   </div>
 </template>
 <script setup>
+import { useFiltersStore } from "~/store/filters";
+const filtersStore = useFiltersStore();
+const haveFiltersChanged = ref(false);
+
 const filtersItems = {
-  visitTypes: [
-    {
-      title: "حضوری",
-      id: "inperson",
-      icon: "hugeicons:building-06",
-    },
-    {
-      title: "تلفنی",
-      id: "phone",
-      icon: "hugeicons:telephone",
-    },
-    {
-      title: "چت",
-      id: "chat",
-      icon: "hugeicons:message-multiple-02",
-    },
-  ],
-  genders: [
-    { title: "مرد", id: "male", icon: "custom:male" },
-    {
-      title: "زن",
-      id: "female",
-      icon: "custom:female",
-    },
-  ],
-  types: [
-    {
-      id: 0,
-      title: "همه",
-    },
-    {
-      id: 1,
-      title: "وکیل پایه یک دادگستری",
-    },
-    {
-      id: 2,
-      title: "وکیل پایه دو دادگستری",
-    },
-    {
-      id: 3,
-      title: "کارآموز وکالت",
-    },
-    {
-      id: 4,
-      title: "وکیل تسخیری",
-    },
-    {
-      id: 5,
-      title: "وکیل معاضدتی",
-    },
-    {
-      id: 6,
-      title: "وکیل اتفاقی",
-    },
-    {
-      id: 7,
-      title: "وکیل موضوع ماده 187",
-    },
-  ],
-  specialties: [
-    {
-      id: 1,
-      title: "وکیل ثبت احوال",
-    },
-    {
-      id: 2,
-      title: "وکیل بیمه",
-    },
-    {
-      id: 3,
-      title: "وکیل ملکی",
-    },
-    {
-      id: 4,
-      title: "وکیل مالیات",
-    },
-    {
-      id: 5,
-      title: "وکیل شرکت ها",
-    },
-    {
-      id: 6,
-      title: "وکیل انحصار وراثت",
-    },
-    {
-      id: 7,
-      title: "وکیل دیوان عدالت اداری",
-    },
-    {
-      id: 8,
-      title: "وکیل خانواده",
-    },
-    {
-      id: 9,
-      title: "وکیل وصول مطالبات",
-    },
-    {
-      id: 10,
-      title: "وکیل قراردادها",
-    },
-    {
-      id: 11,
-      title: "وکیل جرایم اینترنتی",
-    },
-    {
-      id: 12,
-      title: "وکیل اداره کار",
-    },
-    {
-      id: 13,
-      title: "وکیل بین الملل",
-    },
-    {
-      id: 14,
-      title: "وکیل مالکیت معنوی",
-    },
-    {
-      id: 15,
-      title: "وکیل کیفری (جرایم)",
-    },
-    {
-      id: 16,
-      title: "وکیل اجرای احکام",
-    },
-    {
-      id: 17,
-      title: "وکیل جرایم علیه اشخاص",
-    },
-    {
-      id: 18,
-      title: "وکیل جرایم علیه اموال",
-    },
-    {
-      id: 19,
-      title: "وکیل جرایم علیه امنیت کشور",
-    },
-    {
-      id: 20,
-      title: "وکیل اموال و مالکیت",
-    },
-    {
-      id: 21,
-      title: "وکیل ثبت اسناد",
-    },
-    {
-      id: 22,
-      title: "وکیل داوری",
-    },
-    {
-      id: 23,
-      title: "وکیل سربازی و نظام وظیفه",
-    },
-  ],
+  visitTypes: filtersStore.visitTypes,
+  genders: filtersStore.genders,
+  specialties: filtersStore.lawyerSpecialties,
 };
 const filtersVal = reactive({
-  visitType: null,
-  gender: null,
-  specialty: null,
+  visitType: filtersStore.selectedFilters.visitType,
+  gender: filtersStore.selectedFilters.gender,
+  lawyerSpecialty: filtersStore.selectedFilters.lawyerSpecialty,
+});
+
+const applyFilters = () => {
+  filtersStore.applyFilters(filtersVal);
+  filtersStore.drawerVisiblity = false;
+};
+
+watch(filtersVal, () => {
+  haveFiltersChanged.value = true;
 });
 </script>
 <style scoped>

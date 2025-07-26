@@ -1,9 +1,15 @@
-export async function useGet(url, includeAuthHeader = false) {
+export async function useGet(
+  request = {
+    url: "",
+    includeAuthHeader: false,
+    query: {},
+  }
+) {
   const config = useRuntimeConfig();
   const jwtToken = useCookie("jwtToken");
 
   const headers = {
-    ...(includeAuthHeader && jwtToken.value
+    ...(request.includeAuthHeader && jwtToken.value
       ? { Authorization: `Bearer ${jwtToken.value}` }
       : {}),
   };
@@ -13,7 +19,10 @@ export async function useGet(url, includeAuthHeader = false) {
   // Runtime fetch (e.g., inside watch, event handlers)
   if (isClient) {
     try {
-      const data = await $fetch(config.public.apiEndpoint + url, { headers });
+      const data = await $fetch(config.public.apiEndpoint + request.url, {
+        headers,
+        query: request.query,
+      });
 
       return {
         data,
@@ -21,7 +30,10 @@ export async function useGet(url, includeAuthHeader = false) {
         statusCode: data?.status ?? 200,
         pending: false,
         refresh: async () => {
-          const newData = await $fetch(config.public.apiEndpoint + url, { headers });
+          const newData = await $fetch(config.public.apiEndpoint + request.url, {
+            headers,
+            query: request.query,
+          });
           return newData;
         },
       };
@@ -39,8 +51,9 @@ export async function useGet(url, includeAuthHeader = false) {
 
   // SSR/Setup fetch (Nuxt useFetch)
   try {
-    const response = await useFetch(config.public.apiEndpoint + url, {
+    const response = await useFetch(config.public.apiEndpoint + request.url, {
       headers,
+      query: request.query,
     });
 
     return {

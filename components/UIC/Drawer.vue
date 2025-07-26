@@ -1,5 +1,5 @@
 <template>
-  <UDrawer class="" :ui="{ content: 'lg:w-[40%]! mx-auto' }">
+  <UDrawer v-model:open="modelValue" :ui="{ content: 'lg:w-[40%]! mx-auto' }">
     <slot name="button" />
 
     <template #content>
@@ -10,8 +10,10 @@
   </UDrawer>
 </template>
 
-<script>
-export default {};
+<script setup>
+const modelValue = defineModel({
+  type: Boolean,
+});
 </script>
 
 <style>

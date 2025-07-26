@@ -9,7 +9,7 @@
       root: 'primary-box sm:px-4 py-0',
       list: `tabs-list overflow-hidden border-b-0 justify-center py-1.5 sm:justify-start  items-center `,
       indicator: 'h-1.5 bottom-auto bottom-[-2px] ',
-      trigger: 'font-semibold cursor-pointer',
+      trigger: 'font-semibold cursor-pointer text-[13px] lg:text-sm',
       content: 'py-4',
     }"
   >
@@ -19,7 +19,9 @@
           <UIcon :name="item.iconTr" />
           <span>{{ item.label }}</span>
         </div>
-        <div class="dis text-justify whitespace-break-spaces">{{ item.dis }}</div>
+        <div class="dis text-justify whitespace-break-spaces">
+          {{ item.dis }}
+        </div>
       </div>
     </template>
     <template #position="{ item }">
