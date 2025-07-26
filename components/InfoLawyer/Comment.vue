@@ -23,21 +23,25 @@
         <USeparator />
         <div class="comments">
           <div
-            class="comment text-xs lg:text-sm p-4 flex flex-col gap-3 last:border-b-0 border-b border-[var(--ui-border)]"
             v-for="comment in comments"
-            :key="comment"
+            :key="comment.id"
+            class="comment text-xs lg:text-sm p-4 flex flex-col gap-3 last:border-b-0 border-b border-[var(--ui-border)]"
           >
             <div class="info flex justify-between">
-              <div class="username opacity-70">{{ comment.username }}</div>
-              <div class="date">{{ comment.date }}</div>
+              <div class="username opacity-70">
+                {{ `${comment.user.name} ${comment.user.family}` }}
+              </div>
+              <div class="date">
+                {{ new Date(comment.created_at).toLocaleDateString("fa") }}
+              </div>
             </div>
             <div class="user-comment cursor-pointer flex flex-col">
               {{
-                comment.dis.length > 135
-                  ? comment.dis.slice(0, 135) + "..."
-                  : comment.dis
+                comment.comment.length > 135
+                  ? comment.comment.slice(0, 135) + "..."
+                  : comment.comment
               }}
-              <UICDrawer v-if="comment.dis.length > 135" title="more">
+              <UICDrawer v-if="comment.comment.length > 135" title="more">
                 <template #button>
                   <UButton
                     label="مشاهده ی بیشتر"
@@ -47,14 +51,11 @@
                   />
                 </template>
                 <template #default>
-                  {{ comment.dis }}
+                  {{ comment.comment }}
                 </template>
               </UICDrawer>
             </div>
-            <div
-              class="lawyer-input-comment"
-              v-if="Object.keys(comment.replay).length <= 0"
-            >
+            <div v-if="!comment.reply" class="lawyer-input-comment">
               <div class="">
                 <UCollapsible class="flex flex-col gap-2 w-full">
                   <UButton
@@ -62,7 +63,7 @@
                     variant="link"
                     trailing-icon="quill:reply"
                     class="text-right"
-                    :ui="{trailingIcon:'cursor-pointer size-5!'}"
+                    :ui="{ trailingIcon: 'cursor-pointer size-5!' }"
                     block
                   />
 
@@ -85,68 +86,61 @@
               </div>
             </div>
             <div
-              v-if="Object.keys(comment.replay).length > 0"
+              v-if="comment.reply"
               class="lawyer-comment rounded-[8px] p-4 flex flex-col gap-3 bg-[#f4f5f7]"
             >
               <div class="lawyer-info flex justify-between">
                 <div class="lawyer-username opacity-70">
-                  {{ comment.replay.username }}
+                  {{ props.lawyerFullName }}
                 </div>
                 <div class="lawyer-com-date">
-                  {{ comment.replay.date }}
+                  {{ new Date(comment.created_at).toLocaleDateString("fa") }}
                 </div>
               </div>
               <div class="lawyer-com-dis">
-                {{ comment.replay.dis }}
+                {{ comment.reply }}
               </div>
             </div>
           </div>
         </div>
       </div>
+      <UICSecondaryBtn :disabled="currentPageComment == lastPage" :class="{'bg-gray-500! cursor-no-drop!' : currentPageComment == lastPage}" @click="commentHandle" class="mx-auto my-4">
+        <span>مشاهده بیشتر</span>
+      </UICSecondaryBtn>
     </div>
   </section>
 </template>
 
 <script setup>
-const comments = ref([
-  {
-    username: "محمد طاها",
-    date: "1404/4/9",
-    dis: "بسیار راضی هستم از خدمات این وکیل؛ هم شرایط شخصی من را به دقت در نظر گرفتند و هم مدیریت رفتاری‌شان عالی بود. علاوه بر این، حتی خارج از برنامه درمان، همواره حمایت و راهنمایی‌های ارزشمندی دریافت کردم. ",
-    replay: {
-      username: "مجتبی میر باقری",
-      date: "1404/4/9",
-      dis: "ممنون",
-    },
-  },
-  {
-    username: "محمد طاها",
-    date: "1404/4/9",
-    dis: "بسیار راضی هستم از خدمات این وکیل؛ هم شرایط شخصی من را به دقت در نظر گرفتند و هم مدیریت رفتاری‌شان عالی بود. علاوه بر این، حتی خارج از برنامه درمان، همواره حمایت و راهنمایی‌های ارزشمندی دریافت کردم. ",
-    replay: {},
-  },
-  {
-    username: "محمد طاها",
-    date: "1404/4/9",
-    dis: "بسیار راضی هستم از خدمات این وکیل؛ هم شرایط شخصی من را به دقت در نظر گرفتند و هم مدیریت رفتاری‌شان عالی بود. علاوه بر این، حتی خارج از برنامه درمان، همواره حمایت و راهنمایی‌های ارزشمندی دریافت کردم. ",
-    replay: {},
-  },
-  {
-    username: "محمد طاها",
-    date: "1404/4/9",
-    dis: "بسیار راضی هستم از خدمات این وکیل؛ هم شرایط شخصی من را به دقت در نظر گرفتند و هم مدیریت رفتاری‌شان عالی بود. علاوه بر این، حتی خارج از برنامه درمان، همواره حمایت و راهنمایی‌های ارزشمندی دریافت کردم. ",
-    replay: {},
-  },
-  {
-    username: "محمد طاها",
-    date: "1404/4/9",
-    dis: "بسیار راضی هستم از خدمات این وکیل؛ هم شرایط شخصی من را به دقت در نظر گرفتند و هم مدیریت رفتاری‌شان عالی بود. علاوه بر این، حتی خارج از برنامه درمان، همواره حمایت و راهنمایی‌های ارزشمندی دریافت کردم. ",
-    replay: {},
-  },
-]);
+const props = defineProps(["lawyerFullName"]);
+const res = await useGet(`lawyers/${useRoute().params.id}/reviews`);
+const data = await res.data;
+const lastPage = ref(data.data.last_page)
+
+const currentPageComment = ref(1);
+
+const comments = ref(data.data.data);
+
+
+// watch(() => currentPageComment , (page) => {
+
+// })
+
+const commentHandle = async () => {
+  currentPageComment.value++;
+  const res = await useGet(
+    `lawyers/${useRoute().params.id}/reviews?page=${currentPageComment.value}`
+  );
+  const data = await res.data;
+  const newCom = ref(data.data.data)
+  comments.value.push(...newCom.value)
+  console.log(comments.value);
+  
+};
 
 const userComment = ref("");
 </script>
 
 <style>
 </style>
+

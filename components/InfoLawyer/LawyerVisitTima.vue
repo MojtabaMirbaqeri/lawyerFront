@@ -1,4 +1,5 @@
 <script setup>
+
 const weekDays = [
   "شنبه",
   "یکشنبه",
@@ -9,68 +10,12 @@ const weekDays = [
   "جمعه",
 ];
 
+const res = await useGet(`lawyer_schedules/grouped/${useRoute().params.id}`,true)
+const sch = await res.data;
+
+
 // این داده‌ها مثلاً از API اومدن
-const scheduleData = {
-  inperson: [
-    {
-      id: 1,
-      lawyer_id: "4",
-      day_of_week: "1",
-      start_time: "10:00:00",
-      end_time: "19:00:00",
-      type: "inperson",
-      day_name: "یکشنبه",
-    },
-    {
-      id: 3,
-      lawyer_id: "4",
-      day_of_week: "0",
-      start_time: "10:49:00",
-      end_time: "13:49:00",
-      type: "inperson",
-      day_name: "شنبه",
-    },
-    {
-      id: 6,
-      lawyer_id: "4",
-      day_of_week: "4",
-      start_time: "10:49:00",
-      end_time: "13:49:00",
-      type: "inperson",
-      day_name: "چهارشنبه",
-    },
-  ],
-  chat: [
-    {
-      id: 1,
-      lawyer_id: "4",
-      day_of_week: "1",
-      start_time: "10:00:00",
-      end_time: "19:00:00",
-      type: "inperson",
-      day_name: "یکشنبه",
-    },
-    {
-      id: 3,
-      lawyer_id: "4",
-      day_of_week: "0",
-      start_time: "10:49:00",
-      end_time: "13:49:00",
-      type: "inperson",
-      day_name: "شنبه",
-    },
-    {
-      id: 6,
-      lawyer_id: "4",
-      day_of_week: "3",
-      start_time: "10:49:00",
-      end_time: "13:49:00",
-      type: "inperson",
-      day_name: "سه شنبه",
-    },
-  ],
-  phone: [],
-};
+const scheduleData = sch
 
 const items = ref([
   {
@@ -115,7 +60,7 @@ const isShowTable = computed(
   <UTable
     v-if="isShowTable === true"
     :data="data"
-    :ui="{ th: 'text-center!', td: 'text-center!' }"
+    :ui="{ th: 'text-center!', td: 'text-center!' , tr:'even:bg-primary/10'}"
     :columns="[
       { accessorKey: 'day', header: 'روز' },
       { accessorKey: 'start_Time', header: 'ساعت شروع کار' },

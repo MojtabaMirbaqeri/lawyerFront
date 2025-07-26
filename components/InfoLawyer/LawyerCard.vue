@@ -13,7 +13,10 @@
               position="bottom-right"
               :ui="{ base: 'bg-blue-400 size-3 right-[10%]' }"
             >
-              <UAvatar class="w-full h-full" :src="avatar !== null ? avatar : '/images/null-avatar.png'" />
+              <UAvatar
+                class="w-full h-full"
+                :src="avatar !== null ? avatar : '/images/null-avatar.png'"
+              />
             </UChip>
           </div>
           <div class="person-detail w-full">
@@ -28,7 +31,9 @@
               />
             </div>
             <div class="education">{{ education }}</div>
-            <div class="experience">تجربه: {{ experience !== null ? experience : 0 }} سال</div>
+            <div class="experience">
+              تجربه: {{ experience !== null ? experience : 0 }} سال
+            </div>
           </div>
         </div>
         <div class="left flex flex-col lg:items-end gap-3">
@@ -51,7 +56,7 @@
           </div>
           <div class="buttons flex gap-2">
             <UICMainBtn>دیدگاه دیگران</UICMainBtn>
-            <UICMainBtn>اشتراک گذاری</UICMainBtn>
+            <UICMainBtn @click="shareContent">اشتراک گذاری</UICMainBtn>
           </div>
         </div>
       </div>
@@ -61,6 +66,24 @@
 
 <script setup>
 const show = ref(true);
+
+const shareContent = async () => {
+  const shareData = {
+    title: "عنوان مطلب",
+    text: "این یک مطلب جالب است!",
+    url: window.location.href,
+  };
+
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+    } else {
+      alert("مرورگر شما از Web Share API پشتیبانی نمی‌کند.");
+    }
+  } catch (err) {
+    console.error("خطا در اشتراک‌گذاری:", err);
+  }
+};
 
 defineProps([
   "avatar",
