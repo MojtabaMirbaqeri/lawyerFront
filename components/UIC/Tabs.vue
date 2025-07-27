@@ -28,7 +28,7 @@
       </div>
     </template>
     <template #visit="{ item }">
-      <InfoLawyerVisitTima />
+      <InfoLawyerVisitTima :sch="item.sch"/>
     </template>
   </UTabs>
 </template>

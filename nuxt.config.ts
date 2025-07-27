@@ -14,6 +14,7 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     "@pinia/nuxt",
     "@nuxtjs/leaflet",
+    "nuxt-rating",
   ],
   css: ["@/assets/css/main.css", "@/assets/Webfonts/fontiran.css"],
   ui: {

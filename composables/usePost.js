@@ -6,12 +6,13 @@ export async function usePost(url,token,body){
                 Authorization:token ? "Bearer "+token : ''
             },
             method:"POST",
-            body:body
+            body:JSON.stringify(body)
         })
         
         return{
             data:response.data.value,
             status: response.status.value || true,
+      statusCode: response.status.value ? response.status.value : 200,
         }
     }
     catch(error){

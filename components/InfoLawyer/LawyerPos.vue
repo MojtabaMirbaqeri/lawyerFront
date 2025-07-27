@@ -5,6 +5,7 @@
       :zoom="zoom"
       :center="pos"
       :use-global-leaflet="false"
+      class="z-[1]"
     >
       <LTileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

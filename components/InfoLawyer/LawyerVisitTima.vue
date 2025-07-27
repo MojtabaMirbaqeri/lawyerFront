@@ -1,5 +1,7 @@
 <script setup>
 
+const props = defineProps(['sch'])
+
 const weekDays = [
   "شنبه",
   "یکشنبه",
@@ -10,12 +12,12 @@ const weekDays = [
   "جمعه",
 ];
 
-const res = await useGet(`lawyer_schedules/grouped/${useRoute().params.id}`,true)
-const sch = await res.data;
+// const res = await useGet(`lawyer_schedules/grouped/${useRoute().params.id}`,true)
+// const sch = await res.data;
 
 
 // این داده‌ها مثلاً از API اومدن
-const scheduleData = sch
+const scheduleData = props.sch
 
 const items = ref([
   {

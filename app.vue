@@ -10,7 +10,7 @@
 <script setup>
 
 const jwtToken = useCookie("jwtToken");
-jwtToken.value = "3|3QrgsoERXk3sSCY2xDpNqu7819taDstpeKyLEN0N370280be";
+jwtToken.value = "9|G2ekpZdu3hYO4xFjyfbCBMH9JApDxp0yr5cM9pf0c0242e2b";
 
 // const { data } = await useGet("lawyers");
 // console.log(data);

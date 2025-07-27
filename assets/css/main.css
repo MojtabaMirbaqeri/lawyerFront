@@ -8,6 +8,10 @@
   --ui-content: #042f48;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 @theme {
   --color-gray: var(--ui-gray);
   --color-primary: var(--ui-primary);
@@ -71,3 +75,5 @@ body {
 .iconify {
   @apply size-4!;
 }
+
+

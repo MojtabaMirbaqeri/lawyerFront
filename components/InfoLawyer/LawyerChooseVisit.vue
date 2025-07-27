@@ -24,7 +24,7 @@
           <div class="price">{{ items[activeBtn - 1].price }}</div>
         </div>
         <UICSecondaryBtn
-          @click="navigateTo('/reserve/4')"
+          @click="navigateTo(`/reserve/4?${items.find((item) => item.id === activeBtn).value}`)"
           class="flex items-center justify-center"
           ><span class="text-center text-base"
             >ادامه فرآیند</span
@@ -41,18 +41,21 @@ const items = ref([
     id: "1",
     title: "مشاوره تلفنی",
     price: "360,000",
+    value:'phone',
     icon: "hugeicons:telephone",
   },
   {
     id: "2",
     title: "مشاوره حضوری",
     price: "400,000",
+    value:'inperson',
     icon: "hugeicons:building-06",
   },
   {
     id: "3",
     title: "چت",
     price: "250,000",
+    value:'chat',
     icon: "hugeicons:message-multiple-02",
   },
 ]);

@@ -55,7 +55,7 @@
             />
           </div>
           <div class="buttons flex gap-2">
-            <UICMainBtn>دیدگاه دیگران</UICMainBtn>
+            <UICMainBtn @click="navigateTo(`/lawyer/${$route.params.id}#comment`)">دیدگاه دیگران</UICMainBtn>
             <UICMainBtn @click="shareContent">اشتراک گذاری</UICMainBtn>
           </div>
         </div>
@@ -67,9 +67,20 @@
 <script setup>
 const show = ref(true);
 
+const props = defineProps([
+  "avatar",
+  "education",
+  "experience",
+  "visit",
+  "rate",
+  "city",
+  "active",
+  "fullname",
+]);
+
 const shareContent = async () => {
   const shareData = {
-    title: "عنوان مطلب",
+    title: `${props.fullname} ${props.education}`,
     text: "این یک مطلب جالب است!",
     url: window.location.href,
   };
@@ -85,16 +96,7 @@ const shareContent = async () => {
   }
 };
 
-defineProps([
-  "avatar",
-  "education",
-  "experience",
-  "visit",
-  "rate",
-  "city",
-  "active",
-  "fullname",
-]);
+
 </script>
 
 <style></style>
