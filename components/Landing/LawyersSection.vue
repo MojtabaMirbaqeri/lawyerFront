@@ -19,9 +19,9 @@
                 class="flex items-center justify-between py-2 px-2 rounded-lg bg-gray-100 border border-gray-200 transition-all duration-200 cursor-pointer"
                 :class="{
                   'bg-gray-200!  border-gray-400!':
-                    type.id == selectedLawyerType,
+                    type.id == filtersStore.selectedFilters.lawyerType,
                 }"
-                @click="selectedLawyerType = type.id"
+                @click="filtersStore.selectedFilters.lawyerType = type.id"
               >
                 {{ type.title }}
                 <UIcon name="proicons:chevron-left" class="ms-auto" />
@@ -30,11 +30,12 @@
           </template>
         </UICDrawer>
         <UICSelectButton
-          v-model="selectedLawyerType"
+          v-model="filtersStore.selectedFilters.lawyerType"
           :items="lawyerTypes.slice(0, 6)"
         />
       </div>
       <UICDrawer
+        v-model="filtersStore.drawerVisiblity"
         title="filters"
         description="filter laywers"
         class="overflow-y-auto!"
@@ -61,17 +62,56 @@
           :items="tabItems"
           class="sort-tabs"
         />
-        <div class="lawyers-con">
-          <NuxtLink v-for="i in 10" :key="i" to="/lawyer/5">
-            <LawyerCard />
+        <div ref="lawyersListRef" class="lawyers-con">
+          <NuxtLink
+            v-for="lawyer in lawyersRef.data"
+            :key="lawyer.id"
+            :to="`/lawyer/${lawyer.id}`"
+          >
+            <LawyerCard :lawyer-info="lawyer" />
           </NuxtLink>
         </div>
-        <UICPagination class="w-fit! mx-auto" />
+        <UICPagination
+          v-model="currentLawyersPage"
+          class="w-fit! mx-auto"
+          :total="lawyersRef.meta.total"
+          :page-size="lawyersRef.meta.per_page"
+        />
       </main>
     </div>
   </section>
 </template>
 <script setup>
+import { useFiltersStore } from "~/store/filters";
+const filtersStore = useFiltersStore();
+
+const { data: lawyers } = await useGet({
+  url: "lawyers",
+});
+const lawyersRef = ref(lawyers);
+const scrollToElement = useScrollToElement();
+
+const currentLawyersPage = ref(1);
+const lawyersListRef = ref(null);
+
+watch(currentLawyersPage, async (page) => {
+  lawyersRef.value = (
+    await useGet({
+      url: "lawyers",
+      query: {
+        page: page,
+        base_id: filtersStore.selectedFilters.lawyerType,
+      },
+    })
+  ).data;
+
+  nextTick(() => {
+    if (lawyersListRef.value) {
+      scrollToElement(lawyersListRef.value);
+    }
+  });
+});
+
 const tabItems = ref([
   {
     label: "پیش فرض",
@@ -89,18 +129,23 @@ const tabItems = ref([
 
 const selectedTab = ref(tabItems.value[0].value);
 
-const lawyerTypes = [
-  { title: "همه", id: "all" },
-  { title: "وکیل پایه یک دادگستری", id: "1" },
-  { title: "وکیل پایه دو دادگستری", id: "2" },
-  { title: "کارآموز وکالت", id: "3" },
-  { title: "وکیل تسخیری", id: "4" },
-  { title: "وکیل معاضدتی", id: "5" },
-  { title: "وکیل اتفاقی", id: "6" },
-  { title: "وکیل موضوع ماده 187", id: "7" },
-];
-
-const selectedLawyerType = ref(lawyerTypes[0].id);
+const lawyerTypes = filtersStore.lawyerTypes;
+watch(filtersStore.selectedFilters, async (filters) => {
+  console.log(filters);
+  lawyersRef.value = (
+    await useGet({
+      url: "lawyers",
+      query: {
+        page: currentLawyersPage.value,
+        base_id: filters.lawyerType,
+        specialty_id: filters.lawyerSpecialty,
+        gender: filters.gender,
+      },
+    })
+  ).data;
+  currentLawyersPage.value = 1;
+  scrollToElement(lawyersListRef.value);
+});
 </script>
 
 <style scoped>

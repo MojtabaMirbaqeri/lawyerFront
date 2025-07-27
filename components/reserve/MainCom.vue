@@ -55,7 +55,7 @@
         class="left sticky flex-col gap-3 top-[90px] lg:w-[350px] shrink-0 flex"
       >
         <UICProfileDetail
-          src="/images/avatar.png"
+          src="/images/null-avatar.png"
           fullname="محمد محمدی"
           skill="وکیل پایه یک دادگستری"
           :active-day="activeDay"

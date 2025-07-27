@@ -1,6 +1,6 @@
 <template>
   <UApp>
-    <NuxtLoadingIndicator :height="4"/>
+    <NuxtLoadingIndicator :height="4" />
     <NuxtLayout dir="rtl">
       <NuxtPage />
     </NuxtLayout>

@@ -28,7 +28,7 @@
 <script setup>
 import { twMerge } from "tailwind-merge";
 
-const modelValue = defineModel({ type: [String, Array] });
+const modelValue = defineModel({ type: [String, Array, Number] });
 
 const props = defineProps({
   items: {

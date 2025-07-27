@@ -20,9 +20,9 @@
         <div class="flex items-center gap-1">
           <slot name="badges" />
           <UICBadge
-            v-if="active"
-            value="فعال"
+            :value="active ? 'فعال' : 'غیرفعال'"
             icon="mynaui:clock-square-solid"
+            :variant="active ? 'blue' : 'gray'"
           />
         </div>
       </div>
