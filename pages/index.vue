@@ -1,7 +1,8 @@
 <template>
   <main>
-    <LandingHeader />
+    <LandingHeader @scroll-to-lawyers="scrollToLawyers()" />
     <UICBreadCrumb
+      ref="breadCrumbRef"
       :items="[
         {
           label: 'خانه',
@@ -17,3 +18,12 @@
     </div>
   </main>
 </template>
+<script setup>
+const breadCrumbRef = ref(null);
+const scrollToElement = useScrollToElement();
+
+const scrollToLawyers = () => {
+  scrollToElement(breadCrumbRef.value.$el);
+  console.log(breadCrumbRef.value.$el)
+};
+</script>

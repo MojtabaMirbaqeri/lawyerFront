@@ -1,5 +1,19 @@
 <template>
-  <div class="laywer-card primary-box">
+  <div
+    class="laywer-card primary-box"
+    :class="{
+      'border border-gray-200': isEmpty,
+    }"
+  >
+    <div v-if="isEmpty" class="overlay">
+      <div class="flex items-center gap-2">
+        <UIcon
+          name="hugeicons:information-diamond"
+          class="align-middle size-6!"
+        />
+        <h1 class="font-bold text-lg">وکیلی یافت نشد</h1>
+      </div>
+    </div>
     <LawyerProfile
       :avatar="lawyerInfo.profile_image || '/images/null-avatar.png'"
       :fullname="`${lawyerInfo.lawyer_info.name} ${lawyerInfo.lawyer_info.family}`"
@@ -25,18 +39,21 @@
     <div class="flex gap-2 flex-row justify-between items-center">
       <div class="flex gap-2">
         <UICBadge
+          v-if="lawyerInfo.lawyer_info.is_in_person_enabled"
           custom-class="font-semibold text-[11px] lg:text-xs"
           variant="gray"
           value="حضوری"
           icon="hugeicons:building-06"
         />
         <UICBadge
+          v-if="lawyerInfo.lawyer_info.is_phone_enabled"
           custom-class="font-semibold text-[11px] lg:text-xs"
           variant="gray"
           value="تلفنی"
           icon="hugeicons:telephone"
         />
         <UICBadge
+          v-if="lawyerInfo.lawyer_info.is_chat_enabled"
           custom-class="font-semibold text-[11px] lg:text-xs"
           variant="gray"
           value="چت"
@@ -51,11 +68,23 @@
   </div>
 </template>
 <script setup>
-const props = defineProps({ lawyerInfo: Object });
+defineProps({
+  lawyerInfo: {
+    type: Object,
+    required: true,
+  },
+  isEmpty: {
+    type: Boolean,
+    default: false,
+  },
+});
 </script>
 <style scoped>
 @reference "tailwindcss";
 .laywer-card {
-  @apply p-4 space-y-3;
+  @apply p-4 space-y-3  overflow-hidden relative;
+}
+.overlay {
+  @apply w-full h-full flex items-center justify-center absolute top-0 start-0 backdrop-blur-xs z-50 bg-white/30 text-black;
 }
 </style>

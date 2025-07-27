@@ -11,6 +11,7 @@
           <UICSelectButton
             v-model="filtersVal.visitType"
             :items="filtersItems.visitTypes"
+            :multiple="true"
           />
         </div>
       </div>

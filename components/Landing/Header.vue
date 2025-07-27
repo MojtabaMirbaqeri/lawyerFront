@@ -17,13 +17,13 @@
           }"
         >
           <template #trailing>
-            <div class="search-btn">
+            <div class="search-btn" @click="search">
               <UIcon name="hugeicons:search-02" class="size-5! text-white" />
             </div>
           </template>
           <template #leading>
             <USelectMenu
-              v-model="selectedProvince"
+              v-model="useFiltersStore().selectedFilters.city"
               class="h-full"
               :ui="{
                 base: 'font-semibold text-xs sm:text-sm rounded-full w-[120px] sm:w-[160px]',
@@ -49,15 +49,18 @@
         </div>
         <p class="text-sm">آخرین مشاوره دریافت شده در تخصص ثبت اسناد</p>
       </div>
-      <div class="p-2 cursor-pointer flex">
+      <div
+        class="p-2 cursor-pointer flex custom-bounce"
+        @click="$emit('scrollToLawyers')"
+      >
         <UIcon name="proicons:chevron-down" class="size-6!" />
       </div>
     </div>
   </header>
 </template>
 <script setup>
-const lawyerNameFilter = ref("");
-
+import { useFiltersStore } from "~/store/filters";
+defineEmits(["scrollToLawyers"]);
 const provinces = [
   {
     id: 1,
@@ -219,7 +222,12 @@ provinces.unshift({
   id: 0,
   name: "ایران",
 });
-const selectedProvince = ref(provinces[0]?.id);
+useFiltersStore().selectedFilters.city = provinces[0].id;
+
+const lawyerNameFilter = ref("");
+const search = () => {
+  useFiltersStore().selectedFilters.searchField = lawyerNameFilter.value;
+};
 </script>
 <style scoped>
 @reference "tailwindcss";
@@ -246,5 +254,18 @@ header {
 
 .latest-visit {
   @apply w-max mx-auto p-1 px-1.5 flex items-center gap-1.5 text-sm leading-3 rounded-full border border-dashed border-white;
+}
+
+@keyframes bounce-custom {
+  0%, 100% {
+    transform: translateY(-6px);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+.custom-bounce {
+  animation: bounce-custom 2s infinite;
 }
 </style>

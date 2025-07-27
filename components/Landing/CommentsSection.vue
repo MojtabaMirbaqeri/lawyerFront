@@ -15,12 +15,12 @@
 
       <ThingCarouselContent class="p-[1px]" style="direction: ltr !important">
         <ThingCarouselItem
-          v-for="(_, index) in 5"
-          :key="index"
+          v-for="comment in recentComments.data"
+          :key="comment.id"
           grab-cursor
           class="md:basis-1/2 lg:basis-1/3"
         >
-          <CommentBox />
+          <CommentBox :comment-detail="comment" />
         </ThingCarouselItem>
       </ThingCarouselContent>
 
@@ -44,6 +44,8 @@ const scrollPrev = () => {
 const scrollNext = () => {
   carouselRef.value?.scrollNext?.();
 };
+
+const { data: recentComments } = await useGet({ url: "reviews/recent" });
 </script>
 
 <style scoped>

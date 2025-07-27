@@ -2,7 +2,7 @@
     "id": 4,
     "name": "111",
     "family": "2222",
-    "phone": "09912374132",
+    "phone": "09900000000",
     "email": "te121q@gmail.com",
     "about": "تست درباره",
     "specialization": null,
@@ -10,7 +10,7 @@
     "consultation_price_inperson": "20000",
     "consultation_price_phone": "40000",
     "consultation_price_chat": "10000",
-    "education": "Dr",
+    "education": "لیسانس",
     "years_of_experience": null,
     "profile_image": null,
     "is_active": false,
@@ -18,8 +18,8 @@
     "updated_at": "2025-07-03T10:22:51.000000Z",
     "lawyer_info": {
         "id": 6,
-        "name": "عارف",
-        "family": "پورهاشمی",
+        "name": "وکیل",
+        "family": "وکلاییان",
         "profile_image": "profile_images/rvAcbBM1o58so2uAVntyU851oNrxCotcNaooa7Vv.jpg",
         "specialties": [
             "1",
@@ -35,9 +35,9 @@
             "5"
         ],
         "base": "1",
-        "national_code": "4420901322",
+        "national_code": "4420000000",
         "gender": "male",
-        "father_name": "رضا",
+        "father_name": "تست",
         "birth_date": "1404-04-05T00:00:00.000000Z",
         "birth_certificate_number": "1",
         "province_id": "31",
@@ -49,19 +49,25 @@
         "national_card_image": "national_card_images/crZQp8Wr8b2vlsUclwfdJXLWK3sxKaUdan2T5mHB.jpg",
         "created_at": "2025-06-28T10:16:30.000000Z",
         "updated_at": "2025-07-03T06:19:05.000000Z",
-        "education": "Dr",
-        "base_lawyer": {
-            "id": 1,
-            "title": "وکیل پایه یک دادگستری",
-            "created_at": "2025-06-25T08:39:08.000000Z",
-            "updated_at": "2025-07-02T08:57:13.000000Z"
+        "education": "لیسانس",
+        "is_in_person_enabled": true,
+        "is_chat_enabled": true,
+        "is_phone_enabled": true,
+        "city": {
+            "id": 1547,
+            "name": "یزد",
+            "shahr_type": "0",
+            "ostan": "31",
+            "shahrestan": "448",
+            "bakhsh": "1021",
+            "amar_code": "2105031562"
         }
     },
     "user": {
         "id": 2,
         "name": "111",
         "family": "2222",
-        "phone": "09912374132",
+        "phone": "09900000000",
         "email": "te121q@gmail.com",
         "email_verified_at": "2025-06-28T13:43:47.000000Z",
         "created_at": "2025-06-28T13:43:43.000000Z",
@@ -80,8 +86,8 @@
     "city": "یزد",
     "province": "یزد",
     "base": "وکیل پایه یک دادگستری",
-    "average_rating": "0.8000",
-    "review_count": 5,
+    "average_rating": "0.0000",
+    "review_count": 2,
     "latitude": "31.8900648",
     "longitude": "54.3441156"
 }
