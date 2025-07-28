@@ -31,7 +31,7 @@
         <UICBadge
           variant="yellow"
           icon-size="size-4! lg:size-5!"
-          :value="4.8"
+          :value="Number(lawyerInfo.average_rating).toFixed(1)"
           icon="ic:round-star"
         />
       </template>
