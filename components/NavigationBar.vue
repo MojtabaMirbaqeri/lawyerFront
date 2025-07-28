@@ -17,7 +17,7 @@
 <style scoped>
 @reference "tailwindcss";
 #navBar {
-  @apply sticky top-0 start-0 z-10 py-2;
+  @apply sticky top-0 start-0 z-[100] py-2;
   @apply w-full;
   @apply bg-white shadow-lg;
 }

@@ -13,13 +13,30 @@ export const useFiltersStore = defineStore("filters", {
       { title: "مرد", id: "male", icon: "custom:male" },
       { title: "زن", id: "female", icon: "custom:female" },
     ],
+    sortItems: [
+      {
+        label: "پیش فرض",
+        value: "default",
+      },
+      {
+        label: "بیشترین مراجعه",
+        value: "clients",
+      },
+      {
+        label: "بیشترین امتیاز",
+        value: "rating",
+      },
+    ],
     lawyerTypes: [],
     lawyerSpecialties: [],
     selectedFilters: {
-      visitType: null,
+      visitType: [],
       gender: null,
+      sortBy: null,
       lawyerType: null,
       lawyerSpecialty: null,
+      city: null,
+      searchField: null,
     },
   }),
 
@@ -36,9 +53,6 @@ export const useFiltersStore = defineStore("filters", {
         filters.visitType ?? this.selectedFilters.visitType;
 
       this.selectedFilters.gender = filters.gender ?? this.selectedFilters.gender;
-
-      this.selectedFilters.lawyerType =
-        filters.lawyerType ?? this.selectedFilters.lawyerType;
 
       this.selectedFilters.lawyerSpecialty =
         filters.lawyerSpecialty ?? this.selectedFilters.lawyerSpecialty;

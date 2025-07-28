@@ -9,8 +9,10 @@
           />
         </div>
         <div class="user-info">
-          <h3 class="user-name">عاطفه عباس نیا</h3>
-          <h5 class="text-sm text-gray">مشاوره تلفنی</h5>
+          <h5 class="text-sm text-gray">کاربر:</h5>
+          <h3 class="user-name">
+            {{ commentDetail.user.name }} {{ commentDetail.user.family }}
+          </h3>
         </div>
       </div>
       <div class="badge-group">
@@ -20,7 +22,7 @@
           :value="4.8"
           icon="ic:round-star"
         />
-        <UICBadge variant="gray" value="۳ روز پیش" />
+        <UICBadge variant="gray" :value="commentDetail.created_at_formatted" />
       </div>
     </div>
 
@@ -50,8 +52,11 @@
     <div class="comment-footer">
       <NuxtLink to="lawyer/4">
         <div class="lawyer-tag">
-          <NuxtImg src="/images/lawyerpic.png" class="lawyer-avatar" />
-          محمد امین زاده
+          <NuxtImg
+            :src="commentDetail.lawyer.profile_image || '/images/null-avatar.png'"
+            class="lawyer-avatar"
+          />
+          {{ commentDetail.lawyer.full_name }}
         </div>
       </NuxtLink>
     </div>
@@ -59,53 +64,12 @@
 </template>
 
 <script setup>
-const commentDetail = {
-  id: 1,
-  parent_id: null,
-  user_id: "2",
-  lawyer_id: "4",
-  rating: 4,
-  comment:
-    "بسیار راضی هستم از خدمات این وکیل؛ هم شرایط شخصی من را به دقت در نظر گرفتند و هم مدیریت رفتاری‌شان عالی بود. علاوه بر این، حتی خارج از برنامه درمان، همواره حمایت و راهنمایی‌های ارزشمندی دریافت کردم. ",
-  reply: null,
-  status: "approved",
-  is_approved: "1",
-  created_at: "2025-07-01T08:11:40.000000Z",
-  updated_at: "2025-07-01T08:11:40.000000Z",
-  deleted_at: null,
-  user: {
-    id: 2,
-    name: "111",
-    family: "2222",
-    phone: "09912374132",
-    email: "te121q@gmail.com",
-    email_verified_at: "2025-06-28T13:43:47.000000Z",
-    created_at: "2025-06-28T13:43:43.000000Z",
-    updated_at: "2025-06-30T10:52:26.000000Z",
-    kyc_verified_at: null,
+defineProps({
+  commentDetail: {
+    type: Object,
+    required: true,
   },
-  lawyer: {
-    id: 4,
-    user_id: "2",
-    slug: null,
-    email: "te121q@gmail.com",
-    phone: "09912374132",
-    linkedin: null,
-    instagram: null,
-    telegram: null,
-    is_active: false,
-    view_count: "0",
-    consultation_price_inperson: "20000",
-    consultation_price_phone: "40000",
-    consultation_price_chat: "10000",
-    created_at: "2025-06-28T10:16:30.000000Z",
-    updated_at: "2025-07-03T10:22:51.000000Z",
-    deleted_at: null,
-    lawyer_info_id: "6",
-    average_rating: "0.8000",
-    review_count: 5,
-  },
-};
+});
 </script>
 
 <style scoped>

@@ -1,4 +1,4 @@
-export function useScrollToElement(offset = 78) {
+export function useScrollToElement(offset = 68) {
   return (element) => {
     if (!element) return;
 

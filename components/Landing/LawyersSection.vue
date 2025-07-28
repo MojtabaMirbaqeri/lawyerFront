@@ -53,16 +53,16 @@
         <template #default><LandingFilters /></template>
       </UICDrawer>
     </div>
-    <div class="lg:flex gap-4 xl:gap-5 items-start">
+    <div ref="lawyersListRef" class="lg:flex gap-4 xl:gap-5 items-start">
       <LandingSidebar class="hidden lg:block sticky top-[90px]" />
       <main class="space-y-4 grow">
         <UICTabs
-          v-model="selectedTab"
+          v-model="filtersStore.selectedFilters.sortBy"
           :content="false"
           :items="tabItems"
           class="sort-tabs"
         />
-        <div ref="lawyersListRef" class="lawyers-con">
+        <div class="lawyers-con">
           <NuxtLink
             v-for="lawyer in lawyersRef.data"
             :key="lawyer.id"
@@ -70,6 +70,12 @@
           >
             <LawyerCard :lawyer-info="lawyer" />
           </NuxtLink>
+
+          <LawyerCard
+            v-if="lawyersRef.data == 0"
+            :lawyer-info="staticLawyerInfo"
+            :is-empty="true"
+          />
         </div>
         <UICPagination
           v-model="currentLawyersPage"
@@ -89,7 +95,7 @@ const { data: lawyers } = await useGet({
   url: "lawyers",
 });
 const lawyersRef = ref(lawyers);
-const scrollToElement = useScrollToElement();
+const scrollToElement = useScrollToElement(84);
 
 const currentLawyersPage = ref(1);
 const lawyersListRef = ref(null);
@@ -101,6 +107,12 @@ watch(currentLawyersPage, async (page) => {
       query: {
         page: page,
         base_id: filtersStore.selectedFilters.lawyerType,
+        specialty_id: filtersStore.selectedFilters.lawyerSpecialty,
+        gender: filtersStore.selectedFilters.gender,
+        sort: filtersStore.selectedFilters.sortBy,
+        "visit_types[]": filtersStore.selectedFilters.visitType,
+        city_id: filtersStore.selectedFilters.city,
+        name: filtersStore.selectedFilters.searchField,
       },
     })
   ).data;
@@ -112,22 +124,8 @@ watch(currentLawyersPage, async (page) => {
   });
 });
 
-const tabItems = ref([
-  {
-    label: "پیش فرض",
-    value: "default",
-  },
-  {
-    label: "بالاترین تجربه",
-    value: "experience",
-  },
-  {
-    label: "بیشترین امتیاز",
-    value: "score",
-  },
-]);
-
-const selectedTab = ref(tabItems.value[0].value);
+const tabItems = ref(filtersStore.sortItems);
+filtersStore.selectedFilters.sortBy = tabItems.value[0].value;
 
 const lawyerTypes = filtersStore.lawyerTypes;
 watch(filtersStore.selectedFilters, async (filters) => {
@@ -140,11 +138,20 @@ watch(filtersStore.selectedFilters, async (filters) => {
         base_id: filters.lawyerType,
         specialty_id: filters.lawyerSpecialty,
         gender: filters.gender,
+        sort: filters.sortBy,
+        "visit_types[]": filters.visitType,
+        city_id: filters.city,
+        name: filters.searchField,
       },
     })
   ).data;
   currentLawyersPage.value = 1;
   scrollToElement(lawyersListRef.value);
+});
+const staticLawyerInfo = ref(null);
+onMounted(async () => {
+  const res = await fetch("/lawyer-sample.json");
+  staticLawyerInfo.value = await res.json();
 });
 </script>
 
