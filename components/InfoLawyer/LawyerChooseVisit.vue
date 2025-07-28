@@ -24,7 +24,7 @@
           <div class="price">{{ items[activeBtn - 1].price }}</div>
         </div>
         <UICSecondaryBtn
-          @click="navigateTo(`/reserve/4?${items.find((item) => item.id === activeBtn).value}`)"
+          @click="navigateTo(`/reserve/4?visit_type=${items.find((item) => item.id === activeBtn).value}`)"
           class="flex items-center justify-center"
           ><span class="text-center text-base"
             >ادامه فرآیند</span

@@ -76,6 +76,7 @@
           :disabled="!checkBoxVal"
           :class="{ 'mix-blend-luminosity': !checkBoxVal }"
           class="rounded-[8px]! justify-center! w-full"
+          @click="$emit('subReserve')"
         >
           <span class="text-center text-base"> {{ selectDargah === "1" ? 'ثبت نوبت' : 'پرداخت'}} </span>
         </UICSecondaryBtn>
@@ -124,10 +125,11 @@ const state = reactive({
   code: undefined,
 });
 
-const toast = useToast();
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   console.log(event.data);
 }
+
+
 </script>
 
 <style scoped>

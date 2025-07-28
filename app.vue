@@ -13,5 +13,5 @@ const jwtToken = useCookie("jwtToken");
 jwtToken.value = "9|G2ekpZdu3hYO4xFjyfbCBMH9JApDxp0yr5cM9pf0c0242e2b";
 
 // const { data } = await useGet("lawyers");
-// console.log(data);
+// console.log(data)
 </script>

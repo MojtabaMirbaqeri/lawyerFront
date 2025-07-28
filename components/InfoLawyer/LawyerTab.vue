@@ -14,8 +14,7 @@
 <script setup>
 const props = defineProps(["dis", "pos"]);
 const res = await useGet(
-  `lawyer_schedules/grouped/${useRoute().params.id}`,
-  true
+  {url:`lawyer_schedules/grouped/${useRoute().params.id}`,includeAuthHeader:true},
 );
 const sch = await res.data;
 

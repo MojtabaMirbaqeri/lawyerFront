@@ -48,6 +48,7 @@
           <ReserveVisitInfo
             :defVisitTime="defVisitTime"
             :activeDay="activeDay"
+            :def-time="deftime"
           />
         </div>
       </div>
@@ -56,29 +57,58 @@
       >
         <UICProfileDetail
           src="/images/null-avatar.png"
-          fullname="محمد محمدی"
+          :fullname="`${lawyer.name} ${lawyer.family}`"
           skill="وکیل پایه یک دادگستری"
           :active-day="activeDay"
           paymentType="پرداخت حضوری"
           v-model="step"
         />
 
-        <ReserveSelectPay class="hidden lg:flex" v-if="step === 2" />
+        <ReserveSelectPay @subReserve="addReserve" class="hidden lg:flex" v-if="step === 2" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+const res = await useGet({url:`lawyers/${useRoute().params.id}`},"")
+const data = await res.data
+const lawyer = ref(data.data)
+
+const route = useRoute()
+
+const addReserve = async () => {
+  const body = {
+    lawyer_id : lawyer.value.id,
+    type:route.query.visit_type,
+    date:activeDay.value,
+    time:defVisitTime.value,
+    duration:deftime.value,
+    description:dismodel.value
+  }
+  const res = await usePost('appointments','9|G2ekpZdu3hYO4xFjyfbCBMH9JApDxp0yr5cM9pf0c0242e2b',body)
+  console.log(res);
+}
+
+
+const response = await useGet({url:`lawyers/${useRoute().params.id}/weekly-schedule`,query:{visit_type:route.query.visit_type}})
+const resData = await response.data
+const lawyerSchedules = resData.data.schedules
+// console.log(resData.data.schedules);
+ 
+
 const step = ref(1);
+
 
 const dismodel = ref("");
 // روزهای کاری وکیل به همراه ساعت شروع و پایان مخصوص هر روز
-const availableDays = {
-  0: { start: "10:00", end: "14:00" }, // شنبه
-  2: { start: "12:00", end: "16:00" }, // دوشنبه
-  4: { start: "13:00", end: "18:00" }, // چهارشنبه
-};
+const availableDays = lawyerSchedules.reduce((acc, item) => {
+  acc[+item.day_of_week] = {
+    start: item.start_time.slice(0, 5), // فقط HH:mm
+    end: item.end_time.slice(0, 5),
+  };
+  return acc;
+}, {});
 
 const defVisitTime = ref(null);
 
@@ -101,40 +131,23 @@ const selectedDate = ref(null);
 const holidayDates = ref([]);
 const dateButtons = ref([]);
 
-const bookingData = ref([
-  {
-    lawyer_id: 4,
-    type: "phone",
-    date: "2025-07-16",
-    time: "14:00:00",
-    duration: 60,
-    description: "سوال حقوقی درباره ارث",
-  },
-  {
-    lawyer_id: 4,
-    type: "phone",
-    date: "2025-07-19",
-    time: "12:00:00",
-    duration: 30,
-    description: "سوال حقوقی درباره ارث",
-  },
-  {
-    lawyer_id: 4,
-    type: "phone",
-    date: "2025-07-16",
-    time: "15:00:00",
-    duration: 90,
-    description: "سوال حقوقی درباره ارث",
-  },
-  {
-    lawyer_id: 4,
-    type: "phone",
-    date: "2025-07-19",
-    time: "13:00:00",
-    duration: 60,
-    description: "سوال حقوقی درباره ارث",
-  },
-]);
+const bookingData = ref([]);
+
+resData.data.weekly_data.forEach((day) => {
+  day.appointments.forEach((appointment) => {
+    bookingData.value.push({
+      lawyer_id: Number(resData.data.lawyer_id),
+      type: resData.data.visit_type,
+      date: day.date,
+      time: appointment.time,
+      duration: Number(appointment.duration),
+      description: appointment.description,
+    });
+  });
+});
+
+console.log(bookingData.value);
+
 
 function addTimeAndDuration(timeStr, durationMinutes) {
   const [h, m, s] = timeStr.split(":").map(Number);

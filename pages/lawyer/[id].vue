@@ -36,9 +36,10 @@
 </template>
 
 <script setup>
-const res = await useGet(`lawyers/${useRoute().params.id}`,"")
+const res = await useGet({url:`lawyers/${useRoute().params.id}`},"")
 const data = await res.data
 const lawyer = ref(data.data)
+
 
 onMounted(() => {
   console.log(lawyer.value.id);

@@ -9,31 +9,13 @@
             class="bg-primary/10! flex flex-col gap-3 p-3 border rounded-[8px] text-primary border-primary!"
           >
             <div class="tax flex justify-between">
-              <div class="title">مالیات و کارمزد خدمات آنلاین</div>
-              <div class="price">0 تومان</div>
-            </div>
-            <div class="tax flex justify-between">
               <div class="title">تخفیف</div>
               <div class="price">0 تومان</div>
             </div>
-            <div class="tax flex justify-between">
-              <div class="title">پرداخت از کیف پول</div>
-              <div class="price">0 تومان</div>
-            </div>
             <USeparator class="opacity-30" color="primary" />
-            <div class="tax flex justify-between">
-              <div class="title">پرداخت از کیف پول</div>
-              <div class="price">0 تومان</div>
-            </div>
-          </div>
-        </div>
-        <div class="bottom">
-          <div
-            class="price-visit rounded-[8px] border border-primary bg-primary/10! text-primary"
-          >
-            <div class="top border-b border-primary py-3 px-2">
+            <div class="top border-b border-primary/30 pb-2">
               <div class="tax flex justify-between">
-                <div class="title">مالیات و کارمزد خدمات آنلاین</div>
+                <div class="title">قیمت کل</div>
                 <div class="price">0 تومان</div>
               </div>
             </div>

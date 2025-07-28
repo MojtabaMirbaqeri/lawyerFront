@@ -4,7 +4,7 @@
       <div class="avatar max-w-[60px] mb-2">
         <img :src="src" alt="" />
       </div>
-      <div class="fullname font-semibold">{{ fullname }} جناب آقای</div>
+      <div class="fullname font-semibold">جناب آقای {{ fullname }}</div>
       <div class="skill opacity-60 text-xs">{{ skill }}</div>
     </div>
     <div class="bottom flex flex-col gap-3">

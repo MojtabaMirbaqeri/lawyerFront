@@ -7,8 +7,8 @@
         <div class="value">محمد طاها حاجی عبداللهی</div>
       </div>
       <div class="info-box flex justify-between">
-        <div class="title">نوع نوبت</div>
-        <div class="value">نوبت ویزیت در مطب</div>
+        <div class="title">مدت زمان جلسه</div>
+        <div class="value">{{ defTime }} دقیقه</div>
       </div>
       <div class="info-box flex justify-between">
         <div class="title">تاریخ نوبت</div>
@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-defineProps(['activeDay','defVisitTime'])
+defineProps(['activeDay','defVisitTime','defTime'])
 </script>
 
 <style>

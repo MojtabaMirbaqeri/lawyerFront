@@ -142,7 +142,7 @@
 <script setup>
 import { useUserAuthStore } from "~/store/userAuth";
 const props = defineProps(["lawyerFullName", "id"]);
-const res = await useGet(`lawyers/${useRoute().params.id}/reviews`);
+const res = await useGet({url:`lawyers/${useRoute().params.id}/reviews`});
 const data = await res.data;
 const lastPage = ref(data.data.last_page);
 
@@ -155,7 +155,7 @@ const comments = ref(data.data.data);
 const commentHandle = async () => {
   currentPageComment.value++;
   const res = await useGet(
-    `lawyers/${useRoute().params.id}/reviews?page=${currentPageComment.value}`
+   {url: `lawyers/${useRoute().params.id}/reviews?page=${currentPageComment.value}`}
   );
   const data = await res.data;
   const newCom = ref(data.data.data);
@@ -181,7 +181,7 @@ const subReply = async (comid) => {
     bodyComment
   );
   if (res.statusCode) {
-    const res = await useGet(`lawyers/${useRoute().params.id}/reviews`);
+    const res = await useGet({url:`lawyers/${useRoute().params.id}/reviews`});
     const data = await res.data;
     lastPage.value = data.data.last_page;
     comments.value = data.data.data;
@@ -204,7 +204,7 @@ const subComment = async () => {
     bodyComment
   );
   if (res.statusCode) {
-    const res = await useGet(`lawyers/${useRoute().params.id}/reviews`);
+    const res = await useGet({url:`lawyers/${useRoute().params.id}/reviews`});
     const data = await res.data;
     lastPage.value = data.data.last_page;
     comments.value = data.data.data;

@@ -12,6 +12,7 @@
       ]"
       :disabled="item.disabled || item.nonworking"
       @click="handleClick(item.id)"
+      type="button"
     >
       <UIcon
         v-if="item.icon"

@@ -3,7 +3,7 @@
     <div class="container">
       <UIcon name="heroicons:bars-3-solid" class="size-7! lg:hidden!" />
       <NuxtImg src="/images/logo.png" class="h-6 " />
-      <NuxtLink to="#" class="ms-auto">
+      <NuxtLink to="/register" class="ms-auto">
         <UButton
           color="secondary"
           class="text-secondary! gap-0.5 text-base"
