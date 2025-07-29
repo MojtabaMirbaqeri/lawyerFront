@@ -1,25 +1,41 @@
 <template>
   <button
     :disabled="disabled"
-    :class="{
-      'bg-gray-400! cursor-no-drop!': disabled,
-    }"
+    :class="[
+      baseClasses,
+      variantClasses,
+      { 'bg-gray-400! cursor-no-drop!': disabled },
+    ]"
   >
     <slot />
   </button>
 </template>
+
 <script setup>
-defineProps({
+const props = defineProps({
   disabled: {
     type: Boolean,
     default: false,
   },
+  variant: {
+    type: String,
+    default: "default",
+  },
+});
+
+const baseClasses =
+  "text-sm py-2 px-4 rounded-full cursor-pointer hover:opacity-80 transition duration-300 text-center flex items-center gap-1.5 justify-center";
+
+const variantClasses = computed(() => {
+  switch (props.variant) {
+    case "red":
+      return "bg-transparent! border border-red-500 text-red-500!";
+    default:
+      return "bg-blue-400 text-white";
+  }
 });
 </script>
-  <style scoped>
+
+<style scoped>
 @reference "tailwindcss";
-button {
-  @apply text-sm py-2 px-4 rounded-full bg-blue-400 text-white cursor-pointer hover:opacity-80 transition duration-300 text-center;
-  @apply flex items-center gap-1.5 justify-center;
-}
 </style>

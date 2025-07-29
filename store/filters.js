@@ -49,13 +49,12 @@ export const useFiltersStore = defineStore("filters", {
       this.lawyerSpecialties = specialties;
     },
     applyFilters(filters) {
-      this.selectedFilters.visitType =
-        filters.visitType ?? this.selectedFilters.visitType;
-
-      this.selectedFilters.gender = filters.gender ?? this.selectedFilters.gender;
-
-      this.selectedFilters.lawyerSpecialty =
-        filters.lawyerSpecialty ?? this.selectedFilters.lawyerSpecialty;
+      const keys = ["visitType", "gender", "lawyerSpecialty"];
+      keys.forEach((key) => {
+        if (filters[key] !== undefined) {
+          this.selectedFilters[key] = filters[key];
+        }
+      });
     },
   },
 });
