@@ -8,7 +8,7 @@
           color="secondary"
           class="text-secondary! gap-0.5 text-base"
           variant="outline"
-          >ورود<UIcon name="mage:login" class="size-5! rotate-180"
+          >ورود / ثبت نام<UIcon name="mage:login" class="size-5! rotate-180"
         /></UButton>
       </NuxtLink>
     </div>
