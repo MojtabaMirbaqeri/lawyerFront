@@ -21,7 +21,7 @@
               <UICMainBtn class="" @click="subComment"> ثبت نظر </UICMainBtn>
               <NuxtRating
                 :read-only="false"
-                :rating-value="5"
+                :rating-value="rate"
                 dir="ltr"
                 style="direction: ltr !important"
                 :rating-content="[
@@ -146,7 +146,7 @@ const res = await useGet({url:`lawyers/${useRoute().params.id}/reviews`});
 const data = await res.data;
 const lastPage = ref(data.data.last_page);
 
-const rate = ref(0);
+const rate = ref(5);
 
 const currentPageComment = ref(1);
 
