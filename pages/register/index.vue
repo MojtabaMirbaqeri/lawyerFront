@@ -1,34 +1,37 @@
 <template>
-  <div class="">
-    <NuxtLayout
-      name="register"
-      :state="state"
+  <div class="flex flex-col items-center gap-6 w-full">
+    <h1 class="sec-header">ورود / ثبت نام</h1>
+    <UICSelectButton
+      :items="items"
+      class="w-full! flex-nowrap! gap-0!"
+      :ui="{
+        base: 'rounded-[8px] first:rounded-e-none! last:rounded-s-none! w-full justify-center! items-center!',
+      }"
+      v-model="defType"
+    />
+
+    <UForm
       :schema="schema"
-      title="ورود / ثبت نام"
-      :onSubmit="onSubmit"
+      ref="formRef"
+      :state="state"
+      class="space-y-4 flex items-center gap-3 justify-between flex-col w-full"
+      @submit="onSubmit"
     >
-      <template #top-header>
-        <UICSelectButton
-          :items="items"
-          class="w-full! flex-nowrap! gap-0!"
-          :ui="{
-            base: 'rounded-[8px] first:rounded-e-none! last:rounded-s-none! w-full justify-center! items-center!',
-          }"
-          v-model="defType"
-        />
-      </template>
-  
-        <UICInput
-          v-model="state.phone"
-          name="phone"
-          label="لطفا شماره موبایل خود را وارد کنید"
-          @input="filterDigits"
-          maxlength="11"
-        />
-  
-  
-      <template #button-title> دریافت کد تایید </template>
-    </NuxtLayout>
+      <UICInput
+        v-model="state.phone"
+        name="phone"
+        label="لطفا شماره موبایل خود را وارد کنید"
+        @input="filterDigits"
+        maxlength="11"
+      />
+
+      <UICSecondaryBtn
+        class="w-full rounded-[8px]! justify-center h-[46px]"
+        type="submit"
+      >
+        دریافت کد تایید
+      </UICSecondaryBtn>
+    </UForm>
   </div>
 </template>
 
@@ -38,8 +41,8 @@ import type { InferType } from "yup";
 import type { FormSubmitEvent } from "@nuxt/ui";
 
 definePageMeta({
-  layout:false
-})
+  layout: "register",
+});
 
 const items = ref([
   {
@@ -51,6 +54,8 @@ const items = ref([
     title: "وکیل",
   },
 ]);
+
+const formRef = ref();
 
 const defType = ref("1");
 
@@ -66,7 +71,6 @@ const state = reactive({
   phone: undefined,
 });
 
-const valid = ref(false);
 
 async function filterDigits(e: Event) {
   const target = e.target as HTMLInputElement;
