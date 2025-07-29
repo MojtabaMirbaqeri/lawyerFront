@@ -1,7 +1,9 @@
 <template>
   <div class="relative">
     <NavigationBar />
-    <slot />
+    <div class="">
+      <slot />
+    </div>
     <Footer />
   </div>
 </template>

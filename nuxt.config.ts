@@ -7,6 +7,10 @@ export default defineNuxtConfig({
       apiEndpoint: process.env.API_EP,
     },
   },
+  app:{
+        pageTransition: { name: "page", mode: "out-in" },
+    layoutTransition: { name: "page", mode: "out-in" },
+  },
   modules: [
     "@nuxt/eslint",
     "@nuxt/icon",

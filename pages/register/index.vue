@@ -1,46 +1,45 @@
 <template>
-  <section class="px-2">
-    <div
-      class="primary-box p-6 mx-auto flex flex-col items-center gap-6 w-full"
-      :style="{ maxWidth: '450px' }"
+  <div class="">
+    <NuxtLayout
+      name="register"
+      :state="state"
+      :schema="schema"
+      title="ورود / ثبت نام"
+      :onSubmit="onSubmit"
     >
-      <h1 class="sec-header">ورود / ثبت نام</h1>
-      <UICSelectButton
-        :items="items"
-        class="w-full! flex-nowrap! gap-0!"
-        :ui="{
-          base: 'rounded-[8px] first:rounded-e-none! last:rounded-s-none! w-full justify-center! items-center!',
-        }"
-        v-model="defType"
-      />
-
-      <UForm
-        :schema="schema"
-        :state="state"
-        class="space-y-4 flex items-center gap-3 justify-between flex-col w-full"
-        @submit="onSubmit"
-      >
+      <template #top-header>
+        <UICSelectButton
+          :items="items"
+          class="w-full! flex-nowrap! gap-0!"
+          :ui="{
+            base: 'rounded-[8px] first:rounded-e-none! last:rounded-s-none! w-full justify-center! items-center!',
+          }"
+          v-model="defType"
+        />
+      </template>
+  
         <UICInput
           v-model="state.phone"
           name="phone"
           label="لطفا شماره موبایل خود را وارد کنید"
+          @input="filterDigits"
+          maxlength="11"
         />
-
-        <UICSecondaryBtn
-          class="w-full rounded-[8px]! justify-center h-[46px]"
-          type="submit"
-        >
-          دریافت کد تایید
-        </UICSecondaryBtn>
-      </UForm>
-    </div>
-  </section>
+  
+  
+      <template #button-title> دریافت کد تایید </template>
+    </NuxtLayout>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { object, string } from "yup";
 import type { InferType } from "yup";
 import type { FormSubmitEvent } from "@nuxt/ui";
+
+definePageMeta({
+  layout:false
+})
 
 const items = ref([
   {
@@ -55,22 +54,25 @@ const items = ref([
 
 const defType = ref("1");
 
-definePageMeta({
-  layout: "register",
-});
-
 const schema = object({
   phone: string()
-  .required("لطفا شماره موبایل را وارد کنید")
-  .max(11, "شماره موبایل باید 11 رقم باشد")
-  .min(11, "شماره موبایل باید 11 رقم باشد")
-  .matches(/^(\+98|0)?9\d{9}$/, "شماره موبایل معتبر نیست")
+    .required("لطفا شماره موبایل را وارد کنید")
+    .matches(/^(\+98|0)?9\d{9}$/, "شماره موبایل معتبر نیست")
+    .length(11, "شماره موبایل باید دقیقاً 11 رقم باشد"),
 });
 type Schema = InferType<typeof schema>;
 
 const state = reactive({
   phone: undefined,
 });
+
+const valid = ref(false);
+
+async function filterDigits(e: Event) {
+  const target = e.target as HTMLInputElement;
+  target.value = target.value.replace(/\D/g, ""); // حذف همه کاراکترهای غیراعدادی
+  state.phone = target.value.slice(0, 11); // به‌روزرسانی state همزمان
+}
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   console.log(event.data);
