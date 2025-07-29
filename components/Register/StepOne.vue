@@ -37,9 +37,6 @@ import { object, string } from "yup";
 import type { InferType } from "yup";
 import type { FormSubmitEvent } from "@nuxt/ui";
 
-definePageMeta({
-  layout: "register",
-});
 
 const items = ref([
   {

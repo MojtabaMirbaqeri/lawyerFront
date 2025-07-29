@@ -1,13 +1,20 @@
 <template>
-  <div class="flex flex-col items-center gap-6 w-full">
-    <RegisterStepOne/>
+  <div
+    class="flex flex-col items-center gap-6 w-full"
+  >
+    <RegisterStepOne v-if="registerStore.formStep == 1" />
+    <RegisterUserForm v-if="registerStore.formStep == 3" />
   </div>
 </template>
 
 <script setup >
+import { useRegisterStore } from "~/store/register";
+
+const registerStore = useRegisterStore();
+
 definePageMeta({
-  layout:'register'
-})
+  layout: "register",
+});
 </script>
 
 <style>
