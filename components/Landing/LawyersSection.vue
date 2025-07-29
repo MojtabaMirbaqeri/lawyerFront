@@ -71,11 +71,13 @@
             <LawyerCard :lawyer-info="lawyer" />
           </NuxtLink>
 
-          <LawyerCard
-            v-if="lawyersRef.data == 0"
-            :lawyer-info="staticLawyerInfo"
-            :is-empty="true"
-          />
+          <Transition name="fade">
+            <LawyerCard
+              v-if="lawyersRef.data == 0"
+              :lawyer-info="staticLawyerInfo"
+              :is-empty="true"
+            />
+          </Transition>
         </div>
         <UICPagination
           v-model="currentLawyersPage"
@@ -91,68 +93,55 @@
 import { useFiltersStore } from "~/store/filters";
 const filtersStore = useFiltersStore();
 
-const { data: lawyers } = await useGet({
-  url: "lawyers",
-});
-const lawyersRef = ref(lawyers);
-const scrollToElement = useScrollToElement(84);
-
+const lawyersRef = ref((await useGet({ url: "lawyers" })).data);
+const staticLawyerInfo = ref(null);
 const currentLawyersPage = ref(1);
 const lawyersListRef = ref(null);
-
-watch(currentLawyersPage, async (page) => {
-  lawyersRef.value = (
-    await useGet({
-      url: "lawyers",
-      query: {
-        page: page,
-        base_id: filtersStore.selectedFilters.lawyerType,
-        specialty_id: filtersStore.selectedFilters.lawyerSpecialty,
-        gender: filtersStore.selectedFilters.gender,
-        sort: filtersStore.selectedFilters.sortBy,
-        "visit_types[]": filtersStore.selectedFilters.visitType,
-        city_id: filtersStore.selectedFilters.city,
-        name: filtersStore.selectedFilters.searchField,
-      },
-    })
-  ).data;
-
-  nextTick(() => {
-    if (lawyersListRef.value) {
-      scrollToElement(lawyersListRef.value);
-    }
-  });
-});
-
 const tabItems = ref(filtersStore.sortItems);
 filtersStore.selectedFilters.sortBy = tabItems.value[0].value;
-
 const lawyerTypes = filtersStore.lawyerTypes;
-watch(filtersStore.selectedFilters, async (filters) => {
-  console.log(filters);
-  lawyersRef.value = (
-    await useGet({
-      url: "lawyers",
-      query: {
-        page: currentLawyersPage.value,
-        base_id: filters.lawyerType,
-        specialty_id: filters.lawyerSpecialty,
-        gender: filters.gender,
-        sort: filters.sortBy,
-        "visit_types[]": filters.visitType,
-        city_id: filters.city,
-        name: filters.searchField,
-      },
-    })
-  ).data;
-  currentLawyersPage.value = 1;
-  scrollToElement(lawyersListRef.value);
-});
-const staticLawyerInfo = ref(null);
+const scrollToElement = useScrollToElement(84);
+
+const skipNextPageWatch = ref(false);
+
 onMounted(async () => {
   const res = await fetch("/lawyer-sample.json");
   staticLawyerInfo.value = await res.json();
 });
+
+watch(currentLawyersPage, async () => {
+  if (skipNextPageWatch.value) {
+    skipNextPageWatch.value = false;
+    return;
+  }
+  await fetchLawyers();
+});
+
+watch(filtersStore.selectedFilters, async () => {
+  skipNextPageWatch.value = true;
+  currentLawyersPage.value = 1;
+  await fetchLawyers();
+});
+
+async function fetchLawyers() {
+  const { data } = await useGet({
+    url: "lawyers",
+    query: {
+      page: currentLawyersPage.value,
+      base_id: filtersStore.selectedFilters.lawyerType,
+      specialty_id: filtersStore.selectedFilters.lawyerSpecialty,
+      gender: filtersStore.selectedFilters.gender,
+      sort: filtersStore.selectedFilters.sortBy,
+      "visit_types[]": filtersStore.selectedFilters.visitType,
+      city_id: filtersStore.selectedFilters.city,
+      name: filtersStore.selectedFilters.searchField,
+    },
+  });
+  lawyersRef.value = data;
+  nextTick(() => {
+    if (lawyersListRef.value) scrollToElement(lawyersListRef.value);
+  });
+}
 </script>
 
 <style scoped>

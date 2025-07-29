@@ -71,27 +71,32 @@
 <script setup>
 import { useFiltersStore } from "~/store/filters";
 const filtersStore = useFiltersStore();
-const haveFiltersChanged = ref(false);
 
 const filtersItems = {
   visitTypes: filtersStore.visitTypes,
   genders: filtersStore.genders,
   specialties: filtersStore.lawyerSpecialties,
 };
+
 const filtersVal = reactive({
   visitType: filtersStore.selectedFilters.visitType,
   gender: filtersStore.selectedFilters.gender,
   lawyerSpecialty: filtersStore.selectedFilters.lawyerSpecialty,
 });
 
+const haveFiltersChanged = computed(() => {
+  return (
+    JSON.stringify(filtersVal.visitType) !==
+      JSON.stringify(filtersStore.selectedFilters.visitType) ||
+    filtersVal.gender !== filtersStore.selectedFilters.gender ||
+    filtersVal.lawyerSpecialty !== filtersStore.selectedFilters.lawyerSpecialty
+  );
+});
+
 const applyFilters = () => {
   filtersStore.applyFilters(filtersVal);
   filtersStore.drawerVisiblity = false;
 };
-
-watch(filtersVal, () => {
-  haveFiltersChanged.value = true;
-});
 </script>
 <style scoped>
 @reference "tailwindcss";
