@@ -42,7 +42,7 @@
         <USeparator />
         <div class="comments">
           <div
-            v-for="comment in comments"
+            v-for="comment in nestedComments"
             :key="comment.id"
             class="comment text-xs lg:text-sm p-4 flex flex-col gap-3 last:border-b-0 border-b border-[var(--ui-border)]"
           >
@@ -74,7 +74,7 @@
                 </template>
               </UICDrawer>
             </div>
-            <div v-if="!comment.reply" class="lawyer-input-comment">
+            <div v-if="!comment.has_replies" class="lawyer-input-comment">
               <div class="">
                 <UCollapsible class="flex flex-col gap-2 w-full">
                   <UButton
@@ -107,19 +107,21 @@
               </div>
             </div>
             <div
-              v-if="comment.reply"
+              v-if="comment.has_replies"
               class="lawyer-comment rounded-[8px] p-4 flex flex-col gap-3 bg-[#f4f5f7]"
             >
-              <div class="lawyer-info flex justify-between">
-                <div class="lawyer-username opacity-70">
-                  {{ props.lawyerFullName }}
+              <div class="" v-for="rep in comment.replies" :key="rep.id">
+                <div class="lawyer-info flex justify-between">
+                  <div class="lawyer-username opacity-70">
+                    {{ props.lawyerFullName }}
+                  </div>
+                  <div class="lawyer-com-date">
+                    {{ new Date(rep.created_at).toLocaleDateString("fa") }}
+                  </div>
                 </div>
-                <div class="lawyer-com-date">
-                  {{ new Date(comment.created_at).toLocaleDateString("fa") }}
+                <div class="lawyer-com-dis">
+                  {{ rep.comment }}
                 </div>
-              </div>
-              <div class="lawyer-com-dis">
-                {{ comment.reply }}
               </div>
             </div>
           </div>
@@ -140,26 +142,54 @@
 </template>
 
 <script setup>
-import { useUserAuthStore } from "~/store/userAuth";
 const props = defineProps(["lawyerFullName", "id"]);
-const res = await useGet({url:`lawyers/${useRoute().params.id}/reviews`});
+const res = await useGet({ url: `lawyers/${useRoute().params.id}/reviews` });
 const data = await res.data;
-const lastPage = ref(data.data.last_page);
+const lastPage = ref(data.meta.last_page);
 
 const rate = ref(5);
 
 const currentPageComment = ref(1);
 
-const comments = ref(data.data.data);
+const comments = ref(await data.data);
+const nestedComments = ref(
+  comments.value
+    .filter((c) => c.replied_to_review_id === null) // فقط کامنت‌های ریشه
+    .map((root) => {
+      const replies = comments.value.filter(
+        (reply) => Number(reply.replied_to_review_id) === root.id
+      );
+
+      return {
+        ...root, // تمام اطلاعات کامنت اصلی
+        replies: replies.map((r) => ({ ...r })), // تمام اطلاعات ریپلای‌ها
+      };
+    })
+);
+console.log(nestedComments.value);
 
 const commentHandle = async () => {
   currentPageComment.value++;
-  const res = await useGet(
-   {url: `lawyers/${useRoute().params.id}/reviews?page=${currentPageComment.value}`}
-  );
+  const res = await useGet({
+    url: `lawyers/${useRoute().params.id}/reviews?page=${
+      currentPageComment.value
+    }`,
+  });
   const data = await res.data;
-  const newCom = ref(data.data.data);
+  const newCom = ref(data.data);
   comments.value.push(...newCom.value);
+  nestedComments.value = comments.value
+    .filter((c) => c.replied_to_review_id === null) // فقط کامنت‌های ریشه
+    .map((root) => {
+      const replies = comments.value.filter(
+        (reply) => Number(reply.replied_to_review_id) === root.id
+      );
+
+      return {
+        ...root, // تمام اطلاعات کامنت اصلی
+        replies: replies.map((r) => ({ ...r })), // تمام اطلاعات ریپلای‌ها
+      };
+    });
   console.log(comments.value);
 };
 
@@ -175,18 +205,45 @@ const subReply = async (comid) => {
   const bodyComment = {
     comment: lawyerComment.value[comid],
   };
-  const res = await usePost(
-    `reviews/${comid}/reply`,
-    useUserAuthStore().userToken,
-    bodyComment
-  );
+
+  const res = await usePost({
+    url: `reviews/${comid}/reply`,
+    includeAuthHeader: true,
+    body: bodyComment,
+  });
+
   if (res.statusCode) {
-    const res = await useGet({url:`lawyers/${useRoute().params.id}/reviews`});
-    const data = await res.data;
-    lastPage.value = data.data.last_page;
-    comments.value = data.data.data;
+    const allComments = [];
+
+    // fetch all pages up to current
+    for (let page = 1; page <= currentPageComment.value; page++) {
+      const resPage = await useGet({
+        url: `lawyers/${useRoute().params.id}/reviews?page=${page}`,
+      });
+
+      const data = await resPage.data;
+      if (data && data.data) {
+        allComments.push(...data.data);
+        if (page === 1) lastPage.value = data.meta.last_page;
+      }
+    }
+
+    comments.value = allComments;
+
+    nestedComments.value = comments.value
+      .filter((c) => c.replied_to_review_id === null)
+      .map((root) => {
+        const replies = comments.value.filter(
+          (reply) => Number(reply.replied_to_review_id) === root.id
+        );
+        return {
+          ...root,
+          replies: replies.map((r) => ({ ...r })),
+        };
+      });
+
     lawyerComment.value[comid] = "";
-    alert('انجام شد')
+    alert("انجام شد");
   } else {
     alert("خطا");
   }
@@ -198,18 +255,21 @@ const subComment = async () => {
     rating: rate.value,
     comment: userComment.value,
   };
-  const res = await usePost(
-    "reviews",
-    useUserAuthStore().userToken,
-    bodyComment
-  );
+  const res = await usePost({
+    url: "reviews",
+    includeAuthHeader: true,
+    body: bodyComment,
+  });
   if (res.statusCode) {
-    const res = await useGet({url:`lawyers/${useRoute().params.id}/reviews`});
-    const data = await res.data;
-    lastPage.value = data.data.last_page;
-    comments.value = data.data.data;
-    userComment.value = "";
-    rate.value = 5;
+    // const res = await useGet({
+    //   url: `lawyers/${useRoute().params.id}/reviews`,
+    // });
+    // const data = await res.data;
+    // lastPage.value = data.meta.last_page;
+    // comments.value = data.data;
+    // userComment.value = "";
+    // rate.value = 5;
+    alert("ثبت شد");
   } else {
     alert("خطا");
   }
