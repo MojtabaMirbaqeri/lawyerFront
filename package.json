@@ -22,6 +22,7 @@
     "eslint": "^9.30.1",
     "leaflet.markercluster": "^1.5.3",
     "nuxt": "^3.17.6",
+    "nuxt-countdown": "^1.2.1",
     "nuxt-rating": "^0.1.6",
     "pinia": "^3.0.3",
     "tailwind-merge": "^3.3.1",

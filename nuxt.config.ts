@@ -19,6 +19,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxtjs/leaflet",
     "nuxt-rating",
+    'nuxt-countdown'
   ],
   css: ["@/assets/css/main.css", "@/assets/Webfonts/fontiran.css"],
   ui: {

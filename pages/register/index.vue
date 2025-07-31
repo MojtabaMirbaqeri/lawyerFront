@@ -3,6 +3,7 @@
     class="flex flex-col items-center gap-6 w-full"
   >
     <RegisterStepOne v-if="registerStore.formStep == 1" />
+    <RegisterOtpCode v-if="registerStore.formStep == 2"/>
     <RegisterUserForm v-if="registerStore.formStep == 3" />
   </div>
 </template>
