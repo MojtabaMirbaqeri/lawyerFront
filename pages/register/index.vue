@@ -1,9 +1,10 @@
 <template>
   <div class="steps-con flex flex-col items-center gap-6 w-full">
     <RegisterStepOne v-if="registerStore.formStep == 1" />
+    <RegisterOtpCode v-else-if="registerStore.formStep == 2" />
     <RegisterInformationForm v-else-if="registerStore.formStep == 3" />
     <RegisterLawyerForm v-else-if="registerStore.formStep == 4" />
-    <RegisterFinish v-else-if="registerStore.formStep == 6" />
+    <RegisterFinish v-else-if="registerStore.formStep == 5" />
   </div>
 </template>
 

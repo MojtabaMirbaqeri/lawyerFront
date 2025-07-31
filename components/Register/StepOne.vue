@@ -36,22 +36,24 @@
 import { object, string } from "yup";
 import type { InferType } from "yup";
 import type { FormSubmitEvent } from "@nuxt/ui";
+import { useRegisterStore } from "~/store/register";
 
+const registerStore = useRegisterStore();
 
 const items = ref([
   {
-    id: "1",
+    id: "user",
     title: "کاربر",
   },
   {
-    id: "2",
+    id: "lawyer",
     title: "وکیل",
   },
 ]);
 
 const formRef = ref();
 
-const defType = ref("1");
+const defType = ref("user");
 
 const schema = object({
   phone: string()
@@ -72,7 +74,18 @@ async function filterDigits(e: Event) {
 }
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  console.log(event.data);
+  const res = await usePost({url:'auth/send-code',body:{phone:event.data.phone}})
+  console.log(res.status);
+  
+  if(res.statusCode === 200){
+    registerStore.userInformation.phone = event.data.phone
+    registerStore.userInformation.type = defType.value
+    registerStore.nextStep();
+  }
+  else{
+    console.log(res.error);
+    alert('خطا')
+  }
 }
 </script>
 

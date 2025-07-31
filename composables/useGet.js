@@ -6,7 +6,7 @@ export async function useGet(
   }
 ) {
   const config = useRuntimeConfig();
-  const jwtToken = useCookie("jwtToken");
+  const jwtToken = useCookie("jwtToken");  
 
   const headers = {
     ...(request.includeAuthHeader && jwtToken.value

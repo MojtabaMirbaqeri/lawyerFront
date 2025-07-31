@@ -71,6 +71,8 @@
 </template>
 
 <script setup>
+import { useUserAuthStore } from '~/store/userAuth'
+
 const res = await useGet({url:`lawyers/${useRoute().params.id}`},"")
 const data = await res.data
 const lawyer = ref(data.data)
@@ -83,10 +85,10 @@ const addReserve = async () => {
     type:route.query.visit_type,
     date:activeDay.value,
     time:defVisitTime.value,
-    duration:deftime.value,
+    duration:+deftime.value,
     description:dismodel.value
   }
-  const res = await usePost('appointments','9|G2ekpZdu3hYO4xFjyfbCBMH9JApDxp0yr5cM9pf0c0242e2b',body)
+  const res = await usePost('appointments',useUserAuthStore().userToken,body)
   console.log(res);
 }
 

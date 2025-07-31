@@ -11,7 +11,7 @@
 import { useFiltersStore } from "./store/filters";
 
 const jwtToken = useCookie("jwtToken");
-jwtToken.value = "9|G2ekpZdu3hYO4xFjyfbCBMH9JApDxp0yr5cM9pf0c0242e2b";
+jwtToken.value = "46|8b26u5jtAKJKjKS3iawBBs8SuRCsTYUaGxiVsv1Bc8ef5204";
 
 const filtersStore = useFiltersStore();
 
