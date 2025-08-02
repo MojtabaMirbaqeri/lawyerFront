@@ -1,36 +1,36 @@
-export async function usePost(request = { url: '', includeAuthHeader: false, body: {} }) {
-    const endPoint = useRuntimeConfig().public.apiEndpoint
-    const jwtToken = useCookie("jwtToken");
+export async function usePost(request = { url: "", includeAuthHeader: false, body: {} }) {
+  const endPoint = useRuntimeConfig().public.apiEndpoint;
+  const jwtToken = useCookie("jwtToken");
 
-    console.log(request.url);
-    
+  const isFormData = typeof FormData !== "undefined" && request.body instanceof FormData;
 
-    const headers = {
-        ...(request.includeAuthHeader && jwtToken.value
-            ? { Authorization: `Bearer ${jwtToken.value}` }
-            : {}),
+  const headers = {
+    ...(request.includeAuthHeader && jwtToken.value
+      ? { Authorization: `Bearer ${jwtToken.value}` }
+      : {}),
+    ...(!isFormData ? { "Content-Type": "application/json" } : {}),
+  };
+
+  try {
+    const response = await $fetch(endPoint + request.url, {
+      method: "POST",
+      headers,
+      body: isFormData ? request.body : JSON.stringify(request.body),
+    });
+
+    return {
+      data: response.data?.value ?? response,
+      status: response.status?.value || true,
+      statusCode: response.status?.value || 200,
+      pending: false,
     };
-    try {
-        const response = await $fetch(endPoint + request.url, {
-            headers,
-            method: "POST",
-            body: JSON.stringify(request.body)
-        })
-
-        return {
-            data: response.data.value,
-            status: response.status.value || true,
-            statusCode: response.status.value ? response.status.value : 200,
-            pending: false
-        }
-    }
-    catch (error) {
-        return {
-            status: false,
-            pending: false,
-            statusCode: error?.response?.status || 500,
-            data: null,
-            error: error.message || "An unknown error occurred",
-        }
-    }
+  } catch (error) {
+    return {
+      status: false,
+      pending: false,
+      statusCode: error?.response?.status || 500,
+      data: null,
+      error: error.message || "An unknown error occurred",
+    };
+  }
 }

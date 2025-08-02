@@ -140,9 +140,8 @@
 </template>
 
 <script setup>
-import { useUserAuthStore } from "~/store/userAuth";
 const props = defineProps(["lawyerFullName", "id"]);
-const res = await useGet({url:`lawyers/${useRoute().params.id}/reviews`});
+const res = await useGet({ url: `lawyers/${useRoute().params.id}/reviews` });
 const data = await res.data;
 const lastPage = ref(data.data.last_page);
 
@@ -154,9 +153,11 @@ const comments = ref(data.data.data);
 
 const commentHandle = async () => {
   currentPageComment.value++;
-  const res = await useGet(
-   {url: `lawyers/${useRoute().params.id}/reviews?page=${currentPageComment.value}`}
-  );
+  const res = await useGet({
+    url: `lawyers/${useRoute().params.id}/reviews?page=${
+      currentPageComment.value
+    }`,
+  });
   const data = await res.data;
   const newCom = ref(data.data.data);
   comments.value.push(...newCom.value);
@@ -177,16 +178,18 @@ const subReply = async (comid) => {
   };
   const res = await usePost(
     `reviews/${comid}/reply`,
-    useUserAuthStore().userToken,
+    useAuthStore().userToken,
     bodyComment
   );
   if (res.statusCode) {
-    const res = await useGet({url:`lawyers/${useRoute().params.id}/reviews`});
+    const res = await useGet({
+      url: `lawyers/${useRoute().params.id}/reviews`,
+    });
     const data = await res.data;
     lastPage.value = data.data.last_page;
     comments.value = data.data.data;
     lawyerComment.value[comid] = "";
-    alert('انجام شد')
+    alert("انجام شد");
   } else {
     alert("خطا");
   }
@@ -198,13 +201,11 @@ const subComment = async () => {
     rating: rate.value,
     comment: userComment.value,
   };
-  const res = await usePost(
-    "reviews",
-    useUserAuthStore().userToken,
-    bodyComment
-  );
+  const res = await usePost("reviews", useAuthStore().userToken, bodyComment);
   if (res.statusCode) {
-    const res = await useGet({url:`lawyers/${useRoute().params.id}/reviews`});
+    const res = await useGet({
+      url: `lawyers/${useRoute().params.id}/reviews`,
+    });
     const data = await res.data;
     lastPage.value = data.data.last_page;
     comments.value = data.data.data;

@@ -69,7 +69,6 @@
   </div>
 </template>
 <script setup>
-import { useFiltersStore } from "~/store/filters";
 const filtersStore = useFiltersStore();
 
 const filtersItems = {

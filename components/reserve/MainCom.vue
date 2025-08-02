@@ -64,43 +64,45 @@
           v-model="step"
         />
 
-        <ReserveSelectPay @subReserve="addReserve" class="hidden lg:flex" v-if="step === 2" />
+        <ReserveSelectPay
+          @subReserve="addReserve"
+          class="hidden lg:flex"
+          v-if="step === 2"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { useUserAuthStore } from '~/store/userAuth'
+const res = await useGet({ url: `lawyers/${useRoute().params.id}` }, "");
+const data = await res.data;
+const lawyer = ref(data.data);
 
-const res = await useGet({url:`lawyers/${useRoute().params.id}`},"")
-const data = await res.data
-const lawyer = ref(data.data)
-
-const route = useRoute()
+const route = useRoute();
 
 const addReserve = async () => {
   const body = {
-    lawyer_id : lawyer.value.id,
-    type:route.query.visit_type,
-    date:activeDay.value,
-    time:defVisitTime.value,
-    duration:+deftime.value,
-    description:dismodel.value
-  }
-  const res = await usePost('appointments',useUserAuthStore().userToken,body)
+    lawyer_id: lawyer.value.id,
+    type: route.query.visit_type,
+    date: activeDay.value,
+    time: defVisitTime.value,
+    duration: +deftime.value,
+    description: dismodel.value,
+  };
+  const res = await usePost("appointments", useAuthStore().userToken, body);
   console.log(res);
-}
+};
 
-
-const response = await useGet({url:`lawyers/${useRoute().params.id}/weekly-schedule`,query:{visit_type:route.query.visit_type}})
-const resData = await response.data
-const lawyerSchedules = resData.data.schedules
+const response = await useGet({
+  url: `lawyers/${useRoute().params.id}/weekly-schedule`,
+  query: { visit_type: route.query.visit_type },
+});
+const resData = await response.data;
+const lawyerSchedules = resData.data.schedules;
 // console.log(resData.data.schedules);
- 
 
 const step = ref(1);
-
 
 const dismodel = ref("");
 // روزهای کاری وکیل به همراه ساعت شروع و پایان مخصوص هر روز
@@ -149,7 +151,6 @@ resData.data.weekly_data.forEach((day) => {
 });
 
 console.log(bookingData.value);
-
 
 function addTimeAndDuration(timeStr, durationMinutes) {
   const [h, m, s] = timeStr.split(":").map(Number);

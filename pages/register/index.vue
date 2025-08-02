@@ -9,12 +9,12 @@
 </template>
 
 <script setup >
-import { useRegisterStore } from "~/store/register";
 
 const registerStore = useRegisterStore();
 
 definePageMeta({
   layout: "register",
+  middleware: ["reset-register-store"],
 });
 </script>
 

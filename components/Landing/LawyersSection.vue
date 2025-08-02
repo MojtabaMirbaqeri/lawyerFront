@@ -90,7 +90,6 @@
   </section>
 </template>
 <script setup>
-import { useFiltersStore } from "~/store/filters";
 const filtersStore = useFiltersStore();
 
 const lawyersRef = ref((await useGet({ url: "lawyers" })).data);
