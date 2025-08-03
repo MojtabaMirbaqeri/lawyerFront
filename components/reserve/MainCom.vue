@@ -75,8 +75,6 @@
 </template>
 
 <script setup>
-import { useUserAuthStore } from "~/stores/userAuth";
-
 const res = await useGet({ url: `lawyers/${useRoute().params.id}` }, "");
 const data = await res.data;
 const lawyer = ref(data.data);
@@ -92,43 +90,7 @@ const addReserve = async () => {
     duration: +deftime.value,
     description: dismodel.value,
   };
-  const res = await usePost({
-    url: "appointments",
-    includeAuthHeader: true,
-    body: body,
-  });
-  console.log(res.statusCode);
-
-  if (res.statusCode === 200) {
-    alert("sabt");
-    const response = await useGet({
-      url: `lawyers/${useRoute().params.id}/weekly-schedule`,
-      query: { visit_type: route.query.visit_type },
-    });
-    const resData = await response.data;
-    resData.data.weekly_data.forEach((day) => {
-      day.appointments.forEach((appointment) => {
-        bookingData.value.push({
-          lawyer_id: Number(resData.data.lawyer_id),
-          type: resData.data.visit_type,
-          date: day.date,
-          time: appointment.time,
-          duration: Number(appointment.duration),
-          description: appointment.description,
-        });
-      });
-    });
-
-    bookings.value = bookingData.value.map((b) => {
-      return {
-        date: b.date,
-        start: toMinutes(b.time),
-        end: toMinutes(addTimeAndDuration(b.time, b.duration)),
-      };
-    });
-  } else {
-    alert("khata");
-  }
+  const res = await usePost("appointments", useAuthStore().userToken, body);
   console.log(res);
 };
 

@@ -59,7 +59,6 @@
   </header>
 </template>
 <script setup>
-import { useFiltersStore } from "~/stores/filters";
 defineEmits(["scrollToLawyers"]);
 const provinces = [
   {

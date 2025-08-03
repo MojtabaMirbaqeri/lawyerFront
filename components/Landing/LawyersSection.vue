@@ -90,7 +90,6 @@
   </section>
 </template>
 <script setup>
-import { useFiltersStore } from "~/stores/filters";
 const filtersStore = useFiltersStore();
 
 const props = defineProps(['link','titlebtn'])

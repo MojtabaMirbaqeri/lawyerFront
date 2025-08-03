@@ -24,7 +24,7 @@ const props = defineProps({
 });
 
 const baseClasses =
-  "text-sm py-2 px-4 rounded-full cursor-pointer hover:opacity-80 transition duration-300 text-center flex items-center gap-1.5 justify-center";
+  "secondary-btn text-sm py-2 px-4 rounded-full cursor-pointer hover:opacity-80 transition duration-300 text-center flex items-center gap-1.5 justify-center";
 
 const variantClasses = computed(() => {
   switch (props.variant) {

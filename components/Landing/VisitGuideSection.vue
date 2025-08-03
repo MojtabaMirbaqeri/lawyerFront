@@ -47,7 +47,6 @@
   </section>
 </template>
 <script setup>
-import { useFiltersStore } from "~/stores/filters";
 
 const { visitTypes } = useFiltersStore();
 

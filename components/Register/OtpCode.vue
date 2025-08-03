@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { useRegisterStore } from "~/stores/register";
+import { useRegisterStore } from "~/store/register";
 
 const endTime = ref(localStorage.getItem("timer"));
 const counting = ref(true);
@@ -121,14 +121,48 @@ const otpHandle = async () => {
       },
     });
     if (res.statusCode === 200) {
+      if (res.data.data.needs_registration) {
+        registerStore.nextStep();
+        return;
+      }
+      console.log(res);
+//      {
+//     "data": {
+//         "status": 200,
+//         "data": {
+//             "success": true,
+//             "message": "ورود موفقیت‌آمیز بود",
+//             "token": "54|ZA7mdQsWTQLnOXMXKYW4GGPekfcOMkrbNp7byXVd5cde7a28",
+//             "user": {
+//                 "id": 117,
+//                 "name": "کاربر",
+//                 "family": "سیستم",
+//                 "phone": "09140903685",
+//                 "email": "09140903685@temp.com",
+//                 "roles": [
+//                     {
+//                         "id": 3,
+//                         "name": "کاربر",
+//                         "slug": "user"
+//                     }
+//                 ],
+//                 "user_type": "user"
+//             }
+//         },
+//         "message": "ورود موفقیت‌آمیز بود"
+//     },
+//     "status": true,
+//     "statusCode": 200,
+//     "pending": false
+// }
       registerStore.userInformation.code = otpVal.value.join("");
       alert("hhh");
       registerStore.nextStep();
-      otpVal.value = "";
+      otpVal.value = ''
     } else {
-      alert("bbb");
+      alert("code is not valid");
+      otpVal.value = "";
     }
-    return;
   }
   // console.log(registerStore.userInformation);
 };
