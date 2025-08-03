@@ -61,7 +61,7 @@
         />
       </div>
       <div class="flex items-center gap-0.5 text-primary">
-        رزرو مشاوره
+        {{ titlebtn }}
         <UIcon name="proicons:chevron-left" />
       </div>
     </div>
@@ -77,6 +77,9 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  titlebtn:{
+    type : String,
+  }
 });
 </script>
 <style scoped>

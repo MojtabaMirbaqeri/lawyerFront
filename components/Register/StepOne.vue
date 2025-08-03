@@ -36,7 +36,7 @@
 import { object, string } from "yup";
 import type { InferType } from "yup";
 import type { FormSubmitEvent } from "@nuxt/ui";
-import { useRegisterStore } from "~/store/register";
+import { useRegisterStore } from "~/stores/register";
 
 const registerStore = useRegisterStore();
 
@@ -74,17 +74,19 @@ async function filterDigits(e: Event) {
 }
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  const res = await usePost({url:'auth/send-code',body:{phone:event.data.phone}})
+  const res = await usePost({
+    url: "auth/send-code",
+    body: { phone: event.data.phone },
+  });
   console.log(res.status);
-  
-  if(res.statusCode === 200){
-    registerStore.userInformation.phone = event.data.phone
-    registerStore.userInformation.type = defType.value
+
+  if (res.statusCode === 200) {
+    registerStore.userInformation.phone = event.data.phone;
+    registerStore.userInformation.type = defType.value;
     registerStore.nextStep();
-  }
-  else{
+  } else {
     console.log(res.error);
-    alert('خطا')
+    alert("خطا");
   }
 }
 </script>

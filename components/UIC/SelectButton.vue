@@ -6,10 +6,10 @@
       class="flex items-center gap-1"
       :class="
         twMerge(
-          mergedUi.base,
-          isSelected(item.id) && mergedUi.active,
-          item.disabled && mergedUi.disabled,
-          item.nonworking && mergedUi.nonworking
+          mergedThing.base,
+          isSelected(item.id) && mergedThing.active,
+          item.disabled && mergedThing.disabled,
+          item.nonworking && mergedThing.nonworking
         )
       "
       :disabled="item.disabled || item.nonworking"
@@ -18,7 +18,7 @@
       <UIcon
         v-if="item.icon"
         :name="item.icon"
-        :class="[mergedUi.icon, item.iconClass]"
+        :class="[mergedThing.icon, item.iconClass]"
       />
       {{ item.title }}
     </button>
@@ -46,7 +46,7 @@ const props = defineProps({
 });
 
 // پیش‌فرض‌ها
-const defaultUi = {
+const defaultThing = {
   base: "px-4 py-2 rounded-full border border-gray-300 text-sm lg:text-base transition cursor-pointer",
   active: "bg-primary! border-transparent! text-white!",
   disabled:
@@ -56,12 +56,12 @@ const defaultUi = {
 };
 
 // مرج با props.ui
-const mergedUi = {
-  base: twMerge(defaultUi.base, props.ui.base),
-  active: twMerge(defaultUi.active, props.ui.active),
-  disabled: twMerge(defaultUi.disabled, props.ui.disabled),
-  nonworking: twMerge(defaultUi.nonworking, props.ui.nonworking),
-  icon: twMerge(defaultUi.icon, props.ui.icon),
+const mergedThing = {
+  base: twMerge(defaultThing.base, props.ui.base),
+  active: twMerge(defaultThing.active, props.ui.active),
+  disabled: twMerge(defaultThing.disabled, props.ui.disabled),
+  nonworking: twMerge(defaultThing.nonworking, props.ui.nonworking),
+  icon: twMerge(defaultThing.icon, props.ui.icon),
 };
 
 const isSelected = (id) => {

@@ -1,15 +1,13 @@
 <template>
-  <div
-    class="flex flex-col items-center gap-6 w-full"
-  >
+  <div class="flex flex-col items-center gap-6 w-full">
     <RegisterStepOne v-if="registerStore.formStep == 1" />
-    <RegisterOtpCode v-if="registerStore.formStep == 2"/>
+    <RegisterOtpCode v-if="registerStore.formStep == 2" />
     <RegisterUserForm v-if="registerStore.formStep == 3" />
   </div>
 </template>
 
 <script setup >
-import { useRegisterStore } from "~/store/register";
+import { useRegisterStore } from "~/stores/register";
 
 const registerStore = useRegisterStore();
 

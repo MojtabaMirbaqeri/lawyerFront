@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-import { useUserAuthStore } from "~/store/userAuth";
+import { useUserAuthStore } from "~/stores/userAuth";
 
 const res = await useGet({ url: `lawyers/${useRoute().params.id}` }, "");
 const data = await res.data;

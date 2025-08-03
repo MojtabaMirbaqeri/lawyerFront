@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { useRegisterStore } from "~/store/register";
+import { useRegisterStore } from "~/stores/register";
 
 const endTime = ref(localStorage.getItem("timer"));
 const counting = ref(true);
@@ -97,7 +97,7 @@ const timerStartHandle = async () => {
     console.log(res.status);
 
     if (res.statusCode === 200) {
-      alert('send code')
+      alert("send code");
     } else {
       console.log(res.error);
       alert("خطا");
@@ -124,7 +124,7 @@ const otpHandle = async () => {
       registerStore.userInformation.code = otpVal.value.join("");
       alert("hhh");
       registerStore.nextStep();
-      otpVal.value = ''
+      otpVal.value = "";
     } else {
       alert("bbb");
     }

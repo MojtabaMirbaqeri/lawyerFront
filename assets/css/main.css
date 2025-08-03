@@ -39,6 +39,10 @@ html {
   .paragraph {
     @apply text-xs lg:text-sm;
   }
+
+  .ds-container{
+    @apply max-w-[1200px] mx-auto py-5 px-4
+  }
 }
 
 @utility container {

@@ -42,7 +42,7 @@
         <USeparator />
         <div class="comments">
           <div
-            v-for="comment in nestedComments"
+            v-for="comment in comments"
             :key="comment.id"
             class="comment text-xs lg:text-sm p-4 flex flex-col gap-3 last:border-b-0 border-b border-[var(--ui-border)]"
           >
@@ -152,21 +152,21 @@ const rate = ref(5);
 const currentPageComment = ref(1);
 
 const comments = ref(await data.data);
-const nestedComments = ref(
-  comments.value
-    .filter((c) => c.replied_to_review_id === null) // فقط کامنت‌های ریشه
-    .map((root) => {
-      const replies = comments.value.filter(
-        (reply) => Number(reply.replied_to_review_id) === root.id
-      );
+// const nestedComments = ref(
+//   comments.value
+//     .filter((c) => c.replied_to_review_id === null) // فقط کامنت‌های ریشه
+//     .map((root) => {
+//       const replies = comments.value.filter(
+//         (reply) => Number(reply.replied_to_review_id) === root.id
+//       );
 
-      return {
-        ...root, // تمام اطلاعات کامنت اصلی
-        replies: replies.map((r) => ({ ...r })), // تمام اطلاعات ریپلای‌ها
-      };
-    })
-);
-console.log(nestedComments.value);
+//       return {
+//         ...root, // تمام اطلاعات کامنت اصلی
+//         replies: replies.map((r) => ({ ...r })), // تمام اطلاعات ریپلای‌ها
+//       };
+//     })
+// );
+// console.log(nestedComments.value);
 
 const commentHandle = async () => {
   currentPageComment.value++;
@@ -230,17 +230,17 @@ const subReply = async (comid) => {
 
     comments.value = allComments;
 
-    nestedComments.value = comments.value
-      .filter((c) => c.replied_to_review_id === null)
-      .map((root) => {
-        const replies = comments.value.filter(
-          (reply) => Number(reply.replied_to_review_id) === root.id
-        );
-        return {
-          ...root,
-          replies: replies.map((r) => ({ ...r })),
-        };
-      });
+    // nestedComments.value = comments.value
+    //   .filter((c) => c.replied_to_review_id === null)
+    //   .map((root) => {
+    //     const replies = comments.value.filter(
+    //       (reply) => Number(reply.replied_to_review_id) === root.id
+    //     );
+    //     return {
+    //       ...root,
+    //       replies: replies.map((r) => ({ ...r })),
+    //     };
+    //   });
 
     lawyerComment.value[comid] = "";
     alert("انجام شد");

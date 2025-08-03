@@ -11,7 +11,7 @@
       ]"
     />
     <div class="container pt-0 space-y-14 lg:space-y-20">
-      <LandingLawyersSection />
+      <LandingLawyersSection link="lawyer/" :titlebtn="'رزرو مشاوره'"/>
       <LandingCommentsSection />
       <LandingVisitGuideSection />
       <LandingFaqSection />

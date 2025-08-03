@@ -59,7 +59,7 @@
   </header>
 </template>
 <script setup>
-import { useFiltersStore } from "~/store/filters";
+import { useFiltersStore } from "~/stores/filters";
 defineEmits(["scrollToLawyers"]);
 const provinces = [
   {
@@ -257,7 +257,8 @@ header {
 }
 
 @keyframes bounce-custom {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(-6px);
   }
   50% {

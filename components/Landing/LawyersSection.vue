@@ -66,9 +66,9 @@
           <NuxtLink
             v-for="lawyer in lawyersRef.data"
             :key="lawyer.id"
-            :to="`/lawyer/${lawyer.id}`"
+            :to="`/${props.link}${lawyer.id}`"
           >
-            <LawyerCard :lawyer-info="lawyer" />
+            <LawyerCard :titlebtn="titlebtn" :lawyer-info="lawyer" />
           </NuxtLink>
 
           <Transition name="fade">
@@ -90,8 +90,10 @@
   </section>
 </template>
 <script setup>
-import { useFiltersStore } from "~/store/filters";
+import { useFiltersStore } from "~/stores/filters";
 const filtersStore = useFiltersStore();
+
+const props = defineProps(['link','titlebtn'])
 
 const lawyersRef = ref((await useGet({ url: "lawyers" })).data);
 const staticLawyerInfo = ref(null);
