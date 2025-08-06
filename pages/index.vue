@@ -31,6 +31,8 @@ lawyerTypesRes.data.data.unshift({
   title: "همه",
 });
 filtersStore.setLawyerTypes(lawyerTypesRes.data.data);
+console.log(filtersStore.lawyerTypes);
+
 filtersStore.setLawyerSpecialties(lawyerSpecialtiesRes.data.data);
 
 const breadCrumbRef = ref(null);

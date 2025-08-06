@@ -10,5 +10,5 @@
 <script setup>
 
 const jwtToken = useCookie("jwtToken");
-jwtToken.value = "46|8b26u5jtAKJKjKS3iawBBs8SuRCsTYUaGxiVsv1Bc8ef5204";
+jwtToken.value = "77|AjaJz9Byo3uywJXphsih9si7UygnGBqFvdP8XcSI8bb8809c";
 </script>

@@ -35,6 +35,7 @@
   </main>
 </template>
 
+
 <script setup>
 const res = await useGet({url:`lawyers/${useRoute().params.id}`},"")
 const data = await res.data

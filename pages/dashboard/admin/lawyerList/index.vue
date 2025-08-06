@@ -1,6 +1,6 @@
 <template>
   <div class="ds-container">
-    <LandingLawyersSection :titlebtn="'ویرایش وکیل'" link="dashboard/admin/lawyerlist/edit/"/>
+    <dashboard-admin-data-table/>
   </div>
 </template>
 

@@ -51,7 +51,6 @@
 </template>
 
 <script setup>
-import { useRegisterStore } from "~/store/register";
 
 const endTime = ref(localStorage.getItem("timer"));
 const counting = ref(true);

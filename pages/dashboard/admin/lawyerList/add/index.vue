@@ -11,7 +11,6 @@
           <UICInput
             v-model="state.phone"
             name="phone"
-            :readonly="true"
             label="لطفا شماره موبایل را وارد کنید"
             @input="filterDigits"
             maxlength="11"
@@ -39,9 +38,8 @@
         <UICSecondaryBtn
           class="w-fit rounded-[8px]! h-[46px]"
           type="submit"
-          :disabled="!isChanged"
         >
-          ویرایش وکیل
+          ایجاد وکیل
         </UICSecondaryBtn>
       </UForm>
     </div>
@@ -61,12 +59,9 @@ const bases = types.map((type) => ({
   label: type.title,
 }));
 
-const res = await useGet({ url: `lawyers/${useRoute().params.id}` });
-const data = await res.data;
-const lawyer = ref(data.data);
 
 // مدل‌ها
-const baseModel = ref(+lawyer.value.lawyer_info.base);
+const baseModel = ref(bases[0].id);
 
 const education = ref([
   { id: 1, label: "کارشناسی" },
@@ -75,35 +70,13 @@ const education = ref([
   { id: 4, label: "فوق دکتری" },
 ]);
 
-const lawyerEdu = education.value.find(
-  (edu) => edu.label === lawyer.value.education
-);
-const educationModel = ref(lawyerEdu?.id ?? null);
+
+const educationModel = ref(education.value[0].id);
 
 const state = reactive({
-  phone: lawyer.value.phone,
-  name: lawyer.value.lawyer_info.name,
-  lastName: lawyer.value.lawyer_info.family,
-});
-
-// ✅ مقادیر اولیه برای تشخیص تغییر
-const initialState = reactive({
-  phone: lawyer.value.phone,
-  name: lawyer.value.lawyer_info.name,
-  lastName: lawyer.value.lawyer_info.family,
-});
-const initialBase = ref(+lawyer.value.lawyer_info.base);
-const initialEducation = ref(lawyerEdu?.id ?? null);
-
-// ✅ بررسی تغییرات
-const isChanged = computed(() => {
-  return (
-    state.phone !== initialState.phone ||
-    state.name !== initialState.name ||
-    state.lastName !== initialState.lastName ||
-    baseModel.value !== initialBase.value ||
-    educationModel.value !== initialEducation.value
-  );
+  phone: undefined,
+  name: undefined,
+  lastName:undefined,
 });
 
 // ✅ اسکیمای اعتبارسنجی
@@ -131,6 +104,7 @@ function filterDigits(e: Event) {
 // ارسال فرم
 const onSubmit = async (event) => {
   const body = {
+    phone:event.data.phone,
     name: event.data.name,
     family: event.data.lastName,
     base: baseModel.value + "",
@@ -138,8 +112,8 @@ const onSubmit = async (event) => {
       education.value.find((e) => e.id === educationModel.value)?.label || "",
   };
 
-  const res = await usePut({
-    url: `lawyers/${useRoute().params.id}/update`,
+  const res = await usePost({
+    url: `lawyers`,
     includeAuthHeader: true,
     body,
   });

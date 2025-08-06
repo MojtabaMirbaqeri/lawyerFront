@@ -8,6 +8,9 @@
     <slot name="input">
       <UInput
         v-model="state"
+        :readonly="readonly"
+        :class="{'opacity-[0.5]' : readonly}"
+        @focus="onFocus"
         class="w-full"
         :ui="{ root: 'h-[40px] lg:h-[46px]', base: 'h-full' }"
       />
@@ -16,8 +19,14 @@
 </template>
 
 <script setup>
-defineProps(["name", "label"]);
+const props = defineProps(["name", "label","readonly"]);
 const state = defineModel();
+
+const onFocus = (e) => {
+  if (props.readonly) {
+    e.target.blur(); // فوراً از فکوس خارج می‌کنه
+  }
+};
 </script>
 
 <style>

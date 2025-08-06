@@ -209,7 +209,7 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
 }
 
 .sidebar-overlay {
-  @apply w-full transition-opacity duration-300 bg-white/10 z-1 backdrop-blur-[4px] absolute h-screen;
+  @apply w-full transition-opacity duration-300 bg-white/10 z-[11] backdrop-blur-[4px] absolute h-screen;
 }
 
 .mo-items {
