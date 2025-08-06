@@ -1,5 +1,5 @@
 <template>
-  <div class="relative h-[100vh] flex justify-center items-center">
+  <div class="relative h-[100vh]! flex justify-center items-center">
     <div class="form w-full">
       <section class="px-4">
         <div

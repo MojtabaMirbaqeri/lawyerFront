@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sec-header">کد تایید را وارد کنید</h1>
+  <RegisterCardHeader title="کد تایید را وارد کنید" />
   <span
     >کد تایید برای شماره
     <span class="text-primary">{{ registerStore.userInformation.phone }}</span>
@@ -12,6 +12,7 @@
     :otp="true"
     placeholder="○"
     class="otp gap-3"
+    autofocus
   />
 
   <div class="">
@@ -44,6 +45,7 @@
 
   <UICSecondaryBtn
     class="w-full rounded-[8px]! justify-center h-[46px]"
+    :disabled="auth.loading"
     @click="otpHandle"
   >
     تایید
@@ -54,6 +56,7 @@
 
 const endTime = ref(localStorage.getItem("timer"));
 const counting = ref(true);
+
 onBeforeMount(() => {
   // console.log(new Date().setMinutes(new Date().getMinutes()));
   if (!localStorage.getItem("timer")) {
@@ -71,6 +74,9 @@ onBeforeMount(() => {
   endTime.value = localStorage.getItem("timer");
 });
 const otpVal = ref("");
+watch(otpVal, (newVal) => {
+  if (newVal.length == 4) otpHandle();
+});
 
 const registerStore = useRegisterStore();
 
@@ -82,8 +88,6 @@ const timerEndHandle = () => {
 };
 
 const timerStartHandle = async () => {
-  console.log("hhh");
-
   if (!localStorage.getItem("timer")) {
     endTime.value = new Date().setMinutes(new Date().getMinutes() + 2);
 
@@ -106,64 +110,34 @@ const timerStartHandle = async () => {
   counting.value = true;
 };
 
+const auth = useAuthStore();
 const otpHandle = async () => {
-  if (otpVal.value.join("").length !== 4) {
+  const code = otpVal.value.join("");
+
+  if (code.length !== 4) {
     alert("تعداد رقم کد تایید باید 4 رقم باشد");
     otpVal.value = "";
     return;
-  } else {
-    const res = await usePost({
-      url: "auth/verify-code",
-      body: {
-        phone: registerStore.userInformation.phone,
-        code: otpVal.value.join(""),
-      },
-    });
-    if (res.statusCode === 200) {
-      if (res.data.data.needs_registration) {
-        registerStore.nextStep();
-        return;
-      }
-      console.log(res);
-//      {
-//     "data": {
-//         "status": 200,
-//         "data": {
-//             "success": true,
-//             "message": "ورود موفقیت‌آمیز بود",
-//             "token": "54|ZA7mdQsWTQLnOXMXKYW4GGPekfcOMkrbNp7byXVd5cde7a28",
-//             "user": {
-//                 "id": 117,
-//                 "name": "کاربر",
-//                 "family": "سیستم",
-//                 "phone": "09140903685",
-//                 "email": "09140903685@temp.com",
-//                 "roles": [
-//                     {
-//                         "id": 3,
-//                         "name": "کاربر",
-//                         "slug": "user"
-//                     }
-//                 ],
-//                 "user_type": "user"
-//             }
-//         },
-//         "message": "ورود موفقیت‌آمیز بود"
-//     },
-//     "status": true,
-//     "statusCode": 200,
-//     "pending": false
-// }
-      registerStore.userInformation.code = otpVal.value.join("");
-      alert("hhh");
-      registerStore.nextStep();
-      otpVal.value = ''
-    } else {
-      alert("code is not valid");
-      otpVal.value = "";
-    }
   }
-  // console.log(registerStore.userInformation);
+
+  try {
+    const result = await auth.verifyCodeAndLogin(
+      registerStore.userInformation.phone,
+      code
+    );
+
+    registerStore.userInformation.code = code;
+
+    if (result.needsRegistration) {
+      registerStore.nextStep();
+      return;
+    }
+
+    navigateTo("/dashboard");
+  } catch (error) {
+    alert("کد وارد شده نامعتبر است");
+    otpVal.value = "";
+  }
 };
 </script>
 

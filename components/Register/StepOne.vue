@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sec-header">ورود / ثبت نام</h1>
+  <RegisterCardHeader title="ورود / ثبت نام" />
   <UICSelectButton
     :items="items"
     class="w-full! flex-nowrap! gap-0!"
@@ -19,13 +19,14 @@
       v-model="state.phone"
       name="phone"
       label="لطفا شماره موبایل خود را وارد کنید"
-      @input="filterDigits"
       maxlength="11"
+      @input="filterDigits"
     />
 
     <UICSecondaryBtn
       class="w-full rounded-[8px]! justify-center h-[46px]"
       type="submit"
+      :disabled="authStore.loading"
     >
       دریافت کد تایید
     </UICSecondaryBtn>
@@ -38,6 +39,7 @@ import type { InferType } from "yup";
 import type { FormSubmitEvent } from "@nuxt/ui";
 
 const registerStore = useRegisterStore();
+const authStore = useAuthStore();
 
 const items = ref([
   {
@@ -73,6 +75,7 @@ async function filterDigits(e: Event) {
 }
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
+  authStore.loading = true;
   const res = await usePost({
     url: "auth/send-code",
     body: { phone: event.data.phone },
@@ -89,7 +92,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     console.log(res.error);
     alert("خطا");
   }
+  authStore.loading = false;
 }
+
+onMounted(() => {
+  state.phone = registerStore.userInformation.phone ?? "";
+});
 </script>
 
 

@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sec-header">آپلود مدارک</h1>
+  <RegisterCardHeader title="آپلود مدارک" />
 
   <UForm
     :schema="schema"
@@ -20,6 +20,7 @@
           label="تصویر کارت ملی خود را آپلود کنید"
           description="Image/* (max. 5MB)"
           layout="list"
+          accept="image/*"
           :ui="{
             base: 'border-black/30',
             wrapper: 'py-2',
@@ -41,6 +42,7 @@
           label="تصویر پروانه وکالت خود را آپلود کنید"
           description="Image/* (max. 5MB)"
           layout="list"
+          accept="image/*"
           :ui="{
             base: 'border-black/30',
             wrapper: 'py-2',
@@ -48,7 +50,9 @@
         />
       </template>
     </UICInput>
-    <UICSecondaryBtn type="submit">تایید</UICSecondaryBtn>
+    <UICSecondaryBtn type="submit" :disabled="auth.loading">
+      تایید
+    </UICSecondaryBtn>
   </UForm>
 </template>
 <script setup>
@@ -78,9 +82,10 @@ const state = reactive({
   licensePic: null,
 });
 
+const auth = useAuthStore();
+
 async function onSubmit(e) {
   const formData = new FormData();
-
   formData.append("is_lawyer", true);
   formData.append("national_code", lawyerInformation.nationalCode);
   formData.append("license_number", lawyerInformation.licenseNumber);
@@ -90,13 +95,12 @@ async function onSubmit(e) {
   formData.append("license_image", e.data.licensePic);
   formData.append("national_card_image", e.data.IDCardPic);
 
-  const res = await usePost({
-    url: "register-lawyer",
-    body: formData,
-  });
-
-  if (res.statusCode === 200) {
-    registerStore.nextStep();
+  try {
+    await auth.registerLawyer(formData);
+    navigateTo("/dashboard");
+  } catch (err) {
+    alert("خطا در ثبت‌نام وکیل");
+    console.error(err);
   }
 }
 </script>
