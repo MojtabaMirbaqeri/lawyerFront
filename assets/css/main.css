@@ -65,7 +65,7 @@ html {
 body {
   font-family: IRANSansX !important;
   background-color: #f8fafd !important;
-  @apply text-content text-[13px]! lg:text-sm!;
+  @apply text-content text-[13px]! lg:text-sm! overflow-clip;
 }
 
 * {

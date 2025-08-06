@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sec-header">اطلاعات تکمیلی</h1>
+  <RegisterCardHeader title="اطلاعات تکمیلی" />
   <UForm
     :schema="currentSchema"
     :state="state"
@@ -22,7 +22,9 @@
       />
     </template>
 
-    <UICSecondaryBtn type="submit">تایید</UICSecondaryBtn>
+    <UICSecondaryBtn type="submit" :disabled="auth.loading">
+      تایید
+    </UICSecondaryBtn>
   </UForm>
 </template>
 
@@ -68,31 +70,19 @@ const currentSchema = computed(() =>
   userType.value === "lawyer" ? lawyerSchema : userSchema
 );
 
+const auth = useAuthStore();
 const submit = async (e) => {
-  if (userType.value == "user") {
-    const res = await usePost({
-      url: "register-lawyer",
-      body: {
-        is_lawyer: false,
+  if (userType.value === "user") {
+    try {
+      await auth.registerUser({
         name: e.data.name,
         family: e.data.lastName,
         phone: registerStore.userInformation.phone,
-      },
-    });
-    if (res.statusCode == 201) {
-      //       {
-      //     "status": 201,
-      //     "data": {
-      //         "name": "مجتبی",
-      //         "family": "میرباقری",
-      //         "phone": "09999047688",
-      //         "updated_at": "2025-08-02T07:58:28.000000Z",
-      //         "created_at": "2025-08-02T07:58:28.000000Z",
-      //         "id": 119
-      //     },
-      //     "message": "کاربر با موفقیت ثبت شد."
-      // }
-      registerStore.formStep = 5;
+      });
+      navigateTo("/dashboard");
+    } catch (err) {
+      alert("خطا در ثبت‌نام کاربر عادی");
+      console.error(err);
     }
   } else {
     registerStore.lawyerInformation = state;

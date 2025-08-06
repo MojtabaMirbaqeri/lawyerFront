@@ -89,6 +89,7 @@
     </div>
   </section>
 </template>
+
 <script setup>
 const filtersStore = useFiltersStore();
 
@@ -101,25 +102,38 @@ filtersStore.selectedFilters.sortBy = tabItems.value[0].value;
 const lawyerTypes = filtersStore.lawyerTypes;
 const scrollToElement = useScrollToElement(84);
 
-const skipNextPageWatch = ref(false);
+const isFilterChange = ref(false);
 
 onMounted(async () => {
   const res = await fetch("/lawyer-sample.json");
   staticLawyerInfo.value = await res.json();
 });
 
-watch(currentLawyersPage, async () => {
-  if (skipNextPageWatch.value) {
-    skipNextPageWatch.value = false;
+watch(currentLawyersPage, async (newPage, oldPage) => {
+  // اگر تغییر از فیلتر بوده و صفحه تغییر نکرده، fetch نکن
+  if (isFilterChange.value && newPage === oldPage) {
+    isFilterChange.value = false;
     return;
   }
+  
+  // اگر تغییر از فیلتر بوده و صفحه تغییر کرده، فلگ را reset کن
+  if (isFilterChange.value) {
+    isFilterChange.value = false;
+  }
+  
   await fetchLawyers();
 });
 
 watch(filtersStore.selectedFilters, async () => {
-  skipNextPageWatch.value = true;
+  const oldPage = currentLawyersPage.value;
+  isFilterChange.value = true;
   currentLawyersPage.value = 1;
-  await fetchLawyers();
+  
+  // اگر در صفحه 1 هستیم، watch اجرا نمی‌شود، پس خودمان fetch کنیم
+  if (oldPage === 1) {
+    isFilterChange.value = false;
+    await fetchLawyers();
+  }
 });
 
 async function fetchLawyers() {

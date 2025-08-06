@@ -9,12 +9,11 @@
 </template>
 
 <script setup >
-
 const registerStore = useRegisterStore();
 
 definePageMeta({
   layout: "register",
-  middleware: ["reset-register-store"],
+  middleware: ["reset-register-store", "guest"],
 });
 </script>
 

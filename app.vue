@@ -1,5 +1,6 @@
 <template>
   <UApp>
+    <MainLoader />
     <NuxtLoadingIndicator :height="4" />
     <NuxtLayout dir="rtl">
       <NuxtPage />
@@ -8,7 +9,11 @@
 </template>
 
 <script setup>
+onMounted(async () => {
+  const loaderStore = useLoaderStore();
+  const authStore = useAuthStore();
 
-const jwtToken = useCookie("jwtToken");
-jwtToken.value = "46|8b26u5jtAKJKjKS3iawBBs8SuRCsTYUaGxiVsv1Bc8ef5204";
+  loaderStore.toggleVisiblity();
+  document.body.classList.add("overflow-auto!");
+});
 </script>
