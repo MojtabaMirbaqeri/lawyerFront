@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-export const useDashboardStore = defineStore("auth", () => {
+export const useDashboardStore = defineStore("dashboard", () => {
   const openSidebar = false;
   const adminRoute = [
     { title: "داشبورد", url: "/dashboard", icon: "lucide:home" },
