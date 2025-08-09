@@ -24,11 +24,11 @@ type Payment = {
 const data = ref(
   lawyersRef.value.data.map((law) => {
     return {
-      id: law.lawyer_info.id,
-      national_code: law.lawyer_info.national_code,
+      id: law.lawyer_info?.id,
+      national_code: law.lawyer_info?.national_code,
       phone: law.phone,
-      fullName: `${law.lawyer_info.name} ${law.lawyer_info.family}`,
-      base: law.lawyer_info.base_lawyer.title,
+      fullName: `${law.lawyer_info?.name} ${law.lawyer_info?.family}`,
+      base: law.lawyer_info?.base_lawyer?.title,
       edit_id: law.id,
       is_active: law.is_active,
     };
@@ -115,11 +115,11 @@ function getRowItems(row: Row<Payment>) {
         const lawyersRef = ref((await useGet({ url: "lawyers" })).data);
         data.value = lawyersRef.value.data.map((law) => {
           return {
-            id: law.lawyer_info.id,
-            national_code: law.lawyer_info.national_code,
+            id: law.lawyer_info?.id,
+            national_code: law.lawyer_info?.national_code,
             phone: law.phone,
-            fullName: `${law.lawyer_info.name} ${law.lawyer_info.family}`,
-            base: law.lawyer_info.base_lawyer.title,
+            fullName: `${law.lawyer_info?.name} ${law.lawyer_info?.family}`,
+            base: law.lawyer_info?.base_lawyer?.title,
             edit_id: law.id,
             is_active: law.is_active,
           };
@@ -145,11 +145,11 @@ watch(
     );
     data.value = lawyersRef.value.data.map((law) => {
       return {
-        id: law.lawyer_info.id,
-        national_code: law.lawyer_info.national_code,
+        id: law.lawyer_info?.id,
+        national_code: law.lawyer_info?.national_code,
         phone: law.phone,
-        fullName: `${law.lawyer_info.name} ${law.lawyer_info.family}`,
-        base: law.lawyer_info.base_lawyer.title,
+        fullName: `${law.lawyer_info?.name} ${law.lawyer_info?.family}`,
+        base: law.lawyer_info?.base_lawyer?.title,
         edit_id: law.id,
         is_active: law.is_active,
       };
