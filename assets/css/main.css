@@ -101,3 +101,7 @@ body {
 .fade-leave-to {
   opacity: 0;
 }
+
+button{
+  cursor: pointer;
+}
