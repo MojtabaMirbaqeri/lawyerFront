@@ -9,17 +9,17 @@
       <UInput
         v-model="state"
         :readonly="readonly"
-        :class="{'opacity-[0.5]' : readonly}"
+        :class="{ 'opacity-[0.5]': readonly }"
         @focus="onFocus"
         class="w-full"
-        :ui="{ root: 'h-[40px] lg:h-[46px]', base: 'h-full' }"
+        :ui="{ root: 'field-base', base: 'h-full' }"
       />
     </slot>
   </UFormField>
 </template>
 
 <script setup>
-const props = defineProps(["name", "label","readonly"]);
+const props = defineProps(["name", "label", "readonly"]);
 const state = defineModel();
 
 const onFocus = (e) => {
