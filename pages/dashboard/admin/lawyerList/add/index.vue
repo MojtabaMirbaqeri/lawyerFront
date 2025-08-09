@@ -35,10 +35,7 @@
           </div>
         </div>
 
-        <UICSecondaryBtn
-          class="w-fit rounded-[8px]! h-[46px]"
-          type="submit"
-        >
+        <UICSecondaryBtn class="w-fit rounded-[8px]! h-[46px]" type="submit">
           ایجاد وکیل
         </UICSecondaryBtn>
       </UForm>
@@ -52,13 +49,13 @@ import type { InferType } from "yup";
 import { ref, reactive, computed } from "vue";
 
 // گرفتن اطلاعات اولیه
-const lawyerTypesRes = await useGet({ url: "lawyer_bases" });
-const types = lawyerTypesRes.data.data;
-const bases = types.map((type) => ({
+const filtersStore = useFiltersStore();
+
+// گرفتن اطلاعات اولیه
+const bases = filtersStore.lawyerTypes.map((type) => ({
   id: type.id,
   label: type.title,
 }));
-
 
 // مدل‌ها
 const baseModel = ref(bases[0].id);
@@ -70,13 +67,12 @@ const education = ref([
   { id: 4, label: "فوق دکتری" },
 ]);
 
-
 const educationModel = ref(education.value[0].id);
 
 const state = reactive({
   phone: undefined,
   name: undefined,
-  lastName:undefined,
+  lastName: undefined,
 });
 
 // ✅ اسکیمای اعتبارسنجی
@@ -104,7 +100,7 @@ function filterDigits(e: Event) {
 // ارسال فرم
 const onSubmit = async (event) => {
   const body = {
-    phone:event.data.phone,
+    phone: event.data.phone,
     name: event.data.name,
     family: event.data.lastName,
     base: baseModel.value + "",

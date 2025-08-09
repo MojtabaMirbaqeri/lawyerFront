@@ -7,7 +7,11 @@
       <nav class="border-b p-6 sticky top-0 z-10 backdrop-blur-lg lg:z-50">
         <div class="trigger lg:hidden">
           <div class="openBtn">
-            <UIcon name="solar:hamburger-menu-outline" class="size-5!" @click="openSideBarHandle" />
+            <UIcon
+              name="solar:hamburger-menu-outline"
+              class="size-5!"
+              @click="openSideBarHandle"
+            />
           </div>
         </div>
       </nav>
@@ -21,6 +25,7 @@ const dashboardStore = useDashboardStore();
 const openSideBarHandle = () => {
   dashboardStore.openSidebar = true;
 };
+
 </script>
 
 <style>

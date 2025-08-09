@@ -94,7 +94,7 @@ async function onSubmit(e) {
   formData.append("phone", registerStore.userInformation.phone);
   formData.append("license_image", e.data.licensePic);
   formData.append("national_card_image", e.data.IDCardPic);
-
+  formData.append("base", lawyerInformation.lawyerType);
   try {
     await auth.registerLawyer(formData);
     navigateTo("/dashboard");

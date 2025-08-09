@@ -93,15 +93,23 @@
 <script setup>
 const filtersStore = useFiltersStore();
 
-const props = defineProps(['link','titlebtn'])
+const props = defineProps(["link", "titlebtn"]);
 
 const lawyersRef = ref((await useGet({ url: "lawyers" })).data);
 const staticLawyerInfo = ref(null);
 const currentLawyersPage = ref(1);
 const lawyersListRef = ref(null);
+
 const tabItems = ref(filtersStore.sortItems);
 filtersStore.selectedFilters.sortBy = tabItems.value[0].value;
+
 const lawyerTypes = filtersStore.lawyerTypes;
+lawyerTypes.unshift({
+  id: 0,
+  title: "همه",
+});
+filtersStore.selectedFilters.lawyerType = lawyerTypes[0].id;
+
 const scrollToElement = useScrollToElement(84);
 
 const isFilterChange = ref(false);
@@ -117,12 +125,12 @@ watch(currentLawyersPage, async (newPage, oldPage) => {
     isFilterChange.value = false;
     return;
   }
-  
+
   // اگر تغییر از فیلتر بوده و صفحه تغییر کرده، فلگ را reset کن
   if (isFilterChange.value) {
     isFilterChange.value = false;
   }
-  
+
   await fetchLawyers();
 });
 
@@ -130,7 +138,7 @@ watch(filtersStore.selectedFilters, async () => {
   const oldPage = currentLawyersPage.value;
   isFilterChange.value = true;
   currentLawyersPage.value = 1;
-  
+
   // اگر در صفحه 1 هستیم، watch اجرا نمی‌شود، پس خودمان fetch کنیم
   if (oldPage === 1) {
     isFilterChange.value = false;
