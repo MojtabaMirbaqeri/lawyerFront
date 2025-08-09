@@ -1,25 +1,18 @@
+// middleware/auth.global.ts
 export default defineNuxtRouteMiddleware(async (to) => {
   const auth = useAuthStore();
 
-  // اول store را initialize کن
   if (!auth.initialized) {
     await auth.initialize();
   }
 
-  // بررسی مسیرهای محافظت شده
-  if (to.path.startsWith("/dashboard")) {
-  
-
-    if (!auth.token) {
-      return navigateTo("/register");
-    }
-    if (auth.token) {
-      await auth.ensureUser();
-      if (!auth.user && import.meta.client) {
-        return navigateTo("/register");
-      }
-    }
+  if (auth.token && !auth.user && import.meta.client) {
+    await auth.ensureUser();
   }
 
+  const needsAuth = to.path.startsWith("/dashboard") || to.meta.requiresAuth === true;
 
+  if (needsAuth && (!auth.token || !auth.user)) {
+    return navigateTo("/register", { replace: true });
+  }
 });
