@@ -3,8 +3,8 @@
     <div class="">
       <div class="bg-white rounded-[14px] p-7">
         <div class="flex flex-col gap-3">
-          <span class="title">امتیاز و دیدگاه کاربران</span>
-          <div class="text-area">
+          <span class="title text-lg font-bold">امتیاز و دیدگاه کاربران</span>
+          <div v-if="authStore.user?.user_type == 'user'" class="text-area">
             <UTextarea
               color="neutral"
               variant="subtle"
@@ -39,7 +39,7 @@
             </div>
           </div>
         </div>
-        <USeparator />
+        <USeparator class="py-3" />
         <div class="comments">
           <div
             v-for="comment in comments"
@@ -74,7 +74,12 @@
                 </template>
               </UICDrawer>
             </div>
-            <div v-if="!comment.has_replies" class="lawyer-input-comment">
+            <div
+              v-if="
+                !comment.has_replies && authStore.user?.user_type == 'lawyer'
+              "
+              class="lawyer-input-comment"
+            >
               <div class="">
                 <UCollapsible class="flex flex-col gap-2 w-full">
                   <UButton
@@ -99,7 +104,11 @@
                       :maxrows="6"
                       autoresize=""
                     />
-                    <UICMainBtn class="mb-4" @click="subReply(comment.id)">
+                    <UICMainBtn
+                      :disabled="!lawyerComment[comment.id] || isLoading"
+                      class="mb-4"
+                      @click="subReply(comment.id)"
+                    >
                       ثبت نظر
                     </UICMainBtn>
                   </template>
@@ -146,27 +155,14 @@ const props = defineProps(["lawyerFullName", "id"]);
 const res = await useGet({ url: `lawyers/${useRoute().params.id}/reviews` });
 const data = await res.data;
 const lastPage = ref(data.meta.last_page);
+const authStore = useAuthStore();
+const isLoading = ref(false);
 
 const rate = ref(5);
 
 const currentPageComment = ref(1);
 
 const comments = ref(await data.data);
-// const nestedComments = ref(
-//   comments.value
-//     .filter((c) => c.replied_to_review_id === null) // فقط کامنت‌های ریشه
-//     .map((root) => {
-//       const replies = comments.value.filter(
-//         (reply) => Number(reply.replied_to_review_id) === root.id
-//       );
-
-//       return {
-//         ...root, // تمام اطلاعات کامنت اصلی
-//         replies: replies.map((r) => ({ ...r })), // تمام اطلاعات ریپلای‌ها
-//       };
-//     })
-// );
-// console.log(nestedComments.value);
 
 const commentHandle = async () => {
   currentPageComment.value++;
@@ -202,6 +198,9 @@ const addRate = (event) => {
 };
 
 const subReply = async (comid) => {
+  isLoading.value = true;
+  if (!lawyerComment.value[comid]) return;
+
   const bodyComment = {
     comment: lawyerComment.value[comid],
   };
@@ -212,7 +211,9 @@ const subReply = async (comid) => {
     body: bodyComment,
   });
 
-  if (res.statusCode) {
+  isLoading.value = false;
+
+  if (res.statusCode == 201) {
     const allComments = [];
 
     // fetch all pages up to current
@@ -230,26 +231,31 @@ const subReply = async (comid) => {
 
     comments.value = allComments;
 
-    // nestedComments.value = comments.value
-    //   .filter((c) => c.replied_to_review_id === null)
-    //   .map((root) => {
-    //     const replies = comments.value.filter(
-    //       (reply) => Number(reply.replied_to_review_id) === root.id
-    //     );
-    //     return {
-    //       ...root,
-    //       replies: replies.map((r) => ({ ...r })),
-    //     };
-    //   });
-
     lawyerComment.value[comid] = "";
-    alert("انجام شد");
+    useToast().add({
+      title: "دیدگاه شما با موفقیت ثبت شد.",
+      icon: "hugeicons:message-01",
+      color: "success",
+    });
+  } else if (res.statusCode == 403) {
+    lawyerComment.value[comid] = "";
+    useToast().add({
+      title: "شما مجاز به ثبت پاسخ نمی باشید!",
+      icon: "ph:warning",
+      color: "error",
+    });
   } else {
-    alert("خطا");
+    useToast().add({
+      title: "در فرآیند ثبت دیدگاه خطایی رخ داده است!",
+      icon: "ph:warning",
+      color: "error",
+    });
   }
 };
 
 const subComment = async () => {
+  isLoading.value = true;
+
   const bodyComment = {
     lawyer_id: props.id,
     rating: rate.value,
@@ -260,18 +266,22 @@ const subComment = async () => {
     includeAuthHeader: true,
     body: bodyComment,
   });
-  if (res.statusCode) {
-    // const res = await useGet({
-    //   url: `lawyers/${useRoute().params.id}/reviews`,
-    // });
-    // const data = await res.data;
-    // lastPage.value = data.meta.last_page;
-    // comments.value = data.data;
-    // userComment.value = "";
-    // rate.value = 5;
-    alert("ثبت شد");
+
+  isLoading.value = false;
+  if (res.statusCode == 201 || res.statusCode == 200) {
+    userComment.value = "";
+    rate.value = 5;
+    useToast().add({
+      title: "دیدگاه شما در دست بررسی است.",
+      icon: "hugeicons:message-01",
+      color: "success",
+    });
   } else {
-    alert("خطا");
+    useToast().add({
+      title: "در فرآیند ثبت دیدگاه خطایی رخ داده است!",
+      icon: "ph:warning",
+      color: "error",
+    });
   }
 };
 </script>
