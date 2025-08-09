@@ -40,8 +40,12 @@ html {
     @apply text-xs lg:text-sm;
   }
 
-  .ds-container{
-    @apply max-w-[1200px] mx-auto py-5 px-4
+  .ds-container {
+    @apply max-w-[1200px] mx-auto py-5 px-4;
+  }
+
+  .field-base {
+    @apply w-full h-[40px] lg:h-[42px];
   }
 }
 
@@ -79,7 +83,6 @@ body {
 .iconify {
   @apply size-4!;
 }
-
 
 .page-enter-active,
 .page-leave-active {

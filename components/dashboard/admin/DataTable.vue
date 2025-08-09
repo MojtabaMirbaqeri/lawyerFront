@@ -69,6 +69,7 @@ const columns: TableColumn<Payment>[] = [
             content: {
               align: "end",
             },
+
             items: getRowItems(row),
             "aria-label": "Actions dropdown",
           },

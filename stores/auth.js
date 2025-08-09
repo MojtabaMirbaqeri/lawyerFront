@@ -94,6 +94,11 @@ export const useAuthStore = defineStore("auth", {
 
           // در غیر اینصورت، توکن رو ست کن و کاربر لاگین شده
           this.setAuth(data.token, data.user);
+          useToast().add({
+            title: "شما با موفقیت وارد شدید.",
+            icon: "mage:security-shield",
+            color: "success",
+          });
           return { needsRegistration: false };
         }
 
@@ -118,6 +123,11 @@ export const useAuthStore = defineStore("auth", {
         if (res.statusCode === 201 || res.statusCode === 200) {
           const token = res.data.data.user.token;
           this.setAuth(token, res.data.data.user);
+          useToast().add({
+            title: "حساب شما با موفقیت ایجاد شد.",
+            icon: "mage:security-shield",
+            color: "success",
+          });
           return true;
         }
 
@@ -143,7 +153,10 @@ export const useAuthStore = defineStore("auth", {
         if (res.statusCode === 200 || res.statusCode === 201) {
           const token = res.data.data.user.token;
           this.setAuth(token, res.data.data.user);
-          
+          useToast().add({
+            title: "حساب شما در انتظار تایید است.",
+            icon: "mage:security-shield",
+          });
           return true;
         }
 

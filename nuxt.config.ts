@@ -7,8 +7,8 @@ export default defineNuxtConfig({
       apiEndpoint: process.env.API_EP,
     },
   },
-  app:{
-        pageTransition: { name: "page", mode: "out-in" },
+  app: {
+    pageTransition: { name: "page", mode: "out-in" },
     layoutTransition: { name: "page", mode: "out-in" },
   },
   modules: [
@@ -19,7 +19,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxtjs/leaflet",
     "nuxt-rating",
-    'nuxt-countdown'
+    "nuxt-countdown",
   ],
   css: ["@/assets/css/main.css", "@/assets/Webfonts/fontiran.css"],
   ui: {

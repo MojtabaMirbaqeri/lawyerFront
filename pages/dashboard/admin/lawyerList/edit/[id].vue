@@ -52,11 +52,10 @@
 import { object, string } from "yup";
 import type { InferType } from "yup";
 import { ref, reactive, computed } from "vue";
+const filtersStore = useFiltersStore();
 
 // گرفتن اطلاعات اولیه
-const lawyerTypesRes = await useGet({ url: "lawyer_bases" });
-const types = lawyerTypesRes.data.data;
-const bases = types.map((type) => ({
+const bases = filtersStore.lawyerTypes.map((type) => ({
   id: type.id,
   label: type.title,
 }));

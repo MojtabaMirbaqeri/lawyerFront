@@ -10,6 +10,7 @@ export const useRegisterStore = defineStore("register", {
       lastName: "",
       nationalCode: "",
       licenseNumber: "",
+      lawyerType: null,
     },
   }),
 

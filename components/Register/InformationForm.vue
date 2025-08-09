@@ -3,7 +3,7 @@
   <UForm
     :schema="currentSchema"
     :state="state"
-    class="w-full space-y-7"
+    class="w-full space-y-6"
     @submit="submit"
   >
     <UICInput v-model="state.name" name="name" label="نام" />
@@ -20,6 +20,11 @@
         name="licenseNumber"
         label="شماره پروانه"
       />
+      <UICInput name="lawyerType" label="پایه">
+        <template #input>
+          <UICSelect v-model="state.lawyerType" :items="mappedTypes" />
+        </template>
+      </UICInput>
     </template>
 
     <UICSecondaryBtn type="submit" :disabled="auth.loading">
@@ -33,12 +38,24 @@ import { ref, reactive, computed } from "vue";
 import { object, string } from "yup";
 
 const registerStore = useRegisterStore();
+const filtersStore = useFiltersStore();
+
+const mappedTypes = filtersStore.lawyerTypes
+  .map((type) => ({
+    id: type.id,
+    label: type.title,
+  }))
+  .filter((type) => {
+    return type.id != 0;
+  });
+
 const userType = ref(registerStore.userInformation.type);
 const state = reactive({
   name: "",
   lastName: "",
   nationalCode: "",
   licenseNumber: "",
+  lawyerType: mappedTypes[0].id,
 });
 
 const userSchema = object({

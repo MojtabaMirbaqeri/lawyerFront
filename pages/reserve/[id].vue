@@ -1,15 +1,14 @@
 <template>
   <main>
-    <ReserveMainCom/>
+    <ReserveMainCom />
   </main>
 </template>
 
-<script>
-export default {
-
-}
+<script setup>
+definePageMeta({
+  requiresAuth: true,
+});
 </script>
 
 <style>
-
 </style>
