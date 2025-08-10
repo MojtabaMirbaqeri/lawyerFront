@@ -9,6 +9,25 @@ const UDropdownMenu = resolveComponent("UDropdownMenu");
 
 const table = useTemplateRef("table");
 
+const refetch = async (page=null) => {
+  const lawyersRef = ref((await useGet({
+    url: "lawyers",
+    includeAuthHeader: false,
+    query: page ? {page:page} : undefined,
+  })).data);
+  data.value = lawyersRef.value.data.map((law) => {
+    return {
+      id: law.lawyer_info?.id,
+      national_code: law.lawyer_info?.national_code,
+      phone: law.phone,
+      fullName: `${law.lawyer_info?.name} ${law.lawyer_info?.family}`,
+      base: law.lawyer_info?.base_lawyer?.title,
+      edit_id: law.id,
+      is_active: law.is_active,
+    };
+  });
+};
+
 const lawyersRef = ref((await useGet({ url: "lawyers" })).data);
 
 type Payment = {
@@ -113,18 +132,7 @@ function getRowItems(row: Row<Payment>) {
           body: undefined,
         });
         console.log(res);
-        const lawyersRef = ref((await useGet({ url: "lawyers" })).data);
-        data.value = lawyersRef.value.data.map((law) => {
-          return {
-            id: law.lawyer_info?.id,
-            national_code: law.lawyer_info?.national_code,
-            phone: law.phone,
-            fullName: `${law.lawyer_info?.name} ${law.lawyer_info?.family}`,
-            base: law.lawyer_info?.base_lawyer?.title,
-            edit_id: law.id,
-            is_active: law.is_active,
-          };
-        });
+        refetch()
       },
     },
   ];
