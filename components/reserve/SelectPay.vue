@@ -22,7 +22,7 @@
                 <UInput v-model="state.code" class="w-full" />
               </UFormField>
 
-              <UButton class="w-30 justify-center" type="submit"> اعمال کد </UButton>
+              <UButton @click="$emit('subCopun',state.code)" :disabled="state.code === ''" class="w-30 justify-center" type="submit"> اعمال کد </UButton>
             </UForm>
           </div>
         </template>
@@ -92,6 +92,7 @@ import type { FormSubmitEvent } from "@nuxt/ui";
 
 const selectDargah = ref("1");
 
+
 const checkBoxVal = ref(false);
 
 const items = ref([
@@ -122,7 +123,7 @@ const schema = object({
 type Schema = InferType<typeof schema>;
 
 const state = reactive({
-  code: undefined,
+  code: '',
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
