@@ -1,5 +1,5 @@
 <template>
-  <div class="ds-container">
+  <div>
     <dashboard-admin-data-table/>
   </div>
 </template>

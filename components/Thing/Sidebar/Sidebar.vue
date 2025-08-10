@@ -54,9 +54,9 @@
         </div>
       </div>
       <div class="items w-full">
-        <ul class="w-full">
+        <ul class="w-full flex flex-col gap-1.5 p-3">
           <li
-            class="my-3 w-full py-1 px-2 flex items-center gap-2"
+            class="w-full flex items-center gap-2"
             v-for="item in dashboardStore.adminRoute"
             :key="item"
           >
@@ -140,7 +140,7 @@ export const sideBarStyles = tv({
         sideBarWrapper:
           "group-data-[collapsible=icon]:w-[--sidebar-width-icon]",
         sideBarWrapper2:
-          "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
+          "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l border-gray-300 bg-white",
       },
       floating: {
         sideBarWrapper:
@@ -222,6 +222,6 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
 }
 
 .router-link-active {
-  @apply text-blue-500 border border-blue-500;
+  @apply bg-blue-100/80  text-blue-500;
 }
 </style>

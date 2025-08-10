@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="ds-container">
+    <div>
       <UForm
         :schema="schema"
         :state="state"
