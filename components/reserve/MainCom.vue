@@ -42,7 +42,7 @@
         </div>
         <div v-if="step === 2" class="step2 flex flex-col gap-3">
           <UICBackBtn @click="step--" />
-          <ReservePayDetail />
+          <ReservePayDetail :total-price="useCalculatePrice(deftime,basePrice)"/>
           <ReserveSelectPay class="flex lg:hidden" v-if="step === 2" />
           <ReserveAttention />
           <ReserveVisitInfo
@@ -90,7 +90,7 @@ const addReserve = async () => {
     duration: +deftime.value,
     description: dismodel.value,
   };
-  const res = await usePost("appointments", useAuthStore().userToken, body);
+  const res = await usePost({url:"appointments",includeAuthHeader:true,body:body});
   console.log(res);
 };
 
@@ -100,7 +100,8 @@ const response = await useGet({
 });
 const resData = await response.data;
 const lawyerSchedules = resData.data.schedules;
-// console.log(resData.data.schedules);
+
+const basePrice = resData.data.basePrice
 
 const step = ref(1);
 

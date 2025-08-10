@@ -9,7 +9,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/admin/registerlawyer",
       icon: "material-symbols:fingerprint",
     },
-    { title: "لیست کاربران", url: "#", icon: "lucide:calendar" },
+    { title: "لیست کاربران", url: "/dashboard/admin/users", icon: "lucide:calendar" },
     {
       title: "کد تخفیف",
       url: "/dashboard/admin/coupons",

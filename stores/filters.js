@@ -38,6 +38,7 @@ export const useFiltersStore = defineStore("filters", {
       city: null,
       searchField: null,
     },
+    price:[]
   }),
 
   actions: {
