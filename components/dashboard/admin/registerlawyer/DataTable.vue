@@ -4,7 +4,34 @@ import type { TableColumn } from "@nuxt/ui";
 import type { Row } from "@tanstack/vue-table";
 import { getPaginationRowModel } from "@tanstack/vue-table";
 
-const filterStore = useFiltersStore()
+const refetch = async (page = undefined) => {
+  const lawyersRef = ref(
+    (
+      await useGet({
+        url: "register-lawyer-list",
+        includeAuthHeader: true,
+        query: page ? { page: page } : undefined,
+      })
+    ).data
+  );
+  data.value = lawyersRef.value.data.map((law) => {
+    const base = filterStore.lawyerTypes.find((type) => law.base == type.id);
+    return {
+      id: law.user_id,
+      national_code: law.national_code,
+      phone: law.user?.phone,
+      fullName: `${law.user?.name} ${law.user?.family}`,
+      edit_id: law.id,
+      license: law.license_number,
+      status: law.status,
+      nationalCardImage: law.national_card_image,
+      licenseImage: law.license_image,
+      base: base?.title,
+    };
+  });
+};
+
+const filterStore = useFiltersStore();
 const UButton = resolveComponent("UButton");
 const UDropdownMenu = resolveComponent("UDropdownMenu");
 
@@ -22,7 +49,6 @@ const lawyersRef = ref(
 
 console.log(lawyersRef.value.data);
 
-
 type Payment = {
   id: string;
   national_code: string;
@@ -32,16 +58,15 @@ type Payment = {
   is_active: boolean;
   status: "pending" | "approved" | "reject";
   license: string;
-  base:string;
+  base: string;
   nationalCardImage: string;
   licenseImage: string;
 };
 
-console.log(filterStore.lawyerTypes);
-
-
 const data = ref(
   lawyersRef.value.data.map((law) => {
+    const base = filterStore.lawyerTypes.find((type) => law.base == type.id);
+
     return {
       id: law.user_id,
       national_code: law.national_code,
@@ -52,6 +77,7 @@ const data = ref(
       status: law.status,
       nationalCardImage: law.national_card_image,
       licenseImage: law.license_image,
+      base: base?.title,
     };
   })
 );
@@ -110,10 +136,13 @@ watch(
       const res = await useGet({
         url: `register-lawyers/search`,
         query: { q: globalFilter.value, page: pagination.value.pageIndex },
-        includeAuthHeader: false
+        includeAuthHeader: false,
       });
       console.log(res.data.data);
       data.value = res.data.data.map((law) => {
+        const base = filterStore.lawyerTypes.find(
+          (type) => law.base == type.id
+        );
         return {
           id: law.user_id,
           national_code: law.national_code,
@@ -124,33 +153,11 @@ watch(
           status: law.status,
           nationalCardImage: law.national_card_image,
           licenseImage: law.license_image,
+          base: base?.title,
         };
       });
     } else {
-      console.log(page);
-
-      const lawyersRef = ref(
-        (
-          await useGet({
-            url: "register-lawyer-list",
-            query: { page: page },
-            includeAuthHeader: false,
-          })
-        ).data
-      );
-      data.value = lawyersRef.value.data.map((law) => {
-        return {
-          id: law.user_id,
-          national_code: law.national_code,
-          phone: law.user?.phone,
-          fullName: `${law.user?.name} ${law.user?.family}`,
-          edit_id: law.id,
-          license: law.license_number,
-          status: law.status,
-          nationalCardImage: law.national_card_image,
-          licenseImage: law.license_image,
-        };
-      });
+      refetch(page);
     }
   }
 );
@@ -162,11 +169,12 @@ const searchLawyer = async () => {
         await useGet({
           url: "register-lawyer-list",
           includeAuthHeader: true,
-          query: undefined
+          query: undefined,
         })
       ).data
     );
     data.value = lawyersRef.value.data.map((law) => {
+      const base = filterStore.lawyerTypes.find((type) => law.base == type.id);
       return {
         id: law.user_id,
         national_code: law.national_code,
@@ -177,18 +185,21 @@ const searchLawyer = async () => {
         status: law.status,
         nationalCardImage: law.national_card_image,
         licenseImage: law.license_image,
+        base: base?.title,
       };
     });
-    pagination.value.total = lawyersRef.value.meta.total
+    pagination.value.total = lawyersRef.value.meta.total;
     return;
   } else {
     const res = await useGet({
       url: `register-lawyers/search`,
       query: { q: globalFilter.value },
-      includeAuthHeader: false
+      includeAuthHeader: false,
     });
     console.log(res.data.data);
     data.value = res.data.data.map((law) => {
+      const base = filterStore.lawyerTypes.find((type) => law.base == type.id);
+
       return {
         id: law.user_id,
         national_code: law.national_code,
@@ -199,6 +210,7 @@ const searchLawyer = async () => {
         status: law.status,
         nationalCardImage: law.national_card_image,
         licenseImage: law.license_image,
+        base: base?.title,
       };
     });
 
@@ -215,28 +227,7 @@ const rejectHandle = async (com, id) => {
   });
   // console.log(pagination.value.pageIndex);
   if (res.statusCode === 200) {
-    const lawyersRef = ref(
-      (
-        await useGet({
-          url: "register-lawyer-list",
-          query: { page: pagination.value.pageIndex },
-          includeAuthHeader: true,
-        })
-      ).data
-    );
-    data.value = lawyersRef.value.data.map((law) => {
-      return {
-        id: law.user_id,
-        national_code: law.national_code,
-        phone: law.user?.phone,
-        fullName: `${law.user?.name} ${law.user?.family}`,
-        edit_id: law.id,
-        license: law.license_number,
-        status: law.status,
-        nationalCardImage: law.national_card_image,
-        licenseImage: law.license_image,
-      };
-    });
+    refetch(pagination.value.pageIndex);
   }
 };
 
@@ -248,28 +239,7 @@ const acceptHandle = async (id) => {
   });
   // console.log(pagination.value.pageIndex);
   if (res.statusCode === 200) {
-    const lawyersRef = ref(
-      (
-        await useGet({
-          url: "register-lawyer-list",
-          query: { page: pagination.value.pageIndex },
-          includeAuthHeader: true,
-        })
-      ).data
-    );
-    data.value = lawyersRef.value.data.map((law) => {
-      return {
-        id: law.user_id,
-        national_code: law.national_code,
-        phone: law.user?.phone,
-        fullName: `${law.user?.name} ${law.user?.family}`,
-        edit_id: law.id,
-        license: law.license_number,
-        status: law.status,
-        nationalCardImage: law.national_card_image,
-        licenseImage: law.license_image,
-      };
-    });
+    refetch(pagination.value.pageIndex);
   }
 };
 </script>
