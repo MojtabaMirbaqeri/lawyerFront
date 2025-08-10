@@ -5,76 +5,51 @@
 </template>
 
 <script setup>
-const data = ref([
-  {
-    id: "4600",
-    date: "2024-03-11T15:30:00",
-    status: "paid",
-    email: "james.anderson@example.com",
-    amount: 100000000,
-  },
-  {
-    id: "4599",
-    date: "2024-03-11T10:10:00",
-    status: "failed",
-    email: "mia.white@example.com",
-    amount: 276,
-  },
-  {
-    id: "4598",
-    date: "2024-03-11T08:50:00",
-    status: "refunded",
-    email: "william.brown@example.com",
-    amount: 315,
-  },
-  {
-    id: "4597",
-    date: "2024-03-10T19:45:00",
-    status: "paid",
-    email: "emma.davis@example.com",
-    amount: 529,
-  },
-  {
-    id: "4596",
-    date: "2024-03-10T15:55:00",
-    status: "paid",
-    email: "ethan.harris@example.com",
-    amount: 639,
-  },
-]);
+const res = await useGet({url:'users',includeAuthHeader:true,})
+const refData = res.data.data.data
+console.log(res.data.data.data);
+
+const data = ref(refData.map((ref) => {
+  return {
+    fullName : `${ref?.name} ${ref?.family}`,
+    phone:ref?.phone,
+    amount:ref.wallet_balance || 0,
+    activeTicket : ref?.ticket_count,
+    orders:ref?.appointment_count,
+    comments : ref?.review_count
+  }
+}));
 
 const columns = [
   {
-    accessorKey: "id",
-    header: "#",
-    cell: ({ row }) => `#${row.getValue("id")}`,
+    accessorKey: "fullName",
+    header: "نام نام خانوادگی",
   },
   {
-    accessorKey: "date",
-    header: "Date",
-    cell: ({ row }) => {
-      return new Date(row.getValue("date")).toLocaleString("en-US", {
-        day: "numeric",
-        month: "short",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      });
-    },
+    accessorKey: "phone",
+    header: "تلفن",
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "activeTicket",
+    header: "تیکت فعال",
+  },
+  {
+    accessorKey: "orders",
+    header: "سفارشات",
+  },
+  {
+    accessorKey: "comments",
+    header: "دیدگاه",
   },
   {
     accessorKey: "amount",
-    header: () => h("div", { class: "text-right" }, "موجودی کیف پول"),
+    header: () => h("div", { class: "text-center" }, "موجودی کیف پول"),
     cell: ({ row }) => {
       const amount = Number.parseFloat(row.getValue("amount"));
 
       const formatted = new Intl.NumberFormat("fa-IR").format(amount) + " تومان";
 
-      return h("div", { class: "text-right font-medium" }, formatted);
+      return h("div", { class: "text-center font-medium" }, formatted);
     },
   },
 ];

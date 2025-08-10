@@ -5,7 +5,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
     { title: "داشبورد", url: "/dashboard", icon: "lucide:home" },
     { title: "لیست وکلا", url: "/dashboard/admin/lawyerlist", icon: "lucide:inbox" },
     { title: "انتظار تایید", url: "/dashboard/admin/registerlawyer", icon: "material-symbols:fingerprint" },
-    { title: "لیست کاربران", url: "/dashboard/admin/users", icon: "lucide:calendar" },
+    { title: "لیست کاربران", url: "/dashboard/admin/users", icon: "solar:users-group-two-rounded-linear" },
     { title: "صورت حساب", url: "#", icon: "lucide:search" },
     { title: "تنظیمات", url: "#", icon: "lucide:settings" },
   ];
