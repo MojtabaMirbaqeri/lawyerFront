@@ -170,8 +170,8 @@ const searchLawyer = () => {
 </script>
 
 <template>
-  <div class="bg-white px-4 rounded-[8px]">
-    <div class="flex justify-between py-3.5">
+  <div class="ds-table-con">
+    <div class="flex justify-between">
       <UInput
         @change="searchLawyer"
         v-model="globalFilter"
