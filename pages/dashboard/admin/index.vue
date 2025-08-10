@@ -1,5 +1,5 @@
 <template>
-  <div class="ds-container">
+  <div>
     admin page
   </div>
 </template>

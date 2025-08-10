@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="ds-container">
+    <div>
       <!-- <LandingLawyersSection /> -->
        ssads
     </div>
