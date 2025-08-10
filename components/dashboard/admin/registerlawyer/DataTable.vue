@@ -245,8 +245,8 @@ const acceptHandle = async (id) => {
 </script>
 
 <template>
-  <div class="bg-white px-4 rounded-[8px]">
-    <div class="flex justify-between py-3.5">
+  <div class="ds-table-con">
+    <div class="flex justify-between">
       <UInput
         v-model="globalFilter"
         class="max-w-[250px] w-full"

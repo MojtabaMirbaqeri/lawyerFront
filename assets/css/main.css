@@ -47,6 +47,11 @@ html {
   .field-base {
     @apply w-full h-[40px] lg:h-[42px];
   }
+
+  .ds-table-con {
+    @apply bg-white p-[18px] rounded-xl border border-gray-200;
+    @apply flex flex-col gap-4;
+  }
 }
 
 @utility container {
@@ -105,6 +110,6 @@ body {
   opacity: 0;
 }
 
-button{
+button {
   cursor: pointer;
 }
