@@ -14,7 +14,7 @@ type Payment = {
 };
 </script>
 
-<template>
+<template> 
   <UTable
     :data="data"
     :ui="{
