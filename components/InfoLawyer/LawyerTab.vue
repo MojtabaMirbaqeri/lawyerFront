@@ -12,11 +12,9 @@
 </template>
 
 <script setup>
-const props = defineProps(["dis", "pos"]);
-const res = await useGet(
-  {url:`lawyer_schedules/grouped/${useRoute().params.id}`,includeAuthHeader:true},
-);
-const sch = await res.data;
+const props = defineProps(["dis", "pos","sch"]);
+
+
 
 const items = ref([
   {
@@ -36,7 +34,7 @@ const items = ref([
     label: "زمان مشاوره",
     value: "visit",
     slot: "visit",
-    sch: sch,
+    sch: props.sch,
   },
 ]);
 

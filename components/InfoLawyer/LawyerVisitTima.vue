@@ -12,11 +12,7 @@ const weekDays = [
   "جمعه",
 ];
 
-// const res = await useGet(`lawyer_schedules/grouped/${useRoute().params.id}`,true)
-// const sch = await res.data;
 
-
-// این داده‌ها مثلاً از API اومدن
 const scheduleData = props.sch
 
 const items = ref([

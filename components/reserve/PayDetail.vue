@@ -16,7 +16,7 @@
             <div class="top border-b border-primary/30 pb-2">
               <div class="tax flex justify-between">
                 <div class="title">قیمت کل</div>
-                <div class="price">0 تومان</div>
+                <div class="price">{{totalPrice}} تومان</div>
               </div>
             </div>
             <div class="bottom p-2 rounded-b-[8px] flex items-start gap-2">
@@ -37,8 +37,8 @@
   </div>
 </template>
 
-<script>
-export default {};
+<script setup>
+defineProps(["totalPrice"])
 </script>
 
 <style>

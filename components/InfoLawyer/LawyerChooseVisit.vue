@@ -36,25 +36,26 @@
 </template>
 
 <script setup>
+const filterStore = useFiltersStore()
 const items = ref([
   {
     id: "1",
     title: "مشاوره تلفنی",
-    price: "360,000",
+    price: filterStore.price.phone,
     value:'phone',
     icon: "hugeicons:telephone",
   },
   {
     id: "2",
     title: "مشاوره حضوری",
-    price: "400,000",
+    price: filterStore.price.inperson,
     value:'inperson',
     icon: "hugeicons:building-06",
   },
   {
     id: "3",
     title: "چت",
-    price: "250,000",
+    price: filterStore.price.chat,
     value:'chat',
     icon: "hugeicons:message-multiple-02",
   },
