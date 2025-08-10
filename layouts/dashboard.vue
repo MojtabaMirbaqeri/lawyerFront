@@ -9,7 +9,7 @@
             class="size-6! lg:hidden!"
             @click="openSideBarHandle"
           />
-          <DashboardProfile
+          <UserProfile
             :reverse="true"
             :detail="{
               name: `${authStore.user?.name} ${authStore.user?.family}`,

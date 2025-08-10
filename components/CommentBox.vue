@@ -1,20 +1,12 @@
 <template>
   <div class="comment-box">
     <div class="comment-header">
-      <div class="comment-user">
-        <div class="user-avatar">
-          <UIcon
-            name="hugeicons:user-circle-02"
-            class="size-6! absolute -translate-1/2 top-1/2 end-1/2 text-primary"
-          />
-        </div>
-        <div class="user-info">
-          <h5 class="text-sm text-gray">کاربر:</h5>
-          <h3 class="user-name">
-            {{ commentDetail.user.name }} {{ commentDetail.user.family }}
-          </h3>
-        </div>
-      </div>
+      <UserProfile
+        :detail="{
+          name: `${commentDetail.user.name} ${commentDetail.user.family}`,
+          text: 'مراجعه کننده:',
+        }"
+      />
       <div class="badge-group">
         <UICBadge
           variant="yellow"
@@ -53,7 +45,9 @@
       <NuxtLink to="lawyer/4">
         <div class="lawyer-tag">
           <NuxtImg
-            :src="commentDetail.lawyer.profile_image || '/images/null-avatar.png'"
+            :src="
+              commentDetail.lawyer.profile_image || '/images/null-avatar.png'
+            "
             class="lawyer-avatar"
           />
           {{ commentDetail.lawyer.full_name }}
