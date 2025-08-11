@@ -8,7 +8,7 @@
         },
         {
           label: 'جزییات وکیل',
-          to: '/lawyer/4',
+          to: `/lawyer/${$route.params.id}`,
         },
       ]"
     />

@@ -24,7 +24,13 @@
           <div class="price">{{ items[activeBtn - 1].price }}</div>
         </div>
         <UICSecondaryBtn
-          @click="navigateTo(`/reserve/4?visit_type=${items.find((item) => item.id === activeBtn).value}`)"
+          @click="
+            navigateTo(
+              `/reserve/${$route.params.id}?visit_type=${
+                items.find((item) => item.id === activeBtn).value
+              }`
+            )
+          "
           class="flex items-center justify-center"
           ><span class="text-center text-base"
             >ادامه فرآیند</span
@@ -36,27 +42,27 @@
 </template>
 
 <script setup>
-const filterStore = useFiltersStore()
+const filterStore = useFiltersStore();
 const items = ref([
   {
     id: "1",
     title: "مشاوره تلفنی",
     price: filterStore.price.phone,
-    value:'phone',
+    value: "phone",
     icon: "hugeicons:telephone",
   },
   {
     id: "2",
     title: "مشاوره حضوری",
     price: filterStore.price.inperson,
-    value:'inperson',
+    value: "inperson",
     icon: "hugeicons:building-06",
   },
   {
     id: "3",
     title: "چت",
     price: filterStore.price.chat,
-    value:'chat',
+    value: "chat",
     icon: "hugeicons:message-multiple-02",
   },
 ]);
