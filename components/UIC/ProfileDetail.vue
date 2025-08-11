@@ -2,7 +2,7 @@
   <div class="lawyer-detail hidden lg:block primary-box">
     <div class="top flex flex-col items-center">
       <div class="avatar max-w-[60px] mb-2">
-        <img :src="src" alt="" />
+        <NuxtImg :src="src" alt="" />
       </div>
       <div class="fullname font-semibold">جناب آقای {{ fullname }}</div>
       <div class="skill opacity-60 text-xs">{{ skill }}</div>

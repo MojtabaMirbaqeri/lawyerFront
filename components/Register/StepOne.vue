@@ -87,10 +87,27 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     }
     registerStore.userInformation.phone = event.data.phone;
     registerStore.userInformation.type = defType.value;
+    if (res.statusCode === 200) {
+      useToast().add({
+        title: "کد تایید برای شما پیامک شد.",
+        icon: "solar:phone-linear",
+        color: "success",
+      });
+    } else {
+      useToast().add({
+        title: "کد تایید برای شما قبلا پیامک شده است.",
+        icon: "solar:phone-linear",
+        color: "warning",
+      });
+    }
     registerStore.nextStep();
   } else {
     console.log(res.error);
-    alert("خطا");
+    useToast().add({
+      title: "شماره موبایل شما تایید نشد.",
+      icon: "solar:phone-linear",
+      color: "error",
+    });
   }
   authStore.loading = false;
 }

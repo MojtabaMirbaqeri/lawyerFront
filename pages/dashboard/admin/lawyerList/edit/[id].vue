@@ -9,34 +9,32 @@ const items = [
   },
   {
     label: "گزارش مالی",
-    icon: "i-lucide-lock",
+    icon: "carbon:report",
     slot: "payReport" as const,
   },
   {
     label: "گزارش فعالیت",
-    icon: "i-lucide-lock",
+    icon: "ic:outline-pending-actions",
     slot: "actionReport" as const,
   },
 ] satisfies TabsItem[];
 </script>
 
 <template>
-  <UTabs
-    :items="items"
-    variant="link"
-    :ui="{ trigger: 'grow' }"
-    class="gap-4 w-full"
-  >
-    <template #edit="{ item }">
-      <DashboardAdminEditLawyerEditForm/>
-    </template>
+  <div class="">
+    <UTabs
+      :items="items"
+      variant="link"
+      :ui="{ trigger: 'grow' }"
+      class="gap-4 w-full"
+    >
+      <template #edit="{ item }">
+        <DashboardAdminEditLawyerEditForm />
+      </template>
+      <template #payReport="{ item }"> asdasdad </template>
 
-    <template #payReport="{ item }">
-      asdasdad
-    </template>
-    <template #actionReport="{ item }">
-      ششششششششششششش
-    </template>
-  </UTabs>
+      <template #actionReport="{ item }"> ششششششششششششش </template>
+    </UTabs>
+  </div>
 </template>
 

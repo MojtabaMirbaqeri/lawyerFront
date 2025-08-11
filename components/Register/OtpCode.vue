@@ -7,6 +7,7 @@
   >
 
   <UPinInput
+    ref="otpInputRef"
     v-model="otpVal"
     length="4"
     :otp="true"
@@ -53,9 +54,9 @@
 </template>
 
 <script setup>
-
 const endTime = ref(localStorage.getItem("timer"));
 const counting = ref(true);
+const otpInputRef = ref(null);
 
 onBeforeMount(() => {
   // console.log(new Date().setMinutes(new Date().getMinutes()));
@@ -115,8 +116,15 @@ const otpHandle = async () => {
   const code = otpVal.value.join("");
 
   if (code.length !== 4) {
-    alert("تعداد رقم کد تایید باید 4 رقم باشد");
+    nextTick(() => {
+      document.querySelector(".otp input")?.focus();
+    });
     otpVal.value = "";
+    useToast().add({
+      title: "کد ورود باید 4 رقم باشد.",
+      icon: "solar:password-minimalistic-input-broken",
+      color: "error",
+    });
     return;
   }
 
@@ -135,7 +143,14 @@ const otpHandle = async () => {
 
     navigateTo("/dashboard");
   } catch (error) {
-    alert("کد وارد شده نامعتبر است");
+    useToast().add({
+      title: "کد ورود نا معتبر می باشد.",
+      icon: "solar:password-minimalistic-input-broken",
+      color: "error",
+    });
+    nextTick(() => {
+      document.querySelector(".otp input")?.focus();
+    });
     otpVal.value = "";
   }
 };

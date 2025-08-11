@@ -3,11 +3,11 @@
     <UButton icon="stash:image-search" color="neutral" variant="link" class="" :ui="{leadingIcon:'size-6!'}"/>
 
     <template #body>
-        <img :src="image" alt="">
+        <NuxtImg :src="image" alt=""/>
     </template>
   </UModal>
 </template>
 
 <script setup>
-defineProps(['image','title'])
+defineProps(["image", "title"]);
 </script>
