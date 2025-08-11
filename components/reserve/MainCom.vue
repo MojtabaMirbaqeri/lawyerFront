@@ -26,7 +26,7 @@
             </div>
           </div>
 
-          <div class="primary-box p-5 flex mb-[80px] lg:mb-0 flex-col gap-3">
+          <div class="primary-box p-5 flex lg:mb-0 flex-col gap-3">
             <h1 class="sec-header">توضیحات</h1>
             <label for="dis">شرح حال</label>
             <ThingTextarea
@@ -43,7 +43,12 @@
         <div v-if="step === 2" class="step2 flex flex-col gap-3">
           <UICBackBtn @click="step--" />
           <ReservePayDetail :detailPrice="detailPrice" />
-          <ReserveSelectPay class="flex lg:hidden" v-if="step === 2" />
+          <ReserveSelectPay
+            @subCopun="(val) => addOffer(val)"
+            @subReserve="addReserve"
+            class="flex lg:hidden"
+            v-if="step === 2"
+          />
           <ReserveAttention />
           <ReserveVisitInfo
             :defVisitTime="defVisitTime"
@@ -99,8 +104,21 @@ const addReserve = async () => {
     includeAuthHeader: true,
     body: body,
   });
-  if(res.statusCode === 200 || res.statusCode === 201){
-    navigateTo('/dashboard')
+  if (res.statusCode === 200 || res.statusCode === 201) {
+    useToast().add({
+      title: "نوبت شما با موفقیت ثبت شد.",
+      icon: "hugeicons:appointment-02",
+      color: "success",
+    });
+    navigateTo("/dashboard");
+  } else if (res.statusCode === 422) {
+    useToast().add({
+      title: "در این بازه زمانی وکیل نوبت دیگری دارد.",
+      icon: "hugeicons:appointment-02",
+      color: "error",
+    });
+
+    step.value = 1;
   }
   console.log(res);
 };
@@ -112,16 +130,29 @@ const addOffer = async (val) => {
       includeAuthHeader: true,
       query: { code: val },
     });
-    const data = res.data.data;
+    const data = res.data?.data;
     if (res.statusCode === 200) {
       detailPrice.value = useCalculatePrice(deftime.value, basePrice, data);
       console.log(detailPrice.value);
-      codeOffer.value = val
+      useToast().add({
+        title: "کد تخفیف با موفقیت اعمال شد.",
+        icon: "bx:bxs-offer",
+        color: "success",
+      });
+      codeOffer.value = val;
     } else {
-      alert("این کد نا معتبر هست");
+      useToast().add({
+        title: "کد تخفیف نامعتبر هست.",
+        icon: "bx:bxs-offer",
+        color: "error",
+      });
     }
   } else {
-    alert("کد تخفیف شما اعمال شده است");
+    useToast().add({
+      title: "کد تخفیف با موفقیت اعمال شده است.",
+      icon: "bx:bxs-offer",
+      color: "warning",
+    });
   }
 };
 

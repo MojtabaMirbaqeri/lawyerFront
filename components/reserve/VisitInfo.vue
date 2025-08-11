@@ -1,10 +1,10 @@
 <template>
-  <div class="primary-box mb-[120px] lg:mb-0">
+  <div class="primary-box lg:mb-0">
     <h1 class="sec-header mb-3">اطلاعات نوبت</h1>
     <div class="boxes flex flex-col gap-2">
       <div class="info-box flex justify-between">
         <div class="title">مراجعه کننده</div>
-        <div class="value">محمد طاها حاجی عبداللهی</div>
+        <div class="value">{{ useAuthStore().user.name + " " +  useAuthStore().user.family}}</div>
       </div>
       <div class="info-box flex justify-between">
         <div class="title">مدت زمان جلسه</div>

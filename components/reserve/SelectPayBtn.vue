@@ -13,7 +13,7 @@
       :disabled="item.disabled || item.nonworking"
       @click="handleClick(item.id)"
     >
-      <img
+      <NuxtImg
         v-if="item.src"
         :src="'/images/' + item.src"
         class="size-6"
