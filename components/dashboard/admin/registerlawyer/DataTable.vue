@@ -89,6 +89,10 @@ const columns: TableColumn<Payment>[] = [
     cell: ({ row }) => `#${row.getValue("id")}`,
   },
   {
+    accessorKey: "fullName",
+    header: "نام نام خانوادگی",
+  },
+  {
     accessorKey: "national_code",
     header: "کدملی",
   },
@@ -107,10 +111,6 @@ const columns: TableColumn<Payment>[] = [
   {
     accessorKey: "licenseImage",
     header: "عکس پروانه وکیل",
-  },
-  {
-    accessorKey: "fullName",
-    header: "نام نام خانوادگی",
   },
   {
     accessorKey: "status",

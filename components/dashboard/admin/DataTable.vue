@@ -132,7 +132,7 @@ function getRowItems(row: Row<Payment>) {
           body: undefined,
         });
         console.log(res);
-        refetch()
+        refetch(pagination.value.pageIndex)
       },
     },
   ];
@@ -141,7 +141,7 @@ function getRowItems(row: Row<Payment>) {
 const globalFilter = ref("");
 
 const pagination = ref({
-  pageIndex: 3,
+  pageIndex: 1,
   pageSize: 10,
   total: lawyersRef.value.meta.total,
 });
@@ -149,30 +149,19 @@ const pagination = ref({
 watch(
   () => pagination.value.pageIndex,
   async (page) => {
-    const lawyersRef = ref(
-      (await useGet({ url: "lawyers", query: { page: page } })).data
-    );
-    data.value = lawyersRef.value.data.map((law) => {
-      return {
-        id: law.lawyer_info?.id,
-        national_code: law.lawyer_info?.national_code,
-        phone: law.phone,
-        fullName: `${law.lawyer_info?.name} ${law.lawyer_info?.family}`,
-        base: law.lawyer_info?.base_lawyer?.title,
-        edit_id: law.id,
-        is_active: law.is_active,
-      };
-    });
+    refetch(page)
   }
 );
 
-const searchLawyer = () => {
+const searchLawyer = async () => {
   if (globalFilter.value === "") {
     console.log("null");
 
     return;
   } else {
-    console.log(globalFilter.value);
+    const res = await useGet({url:'lawyer-search/comprehensive-search',includeAuthHeader:true,query:{query:globalFilter.value}})
+    console.log(res.data);
+    
   }
 };
 </script>
@@ -204,7 +193,7 @@ const searchLawyer = () => {
 
     <div class="flex justify-center border-t border-default py-4">
       <UPagination
-        v-model="pagination.pageIndex"
+        v-model:page="pagination.pageIndex"
         :items-per-page="pagination.pageSize"
         :total="pagination.total"
         :ui="{
