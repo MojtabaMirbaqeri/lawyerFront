@@ -4,10 +4,10 @@
       <UForm
         :schema="schema"
         :state="state"
-        class="space-y-4 flex gap-3 justify-between items-start flex-col w-full"
+        class="ds-form"
         @submit="onSubmit"
       >
-        <div class="grid grid-cols-1 lg:grid-cols-3 w-full gap-6">
+        <div class="ds-form-grid">
           <UICInput
             v-model="state.phone"
             name="phone"
@@ -37,7 +37,6 @@
         </div>
 
         <UICSecondaryBtn
-          class="w-fit rounded-[8px]! h-[46px]"
           type="submit"
           :disabled="!isChanged"
         >
