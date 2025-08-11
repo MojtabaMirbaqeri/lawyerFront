@@ -9,14 +9,18 @@
             class="bg-primary/10! flex flex-col gap-3 p-3 border rounded-[8px] text-primary border-primary!"
           >
             <div class="tax flex justify-between">
+              <div class="title">قیمت اصلی</div>
+              <div class="price">{{detailPrice.mainPrice}} تومان</div>
+            </div>
+            <div class="tax flex justify-between">
               <div class="title">تخفیف</div>
-              <div class="price">0 تومان</div>
+              <div class="price">{{detailPrice.offerValue}} تومان</div>
             </div>
             <USeparator class="opacity-30" color="primary" />
             <div class="top border-b border-primary/30 pb-2">
               <div class="tax flex justify-between">
-                <div class="title">قیمت کل</div>
-                <div class="price">{{totalPrice}} تومان</div>
+                <div class="title">قیمت نهایی</div>
+                <div class="price">{{detailPrice.price}} تومان</div>
               </div>
             </div>
             <div class="bottom p-2 rounded-b-[8px] flex items-start gap-2">
@@ -38,7 +42,7 @@
 </template>
 
 <script setup>
-defineProps(["totalPrice"])
+defineProps(["detailPrice"])
 </script>
 
 <style>

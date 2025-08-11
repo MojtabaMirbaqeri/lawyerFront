@@ -42,7 +42,7 @@
         </div>
         <div v-if="step === 2" class="step2 flex flex-col gap-3">
           <UICBackBtn @click="step--" />
-          <ReservePayDetail :total-price="useCalculatePrice(deftime,basePrice)"/>
+          <ReservePayDetail :detailPrice="detailPrice" />
           <ReserveSelectPay class="flex lg:hidden" v-if="step === 2" />
           <ReserveAttention />
           <ReserveVisitInfo
@@ -65,9 +65,10 @@
         />
 
         <ReserveSelectPay
-          @subReserve="addReserve"
-          class="hidden lg:flex"
           v-if="step === 2"
+          class="hidden lg:flex"
+          @subCopun="(val) => addOffer(val)"
+          @subReserve="addReserve"
         />
       </div>
     </div>
@@ -79,6 +80,8 @@ const res = await useGet({ url: `lawyers/${useRoute().params.id}` }, "");
 const data = await res.data;
 const lawyer = ref(data.data);
 
+const codeOffer = ref("");
+
 const route = useRoute();
 
 const addReserve = async () => {
@@ -89,9 +92,37 @@ const addReserve = async () => {
     time: defVisitTime.value,
     duration: +deftime.value,
     description: dismodel.value,
+    coupon_code: codeOffer.value,
   };
-  const res = await usePost({url:"appointments",includeAuthHeader:true,body:body});
+  const res = await usePost({
+    url: "appointments",
+    includeAuthHeader: true,
+    body: body,
+  });
+  if(res.statusCode === 200 || res.statusCode === 201){
+    navigateTo('/dashboard')
+  }
   console.log(res);
+};
+
+const addOffer = async (val) => {
+  if (detailPrice.value.offerValue === 0) {
+    const res = await useGet({
+      url: "coupons/validate",
+      includeAuthHeader: true,
+      query: { code: val },
+    });
+    const data = res.data.data;
+    if (res.statusCode === 200) {
+      detailPrice.value = useCalculatePrice(deftime.value, basePrice, data);
+      console.log(detailPrice.value);
+      codeOffer.value = val
+    } else {
+      alert("این کد نا معتبر هست");
+    }
+  } else {
+    alert("کد تخفیف شما اعمال شده است");
+  }
 };
 
 const response = await useGet({
@@ -101,7 +132,7 @@ const response = await useGet({
 const resData = await response.data;
 const lawyerSchedules = resData.data.schedules;
 
-const basePrice = resData.data.basePrice
+const basePrice = resData.data.basePrice;
 
 const step = ref(1);
 
@@ -176,8 +207,17 @@ const bookings = ref(
   })
 );
 
+const detailPrice = ref();
+
 onMounted(() => {
   fetchHolidays();
+  detailPrice.value = useCalculatePrice(deftime.value, basePrice);
+});
+
+onUpdated(() => {
+  if (step.value === 1) {
+    detailPrice.value = useCalculatePrice(deftime.value, basePrice);
+  }
 });
 
 watch(activeDay, (newVal) => {

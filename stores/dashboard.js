@@ -15,7 +15,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/admin/registerlawyer",
       icon: "material-symbols:fingerprint",
     },
-    { title: "لیست کاربران", url: "/dashboard/admin/users", icon: "lucide:calendar" },
+    {
+      title: "لیست کاربران",
+      url: "/dashboard/admin/users",
+      icon: "solar:users-group-two-rounded-linear",
+    },
     { title: "کد تخفیف", url: "/dashboard/admin/coupons", icon: "hugeicons:coupon-01" },
     {
       title: "صورت حساب",
