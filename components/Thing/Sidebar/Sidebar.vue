@@ -7,32 +7,6 @@
     <slot />
   </div>
 
-  <!-- <ThingSheet
-    :open="openMobile"
-    v-bind="$attrs"
-    @update:open="setOpenMobile"
-  >
-    <ThingSheetContent
-      data-sidebar="sidebar"
-      data-mobile="true"
-      :side="side"
-      :class="sideBarStyles().mobileSheet()"
-      :style="{
-        '--sidebar-width': '18rem',
-      }"
-    >
-      <VisuallyHidden>
-        <ThingSheetTitle>Mobile Sidebar</ThingSheetTitle>
-        <ThingSheetDescription>
-          This is the mobile sidebar. You can use this to navigate the site.
-        </ThingSheetDescription>
-      </VisuallyHidden>
-      <div :class="sideBarStyles().mobileInner()">
-        <slot />
-      </div>
-    </ThingSheetContent>
-  </ThingSheet> -->
-
   <nav v-else-if="isMobile">
     <div
       :class="{ 'opacity-0! z-[-1]!': !useDashboardStore().openSidebar }"
@@ -40,11 +14,15 @@
       @click="closeSideBar"
     ></div>
     <div
-      class="mobile-sidebar z-30 h-screen w-[18rem] bg-white right-[-100%] absolute top-0"
+      class="mobile-sidebar z-30 h-screen w-[18rem] bg-white right-[-100%] fixed top-0"
       :class="{ 'right-0!': useDashboardStore().openSidebar }"
     >
       <div class="p-3 flex justify-between items-center">
-        <div class="logo"><img src="/images/logo.png" class="w-25" /></div>
+        <div class="logo">
+          <NuxtLink to="/">
+            <NuxtImg src="/images/logo.png" class="w-25" />
+          </NuxtLink>
+        </div>
         <div class="closeBtn">
           <UIcon
             name="solar:close-circle-linear"
@@ -53,19 +31,26 @@
           />
         </div>
       </div>
-      <div class="items w-full">
-        <ul class="w-full flex flex-col gap-1.5 p-3">
+      <div class="items w-full px-3 divide-y divide-gray-200">
+        <ul class="w-full flex flex-col gap-1.5 py-3">
           <li
+            v-for="item in dashboardStore.sidebarRoutes"
+            :key="item.url"
             class="w-full flex items-center gap-2"
-            v-for="item in dashboardStore.adminRoute"
-            :key="item"
           >
-            <nuxt-link class="w-full flex items-center gap-2 mo-items" :to="item.url" @click="closeSideBar">
-              <UIcon :name="item.icon" class="size-5!" />
+            <nuxt-link
+              class="w-full flex items-center gap-2 ds-menu-item"
+              :to="item.url"
+              @click="closeSideBar"
+            >
+              <UIcon :name="item.icon" class="size-4.5!" />
               {{ item.title }}
             </nuxt-link>
           </li>
         </ul>
+        <div class="py-3">
+          <DashboardLogoutBtn class="h-auto" />
+        </div>
       </div>
     </div>
   </nav>
@@ -108,6 +93,7 @@ const dashboardStore = useDashboardStore();
 
 const closeSideBar = () => {
   dashboardStore.openSidebar = false;
+  document.body.classList.remove("overflow-hidden!");
 };
 
 export const sideBarStyles = tv({
@@ -209,19 +195,6 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
 }
 
 .sidebar-overlay {
-  @apply w-full transition-opacity duration-300 bg-white/10 z-[11] backdrop-blur-[4px] absolute h-screen;
-}
-
-.mo-items {
-  @apply py-3 px-4 rounded-[8px];
-  transition: all 0.3s;
-}
-
-.mo-items:hover {
-  @apply text-blue-500;
-}
-
-.router-link-active {
-  @apply bg-blue-100/80  text-blue-500;
+  @apply w-full transition-opacity duration-300 bg-white/10 z-[11] backdrop-blur-[4px] fixed top-0 h-screen;
 }
 </style>
