@@ -42,7 +42,7 @@
     </div>
 
     <div class="comment-footer">
-      <NuxtLink to="lawyer/4">
+      <NuxtLink :to="`lawyer/${commentDetail.lawyer?.id}`">
         <div class="lawyer-tag">
           <NuxtImg
             :src="

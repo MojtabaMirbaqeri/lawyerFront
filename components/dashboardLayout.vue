@@ -2,18 +2,21 @@
   <div id="dashboard-layout">
     <ThingSidebarProvider>
       <ThingSidebar side="right">
-        <ThingSheetHeader
-          class="p-5 lg:h-20! justify-center border-b border-gray-300"
-        >
-          <img src="/images/logo.png" alt="" class="w-25" />
+        <ThingSheetHeader class="header">
+          <NuxtLink to="/">
+            <NuxtImg src="/images/logo.png" alt="" class="w-25" />
+          </NuxtLink>
         </ThingSheetHeader>
-        <ThingSidebarContent>
-          <ThingSidebarGroup class="px-2.5">
-            <ThingSidebarGroupLabel label="پنل ادمین" />
+        <ThingSidebarContent class="px-2.5 divide-y divide-gray-200">
+          <ThingSidebarGroup>
+            <ThingSidebarGroupLabel :label="authStore.user?.user_type" />
             <ThingSidebarGroupContent>
               <ThingSidebarMenu>
-                <ThingSidebarMenuItem v-for="item in route" :key="item.title">
-                  <ThingSidebarMenuButton as-child class="pc-items">
+                <ThingSidebarMenuItem
+                  v-for="item in dashboardStore.sidebarRoutes"
+                  :key="item.url"
+                >
+                  <ThingSidebarMenuButton as-child class="ds-menu-item">
                     <NuxtLink :to="item.url">
                       <Icon :name="item.icon" class="size-4.5!" />
                       <span>{{ item.title }}</span>
@@ -21,6 +24,11 @@
                   </ThingSidebarMenuButton>
                 </ThingSidebarMenuItem>
               </ThingSidebarMenu>
+            </ThingSidebarGroupContent>
+          </ThingSidebarGroup>
+          <ThingSidebarGroup>
+            <ThingSidebarGroupContent>
+              <DashboardLogoutBtn />
             </ThingSidebarGroupContent>
           </ThingSidebarGroup>
         </ThingSidebarContent>
@@ -32,32 +40,17 @@
 <script lang="ts" setup>
 // Menu items.
 const dashboardStore = useDashboardStore();
-
-const route = dashboardStore.adminRoute;
+const authStore = useAuthStore();
 </script>
 
 <style scoped>
 @reference "tailwindcss";
 
-.pc-items {
-  @apply py-5 px-4 overflow-clip relative;
-  transition: all 0.3s;
+.header {
+  @apply p-5 lg:h-20! justify-center border-b border-gray-300;
 }
 
-.pc-items::before {
-  content: " ";
-  @apply absolute h-[85%]! w-[9px] rounded-full bg-blue-500 translate-x-[calc(100%+1px)] start-0 transition-all duration-300;
-}
-
-.pc-items:hover {
-  @apply text-blue-500;
-}
-
-.router-link-active {
-  @apply text-blue-500 bg-blue-100/80;
-}
-
-.pc-items.router-link-active::before {
-  @apply bg-blue-500 translate-x-1/2!;
+[data-sidebar="group"] {
+  @apply px-0;
 }
 </style>

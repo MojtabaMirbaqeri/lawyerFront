@@ -30,6 +30,7 @@ const dashboardStore = useDashboardStore();
 const authStore = useAuthStore();
 
 const openSideBarHandle = () => {
+  document.body.classList.add("overflow-hidden!");
   dashboardStore.openSidebar = true;
 };
 </script>

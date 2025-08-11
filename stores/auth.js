@@ -199,7 +199,7 @@ export const useAuthStore = defineStore("auth", {
       jwtToken.value = null;
 
       if (redirect && import.meta.client) {
-        navigateTo("/register");
+        navigateTo("/");
       }
     },
   },
