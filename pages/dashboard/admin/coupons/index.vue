@@ -1,5 +1,10 @@
 <template>
   <div class="ds-table-con">
+    <div class="flex justify-end">
+      <NuxtLink to="coupons/add">
+        <UICSecondaryBtn> ایجاد کپن </UICSecondaryBtn>
+      </NuxtLink>
+    </div>
     <UICDataTable :columns="columns" :data="couponsRes?.data" />
   </div>
 </template>

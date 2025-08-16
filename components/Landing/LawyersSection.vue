@@ -103,7 +103,7 @@ const lawyersListRef = ref(null);
 const tabItems = ref(filtersStore.sortItems);
 filtersStore.selectedFilters.sortBy = tabItems.value[0].value;
 
-const lawyerTypes = filtersStore.lawyerTypes;
+const lawyerTypes = [...filtersStore.lawyerTypes];
 lawyerTypes.unshift({
   id: 0,
   title: "همه",

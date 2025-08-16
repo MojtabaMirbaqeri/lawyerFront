@@ -51,9 +51,7 @@
           />
         </div>
 
-        <UICSecondaryBtn type="submit" :disabled="!isChanged">
-          ویرایش کپن
-        </UICSecondaryBtn>
+        <UICSecondaryBtn type="submit"> ایجاد کپن </UICSecondaryBtn>
       </UForm>
     </div>
   </section>
@@ -62,44 +60,13 @@
 <script setup>
 import { object, string, boolean } from "yup";
 
-const route = useRoute();
-
-const { data: initialDetail, statusCode } = await useGet({
-  url: `coupons/${route.params?.id}`,
-  includeAuthHeader: true,
-});
-
-if (statusCode === 404) {
-  useToast().add({
-    title: "آیدی کپن نامعتبر است!",
-    color: "error",
-  });
-  navigateTo("/dashboard/admin/coupons", { replace: true });
-}
-
-// تابع برای فرمت تاریخ
-const formatDate = (dateString) => {
-  if (!dateString) return "";
-  const d = new Date(dateString);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
-
 const state = reactive({
-  code: initialDetail.code,
-  type: initialDetail.type,
-  value: initialDetail.value,
-  is_active: initialDetail.is_active,
-  expires_at: formatDate(initialDetail.expires_at),
-  usage_limit: initialDetail.usage_limit,
-});
-
-const initialState = reactive({ ...state });
-
-const isChanged = computed(() => {
-  return Object.keys(state).some((key) => state[key] !== initialState[key]);
+  code: "",
+  type: "",
+  value: "",
+  is_active: true,
+  expires_at: "",
+  usage_limit: "",
 });
 
 // ولیدیشن Yup
@@ -122,27 +89,26 @@ const onSubmit = async () => {
   const body = {
     code: state.code,
     type: state.type,
-    value: state.value,
+    value: Number(state.value),
     is_active: state.is_active,
-    expires_at: state.expires_at,
-    usage_limit: state.usage_limit,
+    expires_at: new Date(state.expires_at),
+    usage_limit: Number(state.usage_limit),
   };
 
-  const res = await usePut({
-    url: `coupons/${route.params?.id}`,
+  const res = await usePost({
+    url: "coupons",
     includeAuthHeader: true,
     body,
   });
-
-  if (res.statusCode === 200) {
+  if (res.statusCode === 201 || res.statusCode === 200) {
     useToast().add({
-      title: "کپن با موفقیت ویرایش شد",
+      title: "کپن با موفقیت ایجاد شد",
       color: "success",
     });
-    Object.assign(initialState, state);
+    navigateTo("/dashboard/admin/coupons");
   } else {
     useToast().add({
-      title: "ویرایش کپن با خطا مواجه شد",
+      title: "ایجاد کپن با خطا مواجه شد",
       color: "error",
     });
   }

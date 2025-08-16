@@ -6,9 +6,10 @@ import { useAuthStore } from "~/stores/auth";
 export const useDashboardStore = defineStore("dashboard", () => {
   const openSidebar = ref(false);
 
-  const commonRoutes = [{ title: "داشبورد", url: "/dashboard", icon: "lucide:home" }];
+  const commonRoutes = [];
 
   const adminRoutes = [
+    { title: "داشبورد", url: "/dashboard/admin", icon: "hugeicons:dashboard-square-01" },
     { title: "لیست وکلا", url: "/dashboard/admin/lawyerlist", icon: "lucide:inbox" },
     {
       title: "انتظار تایید",
@@ -30,6 +31,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
   ];
 
   const lawyerRoutes = [
+    { title: "داشبورد", url: "/dashboard/lawyer", icon: "hugeicons:dashboard-square-01" },
     { title: "پرونده‌ها", url: "/dashboard/lawyer/cases", icon: "lucide:folder" },
     // {
     //   title: "قرارهای من",
@@ -40,6 +42,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
   ];
 
   const userRoutes = [
+    { title: "داشبورد", url: "/dashboard", icon: "hugeicons:dashboard-square-01" },
     { title: "رزرو جلسه", url: "/dashboard/reserve", icon: "lucide:clock" },
     // { title: "پرونده‌های من", url: "/dashboard/cases", icon: "lucide:folder" },
     // { title: "پروفایل", url: "/dashboard/profile", icon: "lucide:user" },

@@ -18,7 +18,11 @@
       :class="{ 'right-0!': useDashboardStore().openSidebar }"
     >
       <div class="p-3 flex justify-between items-center">
-        <div class="logo"><img src="/images/logo.png" class="w-25" /></div>
+        <div class="logo">
+          <NuxtLink to="/">
+            <NuxtImg src="/images/logo.png" class="w-25" />
+          </NuxtLink>
+        </div>
         <div class="closeBtn">
           <UIcon
             name="solar:close-circle-linear"
@@ -34,8 +38,12 @@
             :key="item.url"
             class="w-full flex items-center gap-2"
           >
-            <nuxt-link class="w-full flex items-center gap-2 mo-items" :to="item.url" @click="closeSideBar">
-              <UIcon :name="item.icon" class="size-5!" />
+            <nuxt-link
+              class="w-full flex items-center gap-2 ds-menu-item"
+              :to="item.url"
+              @click="closeSideBar"
+            >
+              <UIcon :name="item.icon" class="size-4.5!" />
               {{ item.title }}
             </nuxt-link>
           </li>
