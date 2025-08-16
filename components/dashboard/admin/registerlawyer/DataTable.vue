@@ -256,7 +256,7 @@ const acceptHandle = async (id) => {
       />
     </div>
     <UTable
-      :data="data"
+      :data="data"  
       :columns="columns"
       class="flex-1"
       :ui="{

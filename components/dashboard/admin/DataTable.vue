@@ -9,12 +9,18 @@ const UDropdownMenu = resolveComponent("UDropdownMenu");
 
 const table = useTemplateRef("table");
 
-const refetch = async (page=null) => {
-  const lawyersRef = ref((await useGet({
-    url: "lawyers",
-    includeAuthHeader: false,
-    query: page ? {page:page} : undefined,
-  })).data);
+const filterStore = useFiltersStore();
+
+const refetch = async (page = null, total = false) => {
+  const lawyersRef = ref(
+    (
+      await useGet({
+        url: "lawyers",
+        includeAuthHeader: false,
+        query: page ? { page: page } : undefined,
+      })
+    ).data
+  );
   data.value = lawyersRef.value.data.map((law) => {
     return {
       id: law.lawyer_info?.id,
@@ -26,6 +32,39 @@ const refetch = async (page=null) => {
       is_active: law.is_active,
     };
   });
+
+  if (total) {
+    pagination.value.total = lawyersRef.value.meta.total;
+    pagination.value.pageIndex = 1;
+  }
+};
+
+const searchRefetch = async (query, start, page) => {
+  const res = await useGet({
+    url: "lawyer-search/comprehensive-search",
+    includeAuthHeader: true,
+    query: { page: page ? page : undefined, query: query },
+  });
+  const lawyers = ref(res.data.data.data.lawyers);
+
+  data.value = lawyers.value.map((law) => {
+    const base = filterStore.lawyerTypes.find((type) => law.base == type.id);
+    return {
+      id: law?.id,
+      national_code: law?.national_code,
+      phone: law.phone,
+      fullName: `${law?.name} ${law?.family}`,
+      base: base?.title,
+      edit_id: law.id,
+      is_active: law.is_active,
+    };
+  });
+
+  if (start) {
+    pagination.value.pageIndex = 1;
+  }
+
+  pagination.value.total = res.data.data.data.pagination.total;
 };
 
 const lawyersRef = ref((await useGet({ url: "lawyers" })).data);
@@ -132,7 +171,7 @@ function getRowItems(row: Row<Payment>) {
           body: undefined,
         });
         console.log(res);
-        refetch(pagination.value.pageIndex)
+        refetch(pagination.value.pageIndex);
       },
     },
   ];
@@ -149,19 +188,22 @@ const pagination = ref({
 watch(
   () => pagination.value.pageIndex,
   async (page) => {
-    refetch(page)
+    if (globalFilter.value) {
+      searchRefetch(globalFilter.value , false , page)
+      return;
+    } else {
+      refetch(page);
+    }
   }
 );
 
 const searchLawyer = async () => {
   if (globalFilter.value === "") {
-    console.log("null");
+    refetch(null, true);
 
     return;
   } else {
-    const res = await useGet({url:'lawyer-search/comprehensive-search',includeAuthHeader:true,query:{query:globalFilter.value}})
-    console.log(res.data);
-    
+    searchRefetch(globalFilter.value, true , null);
   }
 };
 </script>

@@ -99,7 +99,7 @@ html {
 
 body {
   font-family: IRANSansX !important;
-  background-color: #f8fafd !important;
+  background-color: white !important;
   @apply text-content text-[13px]! lg:text-sm! overflow-clip;
 }
 
