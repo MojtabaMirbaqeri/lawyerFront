@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiEndpoint: process.env.API_EP,
+      imageBase: process.env.IMAGE_BASE,
     },
   },
   app: {
