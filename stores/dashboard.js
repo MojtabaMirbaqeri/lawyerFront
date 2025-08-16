@@ -20,6 +20,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/admin/users",
       icon: "solar:users-group-two-rounded-linear",
     },
+    {title:"تیکت ها" , url:"/dashboard/admin/tickets" , icon:"hugeicons:message-multiple-02"},
     { title: "کد تخفیف", url: "/dashboard/admin/coupons", icon: "hugeicons:coupon-01" },
     {
       title: "صورت حساب",
