@@ -38,7 +38,67 @@ export const useFiltersStore = defineStore("filters", {
       city: null,
       searchField: null,
     },
-    price:[]
+    price: [],
+    ticketFilter: {
+      status: [
+        {
+          id: 'open',
+          label: 'باز'
+        },
+        {
+          id: 'in_progress',
+          label: 'در حال پیگیری'
+        },
+        {
+          id: 'answered',
+          label: 'پاسخ داده شده'
+        },
+        {
+          id: 'waiting_for_user',
+          label: 'در انتظار پاسخ کاربر'
+        },
+        {
+          id: 'closed',
+          label: 'بسته شده'
+        },
+        {
+          id:0,
+          label:'همه'
+        }
+      ],
+      priority: [
+        {
+          id: 1,
+          label: 'کم'
+        },
+        {
+          id: 2,
+          label: 'متوسط'
+        },
+        {
+          id: 3,
+          label: 'زیاد'
+        },
+        {
+          id: 4,
+          label: 'فوری'
+        },
+        {
+          id:0,
+          label:'همه'
+        }
+      ],
+      type: [
+        { id: 'financial', label: 'مالی' },
+        { id: 'technical', label: 'فنی' },
+        { id: 'violation_report', label: 'گزارش تخلف' },
+        { id: 'other', label: 'سایر' },
+        {
+          id:0,
+          label:'همه'
+        }
+      ]
+    }
   }),
 
   actions: {
