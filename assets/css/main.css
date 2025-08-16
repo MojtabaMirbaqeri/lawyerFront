@@ -137,5 +137,5 @@ button {
 }
 
 .ds-form .secondary-btn {
-  @apply w-fit rounded-[8px]! h-[46px];
+  @apply w-fit rounded-[8px]! h-[40px]!;
 }

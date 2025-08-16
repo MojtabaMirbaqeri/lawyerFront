@@ -29,6 +29,7 @@ export const useFiltersStore = defineStore("filters", {
     ],
     lawyerTypes: [],
     lawyerSpecialties: [],
+    lawyerServices: [],
     selectedFilters: {
       visitType: [],
       gender: null,
@@ -108,6 +109,9 @@ export const useFiltersStore = defineStore("filters", {
     },
     setLawyerSpecialties(specialties) {
       this.lawyerSpecialties = specialties;
+    },
+    setLawyerServices(services) {
+      this.lawyerServices = services;
     },
     applyFilters(filters) {
       const keys = ["visitType", "gender", "lawyerSpecialty"];

@@ -40,7 +40,7 @@ import { object, string } from "yup";
 const registerStore = useRegisterStore();
 const filtersStore = useFiltersStore();
 
-const mappedTypes = filtersStore.lawyerTypes
+const mappedTypes = [...filtersStore.lawyerTypes]
   .map((type) => ({
     id: type.id,
     label: type.title,

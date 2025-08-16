@@ -11,12 +11,15 @@
 <script setup>
 const filtersStore = useFiltersStore();
 
-const [lawyerTypesRes, lawyerSpecialtiesRes] = await Promise.all([
-  useGet({ url: "lawyer_bases" }),
-  useGet({ url: "specialties" }),
-]);
+const [lawyerTypesRes, lawyerSpecialtiesRes, lawyerServicesRes] =
+  await Promise.all([
+    useGet({ url: "lawyer_bases" }),
+    useGet({ url: "specialties" }),
+    useGet({ url: "services" }),
+  ]);
 filtersStore.setLawyerTypes(lawyerTypesRes.data.data);
 filtersStore.setLawyerSpecialties(lawyerSpecialtiesRes.data.data);
+filtersStore.setLawyerServices(lawyerServicesRes.data.data);
 
 onMounted(async () => {
   const loaderStore = useLoaderStore();
