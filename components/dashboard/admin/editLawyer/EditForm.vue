@@ -49,10 +49,11 @@
 </template>
 
 <script setup lang="ts">
-import { object, string } from "yup";
+import { date, object, string } from "yup";
 import type { InferType } from "yup";
 import { ref, reactive, computed } from "vue";
 const filtersStore = useFiltersStore();
+const props = defineProps(["lawyer"]);
 
 // گرفتن اطلاعات اولیه
 const bases = filtersStore.lawyerTypes.map((type) => ({
@@ -60,9 +61,9 @@ const bases = filtersStore.lawyerTypes.map((type) => ({
   label: type.title,
 }));
 
-const res = await useGet({ url: `lawyers/${useRoute().params.id}` });
-const data = await res.data;
-const lawyer = ref(data.data);
+// const res = await useGet({ url: `lawyers/${useRoute().params.id}` });
+// const data = await res.data;
+const lawyer = ref(props.lawyer);
 
 // مدل‌ها
 const baseModel = ref(+lawyer.value.lawyer_info.base);
@@ -75,7 +76,7 @@ const education = ref([
 ]);
 
 const lawyerEdu = education.value.find(
-  (edu) => edu.label === lawyer.value.education
+  (edu) => edu.label === lawyer.value.lawyer_info.education
 );
 const educationModel = ref(lawyerEdu?.id ?? null);
 
@@ -142,6 +143,21 @@ const onSubmit = async (event) => {
     includeAuthHeader: true,
     body,
   });
+
+  if (res.statusCode === 200 || res.statusCode === 201) {
+    useToast().add({ title: "وکیل با موفقیت ویرایش شد", color: "success" });
+
+    const res = await useGet({ url: `lawyers/${useRoute().params.id}` });
+    const datas = await res.data;
+    lawyer.value = datas.data;
+
+    // 🔑 ریست کردن مقدار اولیه بعد از ذخیره موفق
+    initialState.phone = state.phone;
+    initialState.name = state.name;
+    initialState.lastName = state.lastName;
+    initialBase.value = baseModel.value;
+    initialEducation.value = educationModel.value;
+  }
 
   console.log(res.statusCode);
 };

@@ -18,6 +18,16 @@ const items = [
     slot: "actionReport" as const,
   },
 ] satisfies TabsItem[];
+
+const res = await useGet({
+  url: `admin/lawyers/${useRoute().params.id}/metrics`,
+  includeAuthHeader: true,
+  query: undefined,
+});
+
+const data = ref(res.data.data);
+const appointments = ref(res.data.data.appointments_list);
+console.log(appointments.value);
 </script>
 
 <template>
@@ -29,9 +39,11 @@ const items = [
       class="gap-4 w-full"
     >
       <template #edit="{ item }">
-        <DashboardAdminEditLawyerEditForm />
+        <DashboardAdminEditLawyerEditForm :lawyer="data" />
       </template>
-      <template #payReport="{ item }"> asdasdad </template>
+      <template #payReport="{ item }">
+        <DashboardAdminEditLawyerReportAppointment :appointments="appointments" :total="res.data.data.appointments_meta.total"/>
+      </template>
 
       <template #actionReport="{ item }"> ششششششششششششش </template>
     </UTabs>
