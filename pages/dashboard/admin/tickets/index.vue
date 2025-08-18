@@ -256,7 +256,7 @@ function getRowItems(row) {
     items.splice(1, 0, {
       label: "مشاهده تیکت ها",
       onSelect() {
-        navigateTo(`/dashboard/admin/coupons/edit/${row.original.id}`);
+        navigateTo(`/dashboard/ticket/${row.original.ticketId}`);
       },
       icon: "hugeicons:message-multiple-02",
     });
