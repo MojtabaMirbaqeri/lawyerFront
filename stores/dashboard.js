@@ -34,6 +34,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
   const lawyerRoutes = [
     { title: "داشبورد", url: "/dashboard/lawyer", icon: "hugeicons:dashboard-square-01" },
     { title: "پرونده‌ها", url: "/dashboard/lawyer/cases", icon: "lucide:folder" },
+    { title: "تیکت ها", url: "/dashboard/lawyer/tickets", icon: "hugeicons:message-multiple-02" },
     // {
     //   title: "قرارهای من",
     //   url: "/dashboard/lawyer/appointments",
