@@ -50,7 +50,7 @@ const tableData = ref(
     user: `${a.user?.name} ${a.user?.family}`,
     userPhone: a.user?.phone,
     lawyer: `${a.lawyer?.name} ${a.lawyer?.family}`,
-    type: a.type === "inperson" ? "حضوری" : "تلفنی",
+    type: a.type === "inperson" ? "حضوری" : a.type === 'phone'?"تلفنی":a.type === 'chat' ? 'چت':'',
     date: a.date,
     time: a.time,
     status: a.status,
@@ -105,9 +105,9 @@ const columns = ref([
     header: "وضعیت",
     cell: ({ row }) => {
       const statusMap = {
-        pending_payment: { label: "در انتظار پرداخت", color: "warning" },
-        confirmed: { label: "تایید شده", color: "success" },
-        cancelled: { label: "لغو شده", color: "error" },
+        pending_payment: { label: "در انتظار", color: "warning" },
+        approved: { color: "success" },
+        rejected: { color: "error" },
       };
 
       const st = statusMap[row.getValue("status")] || {
