@@ -23,6 +23,7 @@
             variant="button"
             :disabled="fileModel.length === 4"
             position="outside"
+            accept="image/*,.pdf,.txt,.xlsx,.docs" 
             class="me-auto"
             layout="list"
           >
@@ -71,6 +72,8 @@ onUpdated(async () => {
 });
 const ticket = () => {
   emit("sendTicket", { file: fileModel.value, dis: dismodel.value });
+  fileModel.value = ''
+  dismodel.value = ''
 };
 </script>
 

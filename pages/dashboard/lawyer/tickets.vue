@@ -74,10 +74,10 @@ const page = ref(1);
 
 const searchHandle = () => {
   if (!globalFilter.value) {
-    refetch(null,null,true,null);
+    refetch(null, null, true, null);
   } else {
     refetch(null, null, true, globalFilter.value);
-    page.value = 1
+    page.value = 1;
   }
 };
 
@@ -90,7 +90,7 @@ const refetch = async (
   console.log(search);
 
   const res = await useGet({
-    url: "tickets",
+    url: "tickets/user",
     includeAuthHeader: true,
     query: {
       page: page ? page : undefined,
@@ -137,7 +137,7 @@ watch(
 );
 
 const res = await useGet({
-  url: "tickets",
+  url: "tickets/user",
   includeAuthHeader: true,
 });
 
@@ -246,7 +246,7 @@ function getRowItems(row) {
     items.splice(1, 0, {
       label: "پاسخ به تیکت",
       onSelect() {
-        navigateTo(`/dashboard/ticket/${row.original.ticketId}`);   
+        navigateTo(`/dashboard/ticket/${row.original.ticketId}`);
       },
       icon: "solar:pen-outline",
     });
