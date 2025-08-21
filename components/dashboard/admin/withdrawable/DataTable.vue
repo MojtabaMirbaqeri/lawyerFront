@@ -8,103 +8,75 @@ type WithdrawalRequest = {
   amount: string;
   status: string;
   bankInfo: string;
-  createdAt: string; // یا Date اگر می‌خواهی تبدیل کنی
+  createdAt: string;
 };
 
 // --- تابع برای واکشی مجدد داده‌ها (برای صفحه‌بندی و رفرش) ---
 const refetch = async (page: number = 1) => {
   const response = await useGet({
-    url: "withdrawal-requests/pending?per_page=10",
+    url: "withdrawal-requests/pending",
     includeAuthHeader: true,
-    query: { page },
+    query: { page, per_page: 10 }, // ارسال per_page در کوئری برای تمیزی بیشتر
   });
 
   const responseData = response.data;
+  
   // مپ کردن داده‌های دریافتی از API به فرمت مورد نیاز جدول
-  data.value = responseData.data.map((req: any) => ({
+  data.value = responseData?.data?.map((req: any) => ({
     id: req.id,
-    fullName: `${req.lawyer?.user?.name || ""} ${
-      req.lawyer?.user?.family || ""
-    }`,
+    fullName: `${req.lawyer?.user?.name || ""} ${req.lawyer?.user?.family || ""}`,
     amount: req.formatted_amount,
     status: req.status_text,
     bankInfo: req.bank_info || "اطلاعات بانکی ثبت نشده",
     createdAt: req.created_at
       ? new Date(req.created_at).toLocaleDateString("fa-IR")
-      : "-", // فرمت‌دهی تاریخ
-  }));
-  console.log(data.value);
-  
+      : "-",
+  })) ?? []; // استفاده از ?? [] برای جلوگیری از خطا در صورت خالی بودن پاسخ
 
   // به‌روزرسانی اطلاعات صفحه‌بندی
-  pagination.value.total = responseData.meta.total;
+  pagination.value.total = responseData?.meta?.total || 0;
 };
 
 // --- دریافت داده‌های اولیه ---
 const { data: initialData } = await useGet({
-  url: "withdrawal-requests/pending?per_page=10",
+  url: "withdrawal-requests/pending",
   includeAuthHeader: true,
-  query: undefined,
+  query: { per_page: 10 },
 });
 
 // --- متغیرهای Reactive ---
 const data = ref<WithdrawalRequest[]>(
-  initialData.data.map((req: any) => ({
+  initialData?.data?.map((req: any) => ({
     id: req.id,
-    fullName: `${req.lawyer?.user?.name || ""} ${
-      req.lawyer?.user?.family || ""
-    }`,
+    fullName: `${req.lawyer?.user?.name || ""} ${req.lawyer?.user?.family || ""}`,
     amount: req.formatted_amount,
     status: req.status_text,
     bankInfo: req.bank_info || "اطلاعات بانکی ثبت نشده",
     createdAt: req.created_at
       ? new Date(req.created_at).toLocaleDateString("fa-IR")
-      : "-", // فرمت‌دهی تاریخ
-  }))
+      : "-",
+  })) ?? [] // استفاده از ?? [] برای جلوگیری از خطا
 );
 
 // --- تعریف ستون‌های جدول ---
-// این ستون‌ها دقیقاً مطابق با تصویر نمونه‌ای که فرستادی چیده شده‌اند.
 const columns: TableColumn<WithdrawalRequest>[] = [
-  {
-    accessorKey: "id",
-    header: "شناسه",
-    cell: ({ row }) => `#${row.getValue("id")}`,
-  },
-  {
-    accessorKey: "status",
-    header: "وضعیت",
-  },
-  {
-    accessorKey: "amount",
-    header: "مبلغ",
-  },
-  {
-    // ترکیب نام وکیل و اطلاعات بانکی در یک ستون
-    accessorKey: "bankInfo",
+  { accessorKey: "id", header: "شناسه", cell: ({ row }) => `#${row.getValue("id")}`},
+  { accessorKey: "status", header: "وضعیت" },
+  { accessorKey: "amount", header: "مبلغ" },
+  { 
+    accessorKey: "bankInfo", 
     header: "بانک مقصد",
-    cell: ({ row }) => {
-      const bankInfo = row.original.bankInfo;
-      const fullName = row.original.fullName;
-      return `${fullName}\n${bankInfo}`;
-    },
+    cell: ({ row }) => `${row.original.fullName}\n${row.original.bankInfo}`
   },
-  {
-    accessorKey: "createdAt",
-    header: "تاریخ",
-  },
-  {
-    // ستون سفارشی برای دکمه‌های تایید و رد
-    accessorKey: "actions",
-    header: "فعالیت",
-  },
+  { accessorKey: "createdAt", header: "تاریخ" },
+  { accessorKey: "actions", header: "فعالیت" },
 ];
 
 // --- تنظیمات صفحه‌بندی ---
 const pagination = ref({
   pageIndex: 1,
-  pageSize: initialData.meta.per_page || 10,
-  total: initialData.meta.total,
+  pageSize: initialData?.meta?.per_page || 10,
+  total: initialData?.meta?.total || 0, // مقدار اولیه برای جلوگیری از خطا
 });
 
 // --- نظارت بر تغییر صفحه برای واکشی داده‌های جدید ---
@@ -117,33 +89,40 @@ watch(
 
 // --- توابع مربوط به تایید و رد درخواست ---
 const rejectHandle = async (comment: string, id: number) => {
-  //              👇 متد به usePost تغییر کرد
   const res = await usePost({
-    //         👇 آیدی داینامیک در URL قرار گرفت
     url: `withdrawal-requests/${id}/reject`,
     includeAuthHeader: true,
-    // دلیل رد همچنان در body ارسال می‌شود
     body: { rejection_reason: comment },
   });
 
   if (res.statusCode === 200) {
-    // واکشی مجدد داده‌ها پس از موفقیت
-    refetch(pagination.value.pageIndex);
+    // ۱. داده‌های صفحه فعلی را مجدداً واکشی کن
+    await refetch(pagination.value.pageIndex);
+
+    // ۲. بررسی کن آیا صفحه خالی شده و صفحه اول نیست
+    if (data.value.length === 0 && pagination.value.pageIndex > 1) {
+      // ۳. اگر شرط برقرار بود، به صفحه قبل برو
+      // watcher به صورت خودکار refetch را برای صفحه جدید صدا می‌زند
+      pagination.value.pageIndex--;
+    }
   }
 };
 
 const acceptHandle = async (id: number) => {
-  //              👇 متد به usePost تغییر کرد
   const res = await usePost({
-    //         👇 آیدی داینامیک در URL قرار گرفت
     url: `withdrawal-requests/${id}/approve`,
     includeAuthHeader: true,
-    body: undefined,
   });
 
   if (res.statusCode === 200) {
-    // واکشی مجدد داده‌های صفحه فعلی پس از موفقیت
-    refetch(pagination.value.pageIndex);
+    // ۱. داده‌های صفحه فعلی را مجدداً واکشی کن
+    await refetch(pagination.value.pageIndex);
+
+    // ۲. بررسی کن آیا صفحه خالی شده و صفحه اول نیست
+    if (data.value.length === 0 && pagination.value.pageIndex > 1) {
+      // ۳. اگر شرط برقرار بود، به صفحه قبل برو
+      pagination.value.pageIndex--;
+    }
   }
 };
 </script>
