@@ -101,10 +101,18 @@ const timerStartHandle = async () => {
     console.log(res.status);
 
     if (res.statusCode === 200) {
-      alert("send code");
+      useToast().add({
+        title: "کد تایید برای شما پیامک شد.",
+        icon: "solar:phone-linear",
+        color: "success",
+      });
     } else {
       console.log(res.error);
-      alert("خطا");
+      useToast().add({
+        title: "شماره موبایل شما تایید نشد.",
+        icon: "solar:phone-linear",
+        color: "error",
+      });
     }
   }
   endTime.value = localStorage.getItem("timer");
