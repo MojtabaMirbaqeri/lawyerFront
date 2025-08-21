@@ -106,8 +106,8 @@ const columns = ref([
     cell: ({ row }) => {
       const statusMap = {
         pending_payment: { label: "در انتظار", color: "warning" },
-        approved: { color: "success" },
-        rejected: { color: "error" },
+        approved: { label:'تایید شده' , color: "success" },
+        cancelled: { label:'تایید نشده' ,color: "error" },
       };
 
       const st = statusMap[row.getValue("status")] || {
