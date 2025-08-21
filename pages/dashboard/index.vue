@@ -2,7 +2,6 @@
   <section>
     <div>
       <!-- <LandingLawyersSection /> -->
-      ssads
     </div>
   </section>
 </template>
