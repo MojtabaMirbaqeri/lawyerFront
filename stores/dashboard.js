@@ -21,7 +21,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/admin/users",
       icon: "solar:users-group-two-rounded-linear",
     },
-    {title:"تیکت ها" , url:"/dashboard/admin/tickets" , icon:"hugeicons:message-multiple-02"},
+    {title:"تیکت‌ها" , url:"/dashboard/admin/tickets" , icon:"hugeicons:message-multiple-02"},
     { title: "کد تخفیف", url: "/dashboard/admin/coupons", icon: "hugeicons:coupon-01" },
     {
       title: "صورت حساب",
@@ -34,7 +34,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
   const lawyerRoutes = [
     { title: "داشبورد", url: "/dashboard/lawyer", icon: "hugeicons:dashboard-square-01" },
     { title: "پرونده‌ها", url: "/dashboard/lawyer/cases", icon: "lucide:folder" },
-    { title: "تیکت ها", url: "/dashboard/lawyer/tickets", icon: "hugeicons:message-multiple-02" },
+    { title: "تیکت‌ها", url: "/dashboard/ticket/tickets", icon: "hugeicons:message-multiple-02" },
     // {
     //   title: "قرارهای من",
     //   url: "/dashboard/lawyer/appointments",
@@ -45,9 +45,9 @@ export const useDashboardStore = defineStore("dashboard", () => {
 
   const userRoutes = [
     { title: "داشبورد", url: "/dashboard", icon: "hugeicons:dashboard-square-01" },
-    { title: "رزرو جلسه", url: "/dashboard/reserve", icon: "lucide:clock" },
-    // { title: "پرونده‌های من", url: "/dashboard/cases", icon: "lucide:folder" },
-    // { title: "پروفایل", url: "/dashboard/profile", icon: "lucide:user" },
+    { title: "تراکنش ها", url: "/dashboard/user/transactions", icon: "lucide:clock" },
+    { title: "تیکت‌ها", url: "/dashboard/ticket/tickets", icon: "hugeicons:message-multiple-02" },
+    { title: "نوبت‌های من", url: "/dashboard/user/appointments", icon: "lucide:calendar-clock" },
   ];
 
   const auth = useAuthStore();

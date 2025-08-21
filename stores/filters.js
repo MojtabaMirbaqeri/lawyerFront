@@ -69,6 +69,10 @@ export const useFiltersStore = defineStore("filters", {
       ],
       priority: [
         {
+          id:0,
+          label:'همه'
+        },
+        {
           id: 1,
           label: 'کم'
         },
@@ -84,20 +88,16 @@ export const useFiltersStore = defineStore("filters", {
           id: 4,
           label: 'فوری'
         },
+      ],
+      type: [
         {
           id:0,
           label:'همه'
-        }
-      ],
-      type: [
+        },
         { id: 'financial', label: 'مالی' },
         { id: 'technical', label: 'فنی' },
         { id: 'violation_report', label: 'گزارش تخلف' },
         { id: 'other', label: 'سایر' },
-        {
-          id:0,
-          label:'همه'
-        }
       ]
     }
   }),
