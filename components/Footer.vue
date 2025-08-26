@@ -77,12 +77,12 @@
           <div
             class="grid grid-cols-2 mx-5 lg:mx-0 py-2 gap-y-2.5 text-primary lg:shrink-0 lg:gap-y-3"
           >
-            <NuxtLink to="#"> خانه</NuxtLink>
-            <NuxtLink to="#"> ثبت نام و ورود </NuxtLink>
+            <NuxtLink to="/"> خانه</NuxtLink>
+            <NuxtLink to="/register"> ثبت نام و ورود </NuxtLink>
             <NuxtLink to="#"> درباره ما </NuxtLink>
-            <NuxtLink to="#"> سوالات متداول </NuxtLink>
+            <NuxtLink to="#faq"> سوالات متداول </NuxtLink>
             <NuxtLink to="#"> ارتباط با ما</NuxtLink>
-            <NuxtLink to="#"> راهنمای ویزیت آنلاین</NuxtLink>
+            <NuxtLink to="#visit-guide"> راهنمای ویزیت آنلاین</NuxtLink>
           </div>
         </div>
       </div>
