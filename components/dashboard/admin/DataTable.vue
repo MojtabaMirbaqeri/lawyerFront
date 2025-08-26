@@ -149,7 +149,7 @@ function getRowItems(row: Row<Payment>) {
   return [
     {
       type: "label",
-      label: "Actions",
+      label: "فعالیت ها",
     },
     {
       label: "ویرایش وکیل",
