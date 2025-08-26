@@ -121,8 +121,16 @@ const onSubmit = async (event) => {
 
   if (res.statusCode === 201 || res.statusCode === 200) {
     useToast().add({ title: "وکیل با موفقیت ایجاد شد", color: "success" });
+  } else if (res.statusCode === 422) {
+    useToast().add({
+      title: "این شماره تلفن قبلا ثبت شده است",
+      color: "error",
+    });
   } else {
-    useToast().add({ title: "وکیل با موفقیت ویرایش شد", color: "success" });
+    useToast().add({
+      title: "مشکلی رخ داده است لطفا مجددا امتحان کنید",
+      color: "error",
+    });
   }
 
   console.log(res.statusCode);

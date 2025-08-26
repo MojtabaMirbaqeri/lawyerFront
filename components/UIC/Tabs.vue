@@ -13,7 +13,17 @@
           <span>{{ item.label }}</span>
         </div>
         <div class="dis text-justify whitespace-break-spaces">
-          {{ item.dis }}
+          <div class="text-box" v-html="item.dis.slice(0, 300)" v-if="showMore === false">
+          </div>
+          <div v-html="item.dis" class="text-box" v-else>
+          </div>
+          <div
+            class="read-more text-primary cursor-pointer"
+            @click="showMore = !showMore"
+            v-if="item.dis.length > 300"
+          >
+          {{ showMore === false ? 'بیشتر' : 'بستن' }}
+          </div>
         </div>
       </div>
     </template>
@@ -23,11 +33,14 @@
       </div>
     </template>
     <template #visit="{ item }">
-      <InfoLawyerVisitTima :sch="item.sch"/>
+      <InfoLawyerVisitTima :sch="item.sch" />
     </template>
   </UTabs>
 </template>
 <script setup>
+
+const showMore = ref(false);
+
 defineProps({
   items: {
     type: Array,
@@ -42,3 +55,8 @@ const selectedTab = defineModel({
   type: String,
 });
 </script>
+<style scoped>
+.text-box {
+  white-space: pre-line; /* \n تبدیل میشه به اینتر */
+}
+</style>

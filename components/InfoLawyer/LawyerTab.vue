@@ -12,15 +12,21 @@
 </template>
 
 <script setup>
-const props = defineProps(["dis", "pos","sch"]);
+const props = defineProps(["dis", "pos", "sch"]);
+const newDis = ref('')
 
-
+if (props.dis) {
+  newDis.value = props.dis
+    .replace(/\r\n/g, "\n") // CRLF → LF
+    .replace(/\r/g, "\n") // CR → LF
+    .replace(/\n/g, "<br/>");
+}
 
 const items = ref([
   {
     label: "درباره من",
     value: "about",
-    dis: props.dis,
+    dis: newDis.value,
     iconTr: "hugeicons:user-account",
     slot: "about",
   },
