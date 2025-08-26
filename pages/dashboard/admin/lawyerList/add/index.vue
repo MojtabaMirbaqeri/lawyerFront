@@ -79,7 +79,10 @@ const state = reactive({
 const schema = object({
   phone: string()
     .required("لطفا شماره موبایل را وارد کنید")
-    .matches(/^(\+98|0)?9\d{9}$/, "شماره موبایل معتبر نیست")
+    .matches(
+      /^(098|0098|98|\+98|0)?9(0[0-5]|[1 3]\d|2[0-3]|9[0-9]|41)\d{7}$/g,
+      "شماره موبایل معتبر نیست"
+    )
     .length(11, "شماره موبایل باید دقیقاً 11 رقم باشد"),
   name: string()
     .required("نام خود را وارد کنید")
@@ -103,7 +106,9 @@ const onSubmit = async (event) => {
     phone: event.data.phone,
     name: event.data.name,
     family: event.data.lastName,
-    base: baseModel.value + "",
+    base: baseModel.value,
+    email: "",
+    about: "",
     education:
       education.value.find((e) => e.id === educationModel.value)?.label || "",
   };
@@ -111,8 +116,14 @@ const onSubmit = async (event) => {
   const res = await usePost({
     url: `lawyers`,
     includeAuthHeader: true,
-    body,
+    body: body,
   });
+
+  if (res.statusCode === 201 || res.statusCode === 200) {
+    useToast().add({ title: "وکیل با موفقیت ایجاد شد", color: "success" });
+  } else {
+    useToast().add({ title: "وکیل با موفقیت ویرایش شد", color: "success" });
+  }
 
   console.log(res.statusCode);
 };
