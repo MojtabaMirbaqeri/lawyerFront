@@ -146,6 +146,8 @@ watch(filtersStore.selectedFilters, async () => {
   }
 });
 
+const isFirstLoad = ref(true);
+
 async function fetchLawyers() {
   const { data } = await useGet({
     url: "lawyers",
@@ -161,8 +163,13 @@ async function fetchLawyers() {
     },
   });
   lawyersRef.value = data;
+
   nextTick(() => {
-    if (lawyersListRef.value) scrollToElement(lawyersListRef.value);
+    // فقط بعد از اولین بار
+    if (!isFirstLoad.value && lawyersListRef.value) {
+      scrollToElement(lawyersListRef.value);
+    }
+    isFirstLoad.value = false;
   });
 }
 </script>

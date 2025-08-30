@@ -1,9 +1,6 @@
 <template>
   <section>
-    <div>
-      <!-- <LandingLawyersSection /> -->
-      ssads
-    </div>
+    <div />
   </section>
 </template>
 
@@ -16,7 +13,9 @@ onMounted(() => {
       navigateTo("/dashboard/admin");
       break;
     case "lawyer":
-      navigateTo("/dashboard/lawyer");
+      if (authStore.user?.lawyer_id) {
+        navigateTo("/dashboard/lawyer");
+      }
       break;
   }
 });

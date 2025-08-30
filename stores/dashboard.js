@@ -5,6 +5,7 @@ import { useAuthStore } from "~/stores/auth";
 
 export const useDashboardStore = defineStore("dashboard", () => {
   const openSidebar = ref(false);
+  const auth = useAuthStore();
 
   const commonRoutes = [];
 
@@ -21,7 +22,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/admin/users",
       icon: "solar:users-group-two-rounded-linear",
     },
-    {title:"تیکت ها" , url:"/dashboard/admin/tickets" , icon:"hugeicons:message-multiple-02"},
+    {
+      title: "تیکت ها",
+      url: "/dashboard/admin/tickets",
+      icon: "hugeicons:message-multiple-02",
+    },
     { title: "کد تخفیف", url: "/dashboard/admin/coupons", icon: "hugeicons:coupon-01" },
     {
       title: "صورت حساب",
@@ -31,16 +36,30 @@ export const useDashboardStore = defineStore("dashboard", () => {
     { title: "تنظیمات", url: "/dashboard/admin/settings", icon: "lucide:settings" },
   ];
 
-  const lawyerRoutes = [
-    { title: "داشبورد", url: "/dashboard/lawyer", icon: "hugeicons:dashboard-square-01" },
-    { title: "پرونده‌ها", url: "/dashboard/lawyer/cases", icon: "lucide:folder" },
-    // {
-    //   title: "قرارهای من",
-    //   url: "/dashboard/lawyer/appointments",
-    //   icon: "lucide:calendar",
-    // },
-    // { title: "پروفایل وکیل", url: "/dashboard/lawyer/profile", icon: "lucide:user" },
-  ];
+const lawyerRoutes = computed(() => {
+  if (auth.user?.lawyer_id) {
+    return [
+      {
+        title: "داشبورد",
+        url: "/dashboard/lawyer",
+        icon: "hugeicons:dashboard-square-01",
+      },
+      {
+        title: "پروفایل",
+        url: "/dashboard/lawyer/profile",
+        icon: "solar:user-circle-linear",
+      },
+    ];
+  } else {
+    return [
+      {
+        title: "داشبورد",
+        url: "/dashboard",
+        icon: "hugeicons:dashboard-square-01",
+      },
+    ];
+  }
+});
 
   const userRoutes = [
     { title: "داشبورد", url: "/dashboard", icon: "hugeicons:dashboard-square-01" },
@@ -49,11 +68,10 @@ export const useDashboardStore = defineStore("dashboard", () => {
     // { title: "پروفایل", url: "/dashboard/profile", icon: "lucide:user" },
   ];
 
-  const auth = useAuthStore();
   const sidebarRoutes = computed(() => {
     const t = auth.user?.user_type;
     if (t === "admin") return [...commonRoutes, ...adminRoutes];
-    if (t === "lawyer") return [...commonRoutes, ...lawyerRoutes];
+    if (t === "lawyer") return [...commonRoutes, ...lawyerRoutes.value];
     return [...commonRoutes, ...userRoutes]; // default -> user
   });
 
