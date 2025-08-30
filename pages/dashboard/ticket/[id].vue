@@ -39,7 +39,7 @@ const sendTicket = async (detail) => {
     });
   }
 
-  if (detail.dis === "" || detail.dis.length < 3) {
+  if (detail.dis === "" || detail.dis.length < 3 || detail.dis.length > 1000) {
     useToast().add({
       title: "مقدار کامنت نباید کمتر از 3 حرف باشد",
       color: "error",

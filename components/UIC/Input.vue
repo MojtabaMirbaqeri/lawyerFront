@@ -11,6 +11,7 @@
         v-model="state"
         :readonly="readonly"
         :class="{ 'opacity-[0.5]': readonly }"
+        :placeholder="label"
         @focus="onFocus"
         class="w-full"
         :ui="{ root: 'field-base', base: 'h-full' }"

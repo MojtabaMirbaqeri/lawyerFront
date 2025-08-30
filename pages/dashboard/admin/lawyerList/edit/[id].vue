@@ -27,6 +27,8 @@ const res = await useGet({
 
 const data = ref(res.data.data);
 const appointments = ref(res.data.data.appointments_list);
+const withdrawals = ref(res.data.data.withdrawals_list);
+const wallet = ref(res.data.data.wallet);
 console.log(appointments.value);
 </script>
 
@@ -42,10 +44,19 @@ console.log(appointments.value);
         <DashboardAdminEditLawyerEditForm :lawyer="data" />
       </template>
       <template #payReport="{ item }">
-        <DashboardAdminEditLawyerReportAppointment :appointments="appointments" :total="res.data.data.appointments_meta.total"/>
+        <DashboardAdminEditLawyerReportWithdrawals
+          :walletDetail="wallet"
+          :withdrawals="withdrawals"
+          :total="res.data.data.withdrawals_meta.total"
+        />
       </template>
 
-      <template #actionReport="{ item }"> ششششششششششششش </template>
+      <template #actionReport="{ item }">
+        <DashboardAdminEditLawyerReportAppointment
+          :appointments="appointments"
+          :total="res.data.data.appointments_meta.total"
+        />
+      </template>
     </UTabs>
   </div>
 </template>

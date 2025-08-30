@@ -1,3 +1,3 @@
 <template>
-  <div>Billing</div>
+  <div><dashboard-admin-withdrawable-data-table/></div>
 </template>

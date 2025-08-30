@@ -2,6 +2,9 @@
 <template>
   <section>
     <div class="ds-table-con">
+      <UICSecondaryBtn class="w-[10%] rounded-[8px]! ms-auto" @click="navigateTo('/dashboard/new/ticket')">
+        <span>ایجاد تیکت</span>
+      </UICSecondaryBtn>
       <div class="flex flex-wrap lg:flex-nowrap gap-2 items-stretch">
         <div class="max-w-[250px] w-full flex flex-col justify-between">
           <label>فیلتر</label>
@@ -74,10 +77,10 @@ const page = ref(1);
 
 const searchHandle = () => {
   if (!globalFilter.value) {
-    refetch(null,null,true,null);
+    refetch(null, null, true, null);
   } else {
     refetch(null, null, true, globalFilter.value);
-    page.value = 1
+    page.value = 1;
   }
 };
 
@@ -90,7 +93,7 @@ const refetch = async (
   console.log(search);
 
   const res = await useGet({
-    url: "tickets",
+    url: "tickets/user",
     includeAuthHeader: true,
     query: {
       page: page ? page : undefined,
@@ -137,7 +140,7 @@ watch(
 );
 
 const res = await useGet({
-  url: "tickets",
+  url: "tickets/user",
   includeAuthHeader: true,
 });
 
@@ -246,7 +249,7 @@ function getRowItems(row) {
     items.splice(1, 0, {
       label: "پاسخ به تیکت",
       onSelect() {
-        navigateTo(`/dashboard/ticket/${row.original.ticketId}`);   
+        navigateTo(`/dashboard/ticket/${row.original.ticketId}`);
       },
       icon: "solar:pen-outline",
     });
@@ -259,39 +262,6 @@ function getRowItems(row) {
         navigateTo(`/dashboard/ticket/${row.original.ticketId}`);
       },
       icon: "hugeicons:message-multiple-02",
-    });
-  }
-
-  if (row.original.statusVal !== "closed") {
-    items.push({
-      label: "بستن",
-      icon: "solar:close-square-linear",
-      async onSelect() {
-        const postRes = await usePost({
-          url: `tickets/${row.original.ticketId}/close`,
-          includeAuthHeader: true,
-        });
-        if (postRes.statusCode == 200) {
-          tickets.value = await res.refresh();
-          data.value = tickets.value.data.data.tickets.map((ticket) => {
-            return {
-              id: ticket?.ticket_number,
-              ticketTitle: ticket?.title,
-              priority: ticket?.priority?.label,
-              type: ticket?.type?.label,
-              status: ticket?.status?.label,
-              statusVal: ticket?.status?.value,
-              fullname: `${ticket?.user?.name} ${ticket?.user?.family}`,
-              ticketId: ticket?.id,
-            };
-          });
-
-          useToast().add({
-            title: "تیکت با موفقیت بسته شد.",
-            color: "success",
-          });
-        }
-      },
     });
   }
 

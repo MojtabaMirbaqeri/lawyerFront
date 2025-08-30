@@ -1,6 +1,6 @@
 <template>
   <UModal
-    v-model="rejectModal"
+    v-model:open="rejectModal"
     title="رد کردن وکیل"
     description="برای رد وکیل ابتدا علت رو بیان کرده سپس دکمه رو فشار دهید"
   >
@@ -70,6 +70,8 @@ const userComment = ref("");
 const handle = () => {
   emit("reject", userComment.value);
   rejectModal.value = false;
+  console.log(rejectModal.value);
+  
 };
 
 const acceptHandle = () => {

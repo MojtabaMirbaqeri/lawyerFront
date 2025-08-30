@@ -113,12 +113,12 @@ const columns: TableColumn<Payment>[] = [
     header: "عکس پروانه وکیل",
   },
   {
-    accessorKey: "status",
-    header: "وضعیت",
-  },
-  {
     accessorKey: "base",
     header: "پایه",
+  },
+  {
+    accessorKey: "status",
+    header: "وضعیت",
   },
 ];
 const globalFilter = ref("");
