@@ -39,7 +39,7 @@
         <UICSecondaryBtn
           class="w-fit rounded-[8px]! h-[46px]"
           type="submit"
-          :disabled="!isChanged"
+          :disabled="!isChanged || isLoading"
         >
           ویرایش وکیل
         </UICSecondaryBtn>
@@ -74,6 +74,8 @@ const education = ref([
   { id: 3, label: "دکتری تخصصی" },
   { id: 4, label: "فوق دکتری" },
 ]);
+
+const isLoading = ref(false);
 
 const lawyerEdu = education.value.find(
   (edu) => edu.label === lawyer.value.lawyer_info.education
@@ -110,10 +112,7 @@ const isChanged = computed(() => {
 const schema = object({
   phone: string()
     .required("لطفا شماره موبایل را وارد کنید")
-    .matches(
-      /^(098|0098|98|\+98|0)?9(0[0-5]|[1 3]\d|2[0-3]|9[0-9]|41)\d{7}$/g,
-      "شماره موبایل معتبر نیست"
-    )
+    .matches(/^(\+98|0)?9\d{9}$/, "شماره موبایل معتبر نیست")
     .length(11, "شماره موبایل باید دقیقاً 11 رقم باشد"),
   name: string()
     .required("نام خود را وارد کنید")
@@ -133,6 +132,7 @@ function filterDigits(e: Event) {
 
 // ارسال فرم
 const onSubmit = async (event) => {
+  isLoading.value = true;
   const body = {
     name: event.data.name,
     family: event.data.lastName,
@@ -162,6 +162,7 @@ const onSubmit = async (event) => {
     initialEducation.value = educationModel.value;
   }
 
+  isLoading.value = false;
   console.log(res.statusCode);
 };
 </script>
