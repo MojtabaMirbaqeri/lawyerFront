@@ -3,7 +3,7 @@
     <div class="comment-header">
       <UserProfile
         :detail="{
-          name: `${commentDetail.user.name} ${commentDetail.user.family}`,
+          name: `${commentDetail?.user?.name} ${commentDetail?.user?.family}`,
           text: 'مراجعه کننده:',
         }"
       />
@@ -14,7 +14,7 @@
           :value="4.8"
           icon="ic:round-star"
         />
-        <UICBadge variant="gray" :value="commentDetail.created_at_formatted" />
+        <UICBadge variant="gray" :value="commentDetail?.created_at_formatted" />
       </div>
     </div>
 
@@ -22,10 +22,10 @@
       <p class="comment-text">
         {{
           commentDetail.comment.length > 160
-            ? commentDetail.comment.slice(0, 160) + "..."
-            : commentDetail.comment
+            ? commentDetail?.comment.slice(0, 160) + "..."
+            : commentDetail?.comment
         }}
-        <UICDrawer v-if="commentDetail.comment.length > 160" title="read more">
+        <UICDrawer v-if="commentDetail?.comment?.length > 160" title="read more">
           <template #button>
             <UButton
               label="مشاهده ی بیشتر"
@@ -35,22 +35,22 @@
             />
           </template>
           <template #default>
-            {{ commentDetail.comment }}
+            {{ commentDetail?.comment }}
           </template>
         </UICDrawer>
       </p>
     </div>
 
     <div class="comment-footer">
-      <NuxtLink :to="`lawyer/${commentDetail.lawyer?.id}`">
+      <NuxtLink :to="`lawyer/${commentDetail?.lawyer?.id}`">
         <div class="lawyer-tag">
           <NuxtImg
             :src="
-              commentDetail.lawyer.profile_image || '/images/null-avatar.png'
+              commentDetail?.lawyer.profile_image || '/images/null-avatar.png'
             "
             class="lawyer-avatar"
           />
-          {{ commentDetail.lawyer.full_name }}
+          {{ commentDetail?.lawyer.full_name }}
         </div>
       </NuxtLink>
     </div>

@@ -45,7 +45,7 @@
               icon="ic:round-star"
             />
             <!-- <UICBadge
-              :value="`${visit} ویزیت آنلاین`"
+              :value="`${visit} مشاوره آنلاین`"
               icon="solar:chat-dots-bold"
             /> -->
             <UICBadge
@@ -55,7 +55,10 @@
             />
           </div>
           <div class="buttons flex gap-2">
-            <UICMainBtn @click="navigateTo(`/lawyer/${$route.params.id}#comment`)">دیدگاه دیگران</UICMainBtn>
+            <UICMainBtn
+              @click="navigateTo(`/lawyer/${$route.params.id}#comment`)"
+              >دیدگاه دیگران</UICMainBtn
+            >
             <UICMainBtn @click="shareContent">اشتراک گذاری</UICMainBtn>
           </div>
         </div>
@@ -95,8 +98,6 @@ const shareContent = async () => {
     console.error("خطا در اشتراک‌گذاری:", err);
   }
 };
-
-
 </script>
 
 <style></style>

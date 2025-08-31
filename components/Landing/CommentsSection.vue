@@ -1,5 +1,5 @@
 <template>
-  <section id="commments">
+  <section v-if="recentComments?.data?.length" id="commments">
     <h2 class="sec-header mb-2 lg:mb-3">دیدگاه و نظرات کاربران</h2>
 
     <ThingCarousel
@@ -15,8 +15,8 @@
 
       <ThingCarouselContent class="p-[1px]" style="direction: ltr !important">
         <ThingCarouselItem
-          v-for="comment in recentComments.data"
-          :key="comment.id"
+          v-for="comment in recentComments?.data"
+          :key="comment?.id"
           grab-cursor
           class="md:basis-1/2 lg:basis-1/3"
         >
