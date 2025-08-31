@@ -14,8 +14,15 @@
         <h1 class="font-bold text-lg">وکیلی یافت نشد</h1>
       </div>
     </div>
+
     <LawyerProfile
-      :avatar="lawyerInfo.profile_image || '/images/null-avatar.png'"
+      :avatar="
+        lawyerInfo.lawyer_info.profile_image
+          ? `${useRuntimeConfig().public.imageBase}${
+              lawyerInfo.lawyer_info.profile_image
+            }`
+          : '/images/null-avatar.png'
+      "
       :fullname="`${lawyerInfo.lawyer_info.name} ${lawyerInfo.lawyer_info.family}`"
       :education="lawyerInfo.base"
       :experience="lawyerInfo.years_of_experience || 0"
@@ -77,9 +84,9 @@ defineProps({
     type: Boolean,
     default: false,
   },
-  titlebtn:{
-    type : String,
-  }
+  titlebtn: {
+    type: String,
+  },
 });
 </script>
 <style scoped>

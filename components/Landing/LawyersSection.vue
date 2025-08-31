@@ -1,5 +1,5 @@
 <template>
-  <section class="space-y-4">
+  <section v-if="lawyersRef?.data?.length" class="space-y-4">
     <div class="space-y-4 xl:space-y-5">
       <div class="space-y-4">
         <UICDrawer
@@ -64,7 +64,7 @@
         />
         <div class="lawyers-con">
           <NuxtLink
-            v-for="lawyer in lawyersRef.data"
+            v-for="lawyer in lawyersRef?.data"
             :key="lawyer.id"
             :to="`/${props.link}${lawyer.id}`"
           >
@@ -73,7 +73,7 @@
 
           <Transition name="fade">
             <LawyerCard
-              v-if="lawyersRef.data == 0"
+              v-if="!lawyersRef?.data || lawyersRef.data == 0"
               :lawyer-info="staticLawyerInfo"
               :is-empty="true"
             />
@@ -146,6 +146,8 @@ watch(filtersStore.selectedFilters, async () => {
   }
 });
 
+const isFirstLoad = ref(true);
+
 async function fetchLawyers() {
   const { data } = await useGet({
     url: "lawyers",
@@ -161,8 +163,13 @@ async function fetchLawyers() {
     },
   });
   lawyersRef.value = data;
+
   nextTick(() => {
-    if (lawyersListRef.value) scrollToElement(lawyersListRef.value);
+    // فقط بعد از اولین بار
+    if (!isFirstLoad.value && lawyersListRef.value) {
+      scrollToElement(lawyersListRef.value);
+    }
+    isFirstLoad.value = false;
   });
 }
 </script>

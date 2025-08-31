@@ -51,7 +51,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
   });
 
   if (forbidden) {
+    throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
+  }
 
-    throw createError({ statusCode: 404, statusMessage: 'Page Not found' });
+  // --- شرط ویژه برای وکیل‌هایی که هنوز lawyer_id ندارند ---
+  if (userType === "lawyer" && !auth.user?.lawyer_id) {
+    if (to.path !== "/dashboard") {
+      return navigateTo("/dashboard");
+    }
   }
 });

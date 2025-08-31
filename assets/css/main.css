@@ -136,6 +136,7 @@ button {
   cursor: pointer;
 }
 
-.ds-form .secondary-btn {
+.ds-form .secondary-btn,
+.form-secondary-btn {
   @apply w-fit rounded-[8px]! h-[40px]!;
 }

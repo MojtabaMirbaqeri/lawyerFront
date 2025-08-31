@@ -13,6 +13,6 @@
 <style scoped>
 @reference "tailwindcss";
 .logout-btn {
-  @apply text-red-600 bg-red-100/70 hover:text-red-600! hover:bg-red-100 cursor-pointer;
+  @apply text-red-600 bg-red-100/70 hover:text-red-600! hover:bg-red-100 cursor-pointer border border-red-200;
 }
 </style>

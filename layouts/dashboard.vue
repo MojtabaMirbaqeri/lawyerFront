@@ -12,13 +12,37 @@
           <UserProfile
             :reverse="true"
             :detail="{
-              name: `${authStore.user?.name} ${authStore.user?.family}`,
-              text: authStore.user.phone,
+              name: `${authStore?.user?.name} ${authStore?.user?.family}`,
+              text: authStore?.user?.phone,
             }"
           />
         </nav>
-        <div class="ds-container">
-          <slot />
+        <div class="ds-container space-y-4">
+          <UAlert
+            v-if="
+              authStore.user?.user_type == 'lawyer' &&
+              authStore.user?.lawyer_id == null
+            "
+            title="عدم دسترسی!"
+            description="احراز هویت شما در دست بررسی می باشد!"
+            color="warning"
+            variant="subtle"
+            icon="solar:shield-warning-linear"
+            :ui="{
+              icon: 'size-8!',
+              title: 'font-bold text-base',
+              root: 'items-center',
+            }"
+          />
+          <slot
+            v-if="
+              !(
+                authStore.user?.user_type == 'lawyer' &&
+                authStore.user?.lawyer_id == null && 
+                $route.path == '/dashboard/lawyer'
+              )
+            "
+          />
         </div>
       </div>
     </ClientOnly>

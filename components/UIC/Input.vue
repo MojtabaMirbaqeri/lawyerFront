@@ -2,9 +2,10 @@
   <UFormField
     :label="label"
     :name="name"
-    class="w-full flex flex-col gap-2.5 text-[15px]"
+    class="w-full flex flex-col gap-2.5 text-[15px] relative"
     :ui="{ error: 'absolute right-0 text-[13px] mt-1', container: 'mt-0!' }"
   >
+    <slot />
     <slot name="input">
       <UInput
         v-model="state"

@@ -50,7 +50,7 @@
               icon="ic:round-star"
             />
             <!-- <UICBadge
-              :value="`${visit} ویزیت آنلاین`"
+              :value="`${visit} مشاوره آنلاین`"
               icon="solar:chat-dots-bold"
             /> -->
             <UICBadge
