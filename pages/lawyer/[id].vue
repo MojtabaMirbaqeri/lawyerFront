@@ -20,7 +20,7 @@
           :avatar="lawyer.lawyer_info.profile_image"
           :education="lawyer.lawyer_info.base_lawyer.title"
           :experience="lawyer.years_of_experience"
-          :rate="lawyer.average_rating.split('').splice(0, 3).join('')"
+          :rate="lawyer.average_rating.toString().split('').splice(0, 3).join('')"
           :city="lawyer.city"
           :spc="lawyer.lawyer_info.specialties"
         />
