@@ -40,7 +40,7 @@
       />
 
       <div class="flex items-center">
-        <UICSecondaryBtn :disabled="status === 'closed'" @click="ticket" class="rounded-[8px]!">
+        <UICSecondaryBtn :disabled="status === 'closed' || isLoading" @click="ticket" class="rounded-[8px]!">
           <UIcon name="system-uicons:paper-plane" />
           ارسال پیام
         </UICSecondaryBtn>
@@ -51,7 +51,7 @@
 
 <script setup>
 import { useElementSize } from "@vueuse/core";
-defineProps(['status'])
+defineProps(['status','isLoading'])
 const dismodel = ref("");
 const fileModel = ref("");
 const emit = defineEmits(["sendTicket"]);
