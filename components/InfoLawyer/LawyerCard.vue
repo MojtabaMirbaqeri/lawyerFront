@@ -2,8 +2,9 @@
   <section>
     <div class="">
       <div
-        class="bg-white flex flex-col lg:flex-row justify-between gap-3 p-4 rounded-[14px]"
+        class="bg-white flex flex-col gap-3  p-4 rounded-[14px]"
       >
+      <div class="flex flex-col lg:flex-row justify-between gap-3">
         <div class="right lg:w-[50%] flex items-center gap-2">
           <div class="avatar max-w-[74px] w-full">
             <UChip
@@ -15,7 +16,11 @@
             >
               <UAvatar
                 class="w-full h-full"
-                :src="avatar !== null ? avatar : '/images/null-avatar.png'"
+                :src="
+                  avatar !== null
+                    ? config.public.imageBase + avatar
+                    : '/images/null-avatar.png'
+                "
               />
             </UChip>
           </div>
@@ -63,6 +68,15 @@
           </div>
         </div>
       </div>
+        <div class="">
+          <div class="mb-3">تخصص های من :</div>
+          <div class="flex flex-wrap gap-4">
+            <div class="" v-for="s in spc" :key="s">
+              <UICBadge :value="'# '+filterStore.lawyerSpecialties[s].title"/>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </template>
@@ -79,7 +93,13 @@ const props = defineProps([
   "city",
   "active",
   "fullname",
+  "spc",
 ]);
+
+const filterStore = useFiltersStore()
+
+const config = useRuntimeConfig();
+console.log(config.public.apiEndpoint);
 
 const shareContent = async () => {
   const shareData = {

@@ -5,7 +5,8 @@
     <button
       v-for="item in items"
       :key="item.id"
-      :class="[baseClass, modelValue === item.id ? activeClass : '']"
+      :disabled="!item.active"
+      :class="[baseClass, modelValue === item.id ? activeClass : '' , !item.active ? 'disable' : '',]"
       @click="() => (modelValue = item.id)"
       class="w-full"
     >
@@ -41,3 +42,14 @@ defineProps({
   },
 });
 </script>
+
+<style scoped>
+@reference "tailwindcss";
+
+.disable {
+  @apply bg-gray-100 opacity-60;
+  color: #666;
+  border-color: #ccd;
+  cursor: not-allowed;
+}
+</style>

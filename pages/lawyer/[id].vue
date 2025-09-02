@@ -20,11 +20,12 @@
           :avatar="lawyer.lawyer_info.profile_image"
           :education="lawyer.lawyer_info.base_lawyer.title"
           :experience="lawyer.years_of_experience"
-          :rate="lawyer.average_rating.split('').splice(0, 3).join('')"
+          :rate="lawyer.average_rating.toString().split('').splice(0, 3).join('')"
           :city="lawyer.city"
+          :spc="lawyer.lawyer_info.specialties"
         />
         <info-lawyer-WhyOnlineVisit />
-        <InfoLawyerChooseVisit class="block lg:hidden" />
+        <InfoLawyerChooseVisit :items="items" class="block lg:hidden" />
         <info-lawyer-tab
           :dis="lawyer.lawyer_info.about"
           :pos="[+lawyer.latitude, +lawyer.longitude]"
@@ -38,7 +39,7 @@
         />
       </div>
       <div class="left w-[150%] hidden lg:block">
-        <InfoLawyerChooseVisit class="sticky top-[90px]" />
+        <InfoLawyerChooseVisit :items="items" class="sticky top-[90px]" />
       </div>
     </div>
   </main>
@@ -56,6 +57,33 @@ const result = await useGet({
 });
 const sch = await result.data;
 useFiltersStore().price = sch.prices;
+const filterStore = useFiltersStore();
+const items = ref([
+  {
+    id: "1",
+    title: "مشاوره تلفنی",
+    price: filterStore.price.phone,
+    value: "phone",
+    icon: "hugeicons:telephone",
+    active:sch.phone.length > 0
+  },
+  {
+    id: "2",
+    title: "مشاوره حضوری",
+    price: filterStore.price.inperson,
+    value: "inperson",
+    icon: "hugeicons:building-06",
+    active:sch.inperson.length > 0
+  },
+  {
+    id: "3",
+    title: "چت",
+    price: filterStore.price.chat,
+    value: "chat",
+    icon: "hugeicons:message-multiple-02",
+    active:sch.chat.length > 0
+  },
+]);
 </script>
 
 <style scoped></style>

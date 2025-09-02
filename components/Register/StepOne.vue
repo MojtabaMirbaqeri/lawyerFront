@@ -60,7 +60,10 @@ const defType = ref("user");
 const schema = object({
   phone: string()
     .required("لطفا شماره موبایل را وارد کنید")
-    .matches(/^(\+98|0)?9\d{9}$/, "شماره موبایل معتبر نیست")
+    .matches(
+      /^(098|0098|98|\+98|0)?9(0[0-5]|[1 3]\d|2[0-3]|9[0-9]|41)\d{7}$/g,
+      "شماره موبایل معتبر نیست"
+    )
     .length(11, "شماره موبایل باید دقیقاً 11 رقم باشد"),
 });
 type Schema = InferType<typeof schema>;
