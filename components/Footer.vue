@@ -82,7 +82,7 @@
             <NuxtLink to="#"> درباره ما </NuxtLink>
             <NuxtLink to="#"> سوالات متداول </NuxtLink>
             <NuxtLink to="#"> ارتباط با ما</NuxtLink>
-            <NuxtLink to="#"> راهنمای ویزیت آنلاین</NuxtLink>
+            <NuxtLink to="#"> راهنمای مشاوره آنلاین</NuxtLink>
           </div>
         </div>
       </div>

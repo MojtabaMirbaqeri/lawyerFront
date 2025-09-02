@@ -3,7 +3,7 @@
     <div class="bg-white flex flex-col gap-3 py-4 px-3 rounded-[14px]">
       <div class="top">
         <div class="title flex justify-between items-center">
-          <span>انتخاب شیوه ویزیت</span>
+          <span>انتخاب شیوه مشاوره</span>
           <div
             class="size-[40px] border border-primary rounded-full flex justify-center items-center"
           >
