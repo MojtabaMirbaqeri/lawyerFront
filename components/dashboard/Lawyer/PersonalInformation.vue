@@ -66,7 +66,7 @@
 
 <script setup>
 import { object, string, mixed } from "yup";
-import { toGregorian, toJalaali, isValidJalaaliDate } from "jalaali-js";
+const jalaali = require("jalaali-js");
 
 const props = defineProps({
   lawyerInformation: {
@@ -87,9 +87,9 @@ function jalaliToIso(jalaliStr) {
   const parts = String(jalaliStr).split("/").map(Number);
   if (parts.length !== 3) return "";
   const [jy, jm, jd] = parts;
-  if (!isValidJalaaliDate(jy, jm, jd))
+  if (!jalaali.isValidJalaaliDate(jy, jm, jd))
     throw new Error("تاریخ جلالی نامعتبر است");
-  const g = toGregorian(jy, jm, jd);
+  const g = jalaali.toGregorian(jy, jm, jd);
   return `${g.gy}-${String(g.gm).padStart(2, "0")}-${String(g.gd).padStart(
     2,
     "0"
@@ -106,7 +106,7 @@ function isoToJalaliString(isoOrDateStr) {
   }
   const d = new Date(datePart);
   if (isNaN(d.getTime())) return "";
-  const j = toJalaali(d.getFullYear(), d.getMonth() + 1, d.getDate());
+  const j = jalaali.toJalaali(d.getFullYear(), d.getMonth() + 1, d.getDate());
   return `${j.jy}/${String(j.jm).padStart(2, "0")}/${String(j.jd).padStart(
     2,
     "0"
