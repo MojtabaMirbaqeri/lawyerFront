@@ -6,7 +6,7 @@
     </div>
     <div class="body">
       <div>
-        <h3>شیوه ویزیت</h3>
+        <h3>شیوه مشاوره</h3>
         <div>
           <UICSelectButton
             v-model="filtersVal.visitType"

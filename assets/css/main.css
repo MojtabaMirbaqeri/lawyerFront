@@ -74,6 +74,9 @@ html {
   .ds-form-grid {
     @apply grid grid-cols-1 lg:grid-cols-3 w-full gap-6;
   }
+  .ltr-force {
+    direction: ltr !important;
+  }
 }
 
 @utility container {

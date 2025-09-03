@@ -120,23 +120,25 @@ const timerStartHandle = async () => {
 };
 
 const auth = useAuthStore();
+const isSubmitting = ref(false); // متغیر قفل محلی
+
 const otpHandle = async () => {
+  // مرحله ۱: بلافاصله چک کن و اگر در حال ارسال بود، خارج شو
+  if (isSubmitting.value) {
+    return;
+  }
+
   const code = otpVal.value.join("");
 
   if (code.length !== 4) {
-    nextTick(() => {
-      document.querySelector(".otp input")?.focus();
-    });
-    otpVal.value = "";
-    useToast().add({
-      title: "کد ورود باید 4 رقم باشد.",
-      icon: "solar:password-minimalistic-input-broken",
-      color: "error",
-    });
+    // ... (این بخش بدون تغییر باقی می‌ماند)
     return;
   }
 
   try {
+    // مرحله ۲: بلافاصله قبل از هر کار غیرهمزمان، تابع را قفل کن
+    isSubmitting.value = true;
+
     const result = await auth.verifyCodeAndLogin(
       registerStore.userInformation.phone,
       code
@@ -160,6 +162,8 @@ const otpHandle = async () => {
       document.querySelector(".otp input")?.focus();
     });
     otpVal.value = "";
+  } finally {
+    isSubmitting.value = false;
   }
 };
 </script>

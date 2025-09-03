@@ -9,30 +9,32 @@ const props = defineProps({
   data: { type: Array },
   total: { type: Number },
   pageIndex: { type: Number },
+  perPage: { type: Number },
 });
 
-const page = defineModel()
-
+const page = defineModel();
 
 const pagination = ref({
   pageIndex: page,
-  pageSize: 10,
+  pageSize: props?.perPage || 10,
   total: props.total,
 });
 
-watch(() => props.total,(total) => {
-  pagination.value.total = total
-})
-
+watch(
+  () => props.total,
+  (total) => {
+    pagination.value.total = total;
+  }
+);
 </script>
 
 <template>
   <div class="">
     <UTable
       :data="data"
-      :column-visibility="{statusVal:false}"
+      :column-visibility="{ statusVal: false }"
       :ui="{
-        root: 'rounded-[7px]',
+        root: 'rounded-[7px] border border-gray-200 overflow-y-hidden',
         thead: 'bg-primary',
         th: 'text-white text-center!',
         td: 'text-center!',
@@ -49,7 +51,7 @@ watch(() => props.total,(total) => {
         />
       </template>
     </UTable>
-    <div class="flex justify-center border-t border-default py-4">
+    <div class="flex justify-center  py-4">
       <UPagination
         v-model:page="pagination.pageIndex"
         :items-per-page="pagination.pageSize"

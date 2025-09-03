@@ -30,7 +30,7 @@
       :active="lawyerInfo.is_active"
       :ui="{
         base: 'items-start! w-full!',
-        avatar: 'max-w-14! lg:max-w-16!',
+        avatar: 'size-14! lg:size-16!',
         name: 'justify-between!',
       }"
     >

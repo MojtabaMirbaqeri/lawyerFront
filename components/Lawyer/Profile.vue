@@ -1,6 +1,6 @@
 <template>
   <div class="right lg:w-[50%] flex items-center gap-2" :class="[ui?.base]">
-    <div class="avatar max-w-[74px] w-full" :class="[ui?.avatar]">
+    <div class="avatar aspect-square! shrink-0!" :class="[ui?.avatar]">
       <UChip
         inset
         class="size-full"
@@ -8,7 +8,13 @@
         position="bottom-right"
         :ui="{ base: 'bg-blue-400 size-3 right-[10%]' }"
       >
-        <UAvatar class="w-full h-full" :src="avatar" />
+        <UAvatar
+          class="size-full"
+          :src="avatar"
+          :ui="{
+            image: 'object-[50%_0%]',
+          }"
+        />
       </UChip>
     </div>
     <div class="person-detail w-full">

@@ -50,6 +50,16 @@ export const useDashboardStore = defineStore("dashboard", () => {
           icon: "solar:user-circle-linear",
         },
         {
+          title: "امور مالی",
+          url: "/dashboard/lawyer/financial",
+          icon: "solar:wallet-money-linear",
+        },
+        {
+          title: "فعالیت ها",
+          url: "/dashboard/appointments",
+          icon: "solar:history-linear",
+        },
+        {
           title: "تیکت‌ها",
           url: "/dashboard/ticket/tickets",
           icon: "hugeicons:message-multiple-02",
@@ -76,7 +86,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
     },
     {
       title: "نوبت‌های من",
-      url: "/dashboard/user/appointments",
+      url: "/dashboard/appointments",
       icon: "lucide:calendar-clock",
     },
   ];
