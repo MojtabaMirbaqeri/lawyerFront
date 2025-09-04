@@ -33,7 +33,9 @@
         </div>
       </div>
       <div class="education">{{ education }}</div>
-      <div class="experience">تجربه: {{ experience }} سال</div>
+      <div>
+        {{ experience ? `تجربه: ${experience} سال` : `محل کار: ${location}` }}
+      </div>
     </div>
   </div>
 </template>
@@ -47,6 +49,7 @@ defineProps([
   "active",
   "show",
   "ui",
+  "location",
 ]);
 </script>
 

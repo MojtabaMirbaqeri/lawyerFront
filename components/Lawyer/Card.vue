@@ -25,7 +25,7 @@
       "
       :fullname="`${lawyerInfo.lawyer_info.name} ${lawyerInfo.lawyer_info.family}`"
       :education="lawyerInfo.base"
-      :experience="lawyerInfo.years_of_experience || 0"
+      :location="`${lawyerInfo.province}، ${lawyerInfo.city}`"
       :show="true"
       :active="lawyerInfo.is_active"
       :ui="{

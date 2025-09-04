@@ -6,6 +6,6 @@
 <style scoped>
 @reference "tailwindcss";
 aside {
-  @apply max-w-72 p-3 xl:max-w-80;
+  @apply w-full max-w-72 p-3 xl:max-w-80;
 }
 </style>

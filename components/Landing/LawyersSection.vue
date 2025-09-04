@@ -1,8 +1,8 @@
 <template>
-  <section v-if="lawyersRef?.data?.length" class="space-y-4">
-    <div class="space-y-4 xl:space-y-5">
-      <div class="space-y-4">
-        <UICDrawer
+  <section class="space-y-4">
+    <div class="space-y-4">
+      <div class="pt-4 xl:pt-5">
+        <!-- <UICDrawer
           title="lawyer types"
           description="Categorization of lawyers by type"
         >
@@ -28,10 +28,10 @@
               </div>
             </div>
           </template>
-        </UICDrawer>
+        </UICDrawer> -->
         <UICSelectButton
           v-model="filtersStore.selectedFilters.lawyerType"
-          :items="lawyerTypes.slice(0, 6)"
+          :items="lawyerTypes"
         />
       </div>
       <UICDrawer
@@ -54,15 +54,15 @@
       </UICDrawer>
     </div>
     <div ref="lawyersListRef" class="lg:flex gap-4 xl:gap-5 items-start">
-      <LandingSidebar class="hidden lg:block sticky top-[90px]" />
-      <main class="space-y-4 grow">
+      <LandingSidebar class="hidden lg:block sticky top-[90px] grow-0 shrink" />
+      <main class="space-y-4 grow shrink-0">
         <UICTabs
           v-model="filtersStore.selectedFilters.sortBy"
           :content="false"
           :items="tabItems"
           class="sort-tabs"
         />
-        <div class="lawyers-con">
+        <div v-if="lawyersRef?.data?.length" class="lawyers-con">
           <NuxtLink
             v-for="lawyer in lawyersRef?.data"
             :key="lawyer.id"
@@ -70,15 +70,17 @@
           >
             <LawyerCard :titlebtn="titlebtn" :lawyer-info="lawyer" />
           </NuxtLink>
-
-          <Transition name="fade">
-            <LawyerCard
-              v-if="!lawyersRef?.data || lawyersRef.data == 0"
-              :lawyer-info="staticLawyerInfo"
-              :is-empty="true"
-            />
-          </Transition>
         </div>
+        <Transition name="fade">
+          <LawyerCard
+            v-if="
+              staticLawyerInfo &&
+              (!lawyersRef?.data?.length || lawyersRef.data == 0)
+            "
+            :lawyer-info="staticLawyerInfo"
+            :is-empty="true"
+          />
+        </Transition>
         <UICPagination
           v-model="currentLawyersPage"
           class="w-fit! mx-auto"
@@ -94,8 +96,8 @@
 const filtersStore = useFiltersStore();
 
 const props = defineProps(["link", "titlebtn"]);
+const lawyersRef = ref(null);
 
-const lawyersRef = ref((await useGet({ url: "lawyers" })).data);
 const staticLawyerInfo = ref(null);
 const currentLawyersPage = ref(1);
 const lawyersListRef = ref(null);
@@ -147,14 +149,13 @@ watch(filtersStore.selectedFilters, async () => {
 });
 
 const isFirstLoad = ref(true);
-
 async function fetchLawyers() {
   const { data } = await useGet({
     url: "lawyers",
     query: {
       page: currentLawyersPage.value,
       base_id: filtersStore.selectedFilters.lawyerType,
-      specialty_id: filtersStore.selectedFilters.lawyerSpecialty,
+      "specialty_id[]": filtersStore.selectedFilters.lawyerSpecialty || [],
       gender: filtersStore.selectedFilters.gender,
       sort: filtersStore.selectedFilters.sortBy,
       "visit_types[]": filtersStore.selectedFilters.visitType,
@@ -163,6 +164,9 @@ async function fetchLawyers() {
     },
   });
   lawyersRef.value = data;
+  if (!useGlobalStore().lawyersCount) {
+    useGlobalStore().lawyersCount = data.meta.total;
+  }
 
   nextTick(() => {
     // فقط بعد از اولین بار
@@ -172,6 +176,8 @@ async function fetchLawyers() {
     isFirstLoad.value = false;
   });
 }
+
+await fetchLawyers();
 </script>
 
 <style scoped>
