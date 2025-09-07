@@ -1,14 +1,14 @@
 <template>
   <section id="visit-guide">
     <div class="guide-con bg-primary/5">
-      <h2 class="sec-header mb-2 lg:mb-3">راهنمای ویزیت آنلاین</h2>
+      <h2 class="sec-header mb-2 lg:mb-3">راهنمای مشاوره آنلاین</h2>
       <div class="space-y-2.5">
         <h2>
           <UIcon
             name="hugeicons:information-diamond"
             class="align-middle me-0.5 size-5!"
           />
-          برای مشاهده جزئیات هر شیوه ویزیت روی آن کلیک کنید
+          برای مشاهده جزئیات هر شیوه مشاوره روی آن کلیک کنید
         </h2>
         <div>
           <UICSelectButton
@@ -47,7 +47,6 @@
   </section>
 </template>
 <script setup>
-
 const { visitTypes } = useFiltersStore();
 
 const filteredVisitTypes = visitTypes.filter((item) => item.id !== "inperson");
@@ -55,7 +54,7 @@ const visitType = ref(filteredVisitTypes[1].id);
 
 const items = ref([
   {
-    label: "ثبت درخواست ویزیت ",
+    label: "ثبت درخواست مشاوره ",
     content: `💠 نوع خدمات حقوقی و وکیل مورد نظر خود را انتخاب کنید.
 
 💠 در بخش شرح درخواست، موضوع مشکل حقوقی خود را به‌صورت کوتاه، دقیق و شفاف بنویسید.

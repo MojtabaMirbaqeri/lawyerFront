@@ -2,7 +2,9 @@
   <header>
     <div class="container">
       <h1 class="header-title">
-        مشاوره آنلاین با 48 نفر از بهترین متخصصین وکالت
+        مشاوره آنلاین با
+        <ClientOnly>{{ useGlobalStore()?.lawyersCount }}</ClientOnly> نفر از
+        بهترین متخصصین وکالت
       </h1>
       <div class="w-full">
         <UInput
@@ -15,6 +17,7 @@
             trailing: 'pe-0 m-1',
             leading: 'ps-0 m-1.5',
           }"
+          @keydown.enter="search"
         >
           <template #trailing>
             <div class="search-btn" @click="search">

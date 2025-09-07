@@ -6,7 +6,7 @@
     </div>
     <div class="body">
       <div>
-        <h3>شیوه ویزیت</h3>
+        <h3>شیوه مشاوره</h3>
         <div>
           <UICSelectButton
             v-model="filtersVal.visitType"
@@ -21,6 +21,7 @@
           <UICSelectButton
             v-model="filtersVal.gender"
             :items="filtersItems.genders"
+            :clearable="true"
           />
         </div>
       </div>
@@ -28,22 +29,14 @@
         <div>
           <h3>تخصص ها</h3>
           <div>
-            <UICSelectButton
-              v-model="filtersVal.lawyerSpecialty"
-              :items="filtersItems.specialties.slice(0, 5)"
-            />
-          </div>
-        </div>
-        <div>
-          <h3 class="text-sm font-medium! ps-2">- سایر تخصص ها</h3>
-          <div>
             <USelectMenu
               v-model="filtersVal.lawyerSpecialty"
               :items="filtersItems.specialties"
+              :multiple="true"
               value-key="id"
               label-key="title"
               :ui="{
-                base: ' rounded-full w-full py-2 cursor-pointer',
+                base: ' rounded-full w-full py-2.5 cursor-pointer',
                 leadingIcon: 'text-primary size-5!',
                 trailingIcon: 'size-5!',
               }"
@@ -55,11 +48,30 @@
             />
           </div>
         </div>
+
+        <!-- تخصص های انتخاب شده -->
+        <div v-if="filtersVal.lawyerSpecialty?.length">
+          <h3 class="text-sm font-medium! ps-2">- تخصص های انتخاب شده</h3>
+          <div class="flex gap-2 flex-wrap">
+            <button
+              v-for="id in filtersVal.lawyerSpecialty"
+              :key="id"
+              class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm border border-blue-200"
+              @click="removeSpecialty(id)"
+            >
+              <UIcon name="hugeicons:cancel-01" class="size-4.5!" />
+              <span>
+                {{ filtersItems.specialties.find((s) => s.id === id)?.title }}
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
+
       <div class="pb-0!">
         <UICSecondaryBtn
           :disabled="!haveFiltersChanged"
-          class="w-full rounded-lg! py-2.5!"
+          class="w-full rounded-lg! py-2.5! font-semibold"
           @click="applyFilters()"
         >
           اعمال فیلترها
@@ -91,6 +103,12 @@ const haveFiltersChanged = computed(() => {
     filtersVal.lawyerSpecialty !== filtersStore.selectedFilters.lawyerSpecialty
   );
 });
+
+const removeSpecialty = (id) => {
+  filtersVal.lawyerSpecialty = filtersVal.lawyerSpecialty.filter(
+    (s) => s !== id
+  );
+};
 
 const applyFilters = () => {
   filtersStore.applyFilters(filtersVal);

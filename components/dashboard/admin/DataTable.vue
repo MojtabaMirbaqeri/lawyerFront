@@ -189,7 +189,7 @@ watch(
   () => pagination.value.pageIndex,
   async (page) => {
     if (globalFilter.value) {
-      searchRefetch(globalFilter.value , false , page)
+      searchRefetch(globalFilter.value, false, page);
       return;
     } else {
       refetch(page);
@@ -203,7 +203,7 @@ const searchLawyer = async () => {
 
     return;
   } else {
-    searchRefetch(globalFilter.value, true , null);
+    searchRefetch(globalFilter.value, true, null);
   }
 };
 </script>
@@ -230,10 +230,14 @@ const searchLawyer = async () => {
       :data="data"
       :columns="columns"
       class="flex-1"
-      :ui="{ root: 'rounded-[7px]', thead: 'bg-primary', th: 'text-white' }"
+      :ui="{
+        root: 'rounded-[7px] border border-gray-200 overflow-y-hidden',
+        thead: 'bg-primary',
+        th: 'text-white',
+      }"
     />
 
-    <div class="flex justify-center border-t border-default py-4">
+    <div class="flex justify-center py-4">
       <UPagination
         v-model:page="pagination.pageIndex"
         :items-per-page="pagination.pageSize"

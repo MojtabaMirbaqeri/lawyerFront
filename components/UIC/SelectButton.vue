@@ -43,9 +43,12 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  clearable: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-// پیش‌فرض‌ها
 const defaultThing = {
   base: "px-4 py-2 rounded-full border border-gray-300 text-sm lg:text-base transition cursor-pointer",
   active: "bg-primary! border-transparent! text-white!",
@@ -55,7 +58,6 @@ const defaultThing = {
   icon: "size-4!",
 };
 
-// مرج با props.ui
 const mergedThing = {
   base: twMerge(defaultThing.base, props.ui.base),
   active: twMerge(defaultThing.active, props.ui.active),
@@ -76,14 +78,21 @@ const handleClick = (id) => {
       ? [...modelValue.value]
       : [];
     const index = current.indexOf(id);
+
     if (index >= 0) {
+      // اگر clearable هست، آیتم رو حذف می‌کنیم
       current.splice(index, 1);
     } else {
       current.push(id);
     }
     modelValue.value = current;
   } else {
-    modelValue.value = id;
+    if (props.clearable && modelValue.value === id) {
+      // اگر clearable باشه و آیتم انتخاب شده دوباره کلیک شد => پاک کن
+      modelValue.value = null;
+    } else {
+      modelValue.value = id;
+    }
   }
 };
 </script>

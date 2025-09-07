@@ -260,7 +260,7 @@ const acceptHandle = async (id) => {
       :columns="columns"
       class="flex-1"
       :ui="{
-        root: 'rounded-[7px]',
+        root: 'rounded-[7px] border border-gray-200 overflow-y-hidden',
         thead: 'bg-primary',
         th: 'text-white text-center!',
         td: 'text-center',
@@ -295,7 +295,7 @@ const acceptHandle = async (id) => {
       </template>
     </UTable>
 
-    <div class="flex justify-center border-t border-default py-4">
+    <div class="flex justify-center py-4">
       <UPagination
         v-model:page="pagination.pageIndex"
         :items-per-page="pagination.pageSize"

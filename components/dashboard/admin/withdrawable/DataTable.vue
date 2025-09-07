@@ -30,7 +30,7 @@ const refetch = async (page: number = 1) => {
       }`,
       amount: req.formatted_amount,
       status: req.status_text,
-      bankInfo: req.bank_info || "اطلاعات بانکی ثبت نشده",
+      bankInfo: req.bank_card,
       createdAt: req.created_at
         ? new Date(req.created_at).toLocaleDateString("fa-IR")
         : "-",
@@ -56,7 +56,7 @@ const data = ref<WithdrawalRequest[]>(
     }`,
     amount: req.formatted_amount,
     status: req.status_text,
-    bankInfo: req.bank_info || "اطلاعات بانکی ثبت نشده",
+    bankInfo: req.bank_card,
     createdAt: req.created_at
       ? new Date(req.created_at).toLocaleDateString("fa-IR")
       : "-",
@@ -75,7 +75,8 @@ const columns: TableColumn<WithdrawalRequest>[] = [
   {
     accessorKey: "bankInfo",
     header: "بانک مقصد",
-    cell: ({ row }) => `${row.original.fullName}\n${row.original.bankInfo}`,
+    cell: ({ row }) =>
+      `${row.original.bankInfo?.card_holder_name}\n${row.original.bankInfo?.card_holder_name}`,
   },
   { accessorKey: "createdAt", header: "تاریخ" },
   { accessorKey: "actions", header: "فعالیت" },
@@ -153,7 +154,7 @@ const acceptHandle = async (id: number) => {
       :columns="columns"
       class="flex-1"
       :ui="{
-        root: 'rounded-[7px]',
+        root: 'rounded-[7px] border border-gray-200 overflow-y-hidden',
         thead: 'bg-primary',
         th: 'text-white text-center!',
         td: 'text-center whitespace-pre-line', // whitespace-pre-line برای نمایش صحیح اطلاعات بانک
@@ -170,7 +171,7 @@ const acceptHandle = async (id: number) => {
       </template>
     </UTable>
 
-    <div class="flex justify-center border-t border-default py-4">
+    <div class="flex justify-center py-4">
       <UPagination
         v-model:page="pagination.pageIndex"
         :items-per-page="pagination.pageSize"

@@ -22,9 +22,11 @@ const [lawyerTypesRes, lawyerSpecialtiesRes, lawyerServicesRes] =
     useGet({ url: "specialties" }),
     useGet({ url: "services" }),
   ]);
-filtersStore.setLawyerTypes(lawyerTypesRes.data.data);
-filtersStore.setLawyerSpecialties(lawyerSpecialtiesRes.data.data);
-filtersStore.setLawyerServices(lawyerServicesRes.data.data);
+ filtersStore.setLawyerTypes(lawyerTypesRes.data.data);
+ filtersStore.setLawyerSpecialties(lawyerSpecialtiesRes.data.data);
+ filtersStore.setLawyerServices(lawyerServicesRes.data.data);
+
+filtersStore.setHydrated(true);
 
 onMounted(async () => {
   const loaderStore = useLoaderStore();

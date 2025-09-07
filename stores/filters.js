@@ -36,70 +36,71 @@ export const useFiltersStore = defineStore("filters", {
       sortBy: null,
       lawyerType: null,
       lawyerSpecialty: null,
-      city: null,
+      city: 0,
       searchField: null,
     },
     price: [],
     ticketFilter: {
       status: [
         {
-          id: 'open',
-          label: 'باز'
+          id: "open",
+          label: "باز",
         },
         {
-          id: 'in_progress',
-          label: 'در حال پیگیری'
+          id: "in_progress",
+          label: "در حال پیگیری",
         },
         {
-          id: 'answered',
-          label: 'پاسخ داده شده'
+          id: "answered",
+          label: "پاسخ داده شده",
         },
         {
-          id: 'waiting_for_user',
-          label: 'در انتظار پاسخ کاربر'
+          id: "waiting_for_user",
+          label: "در انتظار پاسخ کاربر",
         },
         {
-          id: 'closed',
-          label: 'بسته شده'
+          id: "closed",
+          label: "بسته شده",
         },
         {
-          id:0,
-          label:'همه'
-        }
+          id: 0,
+          label: "همه",
+        },
       ],
       priority: [
         {
-          id:0,
-          label:'همه'
+          id: 0,
+          label: "همه",
         },
         {
           id: 1,
-          label: 'کم'
+          label: "کم",
         },
         {
           id: 2,
-          label: 'متوسط'
+          label: "متوسط",
         },
         {
           id: 3,
-          label: 'زیاد'
+          label: "زیاد",
         },
         {
           id: 4,
-          label: 'فوری'
+          label: "فوری",
         },
       ],
       type: [
         {
-          id:0,
-          label:'همه'
+          id: 0,
+          label: "همه",
         },
-        { id: 'financial', label: 'مالی' },
-        { id: 'technical', label: 'فنی' },
-        { id: 'violation_report', label: 'گزارش تخلف' },
-        { id: 'other', label: 'سایر' },
-      ]
-    }
+        { id: "financial", label: "مالی" },
+        { id: "technical", label: "فنی" },
+        { id: "violation_report", label: "گزارش تخلف" },
+        { id: "other", label: "سایر" },
+      ],
+    },
+    hydrated: false,
   }),
 
   actions: {
@@ -120,6 +121,9 @@ export const useFiltersStore = defineStore("filters", {
           this.selectedFilters[key] = filters[key];
         }
       });
+    },
+    setHydrated(val = true) {
+      this.hydrated = val;
     },
   },
 });

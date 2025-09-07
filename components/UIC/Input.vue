@@ -9,19 +9,29 @@
     <slot name="input">
       <UInput
         v-model="state"
+        :type="type || 'text'"
+        :name="name"
         :readonly="readonly"
+        :autofocus="autofocus"
         :class="{ 'opacity-[0.5]': readonly }"
-        :placeholder="label"
-        @focus="onFocus"
+        :placeholder="placeholder || label"
         class="w-full"
         :ui="{ root: 'field-base', base: 'h-full' }"
+        @focus="onFocus"
       />
     </slot>
   </UFormField>
 </template>
 
 <script setup>
-const props = defineProps(["name", "label", "readonly"]);
+const props = defineProps([
+  "name",
+  "label",
+  "readonly",
+  "autofocus",
+  "placeholder",
+  "type",
+]);
 const state = defineModel();
 
 const onFocus = (e) => {

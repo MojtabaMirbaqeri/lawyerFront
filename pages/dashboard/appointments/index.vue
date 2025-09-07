@@ -40,7 +40,9 @@
 </template>
 
 <script setup>
-import { h, resolveComponent, ref, watch } from "vue";
+import { h, resolveComponent } from "vue";
+
+const authStore = useAuthStore();
 
 // کامپوننت‌های مورد نیاز برای رندر داینامیک در جدول
 const UButton = resolveComponent("UButton");
@@ -207,7 +209,10 @@ const columns = ref([
     },
   },
 ]);
-
+if (authStore.user.user_type != "user") {
+  columns.value = columns.value.filter((col) => col?.id !== "actions");
+  columns.value = columns.value.filter((col) => col?.accessorKey !== "lawyer");
+}
 // تابع برای لغو کردن نوبت
 const cancelAppointment = async (appointmentId) => {
   try {
