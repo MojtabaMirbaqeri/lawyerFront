@@ -10,17 +10,17 @@
           >
             <div class="tax flex justify-between">
               <div class="title">قیمت اصلی</div>
-              <div class="price">{{detailPrice.mainPrice}} تومان</div>
+              <div class="price">{{ detailPrice.mainPrice }} تومان</div>
             </div>
             <div class="tax flex justify-between">
               <div class="title">تخفیف</div>
-              <div class="price">{{detailPrice.offerValue}} تومان</div>
+              <div class="price">{{ detailPrice.offerValue }} تومان</div>
             </div>
             <USeparator class="opacity-30" color="primary" />
             <div class="top border-b border-primary/30 pb-2">
               <div class="tax flex justify-between">
                 <div class="title">قیمت نهایی</div>
-                <div class="price">{{detailPrice.price}} تومان</div>
+                <div class="price">{{ detailPrice.price }} تومان</div>
               </div>
             </div>
             <div class="bottom p-2 rounded-b-[8px] flex items-start gap-2">
@@ -30,7 +30,7 @@
               />
               <span class="opacity-80 paragraph"
                 >مبلغ 150,000 تومان را که به عنوان بیعانه به صورت آنلاین پرداخت
-                می‌کنید از هزینه ویزیت کسر می‌شود و مابقی هزینه ویزیت در مطب از
+                می‌کنید از هزینه ویزیت کسر می‌شود و مابقی هزینه ویزیت در دفتر از
                 شما دریافت می‌گردد.</span
               >
             </div>
@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-defineProps(["detailPrice"])
+defineProps(["detailPrice"]);
 </script>
 
 <style>

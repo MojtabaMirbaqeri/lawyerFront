@@ -20,18 +20,21 @@ const refetch = async (page: number = 1) => {
   });
 
   const responseData = response.data;
-  
+
   // مپ کردن داده‌های دریافتی از API به فرمت مورد نیاز جدول
-  data.value = responseData?.data?.map((req: any) => ({
-    id: req.id,
-    fullName: `${req.lawyer?.user?.name || ""} ${req.lawyer?.user?.family || ""}`,
-    amount: req.formatted_amount,
-    status: req.status_text,
-    bankInfo: req.bank_info || "اطلاعات بانکی ثبت نشده",
-    createdAt: req.created_at
-      ? new Date(req.created_at).toLocaleDateString("fa-IR")
-      : "-",
-  })) ?? []; // استفاده از ?? [] برای جلوگیری از خطا در صورت خالی بودن پاسخ
+  data.value =
+    responseData?.data?.map((req: any) => ({
+      id: req.id,
+      fullName: `${req.lawyer?.user?.name || ""} ${
+        req.lawyer?.user?.family || ""
+      }`,
+      amount: req.formatted_amount,
+      status: req.status_text,
+      bankInfo: req.bank_info || "اطلاعات بانکی ثبت نشده",
+      createdAt: req.created_at
+        ? new Date(req.created_at).toLocaleDateString("fa-IR")
+        : "-",
+    })) ?? []; // استفاده از ?? [] برای جلوگیری از خطا در صورت خالی بودن پاسخ
 
   // به‌روزرسانی اطلاعات صفحه‌بندی
   pagination.value.total = responseData?.meta?.total || 0;
@@ -48,7 +51,9 @@ const { data: initialData } = await useGet({
 const data = ref<WithdrawalRequest[]>(
   initialData?.data?.map((req: any) => ({
     id: req.id,
-    fullName: `${req.lawyer?.user?.name || ""} ${req.lawyer?.user?.family || ""}`,
+    fullName: `${req.lawyer?.user?.name || ""} ${
+      req.lawyer?.user?.family || ""
+    }`,
     amount: req.formatted_amount,
     status: req.status_text,
     bankInfo: req.bank_info || "اطلاعات بانکی ثبت نشده",
@@ -60,13 +65,17 @@ const data = ref<WithdrawalRequest[]>(
 
 // --- تعریف ستون‌های جدول ---
 const columns: TableColumn<WithdrawalRequest>[] = [
-  { accessorKey: "id", header: "شناسه", cell: ({ row }) => `#${row.getValue("id")}`},
+  {
+    accessorKey: "id",
+    header: "شناسه",
+    cell: ({ row }) => `#${row.getValue("id")}`,
+  },
   { accessorKey: "status", header: "وضعیت" },
   { accessorKey: "amount", header: "مبلغ" },
-  { 
-    accessorKey: "bankInfo", 
+  {
+    accessorKey: "bankInfo",
     header: "بانک مقصد",
-    cell: ({ row }) => `${row.original.fullName}\n${row.original.bankInfo}`
+    cell: ({ row }) => `${row.original.fullName}\n${row.original.bankInfo}`,
   },
   { accessorKey: "createdAt", header: "تاریخ" },
   { accessorKey: "actions", header: "فعالیت" },
@@ -87,8 +96,11 @@ watch(
   }
 );
 
+const isLoading = ref(false);
+
 // --- توابع مربوط به تایید و رد درخواست ---
 const rejectHandle = async (comment: string, id: number) => {
+  isLoading.value = true;
   const res = await usePost({
     url: `withdrawal-requests/${id}/reject`,
     includeAuthHeader: true,
@@ -97,6 +109,7 @@ const rejectHandle = async (comment: string, id: number) => {
 
   if (res.statusCode === 200) {
     // ۱. داده‌های صفحه فعلی را مجدداً واکشی کن
+    useToast().add({ title: "درخواست برداشت با موفقیت رد شد", color: "success" });
     await refetch(pagination.value.pageIndex);
 
     // ۲. بررسی کن آیا صفحه خالی شده و صفحه اول نیست
@@ -106,17 +119,22 @@ const rejectHandle = async (comment: string, id: number) => {
       pagination.value.pageIndex--;
     }
   }
+  isLoading.value = false;
 };
 
 const acceptHandle = async (id: number) => {
+  isLoading.value = true;
   const res = await usePost({
     url: `withdrawal-requests/${id}/approve`,
     includeAuthHeader: true,
+    body: undefined,
   });
 
   if (res.statusCode === 200) {
     // ۱. داده‌های صفحه فعلی را مجدداً واکشی کن
+    useToast().add({ title: "درخواست برداشت با موفقیت تایید شد", color: "success" });
     await refetch(pagination.value.pageIndex);
+
 
     // ۲. بررسی کن آیا صفحه خالی شده و صفحه اول نیست
     if (data.value.length === 0 && pagination.value.pageIndex > 1) {
@@ -124,6 +142,7 @@ const acceptHandle = async (id: number) => {
       pagination.value.pageIndex--;
     }
   }
+  isLoading.value = false;
 };
 </script>
 
@@ -143,6 +162,7 @@ const acceptHandle = async (id: number) => {
       <template #actions-cell="{ row }">
         <div>
           <UICChooseStatusModal
+          next-word="درخواست برداشت"
             @reject="(comment) => rejectHandle(comment, row.original.id)"
             @accept="acceptHandle(row.original.id)"
           />
