@@ -11,6 +11,11 @@
 <script setup>
 const filtersStore = useFiltersStore();
 
+console.log(useCookie("jwtToken"));
+
+// const res = await useGet({url:'withdrawal-requests/pending',includeAuthHeader:true})
+// console.log(res.data.data);
+
 const [lawyerTypesRes, lawyerSpecialtiesRes, lawyerServicesRes] =
   await Promise.all([
     useGet({ url: "lawyer_bases" }),

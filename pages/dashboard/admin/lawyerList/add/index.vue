@@ -35,7 +35,7 @@
           </div>
         </div>
 
-        <UICSecondaryBtn class="w-fit rounded-[8px]! h-[46px]" type="submit">
+        <UICSecondaryBtn :disabled="isLoading" class="w-fit rounded-[8px]! h-[46px]" type="submit">
           ایجاد وکیل
         </UICSecondaryBtn>
       </UForm>
@@ -50,6 +50,8 @@ import { ref, reactive, computed } from "vue";
 
 // گرفتن اطلاعات اولیه
 const filtersStore = useFiltersStore();
+
+const isLoading = ref(false);
 
 // گرفتن اطلاعات اولیه
 const bases = filtersStore.lawyerTypes.map((type) => ({
@@ -102,6 +104,7 @@ function filterDigits(e: Event) {
 
 // ارسال فرم
 const onSubmit = async (event) => {
+  isLoading.value = true;
   const body = {
     phone: event.data.phone,
     name: event.data.name,
@@ -133,6 +136,7 @@ const onSubmit = async (event) => {
     });
   }
 
+  isLoading.value = false;
   console.log(res.statusCode);
 };
 </script>

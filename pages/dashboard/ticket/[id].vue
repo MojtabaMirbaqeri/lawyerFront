@@ -11,13 +11,15 @@
       <dashboard-messages :items="grouped" />
     </div>
     <div>
-      <dashboard-send-ticket :status="res.data.data.data.ticket.status.value" @send-ticket="(detail) => sendTicket(detail)" />
+      <dashboard-send-ticket :is-loading="isLoading" :status="res.data.data.data.ticket.status.value" @send-ticket="(detail) => sendTicket(detail)" />
     </div>
   </div>
 </template>
 
 <script setup>
 console.log(useRoute().params.id);
+
+const isLoading = ref(false);
 
 const size = 10 * 1024 * 1024;
 
@@ -53,6 +55,8 @@ const sendTicket = async (detail) => {
       })
     }
 
+    isLoading.value = true;
+
     const res = await usePost({
       url: `tickets/${useRoute().params.id}/messages`,
       includeAuthHeader: true,
@@ -66,6 +70,7 @@ const sendTicket = async (detail) => {
       });
 
       refetch()
+      isLoading.value = false;
     }
   }
 

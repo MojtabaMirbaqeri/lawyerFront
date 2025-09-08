@@ -97,8 +97,11 @@ watch(
   }
 );
 
+const isLoading = ref(false);
+
 // --- توابع مربوط به تایید و رد درخواست ---
 const rejectHandle = async (comment: string, id: number) => {
+  isLoading.value = true;
   const res = await usePost({
     url: `withdrawal-requests/${id}/reject`,
     includeAuthHeader: true,
@@ -107,6 +110,7 @@ const rejectHandle = async (comment: string, id: number) => {
 
   if (res.statusCode === 200) {
     // ۱. داده‌های صفحه فعلی را مجدداً واکشی کن
+    useToast().add({ title: "درخواست برداشت با موفقیت رد شد", color: "success" });
     await refetch(pagination.value.pageIndex);
 
     // ۲. بررسی کن آیا صفحه خالی شده و صفحه اول نیست
@@ -116,17 +120,22 @@ const rejectHandle = async (comment: string, id: number) => {
       pagination.value.pageIndex--;
     }
   }
+  isLoading.value = false;
 };
 
 const acceptHandle = async (id: number) => {
+  isLoading.value = true;
   const res = await usePost({
     url: `withdrawal-requests/${id}/approve`,
     includeAuthHeader: true,
+    body: undefined,
   });
 
   if (res.statusCode === 200) {
     // ۱. داده‌های صفحه فعلی را مجدداً واکشی کن
+    useToast().add({ title: "درخواست برداشت با موفقیت تایید شد", color: "success" });
     await refetch(pagination.value.pageIndex);
+
 
     // ۲. بررسی کن آیا صفحه خالی شده و صفحه اول نیست
     if (data.value.length === 0 && pagination.value.pageIndex > 1) {
@@ -134,6 +143,7 @@ const acceptHandle = async (id: number) => {
       pagination.value.pageIndex--;
     }
   }
+  isLoading.value = false;
 };
 </script>
 
@@ -153,6 +163,7 @@ const acceptHandle = async (id: number) => {
       <template #actions-cell="{ row }">
         <div>
           <UICChooseStatusModal
+          next-word="درخواست برداشت"
             @reject="(comment) => rejectHandle(comment, row.original.id)"
             @accept="acceptHandle(row.original.id)"
           />
