@@ -66,7 +66,7 @@
 
 <script setup>
 import { object, string, mixed } from "yup";
-const jalaali = require("jalaali-js");
+import * as jalaali from "jalaali-js";
 
 const props = defineProps({
   lawyerInformation: {
