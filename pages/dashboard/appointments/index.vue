@@ -162,14 +162,14 @@ const columns = ref([
       const colorMap = {
         cancelled: "error",
         pending_payment: "warning",
-        confirmed: "success",
-        completed: "primary",
+        reserved: "success",
+        done: "primary",
       };
       const labelMap = {
         cancelled: "لغو شده",
         pending_payment: "در انتظار پرداخت",
-        confirmed: "تایید شده",
-        completed: "تکمیل شده",
+        reserved: "رزرو شده",
+        done: "تکمیل شده",
       };
 
       return h(

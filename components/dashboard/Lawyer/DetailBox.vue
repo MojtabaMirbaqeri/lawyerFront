@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 md:p-6">
+  <div class="">
     <Suspense>
       <!-- #default slot: Main content to display once async setup is complete -->
       <template #default>

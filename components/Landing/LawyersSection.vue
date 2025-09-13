@@ -1,7 +1,7 @@
 <template>
-  <section class="space-y-4">
+  <section id="lawyers" class="space-y-4">
     <div class="space-y-4">
-      <div class="pt-4 xl:pt-5">
+      <div>
         <!-- <UICDrawer
           title="lawyer types"
           description="Categorization of lawyers by type"
@@ -31,21 +31,16 @@
         </UICDrawer> -->
         <UICSelectButton
           v-model="filtersStore.selectedFilters.lawyerType"
-          :items="lawyerTypes"
-        />
+          :items="lawyerTypes" />
       </div>
       <UICDrawer
         v-model="filtersStore.drawerVisiblity"
         title="filters"
         description="filter laywers"
-        class="overflow-y-auto!"
-      >
+        class="overflow-y-auto!">
         <template #button>
           <div class="filters-trigger primary-box">
-            <UIcon
-              name="system-uicons:filtering"
-              class="size-6! text-primary"
-            />
+            <UIcon name="system-uicons:filtering" class="size-6! text-primary" />
             فیلتر ها
             <UIcon name="proicons:chevron-left" class="ms-auto" />
           </div>
@@ -54,39 +49,32 @@
       </UICDrawer>
     </div>
     <div ref="lawyersListRef" class="lg:flex gap-4 xl:gap-5 items-start">
-      <LandingSidebar class="hidden lg:block sticky top-[90px] grow-0 shrink" />
+      <LandingSidebar class="hidden lg:block sticky top-[80px] grow-0 shrink" />
       <main class="space-y-4 grow shrink-0">
         <UICTabs
           v-model="filtersStore.selectedFilters.sortBy"
           :content="false"
           :items="tabItems"
-          class="sort-tabs"
-        />
+          class="sort-tabs" />
         <div v-if="lawyersRef?.data?.length" class="lawyers-con">
           <NuxtLink
             v-for="lawyer in lawyersRef?.data"
             :key="lawyer.id"
-            :to="`/${props.link}${lawyer.id}`"
-          >
+            :to="`/${props.link}${lawyer.id}`">
             <LawyerCard :titlebtn="titlebtn" :lawyer-info="lawyer" />
           </NuxtLink>
         </div>
         <Transition name="fade">
           <LawyerCard
-            v-if="
-              staticLawyerInfo &&
-              (!lawyersRef?.data?.length || lawyersRef.data == 0)
-            "
+            v-if="staticLawyerInfo && (!lawyersRef?.data?.length || lawyersRef.data == 0)"
             :lawyer-info="staticLawyerInfo"
-            :is-empty="true"
-          />
+            :is-empty="true" />
         </Transition>
         <UICPagination
           v-model="currentLawyersPage"
           class="w-fit! mx-auto"
           :total="lawyersRef.meta.total"
-          :page-size="lawyersRef.meta.per_page"
-        />
+          :page-size="lawyersRef.meta.per_page" />
       </main>
     </div>
   </section>
@@ -94,6 +82,7 @@
 
 <script setup>
 const filtersStore = useFiltersStore();
+const globalStore = useGlobalStore();
 
 const props = defineProps(["link", "titlebtn"]);
 const lawyersRef = ref(null);
@@ -112,7 +101,7 @@ lawyerTypes.unshift({
 });
 filtersStore.selectedFilters.lawyerType = lawyerTypes[0].id;
 
-const scrollToElement = useScrollToElement(84);
+const scrollToElement = useScrollToElement(80);
 
 const isFilterChange = ref(false);
 
@@ -142,6 +131,9 @@ watch(filtersStore.selectedFilters, async () => {
   currentLawyersPage.value = 1;
 
   // اگر در صفحه 1 هستیم، watch اجرا نمی‌شود، پس خودمان fetch کنیم
+  if (globalStore.sidebarVisblity) {
+    globalStore.toggleSidebar();
+  }
   if (oldPage === 1) {
     isFilterChange.value = false;
     await fetchLawyers();
@@ -159,6 +151,7 @@ async function fetchLawyers() {
       gender: filtersStore.selectedFilters.gender,
       sort: filtersStore.selectedFilters.sortBy,
       "visit_types[]": filtersStore.selectedFilters.visitType,
+      province_id: filtersStore.selectedFilters.province,
       city_id: filtersStore.selectedFilters.city,
       name: filtersStore.selectedFilters.searchField,
     },

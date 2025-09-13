@@ -16,18 +16,9 @@
     </div>
 
     <LawyerProfile
-      :avatar="
-        lawyerInfo.lawyer_info.profile_image
-          ? `${useRuntimeConfig().public.imageBase}${
-              lawyerInfo.lawyer_info.profile_image
-            }`
-          : '/images/null-avatar.png'
-      "
-      :fullname="`${lawyerInfo.lawyer_info.name} ${lawyerInfo.lawyer_info.family}`"
-      :education="lawyerInfo.base"
-      :location="`${lawyerInfo.province}، ${lawyerInfo.city}`"
+      :information="lawyerInfo"
       :show="true"
-      :active="lawyerInfo.is_active"
+      :show-experience="false"
       :ui="{
         base: 'items-start! w-full!',
         avatar: 'size-14! lg:size-16!',
