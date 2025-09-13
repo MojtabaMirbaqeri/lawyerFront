@@ -140,9 +140,7 @@ watch(
       });
       console.log(res.data.data);
       data.value = res.data.data.map((law) => {
-        const base = filterStore.lawyerTypes.find(
-          (type) => law.base == type.id
-        );
+        const base = filterStore.lawyerTypes.find((type) => law.base == type.id);
         return {
           id: law.user_id,
           national_code: law.national_code,
@@ -252,11 +250,10 @@ const acceptHandle = async (id) => {
         class="max-w-[250px] w-full"
         placeholder="فیلتر..."
         icon="solar:magnifer-linear"
-        @change="searchLawyer"
-      />
+        @change="searchLawyer" />
     </div>
     <UTable
-      :data="data"  
+      :data="data"
       :columns="columns"
       class="flex-1"
       :ui="{
@@ -264,34 +261,25 @@ const acceptHandle = async (id) => {
         thead: 'bg-primary',
         th: 'text-white text-center!',
         td: 'text-center',
-      }"
-    >
+      }">
       <template #status-cell="{ row }">
         <div
           :class="{ 'text-primary!': row.original.status === 'approved' }"
           class="text-red-500"
-          v-if="row.original.status != 'pending'"
-        >
+          v-if="row.original.status != 'pending'">
           {{ row.original.status === "approved" ? "تایید شده" : "تایید نشده" }}
         </div>
         <div v-else class="">
           <UICChooseStatusModal
             @reject="(com) => rejectHandle(com, row.original.edit_id)"
-            @accept="acceptHandle(row.original.edit_id)"
-          />
+            @accept="acceptHandle(row.original.edit_id)" />
         </div>
       </template>
       <template #licenseImage-cell="{ row }">
-        <UICPictureModal
-          title="عکس پروانه وکیل"
-          :image="row.original.licenseImage"
-        />
+        <UICPictureModal title="عکس پروانه وکیل" :image="row.original.licenseImage" />
       </template>
       <template #nationalCardImage-cell="{ row }">
-        <UICPictureModal
-          title="عکس پروانه وکیل"
-          :image="row.original.licenseImage"
-        />
+        <UICPictureModal title="عکس پروانه وکیل" :image="row.original.licenseImage" />
       </template>
     </UTable>
 
@@ -307,8 +295,7 @@ const acceptHandle = async (id) => {
           next: 'scale-x-[-1]',
           last: 'hidden',
         }"
-        @update:page="(p) => (pagination.pageIndex = p)"
-      />
+        @update:page="(p) => (pagination.pageIndex = p)" />
     </div>
   </div>
 </template>
