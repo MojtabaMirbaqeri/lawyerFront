@@ -7,7 +7,8 @@ export const useAuthStore = defineStore("auth", {
     user: null,
     initialized: false,
     loading: false,
-    height:null
+    height: null,
+    csrfToken: null
   }),
 
   getters: {
@@ -171,9 +172,24 @@ export const useAuthStore = defineStore("auth", {
     },
 
     // متد کمکی برای تنظیم authentication
-    setAuth(token, user) {
+    async setAuth(token, user) {
       this.token = token;
       this.user = user;
+
+      const { data } = await useGet({ url: 'sanctum/csrf-cookie' })
+
+      // ست کردن کوکی با اعتبار 7 روز (بر حسب ثانیه: 7 * 24 * 60 * 60)
+      const csrfToken = useCookie('csrf_token', {
+        maxAge: 60 * 60 * 24 * 7, // 7 روز
+        sameSite: 'lax',          // پیش‌فرض خوبه
+        secure: true              // اگه HTTPS داری
+      })
+
+      // مقداردهی
+      csrfToken.value = data.csrf_token
+
+      // اگر داخل component هستی و data لازم داری:
+      this.csrfToken = csrfToken.value
 
       const jwtToken = useCookie("jwtToken", {
         default: () => null,
@@ -190,18 +206,17 @@ export const useAuthStore = defineStore("auth", {
       jwtToken.value = token;
     },
 
-    logout(redirect = true) {
-      this.token = null;
-      this.user = null;
-      this.initialized = false;
-      this.$reset();
-
-      const jwtToken = useCookie("jwtToken");
-      jwtToken.value = null;
-
+    async logout(redirect = true) {
       if (redirect && import.meta.client) {
-        navigateTo("/");
+        await navigateTo("/");
       }
+
+      setTimeout(() => {
+        const jwtToken = useCookie("jwtToken");
+        jwtToken.value = null;
+        this.$reset();
+      } , 500)
+      
     },
   },
 });
