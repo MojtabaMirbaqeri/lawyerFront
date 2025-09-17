@@ -1,5 +1,5 @@
 <template>
-  <section v-if="recentComments?.data?.length" id="commments">
+  <section v-if="recentComments?.data?.length" id="comments">
     <h2 class="sec-header mb-2 lg:mb-3">دیدگاه و نظرات کاربران</h2>
 
     <ThingCarousel

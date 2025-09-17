@@ -27,6 +27,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/admin/tickets",
       icon: "hugeicons:message-multiple-02",
     },
+    {
+      title: "دیدگاه‌ها",
+      url: "/dashboard/admin/comments",
+      icon: "hugeicons:comment-01",
+    },
     { title: "کد تخفیف", url: "/dashboard/admin/coupons", icon: "hugeicons:coupon-01" },
     {
       title: "صورت حساب",

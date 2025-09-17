@@ -40,18 +40,16 @@ watch(
         td: 'text-center!',
       }"
       :columns="columns"
-      class="flex-1"
-    >
+      class="flex-1">
       <template #is_active-cell="{ cell }">
         <UICBadge
           class="mx-auto"
           :value="cell.getValue() == true ? 'فعال' : 'غیرفعال'"
           :variant="cell.getValue() == false ? 'red' : 'green'"
-          :custom-class="'px-4'"
-        />
+          :custom-class="'px-4'" />
       </template>
     </UTable>
-    <div class="flex justify-center  py-4">
+    <div v-if="showPagination" class="flex justify-center py-4">
       <UPagination
         v-model:page="pagination.pageIndex"
         :items-per-page="pagination.pageSize"
@@ -63,8 +61,7 @@ watch(
           next: 'scale-x-[-1]',
           last: 'hidden',
         }"
-        @update:page="(p) => (page = p)"
-      />
+        @update:page="(p) => (page = p)" />
     </div>
   </div>
 </template>

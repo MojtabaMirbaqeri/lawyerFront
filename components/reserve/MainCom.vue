@@ -110,7 +110,7 @@ const addReserve = async () => {
       icon: "hugeicons:appointment-02",
       color: "success",
     });
-    navigateTo("/dashboard");
+    navigateTo("/dashboard/appointments");
   } else if (res.statusCode === 422) {
     useToast().add({
       title: "در این بازه زمانی وکیل نوبت دیگری دارد.",

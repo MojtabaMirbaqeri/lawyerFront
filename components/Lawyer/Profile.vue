@@ -10,7 +10,13 @@
       >
         <UAvatar
           class="size-full"
-          :src="avatar"
+          :src="
+            information.lawyer_info.profile_image
+              ? `${useRuntimeConfig().public.imageBase}${
+                  information.lawyer_info.profile_image
+                }`
+              : '/images/null-avatar.png'
+          "
           :ui="{
             image: 'object-[50%_0%]',
           }"
@@ -22,35 +28,32 @@
         class="fullname font-semibold flex justify-between lg:justify-start lg:gap-2"
         :class="[ui?.name]"
       >
-        {{ fullname }}
+        {{
+          `${information.lawyer_info.name} ${information.lawyer_info.family}`
+        }}
         <div class="flex items-center gap-1">
           <slot name="badges" />
           <UICBadge
-            :value="active ? 'فعال' : 'غیرفعال'"
+            :value="information.is_active ? 'فعال' : 'غیرفعال'"
             icon="mynaui:clock-square-solid"
-            :variant="active ? 'blue' : 'gray'"
+            :variant="information.is_active ? 'blue' : 'gray'"
           />
         </div>
       </div>
-      <div class="education">{{ education }}</div>
+      <div class="education">{{ information.base }}</div>
       <div>
-        {{ experience ? `تجربه: ${experience} سال` : `محل کار: ${location}` }}
+        {{
+          showExperience
+            ? `تجربه: ${information?.years_of_experience} سال`
+            : `محل کار: ${information.province}، ${information.city}`
+        }}
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-defineProps([
-  "avatar",
-  "education",
-  "experience",
-  "fullname",
-  "active",
-  "show",
-  "ui",
-  "location",
-]);
+defineProps(["information", "show", "ui", "showExperience"]);
 </script>
 
 <style>
