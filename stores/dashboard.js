@@ -38,7 +38,6 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/admin/billing",
       icon: "solar:bill-list-linear",
     },
-    { title: "تنظیمات", url: "/dashboard/admin/settings", icon: "lucide:settings" },
   ];
 
   const lawyerRoutes = computed(() => {

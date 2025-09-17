@@ -27,7 +27,7 @@
             </template>
             <template #leading>
               <USelectMenu
-                v-model="useFiltersStore().selectedFilters.province"
+                v-model="filtersStore.selectedFilters.province"
                 class="h-full"
                 :ui="{
                   base: 'font-semibold text-xs sm:text-sm rounded-full w-[120px] sm:w-[160px]',
@@ -117,6 +117,7 @@
 
 <script setup>
 defineEmits(["scrollToLawyers"]);
+const filtersStore = useFiltersStore();
 
 const provinces = ref(null);
 onMounted(async () => {
@@ -126,7 +127,7 @@ onMounted(async () => {
     id: 0,
     name: "ایران",
   });
-  useFiltersStore().selectedFilters.province = provinces.value[0].id;
+  filtersStore.selectedFilters.province = provinces.value[0].id;
 
   document.addEventListener("click", handleClickOutside);
 });
@@ -134,7 +135,15 @@ onUnmounted(() => {
   document.removeEventListener("click", handleClickOutside);
 });
 
-const lawyerNameFilter = ref("");
+const lawyerNameFilter = ref(filtersStore.selectedFilters.searchField || "");
+
+// این رو اضافه کن
+watch(
+  () => filtersStore.selectedFilters.searchField,
+  (newValue) => {
+    lawyerNameFilter.value = newValue || "";
+  }
+);
 const searchWrapper = ref(null);
 const showSuggestBox = ref(false);
 const loading = ref(false);
@@ -168,7 +177,7 @@ watch(lawyerNameFilter, async (val) => {
 });
 
 const search = () => {
-  useFiltersStore().selectedFilters.searchField = lawyerNameFilter.value;
+  filtersStore.selectedFilters.searchField = lawyerNameFilter.value;
   showSuggestBox.value = false;
 };
 

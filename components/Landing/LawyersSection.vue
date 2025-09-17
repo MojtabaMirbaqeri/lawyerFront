@@ -40,7 +40,9 @@
         class="overflow-y-auto!">
         <template #button>
           <div class="filters-trigger primary-box">
-            <UIcon name="system-uicons:filtering" class="size-6! text-primary" />
+            <UChip inset :show="filtersStore.hasActiveFilters" position="bottom-right">
+              <UIcon name="system-uicons:filtering" class="size-6! text-primary" />
+            </UChip>
             فیلتر ها
             <UIcon name="proicons:chevron-left" class="ms-auto" />
           </div>
@@ -126,6 +128,7 @@ watch(currentLawyersPage, async (newPage, oldPage) => {
 });
 
 watch(filtersStore.selectedFilters, async () => {
+  console.log("triggered");
   const oldPage = currentLawyersPage.value;
   isFilterChange.value = true;
   currentLawyersPage.value = 1;

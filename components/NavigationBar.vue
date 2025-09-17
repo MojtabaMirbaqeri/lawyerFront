@@ -18,7 +18,7 @@
           }"
           :arrow="true"
           mode="hover">
-          <NuxtLink to="#lawyers"> لیست وکلا </NuxtLink>
+          <span @click="navigateTo('/#lawyers')"> لیست وکلا </span>
 
           <template #content>
             <div class="lawyers-popover">
@@ -69,10 +69,7 @@
               <UIcon name="mage:login" class="size-5! rotate-180" />
             </UButton>
           </NuxtLink>
-          <UDropdownMenu
-            v-else
-            :items="dropdownItems"
-            :ui="{ content: '' }">
+          <UDropdownMenu v-else :items="dropdownItems" :ui="{ content: '' }">
             <UButton
               :label="`${useAuthStore().user?.name} ${useAuthStore().user?.family}`"
               color="secondary"
@@ -180,7 +177,7 @@ const menuItems = ref([
       label: "لیست وکلا",
       icon: "lucide:layout-list",
       defaultOpen: true,
-      to: "#lawyers",
+      to: "/#lawyers",
       children: [
         {
           label: "تخصص ها",
@@ -214,6 +211,8 @@ onMounted(async () => {
       label: s.title,
       id: String(s.id),
       onSelect() {
+        filtersStore.clearFilters();
+        navigateTo("/");
         filtersStore.selectedFilters.lawyerSpecialty = s.id;
         lawyersPopoverVisiblity.value = false;
       },
@@ -245,6 +244,8 @@ onMounted(async () => {
           label: city.name,
           id: String(city.id),
           onSelect() {
+            filtersStore.clearFilters();
+            navigateTo("/");
             filtersStore.selectedFilters.city = city.id;
             lawyersPopoverVisiblity.value = false;
           },
@@ -302,7 +303,8 @@ onMounted(async () => {
 .desktop-nav .router-link-exact-active {
   @apply text-blue-500;
 }
-.desktop-nav a {
+.desktop-nav a,
+.desktop-nav span {
   @apply transition-all duration-300 hover:text-blue-500!;
 }
 .lawyers-popover {

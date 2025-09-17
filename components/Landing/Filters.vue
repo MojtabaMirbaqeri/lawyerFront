@@ -1,8 +1,16 @@
 <template>
   <div class="filters-con">
-    <div class="header py-2.5 bg-gray-100 px-1.5 rounded-md">
+    <div class="header">
       <UIcon name="system-uicons:filtering" class="size-6! text-primary" />
       <h3>فیلتر ها</h3>
+      <Transition name="page">
+        <div
+          v-if="filtersStore.hasActiveFilters"
+          class="text-blue-500 ms-auto me-1.5 cursor-pointer hover:text-blue-700 transition-colors"
+          @click="clearAllFilters">
+          پاکسازی فیلتر ها
+        </div>
+      </Transition>
     </div>
     <div class="body">
       <div>
@@ -11,8 +19,7 @@
           <UICSelectButton
             v-model="filtersVal.visitType"
             :items="filtersItems.visitTypes"
-            :multiple="true"
-          />
+            :multiple="true" />
         </div>
       </div>
       <div>
@@ -21,8 +28,7 @@
           <UICSelectButton
             v-model="filtersVal.gender"
             :items="filtersItems.genders"
-            :clearable="true"
-          />
+            :clearable="true" />
         </div>
       </div>
       <div class="space-y-4">
@@ -44,8 +50,7 @@
               icon="hugeicons:target-02"
               :search-input="{
                 placeholder: 'جستجو...',
-              }"
-            />
+              }" />
           </div>
         </div>
 
@@ -57,8 +62,7 @@
               v-for="id in filtersVal.lawyerSpecialty"
               :key="id"
               class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm border border-blue-200"
-              @click="removeSpecialty(id)"
-            >
+              @click="removeSpecialty(id)">
               <UIcon name="hugeicons:cancel-01" class="size-4.5!" />
               <span>
                 {{ filtersItems.specialties.find((s) => s.id === id)?.title }}
@@ -72,8 +76,7 @@
         <UICSecondaryBtn
           :disabled="!haveFiltersChanged"
           class="w-full rounded-lg! py-2.5! font-semibold"
-          @click="applyFilters()"
-        >
+          @click="applyFilters()">
           اعمال فیلترها
         </UICSecondaryBtn>
       </div>
@@ -104,14 +107,36 @@ const haveFiltersChanged = computed(() => {
   );
 });
 
+// const hasActiveFilters = computed(() => {
+//   return (
+//     filtersVal.visitType?.length > 0 ||
+//     filtersVal.gender !== null ||
+//     filtersVal.lawyerSpecialty?.length > 0 ||
+//     filtersStore.selectedFilters.searchField ||
+//     filtersStore.selectedFilters.city ||
+//     filtersStore.selectedFilters.province != 0
+//   );
+// });
+
 const removeSpecialty = (id) => {
-  filtersVal.lawyerSpecialty = filtersVal.lawyerSpecialty.filter(
-    (s) => s !== id
-  );
+  filtersVal.lawyerSpecialty = filtersVal.lawyerSpecialty.filter((s) => s !== id);
 };
 
 const applyFilters = () => {
   filtersStore.applyFilters(filtersVal);
+  filtersStore.drawerVisiblity = false;
+};
+
+const clearAllFilters = () => {
+  // پاکسازی فیلترهای محلی
+  filtersVal.visitType = [];
+  filtersVal.gender = null;
+  filtersVal.lawyerSpecialty = null;
+
+  // پاکسازی فیلترهای store
+  filtersStore.clearFilters();
+
+  // بستن drawer
   filtersStore.drawerVisiblity = false;
 };
 </script>
@@ -121,7 +146,7 @@ const applyFilters = () => {
   @apply divide-y divide-gray-300;
 }
 .filters-con .header {
-  @apply flex items-center gap-2;
+  @apply flex items-center gap-2 py-2.5 bg-gray-100 px-1.5 rounded-md;
 }
 .filters-con .body > div {
   @apply py-4;

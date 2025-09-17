@@ -123,8 +123,28 @@ export const useFiltersStore = defineStore("filters", {
         }
       });
     },
+    clearFilters() {
+      this.selectedFilters.visitType = [];
+      this.selectedFilters.gender = null;
+      this.selectedFilters.lawyerSpecialty = null;
+      this.selectedFilters.province = 0;
+      this.selectedFilters.city = null;
+      this.selectedFilters.searchField = null;
+    },
     setHydrated(val = true) {
       this.hydrated = val;
+    },
+  },
+  getters: {
+    hasActiveFilters: (state) => {
+      return (
+        state.selectedFilters.visitType?.length > 0 ||
+        state.selectedFilters.gender !== null ||
+        state.selectedFilters.lawyerSpecialty?.length > 0 ||
+        state.selectedFilters.province !== 0 ||
+        state.selectedFilters.city ||
+        state.selectedFilters.searchField
+      );
     },
   },
 });
