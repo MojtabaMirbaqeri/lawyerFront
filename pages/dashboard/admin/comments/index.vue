@@ -12,8 +12,7 @@
 <script setup>
 import { h, resolveComponent } from "vue";
 const UBadge = resolveComponent("UBadge");
-const UPopover = resolveComponent("UPopover"); // <--- استفاده از UPopover
-
+const UICTruncatePopover = resolveComponent("UICTruncatePopover");
 const page = ref(1);
 const data = ref([]);
 const total = ref(0);
@@ -70,8 +69,6 @@ async function rejectHandle(id) {
   useToast().add({ title: `دیدگاه با شناسه ${id} رد شد`, color: "success" });
 }
 
-const MAX_VISIBLE = 20; // تعداد کاراکتر قابل نمایش قبل از سه نقطه
-
 const columns = ref([
   {
     accessorKey: "id",
@@ -93,39 +90,10 @@ const columns = ref([
   {
     accessorKey: "comment",
     header: "دیدگاه",
-    // سلول دیدگاه: کوتاه‌شده + UPopover برای نمایش کامل هنگام هاور
     cell: ({ row }) => {
-      const full = row.original.comment || "";
-      const truncated =
-        full.length > MAX_VISIBLE ? full.slice(0, MAX_VISIBLE) + "…" : full;
-
-      // UPopover: default slot = trigger, #content slot = محتوای پاپ‌اور
-      return h(
-        UPopover,
-        {
-          mode: "hover",
-          openDelay: 150,
-          closeDelay: 100,
-          content: { side: "top", sideOffset: 8 },
-        },
-        {
-          default: () =>
-            h(
-              "span",
-              {
-                class: "cursor-pointer select-none inline-block max-w-[20ch] truncate",
-                
-              },
-              truncated
-            ),
-          content: () =>
-            h(
-              "div",
-              { class: "max-w-xs p-2 text-sm leading-relaxed break-words" },
-              full || "-"
-            ),
-        }
-      );
+      return h(UICTruncatePopover, {
+        text: row.getValue("comment"),
+      });
     },
   },
   {
