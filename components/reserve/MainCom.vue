@@ -11,8 +11,7 @@
                 v-model="activeDay"
                 :items="dateButtons"
                 option-label="title"
-                option-value="id"
-              />
+                option-value="id" />
             </div>
 
             <div class="controls selectBtnCon">
@@ -33,8 +32,7 @@
               id="dis"
               v-model="dismodel"
               :maxlength="300"
-              placeholder="شرح حال خود را برای وکیل بنویسید"
-            />
+              placeholder="شرح حال خود را برای وکیل بنویسید" />
             <p class="text-sm text-left text-muted-foreground">
               300 / {{ dismodel.length }}
             </p>
@@ -47,34 +45,28 @@
             @subCopun="(val) => addOffer(val)"
             @subReserve="addReserve"
             class="flex lg:hidden"
-            v-if="step === 2"
-          />
+            v-if="step === 2" />
           <ReserveAttention />
           <ReserveVisitInfo
             :defVisitTime="defVisitTime"
             :activeDay="activeDay"
-            :def-time="deftime"
-          />
+            :def-time="deftime" />
         </div>
       </div>
-      <div
-        class="left sticky flex-col gap-3 top-[90px] lg:w-[350px] shrink-0 flex"
-      >
+      <div class="left sticky z-10 flex-col gap-3 top-[90px] lg:w-[350px] shrink-0 flex">
         <UICProfileDetail
           src="/images/null-avatar.png"
           :fullname="`${lawyer.name} ${lawyer.family}`"
           skill="وکیل پایه یک دادگستری"
           :active-day="activeDay"
           paymentType="پرداخت حضوری"
-          v-model="step"
-        />
+          v-model="step" />
 
         <ReserveSelectPay
           v-if="step === 2"
           class="hidden lg:flex"
           @subCopun="(val) => addOffer(val)"
-          @subReserve="addReserve"
-        />
+          @subReserve="addReserve" />
       </div>
     </div>
   </div>
@@ -222,9 +214,7 @@ function addTimeAndDuration(timeStr, durationMinutes) {
   const newHour = Math.floor(totalMinutes / 60);
   const newMinute = totalMinutes % 60;
 
-  return (
-    String(newHour).padStart(2, "0") + ":" + String(newMinute).padStart(2, "0")
-  );
+  return String(newHour).padStart(2, "0") + ":" + String(newMinute).padStart(2, "0");
 }
 
 // رزروهای ثبت‌شده
@@ -245,11 +235,15 @@ onMounted(() => {
   detailPrice.value = useCalculatePrice(deftime.value, basePrice);
 });
 
-onUpdated(() => {
-  if (step.value === 1) {
-    detailPrice.value = useCalculatePrice(deftime.value, basePrice);
+watch(
+  () => deftime.value,
+  (newVal) => {
+    console.log(newVal)
+    if (step.value === 1) {
+      detailPrice.value = useCalculatePrice(newVal, basePrice);
+    }
   }
-});
+);
 
 watch(activeDay, (newVal) => {
   const found = dateButtons.value.find((btn) => btn.id === newVal);
@@ -301,9 +295,7 @@ function generateDateButtons() {
     });
   }
 
-  const filtered = dateButtons.value.filter(
-    (day) => !day.nonworking && !day.disabled
-  );
+  const filtered = dateButtons.value.filter((day) => !day.nonworking && !day.disabled);
   if (filtered.length > 0) {
     activeDay.value = filtered[0].id;
     selectedDate.value = filtered[0].iso;
@@ -325,15 +317,10 @@ const timeSlots = computed(() => {
   const endTime = toMinutes(config.end);
   const slots = [];
 
-  for (
-    let start = startTime;
-    start + selectedDuration.value <= endTime;
-    start += 30
-  ) {
+  for (let start = startTime; start + selectedDuration.value <= endTime; start += 30) {
     const end = start + selectedDuration.value;
     const isFree = !bookings.value.some(
-      (b) =>
-        b.date === selectedDate.value && overlap(start, end, b.start, b.end)
+      (b) => b.date === selectedDate.value && overlap(start, end, b.start, b.end)
     );
     slots.push({
       title: `${formatTime(start)} - ${formatTime(end)}`,
@@ -360,9 +347,7 @@ function toMinutes(t) {
 
 function formatTime(m) {
   return (
-    String(Math.floor(m / 60)).padStart(2, "0") +
-    ":" +
-    String(m % 60).padStart(2, "0")
+    String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0")
   );
 }
 
