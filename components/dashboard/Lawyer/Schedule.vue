@@ -22,26 +22,22 @@
 
     <div v-else class="space-y-12">
       <section>
-        <h2 class="text-xl font-bold mb-4 pb-2 border-b border-gray-200">اطلاعات محل کار</h2>
+        <h2 class="text-xl font-bold mb-4 pb-2 border-b border-gray-200">
+          اطلاعات محل کار
+        </h2>
         <UForm
           :schema="workplaceSchema"
           :state="workplaceState"
           class="ds-form"
-          @submit="onWorkplaceSubmit"
-        >
+          @submit="onWorkplaceSubmit">
           <div class="ds-form-grid">
-            <UICInput
-              v-model="workplaceState.name"
-              name="name"
-              label="نام محل کار"
-            />
+            <UICInput v-model="workplaceState.name" name="name" label="نام محل کار" />
             <UICInput name="province_id" label="استان">
               <template #input>
                 <UICSelect
                   v-model="workplaceState.province_id"
                   :items="provinces"
-                  :disabled="isFetchingProvinces"
-                />
+                  :disabled="isFetchingProvinces" />
               </template>
             </UICInput>
             <UICInput name="city_id" label="شهر">
@@ -49,32 +45,21 @@
                 <UICSelect
                   v-model="workplaceState.city_id"
                   :items="cities"
-                  :disabled="isCitySelectDisabled"
-                />
+                  :disabled="isCitySelectDisabled" />
               </template>
             </UICInput>
             <UICInput
               v-model="workplaceState.address"
               name="address"
               label="آدرس محل کار"
-              custom-class="md:col-span-3"
-            />
-            <UICInput
-              v-model="workplaceState.phone"
-              name="phone"
-              label="تلفن ثابت"
-            />
+              custom-class="md:col-span-3" />
+            <UICInput v-model="workplaceState.phone" name="phone" label="تلفن ثابت" />
             <UICInput
               v-model="workplaceState.emergency_phone"
               name="emergency_phone"
-              label="تلفن اضطراری"
-            />
+              label="تلفن اضطراری" />
           </div>
-          <UICSecondaryBtn
-            type="submit"
-            :disabled="isWorkplaceLoading"
-            class="mt-4"
-          >
+          <UICSecondaryBtn type="submit" :disabled="isWorkplaceLoading" class="mt-4">
             {{ isWorkplaceLoading ? "در حال افزودن..." : "افزودن محل کار" }}
           </UICSecondaryBtn>
         </UForm>
@@ -84,36 +69,32 @@
         </div>
       </section>
 
-      <hr class="text-gray-200">
+      <hr class="text-gray-200" />
 
       <section>
-        <h2 class="text-xl font-bold mb-4 pb-2 border-b border-gray-200">ساعات کاری هفتگی</h2>
+        <h2 class="text-xl font-bold mb-4 pb-2 border-b border-gray-200">
+          ساعات کاری هفتگی
+        </h2>
         <UForm
           :schema="scheduleSchema"
           :state="weeklyScheduleState"
-          @submit="onScheduleSubmit"
-        >
+          @submit="onScheduleSubmit">
           <div class="space-y-3">
             <UAccordion :items="weeklyScheduleState">
               <template
                 v-for="(day, index) in weeklyScheduleState"
                 :key="day.day_of_week"
-                v-slot:[day.slot]
-              >
+                v-slot:[day.slot]>
                 <div class="p-4 space-y-6 bg-gray-50/50">
                   <div
                     v-for="type in consultationTypes"
                     :key="type.key"
-                    class="grid grid-cols-12 items-center gap-4"
-                  >
-                    <div
-                      class="col-span-12 sm:col-span-3 flex items-center gap-x-3"
-                    >
+                    class="grid grid-cols-12 items-center gap-4">
+                    <div class="col-span-12 sm:col-span-3 flex items-center gap-x-3">
                       <USwitch
                         v-model="
                           weeklyScheduleState[index].schedules[type.key].enabled
-                        "
-                      />
+                        " />
                       <label class="font-medium">{{ type.label }}</label>
                     </div>
                     <div
@@ -121,34 +102,27 @@
                       :class="{
                         'opacity-50 pointer-events-none':
                           !day.schedules[type.key].enabled,
-                      }"
-                    >
+                      }">
                       <UICInput
                         :label="`ساعت شروع`"
-                        :name="`[${index}].schedules.${type.key}.start_time`"
-                      >
+                        :name="`[${index}].schedules.${type.key}.start_time`">
                         <template #input>
                           <UInput
                             v-model="
-                              weeklyScheduleState[index].schedules[type.key]
-                                .start_time
+                              weeklyScheduleState[index].schedules[type.key].start_time
                             "
-                            type="time"
-                          />
+                            type="time" />
                         </template>
                       </UICInput>
                       <UICInput
                         :label="`ساعت پایان`"
-                        :name="`[${index}].schedules.${type.key}.end_time`"
-                      >
+                        :name="`[${index}].schedules.${type.key}.end_time`">
                         <template #input>
                           <UInput
                             v-model="
-                              weeklyScheduleState[index].schedules[type.key]
-                                .end_time
+                              weeklyScheduleState[index].schedules[type.key].end_time
                             "
-                            type="time"
-                          />
+                            type="time" />
                         </template>
                       </UICInput>
                     </div>
@@ -160,8 +134,7 @@
           <UICSecondaryBtn
             type="submit"
             :disabled="isScheduleLoading"
-            class="mt-6 form-secondary-btn"
-          >
+            class="mt-6 form-secondary-btn">
             {{ isScheduleLoading ? "در حال ثبت..." : "ثبت ساعات کاری" }}
           </UICSecondaryBtn>
         </UForm>
@@ -197,6 +170,8 @@ const provinces = ref([]);
 const cities = ref([]);
 const isFetchingProvinces = ref(false);
 const isFetchingCities = ref(false);
+const UICTruncatePopover = resolveComponent("UICTruncatePopover");
+
 
 const isCitySelectDisabled = computed(() => {
   return !workplaceState.province_id || isFetchingCities.value;
@@ -220,8 +195,7 @@ async function fetchInitialData() {
       useGet({ url: "lawyer_schedules/weekly", includeAuthHeader: true }),
     ]);
 
-    if (workplacesRes.status)
-      workplacesList.value = workplacesRes.data.data || [];
+    if (workplacesRes.status) workplacesList.value = workplacesRes.data.data || [];
 
     const defaultWeek = [
       { day_of_week: 0, label: "شنبه" },
@@ -232,14 +206,10 @@ async function fetchInitialData() {
       { day_of_week: 5, label: "پنج‌شنبه" },
     ];
 
-    const apiSchedule = scheduleRes.status
-      ? scheduleRes.data.weekly_schedule
-      : [];
+    const apiSchedule = scheduleRes.status ? scheduleRes.data.weekly_schedule : [];
 
     weeklyScheduleState.value = defaultWeek.map((day) => {
-      const apiDayData = apiSchedule.find(
-        (d) => d.day_of_week == day.day_of_week
-      );
+      const apiDayData = apiSchedule.find((d) => d.day_of_week == day.day_of_week);
       const schedules = {};
 
       consultationTypes.forEach((type) => {
@@ -294,8 +264,6 @@ async function fetchProvinces() {
 
 async function fetchCities(provinceId) {
   if (!provinceId) {
-    cities.value = [];
-    workplaceState.city_id = "";
     return;
   }
   isFetchingCities.value = true;
@@ -305,7 +273,7 @@ async function fetchCities(provinceId) {
       id: String(c.id),
       label: c.name,
     }));
-    if (!cities.value.find((c) => c.id === workplaceState.city_id)) {
+    if (!cities.value.find((c) => c.id == workplaceState.city_id)) {
       workplaceState.city_id = cities.value.length ? cities.value[0].id : "";
     }
   } catch (err) {
@@ -333,8 +301,8 @@ fetchProvinces();
 // ======== بخش محل کار ========
 const workplaceSchema = object({
   name: string().required("نام محل کار الزامی است"),
-  province_id: number().required("استان الزامی است"),
-  city_id: number().required("شهر الزامی است"),
+  province_id: string().required("استان الزامی است"),
+  city_id: string().required("شهر الزامی است"),
   address: string().required("آدرس الزامی است"),
   phone: string().required("تلفن ثابت الزامی است"),
   emergency_phone: string(),
@@ -344,6 +312,9 @@ async function onWorkplaceSubmit(event) {
   isWorkplaceLoading.value = true;
   const body = {
     ...event.data,
+    // تبدیل string به number برای ارسال به backend
+    province_id: parseInt(event.data.province_id),
+    city_id: parseInt(event.data.city_id),
     work_times: [],
   };
   try {
@@ -359,19 +330,17 @@ async function onWorkplaceSubmit(event) {
       });
       workplacesList.value.push(res.data.data);
 
-      const tehran = provinces.value.find((p) => p.label === "تهران");
-      const tehranId = tehran
-        ? tehran.id
-        : provinces.value.length
-        ? provinces.value[0].id
-        : "";
+      // ریست کردن فرم با حفظ province و city
+      const currentProvinceId = workplaceState.province_id;
+      const currentCityId = workplaceState.city_id;
+
       Object.assign(workplaceState, {
         name: "",
         address: "",
         phone: "",
         emergency_phone: "",
-        province_id: tehranId,
-        city_id: "",
+        province_id: currentProvinceId, // حفظ استان انتخاب شده
+        city_id: currentCityId, // حفظ شهر انتخاب شده
       });
     } else {
       toast.add({ description: "خطا در افزودن محل کار.", color: "error" });
@@ -390,9 +359,7 @@ async function handleWorkplaceDelete(id) {
     includeAuthHeader: true,
   });
   if (res.status) {
-    workplacesList.value = workplacesList.value.filter(
-      (item) => item.id !== id
-    );
+    workplacesList.value = workplacesList.value.filter((item) => item.id !== id);
     toast.add({ description: "محل کار با موفقیت حذف شد.", color: "success" });
   } else {
     toast.add({ description: "خطا در حذف آیتم.", color: "error" });
@@ -407,7 +374,15 @@ const workplaceColumns = [
     cell: ({ row }) => row.original.province?.name,
   },
   { key: "city", header: "شهر", cell: ({ row }) => row.original.city?.name },
-  { accessorKey: "address", header: "آدرس" },
+  {
+    accessorKey: "address",
+    header: "آدرس",
+    cell: ({ row }) => {
+      return h(UICTruncatePopover, {
+        text: row.getValue("address"),
+      });
+    },
+  },
   { accessorKey: "phone", header: "تلفن" },
   {
     id: "actions",
