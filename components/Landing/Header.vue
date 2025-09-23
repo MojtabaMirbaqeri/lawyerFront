@@ -3,8 +3,8 @@
     <div class="container">
       <h1 class="header-title">
         مشاوره آنلاین با
-        <ClientOnly>{{ useGlobalStore()?.lawyersCount }}</ClientOnly> نفر از بهترین
-        متخصصین وکالت
+        <ClientOnly>{{ useGlobalStore()?.lawyersCount?.toLocaleString() }}</ClientOnly>
+        نفر از بهترین متخصصین وکالت
       </h1>
       <div class="w-full">
         <div class="relative z-50" ref="searchWrapper">
@@ -149,31 +149,51 @@ const showSuggestBox = ref(false);
 const loading = ref(false);
 const lawyers = ref([]);
 
-watch(lawyerNameFilter, async (val) => {
-  if (val.length >= 3) {
+// Debounced search function
+let searchTimeout = null;
+
+const performSearch = async (searchQuery) => {
+  if (searchQuery.length >= 3) {
     showSuggestBox.value = true;
     loading.value = true;
 
-    const { data, status } = await useGet({
-      url: "lawyer-search/suggestions",
-      query: {
-        query: val,
-        per_page: 5,
-      },
-    });
+    try {
+      const { data, status } = await useGet({
+        url: "lawyer-search/suggestions",
+        query: {
+          query: searchQuery,
+          per_page: 5,
+        },
+      });
 
-    if (status && data.data.data?.lawyers) {
-      lawyers.value = data.data.data.lawyers;
-      console.log(lawyers.value);
-    } else {
+      if (status && data.data.data?.lawyers) {
+        lawyers.value = data.data.data.lawyers;
+        console.log(lawyers.value);
+      } else {
+        lawyers.value = [];
+      }
+    } catch (error) {
       lawyers.value = [];
+      console.error("Search error:", error);
+    } finally {
+      loading.value = false;
     }
-
-    loading.value = false;
   } else {
     showSuggestBox.value = false;
     lawyers.value = [];
   }
+};
+
+watch(lawyerNameFilter, (val) => {
+  // Clear previous timeout
+  if (searchTimeout) {
+    clearTimeout(searchTimeout);
+  }
+
+  // Set new timeout for debounce (500ms delay)
+  searchTimeout = setTimeout(() => {
+    performSearch(val);
+  }, 800);
 });
 
 const search = () => {
@@ -192,6 +212,13 @@ const handleFocus = () => {
     showSuggestBox.value = true;
   }
 };
+
+// Clean up timeout on component unmount
+onUnmounted(() => {
+  if (searchTimeout) {
+    clearTimeout(searchTimeout);
+  }
+});
 </script>
 
 <style scoped>
