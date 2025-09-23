@@ -15,9 +15,9 @@
 
     <div
       :class="{
-        'left-message': authStore.user.user_type != message.user.type,
+        'left-message': authStore.user.user_type != message.user?.type || authStore.user.id !== message.user?.id,
         'right-message primary-box':
-          authStore.user.user_type == message.user.type,
+          authStore.user.user_type == message.user.type || authStore.user.id === message.user?.id,
       }"
       class="flex flex-col"
       v-for="message in item.messages"
