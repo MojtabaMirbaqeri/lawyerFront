@@ -3,21 +3,14 @@
   <section>
     <div class="ds-table-con">
       <!-- جدول داده‌ها -->
-      <UICDataTable
-        :data="data"
-        :columns="columns"
-        :total="total"
-        v-model="page"
-      />
+      <UICDataTable :data="data" :columns="columns" :total="total" v-model="page" />
     </div>
 
     <!-- مودال تایید لغو نوبت -->
     <UModal v-model:open="isCancelModalOpen">
       <template #body>
         <div class="">
-          <h3
-            class="text-lg font-medium leading-6 text-gray-900 dark:text-white"
-          >
+          <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">
             لغو نوبت
           </h3>
           <div class="mt-2">
@@ -28,8 +21,7 @@
           <div class="mt-4 flex justify-start gap-3">
             <UICSecondaryBtn
               @click="handleConfirmCancel"
-              class="rounded-[8px]! py-[10px]!"
-            >
+              class="rounded-[8px]! py-[10px]!">
               <span>تایید و لغو</span>
             </UICSecondaryBtn>
           </div>
@@ -48,6 +40,7 @@ const authStore = useAuthStore();
 const UButton = resolveComponent("UButton");
 const UDropdownMenu = resolveComponent("UDropdownMenu");
 const UBadge = resolveComponent("UBadge");
+const UICTruncatePopover = resolveComponent("UICTruncatePopover");
 
 // وضعیت مودال
 const isCancelModalOpen = ref(false);
@@ -153,6 +146,15 @@ const columns = ref([
   {
     accessorKey: "time",
     header: "ساعت",
+  },
+  {
+    accessorKey: "description",
+    header: "توضیحات",
+    cell: ({ row }) => {
+      return h(UICTruncatePopover, {
+        text: row.getValue("description") || "----",
+      });
+    },
   },
   {
     accessorKey: "status",
