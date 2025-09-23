@@ -7,8 +7,7 @@
           color="primary"
           variant="link"
           trailing-icon="hugeicons:add-02"
-          class="p-0 flex justify-between w-full"
-        />
+          class="p-0 flex justify-between w-full" />
 
         <template #content>
           <div class="w-full mt-5">
@@ -16,13 +15,18 @@
               :schema="schema"
               :state="state"
               class="space-y-4 flex items-start gap-2 justify-between"
-              @submit="onSubmit"
-            >
+              @submit="onSubmit">
               <UFormField name="code" class="w-full">
                 <UInput v-model="state.code" class="w-full" />
               </UFormField>
 
-              <UButton @click="$emit('subCopun',state.code)" :disabled="state.code === ''" class="w-30 justify-center" type="submit"> اعمال کد </UButton>
+              <UButton
+                @click="$emit('subCopun', state.code)"
+                :disabled="state.code === ''"
+                class="w-30 justify-center"
+                type="submit">
+                اعمال کد
+              </UButton>
             </UForm>
           </div>
         </template>
@@ -43,8 +47,7 @@
                   label=" قوانین و مقررات"
                   color="primary"
                   variant="link"
-                  class="p-0 ps-1 cursor-pointer"
-                />
+                  class="p-0 ps-1 cursor-pointer" />
               </template>
               <template #default> قوانین و مقررات </template>
             </UICDrawer>
@@ -63,8 +66,7 @@
                     label=" قوانین و مقررات"
                     color="primary"
                     variant="link"
-                    class="p-0 ps-1 cursor-pointer"
-                  />
+                    class="p-0 ps-1 cursor-pointer" />
                 </template>
                 <template #default> قوانین و مقررات </template>
               </UICDrawer>
@@ -76,9 +78,10 @@
           :disabled="!checkBoxVal"
           :class="{ 'mix-blend-luminosity': !checkBoxVal }"
           class="rounded-[8px]! justify-center! w-full"
-          @click="$emit('subReserve')"
-        >
-          <span class="text-center text-base"> {{ selectDargah === "1" ? 'ثبت نوبت' : 'پرداخت'}} </span>
+          @click="$emit('subReserve')">
+          <span class="text-center text-base">
+            {{ selectDargah === "1" ? "ثبت نوبت" : "پرداخت" }}
+          </span>
         </UICSecondaryBtn>
       </div>
     </div>
@@ -92,7 +95,6 @@ import type { FormSubmitEvent } from "@nuxt/ui";
 
 const selectDargah = ref("1");
 
-
 const checkBoxVal = ref(false);
 
 const items = ref([
@@ -100,19 +102,19 @@ const items = ref([
     id: "1",
     title: "پرداخت حضوری",
     src: "office.png",
-    disabled:false,
+    disabled: false,
   },
   {
     id: "2",
     title: "درگاه به پرداخت بانک ملت",
     src: "behpardakht.webp",
-    disabled:true,
+    disabled: true,
   },
   {
     id: "3",
     title: "درگاه بانک سامان",
     src: "samanBank.webp",
-    disabled:true,
+    disabled: true,
   },
 ]);
 
@@ -123,20 +125,18 @@ const schema = object({
 type Schema = InferType<typeof schema>;
 
 const state = reactive({
-  code: '',
+  code: "",
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   console.log(event.data);
 }
-
-
 </script>
 
 <style scoped>
 @reference "tailwindcss";
 
 .sidebar-btn {
-  @apply fixed lg:shadow-none lg:z-0 shadow-[0_35px_35px_20px_rgba(0,0,0,0.25)] gap-6 rounded-t-[14px] lg:static bottom-0 right-0 mx-auto lg:mx-0 bg-white p-4 z-50 left-0 flex flex-col;
+  @apply fixed lg:shadow-none lg:z-0 shadow-[0_35px_35px_20px_rgba(0,0,0,0.25)] gap-6 rounded-t-[14px] lg:static bottom-0 right-0 mx-auto lg:mx-0 bg-white py-4 z-50 left-0 flex flex-col;
 }
 </style>
