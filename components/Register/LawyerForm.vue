@@ -50,9 +50,10 @@
         />
       </template>
     </UICInput>
-    <UICSecondaryBtn type="submit" :disabled="auth.loading">
-      تایید
-    </UICSecondaryBtn>
+    <UICSecondaryBtn
+      type="submit"
+      :disabled="auth.loading"
+    > تایید </UICSecondaryBtn>
   </UForm>
 </template>
 <script setup>
@@ -97,7 +98,7 @@ async function onSubmit(e) {
   formData.append("base", lawyerInformation.lawyerType);
   try {
     await auth.registerLawyer(formData);
-    navigateTo("/dashboard");
+    navigateTo("/dashboard/lawyer");
   } catch (err) {
     alert("خطا در ثبت‌نام وکیل");
     console.error(err);

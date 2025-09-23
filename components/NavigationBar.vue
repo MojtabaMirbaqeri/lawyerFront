@@ -137,7 +137,7 @@ const dropdownItems = computed(() => {
         label: "پنل کاربری",
         icon: "hugeicons:dashboard-square-01",
         onSelect() {
-          navigateTo("/dashboard");
+          useNavigateToDashboard();
         },
       },
     ],

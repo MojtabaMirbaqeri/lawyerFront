@@ -13,8 +13,7 @@
     :otp="true"
     placeholder="○"
     class="otp gap-3"
-    autofocus
-  />
+    autofocus />
 
   <div class="">
     <div class="send-again flex">
@@ -22,8 +21,7 @@
         @click="timerStartHandle"
         class="text-primary cursor-pointer"
         :class="{ 'mix-blend-luminosity': counting }"
-        v-if="!counting"
-      >
+        v-if="!counting">
         دریافت مجدد
       </span>
       <Countdown
@@ -31,8 +29,7 @@
         @end="timerEndHandle"
         @start="timerStartHandle"
         v-slot="{ minutes, seconds }"
-        v-if="counting"
-      >
+        v-if="counting">
         <span>
           {{
             (seconds < 10 ? "0" + seconds.toString() : seconds) +
@@ -47,8 +44,7 @@
   <UICSecondaryBtn
     class="w-full rounded-[8px]! justify-center h-[46px]"
     :disabled="auth.loading"
-    @click="otpHandle"
-  >
+    @click="otpHandle">
     تایید
   </UICSecondaryBtn>
 </template>
@@ -64,8 +60,7 @@ onBeforeMount(() => {
     endTime.value = new Date().setMinutes(new Date().getMinutes() + 2);
     localStorage.setItem("timer", endTime.value);
   } else if (
-    localStorage.getItem("timer") <
-    new Date().setMinutes(new Date().getMinutes())
+    localStorage.getItem("timer") < new Date().setMinutes(new Date().getMinutes())
   ) {
     console.log(222);
     localStorage.removeItem("timer");
@@ -151,7 +146,7 @@ const otpHandle = async () => {
       return;
     }
 
-    navigateTo("/dashboard");
+    useNavigateToDashboard(true);
   } catch (error) {
     useToast().add({
       title: "کد ورود نا معتبر می باشد.",

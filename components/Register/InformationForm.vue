@@ -96,9 +96,8 @@ const submit = async (e) => {
         family: e.data.lastName,
         phone: registerStore.userInformation.phone,
       });
-      navigateTo("/dashboard");
+      navigateTo("/");
     } catch (err) {
-      alert("خطا در ثبت‌نام کاربر عادی");
       console.error(err);
     }
   } else {
