@@ -68,6 +68,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
           url: "/dashboard/ticket/tickets",
           icon: "hugeicons:message-multiple-02",
         },
+        {
+          title: "مدیریت چت",
+          url: "/dashboard/lawyer/chats",
+          icon: "hugeicons:message-multiple-02",
+        },
       ];
     } else {
       return [
