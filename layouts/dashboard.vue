@@ -1,9 +1,13 @@
 <template>
   <div class="flex justify-between">
     <ClientOnly>
-      <dashboard-layout />
+      <dashboard-layout :chat-items="chatItems" />
       <div class="w-full">
-        <nav class="dashboard-nav">
+        <!-- وقتی هیچ اتاقی انتخاب نشده -->
+        <nav
+          class="dashboard-nav"
+          v-if="chatStore.selectedRoom == 0"
+        >
           <UIcon
             name="solar:hamburger-menu-outline"
             class="size-6! lg:hidden!"
@@ -17,7 +21,30 @@
             }"
           />
         </nav>
-        <div class="ds-container space-y-4">
+
+        <!-- وقتی اتاق انتخاب شده -->
+        <nav
+          class="dashboard-nav"
+          v-else
+        >
+          <UIcon
+            name="solar:hamburger-menu-outline"
+            class="size-6! lg:hidden!"
+            @click="openSideBarHandle"
+          />
+          <UserProfile
+            :reverse="true"
+            :detail="{
+              name: roomName,
+              text: chatStore?.roomInfo?.phone,
+            }"
+          />
+        </nav>
+
+        <div
+          class="space-y-4"
+          :class="{ 'ds-container': $route.path.startsWith('/dashboard') }"
+        >
           <UAlert
             v-if="
               authStore.user?.user_type == 'lawyer' &&
@@ -35,13 +62,11 @@
             }"
           />
           <slot
-            v-if="
-              !(
-                authStore.user?.user_type == 'lawyer' &&
-                authStore.user?.lawyer_id == null && 
-                $route.path == '/dashboard/lawyer'
-              )
-            "
+            v-if="!(
+              authStore.user?.user_type == 'lawyer' &&
+              authStore.user?.lawyer_id == null &&
+              $route.path == '/dashboard/lawyer'
+            )"
           />
         </div>
       </div>
@@ -52,11 +77,31 @@
 <script setup>
 const dashboardStore = useDashboardStore();
 const authStore = useAuthStore();
+const chatStore = useChatStore();
+
+defineProps(["chatItems"]);
 
 const openSideBarHandle = () => {
   document.body.classList.add("overflow-hidden!");
   dashboardStore.openSidebar = true;
 };
+
+// اسم اتاق یا شخص مقابل
+const roomName = computed(() => {
+  const room = chatStore.roomInfo;
+  if (!room) return "";
+
+  // گروه
+  if (room.members?.length > 2) {
+    return room.name || "";
+  }
+
+  // چت خصوصی (پیدا کردن فرد مقابل)
+  const other = room.members?.find((m) => m.id !== authStore.user.id);
+  if (!other) return "";
+
+  return `${other.name ?? ""} ${other.family ?? ""}`.trim();
+});
 </script>
 
 <style scoped>

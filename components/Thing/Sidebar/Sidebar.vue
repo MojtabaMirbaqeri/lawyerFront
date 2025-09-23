@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="items w-full px-3 divide-y divide-gray-200">
-        <ul class="w-full flex flex-col gap-1.5 py-3">
+        <ul class="w-full flex flex-col gap-1.5 py-3" v-if="$route.path === '/dashboard'">
           <li
             v-for="item in dashboardStore.sidebarRoutes"
             :key="item.url"
@@ -46,6 +46,21 @@
               <UIcon :name="item.icon" class="size-4.5!" />
               {{ item.title }}
             </nuxt-link>
+          </li>
+        </ul>
+        <ul class="w-full flex flex-col gap-1.5 py-3" v-else>
+          <li
+            v-for="item in chatStore.chatRooms"
+            :key="item.id"
+            class="w-full flex items-center gap-2"
+          >
+            <div
+              class="w-full flex items-center gap-2 ds-menu-item cursor-pointer"
+              @click="handleChatSidebar(item)"
+            >
+              <!-- <UIcon :name="item.icon" class="size-4.5!" /> -->
+              {{ getChatName(item) }}
+            </div>
           </li>
         </ul>
         <div class="py-3">
@@ -90,11 +105,37 @@ import type { HTMLAttributes } from "vue";
 import { tv } from "tailwind-variants";
 
 const dashboardStore = useDashboardStore();
+const chatStore = useChatStore()
+const userStore = useAuthStore()
 
 const closeSideBar = () => {
   dashboardStore.openSidebar = false;
   document.body.classList.remove("overflow-hidden!");
 };
+
+const handleChatSidebar = (item) => {
+  chatStore.selectRoom(item)
+  closeSideBar()
+}
+
+const getChatName = (room) => {
+    // If the room has more than 2 members, it's a group chat. Return the room's name.
+    if (room.members.length > 2) {
+      return room.name;
+    }
+
+    // Find the member who is NOT the current logged-in user.
+    const otherUser = room.members.find(member => member.id !== userStore.user?.id);
+
+    // If we found the other user, return their full name.
+    if (otherUser) {
+      return `${otherUser.name} ${otherUser.family}`;
+    }
+
+    // As a fallback (e.g., a chat with only one person), return the original room name.
+    return room.name;
+}
+
 
 export const sideBarStyles = tv({
   slots: {
