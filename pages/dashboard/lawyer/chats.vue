@@ -80,10 +80,10 @@ async function startChatRoom(appointment) {
       toast.add({ title: "اتاق گفتگو با موفقیت ایجاد شد.", color: "success" });
 
       // اگر پاسخ شامل id روم هست، هدایت کن (اختیاری)
-      const roomId = res.data?.id ?? res.data?.data?.id ?? null;
+      const roomId = res.data?.id ?? res.data?.data?.id ?? 1;
       if (roomId) {
-        // مسیر پیشنهادی — در صورت نیاز مسیر را به مسیر اپلیکیشن خودت تغییر بده
-        navigateTo(`/dashboard/chat/rooms/${roomId}`);
+        useChatStore().selectedRoom = roomId;
+        navigateTo(`/chat`);
       } else {
         // ریفرش لیست نوبت‌ها (مثل الگوی قبلی)
         appointmentsRes.value.data = await appointmentsRes.value.refresh();

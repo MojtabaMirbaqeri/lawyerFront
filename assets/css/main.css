@@ -41,7 +41,7 @@ html {
   }
 
   .ds-container {
-    @apply max-w-[1200px] mx-auto py-5 px-4;
+    @apply lg:w-[calc(100svw_-_256px)] max-w-[1200px] mx-auto py-5 px-4;
   }
 
   .field-base {
