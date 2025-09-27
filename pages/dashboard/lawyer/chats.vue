@@ -80,9 +80,12 @@ async function startChatRoom(appointment) {
       toast.add({ title: "اتاق گفتگو با موفقیت ایجاد شد.", color: "success" });
 
       // اگر پاسخ شامل id روم هست، هدایت کن (اختیاری)
-      const roomId = res.data?.id ?? res.data?.data?.id ?? 1;
+      const roomId = res.data?.room?.id ?? res.data?.data?.data?.room?.id ?? 1;
       if (roomId) {
         useChatStore().selectedRoom = roomId;
+        useChatStore().roomInfo = res.data?.room ?? res?.data?.data?.data?.room ?? {};
+        console.log(useChatStore().selectedRoom);
+        
         navigateTo(`/chat`);
       } else {
         // ریفرش لیست نوبت‌ها (مثل الگوی قبلی)
@@ -90,12 +93,18 @@ async function startChatRoom(appointment) {
       }
     } else {
       // خطای غیرمنتظره
-      toast.add({ title: "ایجاد اتاق گفتگو با خطا مواجه شد.", color: "danger" });
+      toast.add({
+        title: "ایجاد اتاق گفتگو با خطا مواجه شد.",
+        color: "danger",
+      });
       console.error("startChatRoom response:", res);
     }
   } catch (err) {
     console.error(err);
-    useToast().add({ title: "خطا در برقراری ارتباط با سرور.", color: "danger" });
+    useToast().add({
+      title: "خطا در برقراری ارتباط با سرور.",
+      color: "danger",
+    });
   }
 }
 

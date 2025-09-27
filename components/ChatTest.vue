@@ -90,7 +90,7 @@
                   <button
                     v-else-if="file.isDownloading"
                     @click="cancelDownload(file)"
-                    class="action-button progress-button"
+                    class="action-button justify-center items-center progress-button"
                   >
                     <svg
                       class="progress-circle"
@@ -536,14 +536,41 @@ const handleFileDownload = async (file) => {
       if (totalSize)
         file.progress = Math.round((receivedLength / totalSize) * 100);
     }
-    file.localUrl = URL.createObjectURL(new Blob(chunks));
+    
+    // --- شروع تغییرات ---
+
+    // 1. یک Blob از تکه‌های داده بسازید
+    const blob = new Blob(chunks);
+    // 2. یک URL موقت برای این Blob ایجاد کنید
+    const url = URL.createObjectURL(blob);
+    // 3. یک تگ <a> موقت در حافظه ایجاد کنید
+    const a = document.createElement('a');
+    // 4. آدرس Blob را به عنوان href تنظیم کنید
+    a.href = url;
+    // 5. نام فایل اصلی را به ویژگی download بدهید (این بخش کلیدی است)
+    a.download = file.original_name || 'download'; // یک نام پیش‌فرض در صورت نبودن نام اصلی
+    // 6. تگ را به بدنه صفحه اضافه کنید (برای سازگاری با برخی مرورگرها)
+    document.body.appendChild(a);
+    // 7. به صورت برنامه‌نویسی روی آن کلیک کنید تا دانلود شروع شود
+    a.click();
+    // 8. تگ موقت را از صفحه حذف کنید
+    document.body.removeChild(a);
+    // 9. URL ساخته شده را از حافظه پاک کنید تا از نشت حافظه (memory leak) جلوگیری شود
+    URL.revokeObjectURL(url);
+
+    // دیگر نیازی به ذخیره localUrl در state نیست
+    // file.localUrl = ... // این خط را حذف یا کامنت کنید
+
+    // --- پایان تغییرات ---
+
   } catch (error) {
     if (error.name !== "AbortError") console.error("Download error:", error);
   } finally {
     file.isDownloading = false;
+    // چون دیگر localUrl نداریم، progress را ریست می‌کنیم تا دکمه دانلود دوباره نمایش داده شود
+    file.progress = 0;
   }
 };
-
 const cancelDownload = (file) => {
   if (file.abortController) file.abortController.abort();
 };
@@ -590,10 +617,31 @@ onMounted(async () => {
       scrollToBottom(); // <-- اسکرول کردن بعد از mount شدن کامپوننت
     }
   });
+
+  await nextTick(() => {
+      // چندبار پشت سر هم اسکرول کن تا مطمئن بشی بعد از لود عکس‌ها هم میره پایین
+      let tries = 5;
+      function tryScroll() {
+        scrollToBottom();
+        if (tries-- > 0) requestAnimationFrame(tryScroll);
+      }
+      tryScroll();
+    });
+
+  await nextTick(() => {
+      const el = messagesContainer.value;
+      if (!el) return;
+      const onScroll = () => {
+        if (el.scrollTop <= 500) loadOlderMessages();
+      };
+      el.removeEventListener("scroll", onScroll);
+      el.addEventListener("scroll", onScroll);
+    });
 });
 
 onUnmounted(() => {
   cleanupEchoListeners();
+  chatStore.chatRooms = []
 });
 </script>
 
@@ -795,12 +843,15 @@ onUnmounted(() => {
 }
 .progress-button {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .progress-circle {
   position: absolute;
-  top: 0;
-  left: 0;
-  transform: rotate(-90deg);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
 }
 .progress-circle .bg {
   fill: none;
@@ -822,7 +873,11 @@ onUnmounted(() => {
 }
 .cancel-icon {
   position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   font-size: 16px;
+  pointer-events: none;
 }
 .attachments-wrapper + .text {
   margin-top: 8px;

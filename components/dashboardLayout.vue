@@ -11,7 +11,7 @@
           <ThingSidebarGroup>
             <ThingSidebarGroupLabel :label="authStore.user?.user_type" />
             <ThingSidebarGroupContent>
-              <ThingSidebarMenu v-if="!chatItems">
+              <ThingSidebarMenu v-if="chatItems.length <= 0">
                 <ThingSidebarMenuItem
                   v-for="item in dashboardStore.sidebarRoutes"
                   :key="item.url"
@@ -141,6 +141,12 @@ const getChatPartner = (room) => {
     const partner = room.members.find(
       (member) => member.id !== authStore.user?.id
     );
+    console.log(
+      partner?.name,
+      partner?.family,  
+      partner?.profile_image || null,
+    );
+    
     return {
       name: partner?.name,
       family: partner?.family,

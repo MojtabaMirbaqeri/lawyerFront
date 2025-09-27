@@ -1,12 +1,12 @@
 <template>
   <div class="flex justify-between">
     <ClientOnly>
-      <dashboard-layout :chat-items="chatItems" />
+      <dashboard-layout :chat-items="chatItems || []" />
       <div class="w-full">
         <!-- وقتی هیچ اتاقی انتخاب نشده -->
         <nav
           class="dashboard-nav"
-          v-if="chatStore.selectedRoom == 0"
+          v-if="chatStore.chatRooms?.length <= 0 || chatStore.selectedRoom == 0"
         >
           <UIcon
             name="solar:hamburger-menu-outline"
@@ -23,10 +23,7 @@
         </nav>
 
         <!-- وقتی اتاق انتخاب شده -->
-        <nav
-          class="dashboard-nav"
-          v-else
-        >
+        <nav class="dashboard-nav" v-else>
           <UIcon
             name="solar:hamburger-menu-outline"
             class="size-6! lg:hidden!"
@@ -93,7 +90,7 @@ const roomName = computed(() => {
 
   // گروه
   if (room.members?.length > 2) {
-    return room.name || "";
+    return room.name || `${authStore.user?.name ?? ""} ${authStore.user?.family ?? ""}`.trim();
   }
 
   // چت خصوصی (پیدا کردن فرد مقابل)
@@ -102,6 +99,26 @@ const roomName = computed(() => {
 
   return `${other.name ?? ""} ${other.family ?? ""}`.trim();
 });
+
+// وقتی کامپوننت mount شد
+onMounted(() => {
+  if (chatStore.selectedRoom !== 0) {
+    console.log("Room ID exists:", chatStore.selectedRoom);
+    console.log("Room Name on mount:", roomName.value);
+  }
+});
+
+// وقتی اطلاعات اتاق آپدیت شد (مثلاً از API اومد)
+watch(
+  () => chatStore.roomInfo,
+  (newVal) => {
+    if (newVal) {
+      console.log("Room Info updated:", newVal);
+      console.log("Room Name updated:", roomName.value);
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <style scoped>

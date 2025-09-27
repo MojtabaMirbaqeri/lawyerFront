@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="items w-full px-3 divide-y divide-gray-200">
-        <ul class="w-full flex flex-col gap-1.5 py-3" v-if="$route.path === '/dashboard'">
+        <ul class="w-full flex flex-col gap-1.5 py-3" v-if="$route.path.startsWith('/dashboard')">
           <li
             v-for="item in dashboardStore.sidebarRoutes"
             :key="item.url"
@@ -50,18 +50,47 @@
         </ul>
         <ul class="w-full flex flex-col gap-1.5 py-3" v-else>
           <li
-            v-for="item in chatStore.chatRooms"
-            :key="item.id"
-            class="w-full flex items-center gap-2"
-          >
-            <div
-              class="w-full flex items-center gap-2 ds-menu-item cursor-pointer"
-              @click="handleChatSidebar(item)"
-            >
-              <!-- <UIcon :name="item.icon" class="size-4.5!" /> -->
-              {{ getChatName(item) }}
-            </div>
-          </li>
+  v-for="item in chatStore.chatRooms"
+  :key="item.id"
+  class="w-full flex items-center gap-2"
+>
+  <div
+    class="w-full flex items-center gap-2 ds-menu-item cursor-pointer"
+    @click="handleChatSidebar(item)"
+  >
+    <!-- پروفایل یا دایره رنگی -->
+    <template v-if="getChatPartner(item)?.profile">
+      <NuxtImg
+        :src="getChatPartner(item).profile"
+        alt="profile"
+        class="w-8 h-8 rounded-full object-cover"
+      />
+    </template>
+    <template v-else>
+      <div
+        class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold"
+        :style="{ backgroundColor: getColor(item.id) }"
+      >
+        {{
+          getInitials(
+            getChatPartner(item)?.name,
+            getChatPartner(item)?.family
+          )
+        }}
+      </div>
+    </template>
+
+    <!-- نام طرف مقابل یا گروه -->
+    <div>
+      {{
+        getChatPartner(item)?.name +
+        " " +
+        (getChatPartner(item)?.family || "")
+      }}
+    </div>
+  </div>
+</li>
+
         </ul>
         <div class="py-3">
           <DashboardLogoutBtn class="h-auto" />
@@ -106,7 +135,59 @@ import { tv } from "tailwind-variants";
 
 const dashboardStore = useDashboardStore();
 const chatStore = useChatStore()
-const userStore = useAuthStore()
+const authStore = useAuthStore()
+
+const colors = [
+  "#F44336", "#E91E63", "#9C27B0", "#673AB7",
+  "#3F51B5", "#2196F3", "#03A9F4", "#00BCD4",
+  "#009688", "#4CAF50", "#8BC34A", "#CDDC39",
+  "#FFC107", "#FF9800", "#FF5722"
+]
+
+// تابع انتخاب رنگ ثابت بر اساس id روم/کاربر
+const getColor = (id: number) => {
+  const index = id % colors.length
+  return colors[index]
+}
+
+// گرفتن حروف اول
+const getInitials = (name?: string, family?: string) => {
+  if (!name && !family) return "?"
+  const first = name ? name.charAt(0) : ""
+  const last = family ? family.charAt(0) : ""
+  return (first + last).toUpperCase()
+}
+
+/**
+ * در چت دو نفره، اطلاعات کاربر طرف مقابل را برمی‌گرداند
+ * اگر گروه بود، اسم و عکس گروه را برمی‌گرداند
+ */
+const getChatPartner = (room: any) => {
+  if (!room) return null
+
+  // اگر گروهی بود
+  if (room.members.length > 2) {
+    return {
+      name: room.name,
+      family: "",
+      profile: room.profile_image || null,
+    }
+  }
+
+  // اگر دو نفره بود
+  if (room.members.length === 2) {
+    const partner = room.members.find(
+      (member: any) => member.id !== authStore.user?.id
+    )
+    return {
+      name: partner?.name,
+      family: partner?.family,
+      profile: partner?.profile_image || null,
+    }
+  }
+
+  return null
+}
 
 const closeSideBar = () => {
   dashboardStore.openSidebar = false;
