@@ -3,43 +3,49 @@
     <UICBreadCrumb
       :items="[
         {
-          label: 'خانه',
-          to: '/',
+          label: 'وکیلینجا',
         },
         {
-          label: 'جزییات وکیل',
-          to: `/lawyer/${$route.params.id}`,
+          label: lawyer?.province || 'ثبت نشده',
+        },
+        {
+          label: lawyer?.city || 'ثبت نشده',
+        },
+        {
+          label: lawyer?.lawyer_info?.name + ' ' + lawyer?.lawyer_info?.family,
         },
       ]"
     />
     <div class="container gap-4 flex flex-col lg:flex-row">
       <div class="right flex flex-col gap-4">
         <info-lawyer-card
-          :fullname="lawyer.lawyer_info.name + ' ' + lawyer.lawyer_info.family"
-          :active="lawyer.is_active"
-          :avatar="lawyer.lawyer_info.profile_image"
-          :education="lawyer.lawyer_info.base_lawyer.title"
-          :experience="lawyer.years_of_experience"
-          :rate="lawyer.average_rating.toString().split('').splice(0, 3).join('')"
-          :city="lawyer.city"
-          :spc="lawyer.lawyer_info.specialties"
+          :fullname="lawyer?.lawyer_info?.name + ' ' + lawyer?.lawyer_info?.family"
+          :active="lawyer?.is_active"
+          :avatar="lawyer?.lawyer_info?.profile_image"
+          :education="lawyer?.lawyer_info?.base_lawyer?.title"
+          :experience="lawyer?.years_of_experience"
+          :rate="lawyer?.average_rating.toString().split('').splice(0, 3).join('')"
+          :city="lawyer?.province"
+          :spc="lawyer?.lawyer_info?.specialties"
         />
-        <info-lawyer-WhyOnlineVisit />
-        <InfoLawyerChooseVisit :items="items" class="block lg:hidden" />
+        <InfoLawyerChooseVisit :active="lawyer?.is_active" :items="items" class="block lg:hidden" />
         <info-lawyer-tab
-          :dis="lawyer.lawyer_info.about"
-          :pos="[+lawyer.latitude, +lawyer.longitude]"
-          :sch="sch"
+        :dis="lawyer?.lawyer_info?.about"
+        :pos="[+lawyer?.latitude, +lawyer?.longitude]"
+        :sch="sch"
         />
-        <info-lawyer-comment
-          :id="lawyer.id"
-          :lawyer-full-name="
-            lawyer.lawyer_info.name + ' ' + lawyer.lawyer_info.family
-          "
-        />
+        <!-- <info-lawyer-WhyOnlineVisit /> -->
+         <ClientOnly>
+           <info-lawyer-comment
+             :id="lawyer?.id"
+             :lawyer-full-name="
+               lawyer?.lawyer_info?.name + ' ' + lawyer?.lawyer_info?.family
+             "
+           />
+         </ClientOnly>
       </div>
       <div class="left w-[150%] hidden lg:block">
-        <InfoLawyerChooseVisit :items="items" class="sticky top-[90px]" />
+        <InfoLawyerChooseVisit :active="lawyer?.is_active" :items="items" class="sticky top-[90px]" />
       </div>
     </div>
   </main>

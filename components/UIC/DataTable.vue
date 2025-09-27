@@ -54,6 +54,8 @@ watch(
         v-model:page="pagination.pageIndex"
         :items-per-page="pagination.pageSize"
         :total="pagination.total"
+        show-edges
+        :sibling-count="0"
         :default-page="1"
         :ui="{
           first: 'hidden',

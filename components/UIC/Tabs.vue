@@ -3,6 +3,7 @@
     v-model="selectedTab"
     color="primary"
     variant="link"
+    :ui="ui"
     :content="content"
     :items="items"
   >
@@ -49,6 +50,9 @@ defineProps({
   content: {
     type: Boolean,
   },
+  ui:{
+    type:Object
+  }
 });
 
 const selectedTab = defineModel({

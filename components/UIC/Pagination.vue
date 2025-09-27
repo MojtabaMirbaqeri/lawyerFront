@@ -11,7 +11,7 @@ defineProps(["total", "pageSize"]);
     show-edges
     :total="total"
     :items-per-page="pageSize"
-    :sibling-count="1"
+    :sibling-count="0"
     :ui="{
       first: 'hidden',
       prev: 'scale-x-[-1]',
