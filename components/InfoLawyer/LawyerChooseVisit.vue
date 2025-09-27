@@ -20,10 +20,11 @@
       </div>
       <div class="sidebar-btn">
         <div class="choosed-visit flex justify-between">
-          <div class="title">{{ items[activeBtn - 1].title }}</div>
-          <div class="price">{{ items[activeBtn - 1].price }}</div>
+          <div class="title">{{ items[activeBtn-1]?.title }}</div>
+          <div class="price">{{ items[activeBtn-1]?.price }}</div>
         </div>
         <UICSecondaryBtn
+          :disabled="!props.active"
           @click="
             navigateTo(
               `/reserve/${$route.params.id}?visit_type=${
@@ -31,7 +32,7 @@
               }`
             )
           "
-          class="flex items-center justify-center"
+          class="flex items-center justify-center rounded-[8px]!"
           ><span class="text-center text-base"
             >ادامه فرآیند</span
           ></UICSecondaryBtn
@@ -42,17 +43,15 @@
 </template>
 
 <script setup>
-const props = defineProps(['items'])
-console.log(props.items);
+const props = defineProps(['items','active'])
 
-
-const activeBtn = ref("1");
+const activeBtn = ref("0");
 </script>
 
 <style scoped>
 @reference "tailwindcss";
 
 .sidebar-btn {
-  @apply fixed lg:shadow-none lg:z-0 shadow-[0_35px_35px_20px_rgba(0,0,0,0.25)] gap-6 rounded-t-[14px] lg:static bottom-0 right-0 mx-auto lg:mx-0 bg-white p-4 z-50 left-0 flex flex-col;
+  @apply fixed lg:shadow-none lg:z-0 shadow-[0_35px_35px_20px_rgba(0,0,0,0.25)] gap-6 rounded-t-[14px] lg:static bottom-0 right-0 mx-auto lg:mx-0 bg-white z-50 left-0 flex flex-col;
 }
 </style>

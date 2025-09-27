@@ -1,7 +1,7 @@
 <template>
   <section>
     <div class="">
-      <h2 class="sec-header">چرا مشاره آنلاین؟</h2>
+      <h2 class="sec-header">چرا مشاوره آنلاین؟</h2>
       <div class="options flex flex-col gap-3 mt-5">
         <div
           v-for="option in options"

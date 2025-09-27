@@ -2,7 +2,7 @@
   <section>
     <div class="">
       <UICTabs
-        class="lg:w-[601px] xl:w-[683px]"
+        class="lg:w-[601px] xl:w-[683px] primary-box shadow-none"
         :content="true"
         v-model="setdef"
         :items="items"

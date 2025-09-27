@@ -54,7 +54,7 @@
             /> -->
               <UICBadge
                 variant="gray"
-                :value="city"
+                :value="city || 'ثبت نشده'"
                 icon="material-symbols:location-on-rounded"
               />
             </div>
@@ -72,7 +72,7 @@
           <div class="flex flex-wrap gap-4">
             <div class="" v-for="s in spc" :key="s">
               <UICBadge
-                :value="'# ' + filterStore.lawyerSpecialties[s].title"
+                :value="'# ' + filterStore?.lawyerSpecialties[s]?.title"
               />
             </div>
           </div>
