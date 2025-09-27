@@ -88,7 +88,7 @@ const fetchData = async (pageNumber, setTotal = false) => {
 };
 
 // واکشی اطلاعات اولیه برای صفحه اول
-fetchData(1, true);
+await fetchData(1, true);
 
 // نظارت بر تغییرات متغیر page و واکشی مجدد اطلاعات در صورت تغییر
 watch(page, (newPage) => {
