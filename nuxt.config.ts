@@ -2,6 +2,12 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-05-15",
   devtools: { enabled: true },
+  nitro: {
+    prerender: {
+      crawlLinks: false,
+      failOnError: false,
+    },
+  },
   runtimeConfig: {
     public: {
       apiEndpoint: process.env.API_EP,
