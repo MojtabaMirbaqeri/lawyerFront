@@ -131,6 +131,9 @@ export const useFiltersStore = defineStore("filters", {
       this.selectedFilters.city = null;
       this.selectedFilters.searchField = null;
     },
+    setProvince(provinceId) {
+      this.selectedFilters.province = provinceId;
+    },
     setHydrated(val = true) {
       this.hydrated = val;
     },

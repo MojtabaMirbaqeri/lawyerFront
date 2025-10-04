@@ -5,7 +5,7 @@
         <div
           class="divide-y divide-gray-200 lg:divide-y-0 lg:flex flex-row items-center gap-12 lg:container"
         >
-          <div class="partners lg:grow">
+          <!-- <div class="partners lg:grow">
             <div class="container lg:p-0!">
               <div>
                 <div class="text-base">همراهان وکیلینجا:</div>
@@ -21,7 +21,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
           <div>
             <div class="container help">
               <h3 class="text-primary">نیاز به راهنمایی دارید؟</h3>
@@ -44,6 +44,7 @@
               <NuxtLink
                 v-for="social in socials"
                 :key="social"
+                target="_blank"
                 :to="social.src"
                 class="social bg-primary/12"
               >
@@ -112,17 +113,17 @@ const socials = [
   {
     name: "instagram",
     icon: "hugeicons:instagram",
-    src: "#",
+    src: "https://www.instagram.com/vakilvakil_com",
   },
   {
     name: "telegram",
     icon: "hugeicons:telegram",
-    src: "#",
+    src: "https://t.me/vakilvakil_com",
   },
   {
-    name: "twitter",
-    icon: "hugeicons:new-twitter",
-    src: "#",
+    name: "aparat",
+    icon: "simple-icons:aparat",
+    src: "https://www.aparat.com/vakilvakil_com",
   },
 ];
 
