@@ -43,11 +43,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
   const lawyerRoutes = computed(() => {
     if (auth.user?.lawyer_id) {
       return [
-        {
-          title: "داشبورد",
-          url: "/dashboard/lawyer",
-          icon: "hugeicons:dashboard-square-01",
-        },
+        // {
+        //   title: "داشبورد",
+        //   url: "/dashboard/lawyer",
+        //   icon: "hugeicons:dashboard-square-01",
+        // },
         {
           title: "پروفایل",
           url: "/dashboard/lawyer/profile",
@@ -86,7 +86,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
   });
 
   const userRoutes = [
-    { title: "داشبورد", url: "/dashboard", icon: "hugeicons:dashboard-square-01" },
+    // { title: "داشبورد", url: "/dashboard", icon: "hugeicons:dashboard-square-01" },
     { title: "تراکنش ها", url: "/dashboard/user/transactions", icon: "lucide:clock" },
     {
       title: "تیکت‌ها",
