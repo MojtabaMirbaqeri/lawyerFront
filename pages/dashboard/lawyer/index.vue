@@ -4,7 +4,7 @@
     <div class="ds-table-con">
       <h2>شما {{ comProfile }} درصد پروفایل خود را تکمیل کرده اید.</h2>
       <UICProgressBar :value="comProfile" class="mb-2 lg:mb-4" />
-      <DashboardLawyerDetailBox :stats="dashboardRes.data" />
+      <DashboardLawyerDetailBox v-if="dashboardRes?.data" :stats="dashboardRes?.data" />
     </div>
 
     <!-- نوبت‌های امروز -->
