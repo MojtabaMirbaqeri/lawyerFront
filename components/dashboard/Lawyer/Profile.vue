@@ -78,7 +78,7 @@
             <UICInput v-model="chatPrice" name="chat" placeholder="قیمت مشاوره تلفنی" label="قیمت مشاوره چت آنلاین"/>
             <UICInput v-model="inPersonPrice" placeholder="قیمت مشاوره حضوری" name="inperon" label="قیمت مشاوره حضوری"/>
           </div>
-          <DashboardLawyerGetLocation class="h-[250px]! rounded-[8px] overflow-hidden" v-model="locationModel"/> 
+          <DashboardLawyerGetLocation class="h-[250px]! w-full rounded-[8px] overflow-hidden" v-model="locationModel"/> 
         </div>
         <h1 class="font-semibold">درباره شما</h1>
         <ThingTextarea
@@ -210,8 +210,12 @@ const updateProfile = async () => {
     formDataToSend.append("family", formData.family);
     formDataToSend.append("base", formData.base.toString());
     formDataToSend.append("about", formData.about);
-    formDataToSend.append("latitude", locationModel.value[0]);
-    formDataToSend.append("longitude", locationModel.value[1]);
+    // بررسی و ارسال صحیح موقعیت - اگر خالی باشد null ارسال کن
+    const lat = locationModel.value[0];
+    const lng = locationModel.value[1];
+    
+    formDataToSend.append("latitude", (lat === '' || lat === null || lat === undefined) ? 0 : lat);
+    formDataToSend.append("longitude", (lng === '' || lng === null || lng === undefined) ? 0 : lng);
     formDataToSend.append("consultation_price_phone", phonePrice.value);
     formDataToSend.append("consultation_price_chat", chatPrice.value);
     formDataToSend.append("consultation_price_inperson", inPersonPrice.value);
