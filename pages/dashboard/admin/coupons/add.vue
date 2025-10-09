@@ -12,17 +12,11 @@
                 :items="[
                   { id: 'amount', label: 'مقداری' },
                   { id: 'percent', label: 'درصدی' },
-                ]"
-              />
+                ]" />
             </template>
           </UICInput>
 
-          <UICInput
-            v-model="state.value"
-            name="value"
-            label="مقدار"
-            type="number"
-          />
+          <UICInput v-model="state.value" name="value" label="مقدار" type="number" />
 
           <UICInput name="is_active" label="وضعیت">
             <template #input>
@@ -31,24 +25,25 @@
                 :items="[
                   { id: true, label: 'فعال' },
                   { id: false, label: 'غیرفعال' },
-                ]"
-              />
+                ]" />
             </template>
           </UICInput>
 
-          <UICInput
-            v-model="state.expires_at"
-            name="expires_at"
-            label="تاریخ انقضا"
-            type="date"
-          />
+          <UICInput name="expires_at" label="تاریخ انقضا">
+            <template #input>
+              <PersianDate v-model="state.expires_at" :column="1" mode="single">
+                <template #icon>
+                  <UIcon name="solar:calendar-linear" class="h-full! w-5!" />
+                </template>
+              </PersianDate>
+            </template>
+          </UICInput>
 
           <UICInput
             v-model="state.usage_limit"
             name="usage_limit"
             label="سقف استفاده"
-            type="number"
-          />
+            type="number" />
         </div>
 
         <UICSecondaryBtn type="submit"> ایجاد کپن </UICSecondaryBtn>
@@ -59,6 +54,8 @@
 
 <script setup>
 import { object, string, boolean } from "yup";
+import PersianDate from "@alireza-ab/vue3-persian-datepicker";
+
 
 const state = reactive({
   code: "",
@@ -79,7 +76,7 @@ const schema = object({
   is_active: boolean().required(),
   expires_at: string()
     .required("تاریخ انقضا الزامی است")
-    .matches(/^\d{4}-\d{2}-\d{2}$/, "فرمت تاریخ باید YYYY-MM-DD باشد"),
+    .matches(/^\d{4}-\d{2}-\d{2}$/, "تاریخ انقضای وارد شده نامعتبر است"),
   usage_limit: string()
     .required("سقف استفاده الزامی است")
     .matches(/^\d+$/, "مقدار باید عدد باشد"),

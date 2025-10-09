@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@alireza-ab/vue3-persian-datepicker": "^1.0.6",
     "@nuxt/eslint": "^1.2.0",
     "@nuxt/icon": "^1.15.0",
     "@nuxt/image": "^1.10.0",

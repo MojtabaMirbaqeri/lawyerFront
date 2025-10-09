@@ -8,8 +8,7 @@
           name="full_name"
           label="نام و نام خانوادگی"
           readonly
-          disabled
-        />
+          disabled />
 
         <!-- جنسیت -->
         <UICInput name="gender" label="جنسیت">
@@ -19,25 +18,23 @@
               :items="[
                 { id: 'male', label: 'مرد' },
                 { id: 'female', label: 'زن' },
-              ]"
-            />
+              ]" />
           </template>
         </UICInput>
 
         <!-- نام پدر -->
-        <UICInput
-          v-model="state.father_name"
-          name="father_name"
-          label="نام پدر"
-        />
+        <UICInput v-model="state.father_name" name="father_name" label="نام پدر" />
 
         <!-- تاریخ تولد (شمسی: YYYY/MM/DD) -->
-        <UICInput
-          v-model="state.birth_date"
-          name="birth_date"
-          label="تاریخ تولد (شمسی)"
-          placeholder="مثال: 1345/08/12"
-        />
+        <UICInput name="birth_date" label="تاریخ تولد (شمسی)">
+          <template #input>
+            <PersianDate v-model="state.birth_date" :column="1" mode="single">
+              <template #icon>
+                <UIcon name="solar:calendar-linear" class="h-full! w-5!" />
+              </template>
+            </PersianDate>
+          </template>
+        </UICInput>
 
         <!-- استان -->
         <UICInput name="province_id" label="استان">
@@ -54,10 +51,7 @@
         </UICInput>
       </div>
 
-      <UICSecondaryBtn
-        type="submit"
-        :disabled="!isChanged || isLoading || isFetching"
-      >
+      <UICSecondaryBtn type="submit" :disabled="!isChanged || isLoading || isFetching">
         {{ isLoading ? "در حال ارسال..." : "ثبت اطلاعات" }}
       </UICSecondaryBtn>
     </UForm>
@@ -66,7 +60,7 @@
 
 <script setup>
 import { object, string, mixed } from "yup";
-import * as jalaali from "jalaali-js";
+import PersianDate from "@alireza-ab/vue3-persian-datepicker";
 
 const props = defineProps({
   lawyerInformation: {
@@ -81,45 +75,13 @@ const isFetching = ref(false);
 const provinces = ref([]);
 const cities = ref([]);
 
-// --- jalali helpers ---
-function jalaliToIso(jalaliStr) {
-  if (!jalaliStr) return "";
-  const parts = String(jalaliStr).split("/").map(Number);
-  if (parts.length !== 3) return "";
-  const [jy, jm, jd] = parts;
-  if (!jalaali.isValidJalaaliDate(jy, jm, jd))
-    throw new Error("تاریخ جلالی نامعتبر است");
-  const g = jalaali.toGregorian(jy, jm, jd);
-  return `${g.gy}-${String(g.gm).padStart(2, "0")}-${String(g.gd).padStart(
-    2,
-    "0"
-  )}`;
-}
-
-function isoToJalaliString(isoOrDateStr) {
-  if (!isoOrDateStr) return "";
-  const datePart = String(isoOrDateStr).split("T")[0];
-  const yearPart = Number(datePart.split(/[-/]/)[0]);
-  if (yearPart >= 1300 && yearPart <= 1500) {
-    const p = datePart.split(/[-/]/);
-    return `${p[0]}/${p[1].padStart(2, "0")}/${p[2].padStart(2, "0")}`;
-  }
-  const d = new Date(datePart);
-  if (isNaN(d.getTime())) return "";
-  const j = jalaali.toJalaali(d.getFullYear(), d.getMonth() + 1, d.getDate());
-  return `${j.jy}/${String(j.jm).padStart(2, "0")}/${String(j.jd).padStart(
-    2,
-    "0"
-  )}`;
-}
-
 const li = props.lawyerInformation?.lawyer_info || {};
 
 const state = reactive({
   full_name: `${props.lawyerInformation.name} ${props.lawyerInformation.family}`,
   gender: li.gender || "male",
   father_name: li.father_name || "",
-  birth_date: isoToJalaliString(li.birth_date) || "",
+  birth_date: li.birth_date ? new Date(li.birth_date).toISOString().split("T")[0] : "",
   province_id: li.province_id ? String(li.province_id) : "",
   city_id: li.city_id ? String(li.city_id) : "",
 });
@@ -141,10 +103,7 @@ onMounted(async () => {
       id: String(p.id),
       label: p.name,
     }));
-    if (
-      (!state.province_id || state.province_id === "") &&
-      provinces.value.length
-    )
+    if ((!state.province_id || state.province_id === "") && provinces.value.length)
       state.province_id = provinces.value[0].id;
     await fetchCities(state.province_id);
   } catch (err) {
@@ -196,7 +155,7 @@ const schema = object({
   father_name: string().required("نام پدر الزامی است"),
   birth_date: string()
     .required("تاریخ تولد الزامی است")
-    .matches(/^\d{4}\/\d{2}\/\d{2}$/, "فرمت باید YYYY/MM/DD باشد"),
+    .matches(/^\d{4}-\d{2}-\d{2}$/, "تاریخ تولد وارد شده نامعتبر است"),
   province_id: mixed().required("استان الزامی است"),
   city_id: mixed().required("شهر الزامی است"),
 });
@@ -204,18 +163,10 @@ const schema = object({
 const onSubmit = async () => {
   if (!isChanged.value || isLoading.value) return;
 
-  let gregorianBirth;
-  try {
-    gregorianBirth = jalaliToIso(state.birth_date);
-  } catch (err) {
-    useToast().add({ title: "تاریخ تولد نامعتبر است", color: "error" });
-    return;
-  }
-
   const body = {
     gender: state.gender,
     father_name: state.father_name,
-    birth_date: gregorianBirth,
+    birth_date: state.birth_date,
     province_id: Number(state.province_id),
     city_id: Number(state.city_id),
   };
@@ -246,3 +197,18 @@ const onSubmit = async () => {
   }
 };
 </script>
+<style>
+@reference "tailwindcss";
+.pdp {
+  @apply h-[40px] lg:h-[42px];
+}
+.pdp-group {
+  @apply h-full!;
+}
+.pdp-input {
+  @apply h-full!;
+}
+.pdp-icon {
+  @apply h-full! max-h-none!;
+}
+</style>

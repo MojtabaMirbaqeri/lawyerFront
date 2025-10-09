@@ -59,14 +59,15 @@
               name="emergency_phone"
               label="تلفن اضطراری" />
           </div>
-          <UICSecondaryBtn type="submit" :disabled="isWorkplaceLoading" class="mt-4">
+          <DashboardLawyerGetLocation
+            v-model="workplaceLocation"
+            class="h-[250px]! w-full rounded-[8px] overflow-hidden" />
+          <UICSecondaryBtn type="submit" :disabled="isWorkplaceLoading">
             {{ isWorkplaceLoading ? "در حال افزودن..." : "افزودن محل کار" }}
           </UICSecondaryBtn>
         </UForm>
 
-        <div class="ds-table-con mt-6">
-          <UICDataTable :columns="workplaceColumns" :data="workplacesList" />
-        </div>
+        <UICDataTable class="mt-6" :columns="workplaceColumns" :data="workplacesList" />
       </section>
 
       <hr class="text-gray-200" />
@@ -171,7 +172,7 @@ const cities = ref([]);
 const isFetchingProvinces = ref(false);
 const isFetchingCities = ref(false);
 const UICTruncatePopover = resolveComponent("UICTruncatePopover");
-
+const workplaceLocation = ref([]);
 
 const isCitySelectDisabled = computed(() => {
   return !workplaceState.province_id || isFetchingCities.value;
@@ -316,6 +317,8 @@ async function onWorkplaceSubmit(event) {
     province_id: parseInt(event.data.province_id),
     city_id: parseInt(event.data.city_id),
     work_times: [],
+    lat: workplaceLocation?.value[0],
+    lng: workplaceLocation?.value[1],
   };
   try {
     const res = await usePost({

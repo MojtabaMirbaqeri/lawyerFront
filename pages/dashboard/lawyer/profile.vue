@@ -5,7 +5,7 @@
       color="primary"
       variant="link"
       :items="tabItems"
-      class="ds-table-con overflow-hidden"
+      class="ds-table-con"
     >
       <template #profile>
         <DashboardLawyerProfile :lawyer-information="lawyerInformation.data" />
