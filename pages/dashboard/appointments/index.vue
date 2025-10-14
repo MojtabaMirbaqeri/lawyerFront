@@ -116,6 +116,7 @@ const data = ref(
       time: appointment?.time.slice(0, 5),
       status: appointment?.status,
       paymentStatus: appointment?.payment?.status,
+      roomId:appointment?.chat_room,
     };
   })
 );
@@ -256,6 +257,16 @@ function getRowItems(row) {
         isCancelModalOpen.value = true;
       },
     });
+    if(row.original.roomId){
+      items.push({
+      label: "شروع چت",
+      icon: "solar:close-circle-outline",
+      onSelect() {
+        appointmentToCancelId.value = row.original.id;
+        isCancelModalOpen.value = true;
+      },
+    });
+    }
   } else {
     items.push({
       label: "نوبت مجدد",

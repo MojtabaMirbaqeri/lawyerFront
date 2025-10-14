@@ -18,6 +18,9 @@ export async function usePut(request = { url: "", includeAuthHeader: false, body
       body: isFormData ? request.body : JSON.stringify(request.body),
     });
 
+    console.log(response);
+    
+
     return {
       data: response.data?.value ?? response,
       status: response.status?.value || true,
@@ -25,6 +28,7 @@ export async function usePut(request = { url: "", includeAuthHeader: false, body
       pending: false,
     };
   } catch (error) {
+    // console.log(error);
     return {
       status: false,
       pending: false,

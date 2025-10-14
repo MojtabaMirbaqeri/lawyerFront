@@ -226,6 +226,13 @@ const rejectHandle = async (com, id) => {
   // console.log(pagination.value.pageIndex);
   if (res.statusCode === 200) {
     refetch(pagination.value.pageIndex);
+    useToast().add({ title: "احراز هویت وکیل رد شد", color: "success" });
+  }
+  else if(res.statusCode === 422){
+    useToast().add({ title: res.data.message, color: "error" });
+  }
+  else{
+    useToast().add({ title: "مشکلی رخ داده است", color: "error" });
   }
 };
 
@@ -238,6 +245,15 @@ const acceptHandle = async (id) => {
   // console.log(pagination.value.pageIndex);
   if (res.statusCode === 200) {
     refetch(pagination.value.pageIndex);
+    useToast().add({ title: "احراز هویت وکیل تایید شد", color: "success" });
+  }
+  else if(res.statusCode === 422){
+    console.log(res);
+    
+    useToast().add({ title: res.data, color: "error" });
+  }
+  else{
+    useToast().add({ title: "مشکلی رخ داده است", color: "error" });
   }
 };
 </script>

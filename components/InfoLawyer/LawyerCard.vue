@@ -35,9 +35,9 @@
                 />
               </div>
               <div class="education">{{ education }}</div>
-              <div class="experience">
+              <!-- <div class="experience">
                 تجربه: {{ experience !== null ? experience : 0 }} سال
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="left flex flex-col lg:items-end gap-3">

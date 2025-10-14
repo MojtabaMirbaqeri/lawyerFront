@@ -242,6 +242,8 @@ const searchLawyer = async () => {
         v-model:page="pagination.pageIndex"
         :items-per-page="pagination.pageSize"
         :total="pagination.total"
+        show-edges
+        :sibling-count="0"
         :ui="{
           first: 'hidden',
           prev: 'scale-x-[-1]',
