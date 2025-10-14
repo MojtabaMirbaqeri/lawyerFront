@@ -9,7 +9,7 @@
         </ThingSheetHeader>
         <ThingSidebarContent class="px-2.5 divide-y divide-gray-200">
           <ThingSidebarGroup>
-            <ThingSidebarGroupLabel :label="authStore.user?.user_type" />
+            <!-- <ThingSidebarGroupLabel :label="authStore.user?.user_type" /> -->
             <ThingSidebarGroupContent>
               <ThingSidebarMenu v-if="chatItems.length <= 0">
                 <ThingSidebarMenuItem

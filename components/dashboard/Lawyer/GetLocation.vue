@@ -2,7 +2,7 @@
     <div class="relative">
       <!-- دکمه برای تشخیص موقعیت فعلی -->
       <button
-        class="mb-2 absolute z-50 p-2 bg-white right-3 rounded-[8px] top-3 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center gap-2"
+        class="mb-2 absolute z-[5] p-2 bg-white right-3 rounded-[8px] top-3 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center gap-2"
         @click="detectLocation"
       >
         <UIcon name="solar:gps-outline" class="size-5!"/>
