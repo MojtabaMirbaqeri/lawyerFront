@@ -67,7 +67,7 @@ const searchRefetch = async (query, start, page) => {
   pagination.value.total = res.data.data.data.pagination.total;
 };
 
-const lawyersRef = ref((await useGet({ url: "lawyers" })).data);
+const lawyersRef = ref((await useGet({ url: "lawyers", includeAuthHeader: true })).data);
 
 type Payment = {
   id: string;
@@ -216,13 +216,11 @@ const searchLawyer = async () => {
         v-model="globalFilter"
         class="max-w-[250px] w-full"
         placeholder="فیلتر..."
-        icon="solar:magnifer-linear"
-      />
+        icon="solar:magnifer-linear" />
 
       <UICSecondaryBtn
         @click="navigateTo('/dashboard/admin/lawyerlist/add')"
-        class="rounded-[8px]!"
-      >
+        class="rounded-[8px]!">
         <span>ایجاد وکیل</span>
       </UICSecondaryBtn>
     </div>
@@ -234,8 +232,7 @@ const searchLawyer = async () => {
         root: 'rounded-[7px] border border-gray-200 overflow-y-hidden',
         thead: 'bg-primary',
         th: 'text-white',
-      }"
-    />
+      }" />
 
     <div class="flex justify-center py-4">
       <UPagination
@@ -250,8 +247,7 @@ const searchLawyer = async () => {
           next: 'scale-x-[-1]',
           last: 'hidden',
         }"
-        @update:page="(p) => (pagination.pageIndex = p)"
-      />
+        @update:page="(p) => (pagination.pageIndex = p)" />
     </div>
   </div>
 </template>
