@@ -122,6 +122,9 @@ const refetch = async () => {
 };
 
 console.log(grouped.value);
+useHead({
+  title: "جزئیات تیکت | وکیلینجا",
+});
 </script>
 
 <style scoped>

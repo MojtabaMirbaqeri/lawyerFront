@@ -13,6 +13,9 @@ definePageMeta({
   layout:false
 })
 const chatStore = useChatStore()
+useHead({
+  title: "گفتگو | وکیلینجا",
+})
 
 const res = await useGet({url:'chat/rooms/',includeAuthHeader:true})
 console.log(res.data);

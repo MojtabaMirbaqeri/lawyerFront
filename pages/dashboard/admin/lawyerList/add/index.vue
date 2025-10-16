@@ -139,4 +139,7 @@ const onSubmit = async (event) => {
   isLoading.value = false;
   console.log(res.statusCode);
 };
+useHead({
+  title: "ایجاد وکیل جدید | وکیلینجا",
+});
 </script>

@@ -132,4 +132,7 @@ const ticketColumns = [
     },
   },
 ];
+useHead({
+  title: "داشبورد | وکیلینجا",
+});
 </script>

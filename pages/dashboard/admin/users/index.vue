@@ -2,12 +2,7 @@
 <template>
   <div class="ds-table-con">
     <!-- جدول داده‌ها با قابلیت صفحه‌بندی -->
-    <UICDataTable
-      :data="data"
-      :columns="columns"
-      :total="total"
-      v-model="page"
-    />
+    <UICDataTable v-model="page" :data="data" :columns="columns" :total="total" />
   </div>
 </template>
 
@@ -60,7 +55,7 @@ const columns = [
 const fetchData = async (pageNumber, setTotal = false) => {
   try {
     const res = await useGet({
-      url: 'users',
+      url: "users",
       includeAuthHeader: true,
       query: {
         page: pageNumber,
@@ -69,7 +64,7 @@ const fetchData = async (pageNumber, setTotal = false) => {
 
     // مپ کردن داده‌های دریافت شده برای نمایش در جدول
     data.value = res.data.data.map((user) => ({
-      fullName: `${user?.name || ''} ${user?.family || ''}`.trim(),
+      fullName: `${user?.name || ""} ${user?.family || ""}`.trim(),
       phone: user?.phone,
       amount: user.wallet_balance || 0,
       activeTicket: user?.ticket_count,
@@ -94,8 +89,7 @@ await fetchData(1, true);
 watch(page, (newPage) => {
   fetchData(newPage);
 });
+useHead({
+  title: "لیست کاربران | وکیلینجا",
+});
 </script>
-
-<style>
-/* می‌توانید استایل‌های مورد نظر خود را در اینجا اضافه کنید */
-</style>

@@ -278,4 +278,7 @@ function getRowItems(row) {
   }
   return items;
 }
+useHead({
+  title: "نوبت‌ها | وکیلینجا",
+});
 </script>

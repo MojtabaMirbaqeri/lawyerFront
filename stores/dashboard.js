@@ -38,6 +38,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/admin/billing",
       icon: "solar:bill-list-linear",
     },
+    {
+      title: "پشتیبانی",
+      url: "/dashboard/admin/support",
+      icon: "solar:headphones-round-outline",
+    },
   ];
 
   const lawyerRoutes = computed(() => {

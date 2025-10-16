@@ -163,4 +163,7 @@ const submit = async (e) => {
   }
   e.data.priority = 1;
 };
+useHead({
+  title: "ایجاد تیکت جدید | وکیلینجا",
+});
 </script>
