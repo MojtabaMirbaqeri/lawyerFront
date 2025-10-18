@@ -257,16 +257,16 @@ function getRowItems(row) {
         isCancelModalOpen.value = true;
       },
     });
-    if(row.original.roomId){
-      items.push({
-      label: "شروع چت",
-      icon: "solar:close-circle-outline",
-      onSelect() {
-        appointmentToCancelId.value = row.original.id;
-        isCancelModalOpen.value = true;
-      },
-    });
-    }
+    // if(row.original.roomId){
+    //   items.push({
+    //   label: "شروع چت",
+    //   icon: "solar:chat-round-line-outline",
+    //   onSelect() {
+    //     appointmentToCancelId.value = row.original.id;
+    //     isCancelModalOpen.value = true;
+    //   },
+    // });
+    // }
   } else {
     items.push({
       label: "نوبت مجدد",

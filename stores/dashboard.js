@@ -98,6 +98,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/appointments",
       icon: "lucide:calendar-clock",
     },
+    {
+      title: "لیست چت ها",
+      url: "/chat",
+      icon: "solar:chat-round-line-outline",
+    },
   ];
 
   const sidebarRoutes = computed(() => {

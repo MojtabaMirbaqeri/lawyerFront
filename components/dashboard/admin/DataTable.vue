@@ -116,6 +116,15 @@ const columns: TableColumn<Payment>[] = [
     header: "پایه",
   },
   {
+  accessorKey: "is_active",
+  header: "وضعیت",
+  cell: ({ row }) => {
+    const value = row.original.is_active
+    return value ? "فعال" : "غیرفعال"
+  },
+}
+,
+  {
     id: "actions",
     cell: ({ row }) => {
       return h(
