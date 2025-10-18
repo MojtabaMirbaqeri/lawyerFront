@@ -184,6 +184,9 @@ const columns = [
     },
   },
 ];
+useHead({
+  title: "چت‌های امروز | وکیلینجا",
+});
 </script>
 
 <style scoped>

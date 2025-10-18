@@ -5,6 +5,9 @@
 </template>
 
 <script setup>
+useHead({
+  title: "داشبورد ادمین | وکیلینجا",
+});
 </script>
 
 <style>

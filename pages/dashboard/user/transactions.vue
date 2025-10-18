@@ -1,12 +1,7 @@
 <template>
   <section>
     <div class="ds-table-con">
-      <UICDataTable
-        :data="data"
-        :columns="columns"
-        :total="total"
-        v-model="page"
-      />
+      <UICDataTable :data="data" :columns="columns" :total="total" v-model="page" />
     </div>
   </section>
 </template>
@@ -52,7 +47,6 @@ const refetch = async (currentPage = 1) => {
 
     // تنظیم تعداد کل آیتم‌ها برای صفحه‌بندی
     total.value = res.data.total;
-
   } catch (error) {
     console.error("Failed to fetch payments:", error);
     // می‌توانید در اینجا یک پیام خطا به کاربر نمایش دهید
@@ -86,7 +80,7 @@ const columns = ref([
     accessorKey: "gateway",
     header: "درگاه پرداخت",
   },
-    {
+  {
     accessorKey: "refId",
     header: "کد رهگیری",
   },
@@ -104,14 +98,14 @@ const columns = ref([
         pending: "warning",
         failed: "error",
         paid: "success", // فرض می‌کنیم وضعیت موفق paid باشد
-        succeeded: "success" // یا succeeded
+        succeeded: "success", // یا succeeded
       };
       // تعریف ترجمه وضعیت‌ها
       const labelMap = {
         pending: "در انتظار",
         failed: "ناموفق",
         paid: "پرداخت موفق",
-        succeeded: "پرداخت موفق"
+        succeeded: "پرداخت موفق",
       };
 
       return h(
@@ -127,8 +121,10 @@ const columns = ref([
   },
 ]);
 
-
 // دریافت داده‌های اولیه هنگام بارگذاری کامپوننت
 await refetch(page.value);
 
+useHead({
+  title: "تراکنش ها | وکیلینجا",
+});
 </script>

@@ -147,4 +147,7 @@ const onSubmit = async () => {
     });
   }
 };
+useHead({
+  title: "ویرایش کپن | وکیلینجا",
+});
 </script>

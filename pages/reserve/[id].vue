@@ -5,6 +5,9 @@
 </template>
 
 <script setup>
+useHead({
+  title: "رزرو نوبت | وکیلینجا",
+});
 
 </script>
 

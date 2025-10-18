@@ -19,6 +19,9 @@ onMounted(() => {
       break;
   }
 });
+useHead({
+  title: "داشبورد | وکیلینجا",
+});
 </script>
 
 <style>

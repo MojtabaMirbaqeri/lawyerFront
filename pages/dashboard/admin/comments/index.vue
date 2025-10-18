@@ -4,7 +4,7 @@
       <h2 class="mb-4 text-lg font-bold">مدیریت دیدگاه‌ها</h2>
 
       <!-- جدول دیدگاه‌ها -->
-      <UICDataTable :data="data" :columns="columns" :total="total" v-model="page" />
+      <UICDataTable v-model="page" :data="data" :columns="columns" :total="total"  />
     </div>
   </section>
 </template>
@@ -126,4 +126,7 @@ const columns = ref([
     },
   },
 ]);
+useHead({
+  title: "مدیریت دیدگاه‌ها | وکیلینجا",
+});
 </script>

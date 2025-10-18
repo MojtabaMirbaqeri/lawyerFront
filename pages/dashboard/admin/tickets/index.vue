@@ -297,6 +297,9 @@ function getRowItems(row) {
 
   return items;
 }
+useHead({
+  title: "مدیریت تیکت‌ها | وکیلینجا",
+});
 </script>
 
 <style>

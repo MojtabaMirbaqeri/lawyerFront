@@ -114,6 +114,14 @@ const items = ref([
     active: sch.chat.length > 0,
   },
 ]);
+useHead(() => {
+  const fullName =
+    (lawyer.value?.lawyer_info?.name || "") +
+    (lawyer.value?.lawyer_info?.family ? " " + lawyer.value?.lawyer_info?.family : "");
+  return {
+    title: fullName.trim() ? `${fullName} | وکیلینجا` : "جزئیات وکیل | وکیلینجا",
+  };
+});
 </script>
 
 <style scoped></style>

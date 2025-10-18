@@ -140,4 +140,7 @@ const couponsRes = ref(
     includeAuthHeader: true,
   })
 );
+useHead({
+  title: "مدیریت کپن‌ها | وکیلینجا",
+});
 </script>

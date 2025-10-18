@@ -15,6 +15,9 @@ definePageMeta({
   layout: "register",
   middleware: ["reset-register-store", "guest"],
 });
+useHead({
+  title: "ثبت‌نام | وکیلینجا",
+});
 </script>
 
 <style>

@@ -5,11 +5,10 @@
     </div>
   </section>
 </template>
-
-<script>
-export default {
-
-}
+<script setup>
+useHead({
+  title: "ثبت وکیل جدید | وکیلینجا",
+});
 </script>
 
 <style>
