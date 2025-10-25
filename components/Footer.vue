@@ -131,7 +131,7 @@ const licenses = [
   {
     name: "enamad",
     image: "/images/footer/enamad-logo.webp",
-    src: "#",
+    src: "/enamad",
   },
   {
     name: "anjoman senfi",
