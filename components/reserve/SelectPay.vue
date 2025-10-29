@@ -51,7 +51,7 @@
               </template>
               <template #default> قوانین و مقررات </template>
             </UICDrawer>
-            وکیلینجا را میپذیرم.
+            وکیل وکیل را میپذیرم.
           </template>
         </UCheckbox>
       </div>
@@ -70,7 +70,7 @@
                 </template>
                 <template #default> قوانین و مقررات </template>
               </UICDrawer>
-              وکیلینجا را میپذیرم.
+              وکیل وکیل را میپذیرم.
             </template>
           </UCheckbox>
         </div>

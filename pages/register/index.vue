@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script setup >
+<script setup>
 const registerStore = useRegisterStore();
 
 definePageMeta({
@@ -16,7 +16,7 @@ definePageMeta({
   middleware: ["reset-register-store", "guest"],
 });
 useHead({
-  title: "ثبت‌نام | وکیلینجا",
+  title: "ثبت‌نام | وکیل وکیل",
 });
 </script>
 

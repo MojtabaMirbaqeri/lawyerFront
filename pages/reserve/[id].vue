@@ -6,10 +6,8 @@
 
 <script setup>
 useHead({
-  title: "رزرو نوبت | وکیلینجا",
+  title: "رزرو نوبت | وکیل وکیل",
 });
-
 </script>
 
-<style>
-</style>
+<style></style>

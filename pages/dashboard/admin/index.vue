@@ -1,14 +1,11 @@
 <template>
-  <div>
-    admin page
-  </div>
+  <div>admin page</div>
 </template>
 
 <script setup>
 useHead({
-  title: "داشبورد ادمین | وکیلینجا",
+  title: "داشبورد ادمین | وکیل وکیل",
 });
 </script>
 
-<style>
-</style>
+<style></style>

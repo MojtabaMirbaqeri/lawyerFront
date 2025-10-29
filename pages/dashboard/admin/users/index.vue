@@ -90,6 +90,6 @@ watch(page, (newPage) => {
   fetchData(newPage);
 });
 useHead({
-  title: "لیست کاربران | وکیلینجا",
+  title: "لیست کاربران | وکیل وکیل",
 });
 </script>

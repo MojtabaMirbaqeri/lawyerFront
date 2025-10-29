@@ -12,17 +12,11 @@
                 :items="[
                   { id: 'amount', label: 'مقداری' },
                   { id: 'percent', label: 'درصدی' },
-                ]"
-              />
+                ]" />
             </template>
           </UICInput>
 
-          <UICInput
-            v-model="state.value"
-            name="value"
-            label="مقدار"
-            type="number"
-          />
+          <UICInput v-model="state.value" name="value" label="مقدار" type="number" />
 
           <UICInput name="is_active" label="وضعیت">
             <template #input>
@@ -31,8 +25,7 @@
                 :items="[
                   { id: true, label: 'فعال' },
                   { id: false, label: 'غیرفعال' },
-                ]"
-              />
+                ]" />
             </template>
           </UICInput>
 
@@ -40,15 +33,13 @@
             v-model="state.expires_at"
             name="expires_at"
             label="تاریخ انقضا"
-            type="date"
-          />
+            type="date" />
 
           <UICInput
             v-model="state.usage_limit"
             name="usage_limit"
             label="سقف استفاده"
-            type="number"
-          />
+            type="number" />
         </div>
 
         <UICSecondaryBtn type="submit" :disabled="!isChanged">
@@ -148,6 +139,6 @@ const onSubmit = async () => {
   }
 };
 useHead({
-  title: "ویرایش کپن | وکیلینجا",
+  title: "ویرایش کپن | وکیل وکیل",
 });
 </script>

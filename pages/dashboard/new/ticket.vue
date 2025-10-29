@@ -1,10 +1,5 @@
 <template>
-  <UForm
-    :schema="ticketSchema"
-    :state="state"
-    class="w-full space-y-6"
-    @submit="submit"
-  >
+  <UForm :schema="ticketSchema" :state="state" class="w-full space-y-6" @submit="submit">
     <div class="flex flex-col lg:flex-row gap-5">
       <UICInput v-model="state.title" name="title" label="عنوان تیکت" />
 
@@ -13,8 +8,7 @@
           <UICSelect
             v-model="state.priority"
             :items="priorities"
-            placeholder="انتخاب کنید"
-          />
+            placeholder="انتخاب کنید" />
         </template>
       </UICInput>
 
@@ -23,8 +17,7 @@
           <UICSelect
             v-model="state.department"
             :items="departments"
-            placeholder="انتخاب کنید"
-          />
+            placeholder="انتخاب کنید" />
         </template>
       </UICInput>
     </div>
@@ -35,8 +28,7 @@
           v-model="state.description"
           class="w-full"
           :ui="{ base: 'max-h-[200px]!' }"
-          placeholder="توضیحات خود را وارد کنید..."
-        />
+          placeholder="توضیحات خود را وارد کنید..." />
       </template>
     </UICInput>
 
@@ -64,8 +56,7 @@
             position="outside"
             accept="image/*,.pdf,.txt,.xlsx,.docs,.mp4"
             class="me-auto"
-            layout="list"
-          />
+            layout="list" />
           <p v-if="fileModel.length > 0" class="mt-2 text-sm text-gray-500">
             حجم کل: {{ totalSizeInMB.toFixed(2) }} مگابایت
           </p>
@@ -156,7 +147,7 @@ const submit = async (e) => {
     body: formData,
   });
   console.log(res.statusCode);
-  
+
   if (res.statusCode === 200) {
     navigateTo(`/dashboard/ticket/${res.data.data.data.ticket.id}`);
     useToast().add({ title: "تیکت با موفقیت ثبت شد", color: "success" });
@@ -164,6 +155,6 @@ const submit = async (e) => {
   e.data.priority = 1;
 };
 useHead({
-  title: "ایجاد تیکت جدید | وکیلینجا",
+  title: "ایجاد تیکت جدید | وکیل وکیل",
 });
 </script>

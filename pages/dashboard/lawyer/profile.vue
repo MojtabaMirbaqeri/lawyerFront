@@ -6,15 +6,13 @@
       color="primary"
       variant="link"
       :items="tabItems"
-      class="ds-table-con"
-    >
+      class="ds-table-con">
       <template #profile>
         <DashboardLawyerProfile :lawyer-information="lawyerInformation.data" />
       </template>
       <template #personal_information>
         <DashboardLawyerPersonalInformation
-          :lawyer-information="lawyerInformation.data"
-        />
+          :lawyer-information="lawyerInformation.data" />
       </template>
       <template #experience>
         <DashboardLawyerExperience />
@@ -23,9 +21,7 @@
         <DashboardLawyerSchedule />
       </template>
       <template #authentication>
-        <DashboardLawyerAuthentication
-          :lawyer-information="lawyerInformation.data"
-        />
+        <DashboardLawyerAuthentication :lawyer-information="lawyerInformation.data" />
       </template>
     </UTabs>
   </section>
@@ -77,6 +73,6 @@ const tabItems = ref([
 
 const activeTab = ref(tabItems.value[0].value);
 useHead({
-  title: "پروفایل | وکیلینجا",
+  title: "پروفایل | وکیل وکیل",
 });
 </script>

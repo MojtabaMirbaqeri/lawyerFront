@@ -12,23 +12,16 @@
             label="فیلتر"
             placeholder="فیلتر..."
             @change="searchHandle"
-            icon="solar:magnifer-linear"
-          />
+            icon="solar:magnifer-linear" />
         </div>
         <UICInput label="وضعیت">
           <template #input>
-            <UICSelect
-              :items="filterStore.ticketFilter.status"
-              v-model="status"
-            />
+            <UICSelect :items="filterStore.ticketFilter.status" v-model="status" />
           </template>
         </UICInput>
         <UICInput label="اولویت">
           <template #input>
-            <UICSelect
-              :items="filterStore.ticketFilter.priority"
-              v-model="priority"
-            />
+            <UICSelect :items="filterStore.ticketFilter.priority" v-model="priority" />
           </template>
         </UICInput>
         <UICInput label="دپارتمان">
@@ -37,12 +30,7 @@
           </template>
         </UICInput>
       </div>
-      <UICDataTable
-        :data="data"
-        :columns="columns"
-        :total="total"
-        v-model="page"
-      />
+      <UICDataTable :data="data" :columns="columns" :total="total" v-model="page" />
     </div>
   </section>
 </template>
@@ -74,19 +62,14 @@ const page = ref(1);
 
 const searchHandle = () => {
   if (!globalFilter.value) {
-    refetch(null,null,true,null);
+    refetch(null, null, true, null);
   } else {
     refetch(null, null, true, globalFilter.value);
-    page.value = 1
+    page.value = 1;
   }
 };
 
-const refetch = async (
-  page = null,
-  query = null,
-  setTotal = false,
-  search = null
-) => {
+const refetch = async (page = null, query = null, setTotal = false, search = null) => {
   console.log(search);
 
   const res = await useGet({
@@ -246,7 +229,7 @@ function getRowItems(row) {
     items.splice(1, 0, {
       label: "پاسخ به تیکت",
       onSelect() {
-        navigateTo(`/dashboard/ticket/${row.original.ticketId}`);   
+        navigateTo(`/dashboard/ticket/${row.original.ticketId}`);
       },
       icon: "solar:pen-outline",
     });
@@ -298,9 +281,8 @@ function getRowItems(row) {
   return items;
 }
 useHead({
-  title: "مدیریت تیکت‌ها | وکیلینجا",
+  title: "مدیریت تیکت‌ها | وکیل وکیل",
 });
 </script>
 
-<style>
-</style>
+<style></style>

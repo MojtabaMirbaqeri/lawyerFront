@@ -3,12 +3,11 @@
     <div class="footer-con">
       <div class="lg:py-4">
         <div
-          class="divide-y divide-gray-200 lg:divide-y-0 lg:flex flex-row items-center gap-12 lg:container"
-        >
+          class="divide-y divide-gray-200 lg:divide-y-0 lg:flex flex-row items-center gap-12 lg:container">
           <!-- <div class="partners lg:grow">
             <div class="container lg:p-0!">
               <div>
-                <div class="text-base">همراهان وکیلینجا:</div>
+                <div class="text-base">همراهان وکیل وکیل:</div>
               </div>
               <div class="grow">
                 <div class="container partners-logos">
@@ -34,31 +33,25 @@
       </div>
       <div>
         <div
-          class="container flex flex-col lg:flex-row lg:items-start gap-2.5 py-6! lg:gap-8 lg:justify-between lg:py-6!"
-        >
-          <div
-            class="flex justify-between items-center lg:flex-col lg:items-start gap-4"
-          >
-            <NuxtImg src="/images/logo.png" class="h-5.5" />
+          class="container flex flex-col lg:flex-row lg:items-start gap-2.5 py-6! lg:gap-8 lg:justify-between lg:py-6!">
+          <div class="flex justify-between items-center lg:flex-col lg:items-start gap-4">
+            <NuxtImg src="/images/main-logo.svg" class="h-8" />
             <div class="social-networks">
               <NuxtLink
                 v-for="social in socials"
                 :key="social"
                 target="_blank"
                 :to="social.src"
-                class="social bg-primary/12"
-              >
+                class="social bg-primary/12">
                 <UIcon :name="social.icon" />
               </NuxtLink>
             </div>
           </div>
-          <div
-            class="p-4 bg-gray-100 lg:max-w-[540px] rounded-[20px] space-y-2"
-          >
-            <h4 class="font-bold">دانلود اپلیکیشن وکیلینجا</h4>
+          <div class="p-4 bg-gray-100 lg:max-w-[540px] rounded-[20px] space-y-2">
+            <h4 class="font-bold">دانلود اپلیکیشن وکیل وکیل</h4>
             <p>
-              دسترسی راحت‌تر و سریع‌تر به وکلا، شما می‌توانید با انتخاب دکمه‌های
-              زیر اقدام به دانلود اپ وکیلینجا کنید.
+              دسترسی راحت‌تر و سریع‌تر به وکلا، شما می‌توانید با انتخاب دکمه‌های زیر اقدام
+              به دانلود اپ وکیل وکیل کنید.
             </p>
             <div class="download-links">
               <NuxtLink to="#">
@@ -76,8 +69,7 @@
             </div>
           </div>
           <div
-            class="grid grid-cols-2 mx-5 lg:mx-0 py-2 gap-y-2.5 text-primary lg:shrink-0 lg:gap-y-3"
-          >
+            class="grid grid-cols-2 mx-5 lg:mx-0 py-2 gap-y-2.5 text-primary lg:shrink-0 lg:gap-y-3">
             <NuxtLink to="/"> خانه</NuxtLink>
             <NuxtLink to="/register"> ثبت نام و ورود </NuxtLink>
             <NuxtLink to="#"> درباره ما </NuxtLink>
@@ -89,11 +81,7 @@
       </div>
       <div>
         <div class="container licenses">
-          <NuxtLink
-            v-for="license in licenses"
-            :key="license.name"
-            :to="license.src"
-          >
+          <NuxtLink v-for="license in licenses" :key="license.name" :to="license.src">
             <NuxtImg :src="license.image" />
           </NuxtLink>
         </div>
@@ -101,7 +89,7 @@
     </div>
     <div class="copy-right">
       <div class="container">
-        1404 - تمامی حقوق مادی و معنوی این وبسایت متعلق به وکیلینجا می‌باشد.
+        1404 - تمامی حقوق مادی و معنوی این وبسایت متعلق به وکیل وکیل می‌باشد.
       </div>
     </div>
   </footer>

@@ -1,17 +1,17 @@
 <template>
-  <div
-    class="relative ds-table-con h-[100%] flex flex-col gap-6 justify-between"
-  >
+  <div class="relative ds-table-con h-[100%] flex flex-col gap-6 justify-between">
     <!-- بخش پیام‌ها -->
     <div
       :style="{ height: `calc(77vh - ${useAuthStore().height?.height}px)` }"
-      class="flex flex-col gap-3 overflow-y-auto px-5 pb-7"
-    >
+      class="flex flex-col gap-3 overflow-y-auto px-5 pb-7">
       <div class="mx-auto py-1.5">{{ res.data.data.data.ticket.title }}</div>
       <dashboard-messages :items="grouped" />
     </div>
     <div>
-      <dashboard-send-ticket :is-loading="isLoading" :status="res.data.data.data.ticket.status.value" @send-ticket="(detail) => sendTicket(detail)" />
+      <dashboard-send-ticket
+        :is-loading="isLoading"
+        :status="res.data.data.data.ticket.status.value"
+        @send-ticket="(detail) => sendTicket(detail)" />
     </div>
   </div>
 </template>
@@ -49,10 +49,10 @@ const sendTicket = async (detail) => {
   } else {
     formData.append("message", detail.dis);
     formData.append("is_internal", 0);
-    if(detail.file){
+    if (detail.file) {
       detail.file.forEach((file) => {
         formData.append("attachments[]", file);
-      })
+      });
     }
 
     isLoading.value = true;
@@ -69,7 +69,7 @@ const sendTicket = async (detail) => {
         color: "success",
       });
 
-      refetch()
+      refetch();
       isLoading.value = false;
     }
   }
@@ -123,9 +123,8 @@ const refetch = async () => {
 
 console.log(grouped.value);
 useHead({
-  title: "جزئیات تیکت | وکیلینجا",
+  title: "جزئیات تیکت | وکیل وکیل",
 });
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

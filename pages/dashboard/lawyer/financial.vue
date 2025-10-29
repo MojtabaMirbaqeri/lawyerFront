@@ -45,8 +45,6 @@ const tabItems = ref([
 
 const activeTab = ref(tabItems.value[0].value);
 useHead({
-  title: "امور مالی | وکیلینجا",
+  title: "امور مالی | وکیل وکیل",
 });
 </script>
-<style>
-</style>

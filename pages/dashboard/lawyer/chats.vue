@@ -85,7 +85,7 @@ async function startChatRoom(appointment) {
         useChatStore().selectedRoom = roomId;
         useChatStore().roomInfo = res.data?.room ?? res?.data?.data?.data?.room ?? {};
         console.log(useChatStore().selectedRoom);
-        
+
         navigateTo(`/chat`);
       } else {
         // ریفرش لیست نوبت‌ها (مثل الگوی قبلی)
@@ -185,7 +185,7 @@ const columns = [
   },
 ];
 useHead({
-  title: "چت‌های امروز | وکیلینجا",
+  title: "چت‌های امروز | وکیل وکیل",
 });
 </script>
 
