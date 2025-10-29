@@ -235,10 +235,10 @@ const educationState = reactive({
 });
 
 const degreeOptions = [
-  { id: "diploma", label: "دیپلم" },
   { id: "bachelor", label: "کارشناسی" },
   { id: "master", label: "کارشناسی ارشد" },
   { id: "phd", label: "دکترا" },
+  { id: "postgraduate", label: "فوق دکتری" },
 ];
 
 const educationSchema = object({

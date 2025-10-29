@@ -74,6 +74,17 @@ watch(otpVal, (newVal) => {
   if (newVal.length == 4) otpHandle();
 });
 
+onMounted(async() => {
+  await nextTick(() => {
+    const inputs = document.querySelectorAll(".otp input");
+    inputs.forEach((input) => {
+      input.setAttribute("type", "text");
+      input.setAttribute("inputmode", "numeric");
+      input.setAttribute("pattern", "[0-9]*");
+    });
+  });
+})
+
 const registerStore = useRegisterStore();
 
 const timerEndHandle = () => {

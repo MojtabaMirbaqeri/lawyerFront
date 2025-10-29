@@ -37,7 +37,7 @@ console.log(appointments.value);
     <UTabs
       :items="items"
       variant="link"
-      :ui="{ trigger: 'grow' }"
+      :ui="{ trigger: 'grow shrink-0' }"
       class="gap-4 w-full"
     >
       <template #edit="{ item }">

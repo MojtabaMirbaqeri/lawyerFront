@@ -20,6 +20,13 @@
               text: authStore?.user?.phone,
             }"
           />
+
+          <UIcon
+            v-if="$route.path == '/chat'"
+            name="ic:round-arrow-back-ios-new"
+            class="size-5! hidden! cursor-pointer lg:block!"
+            @click="navigateTo('/dashboard')"
+          />
         </nav>
 
         <!-- وقتی اتاق انتخاب شده -->
@@ -35,6 +42,12 @@
               name: roomName,
               text: chatStore?.roomInfo?.phone,
             }"
+          />
+          <UIcon
+            v-if="$route.path == '/chat'"
+            name="ic:round-arrow-back-ios-new"
+            class="size-5! hidden! cursor-pointer lg:block!"
+            @click="navigateTo('/dashboard')"
           />
         </nav>
 

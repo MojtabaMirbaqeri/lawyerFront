@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-wrapper h-[calc(100vh-64px)] lg:h-[calc(100vh-80px)];">
+  <div class="chat-wrapper h-[calc(100svh-64px)] lg:h-[calc(100svh-80px)];">
     <div v-if="roomId !== 0" ref="messagesContainer" class="messages-container">
       <div
         v-for="(msg, index) in messages"
@@ -146,9 +146,7 @@
 
     <div class="chat-input flex-col gap-3" v-if="chatStore.selectedRoom != 0">
       <div
-        :class="`flex lg:me-auto items-start justify-start ${
-          fileModel.length <= 0 ? 'hidden' : ''
-        }`"
+        :class="`flex lg:me-auto items-start justify-start`"
       >
         <UFileUpload
           v-model="fileModel"
@@ -158,9 +156,7 @@
             base: 'p-0 w-6! border-0 bg-red-500 hidden',
             avatar: 'bg-transparent scale-[1.3] text-black! file',
             label: 'm-0',
-            root: `flex-row-reverse max-w-[100svw] px-5 ${
-              fileModel.length <= 0 ? 'hidden' : ''
-            }`,
+            root: `flex-row-reverse max-w-[100svw] px-5`,
             fileName: 'block',
             file: 'w-fit gap-1 py-[2px] px-[3px] rounded-full shrink-0',
             fileSize: 'hidden',
@@ -217,9 +213,10 @@
               files: 'hidden',
             }"
             icon="solar:link-bold"
-            variant="button"
+            variant="area"
             :disabled="fileModel.length === 4"
             position="outside"
+            layout="list"
             accept="image/*,.pdf,.doc,.docx,.txt,.zip,.rar"
           />
         </div>
@@ -261,6 +258,7 @@ const lastPage = ref(0);
 const sendStatus = ref({ loading: false });
 const loadingOld = ref(false);
 const currentPage = ref(1);
+const scrollTimeout = ref(null);
 
 // تابع کمکی برای اسکرول به پایین
 const scrollToBottom = () => {
@@ -292,7 +290,15 @@ watch(
       const el = messagesContainer.value;
       if (!el) return;
       const onScroll = () => {
-        if (el.scrollTop <= 100) loadOlderMessages();
+        if (scrollTimeout.value) {
+          clearTimeout(scrollTimeout.value);
+        }
+        scrollTimeout.value = setTimeout(() => {
+          // Only fetch if user is very close to the top (within 100px)
+          if (el.scrollTop <= 100) {
+            loadOlderMessages();
+          }
+        }, 200);
       };
       el.removeEventListener("scroll", onScroll);
       el.addEventListener("scroll", onScroll);
@@ -343,6 +349,12 @@ const handleJoinRoom = async () => {
   if (!window.Echo) return;
   cleanupEchoListeners();
   currentRoomId.value = Number(roomId.value);
+  
+  // Reset pagination when joining a new room
+  currentPage.value = 1;
+  lastPage.value = 0;
+  loadingOld.value = false;
+  
   try {
     if (roomId.value !== 0) {
       await usePost({
@@ -473,11 +485,14 @@ const appendMessage = (msgData, mine = false) => {
 
 
 const loadOlderMessages = async () => {
-  if (
-    loadingOld.value ||
-    (lastPage.value && currentPage.value >= lastPage.value)
-  )
+  // Check if already loading or reached the last page
+  if (loadingOld.value) return;
+  
+  // Check if we're already on or past the last page
+  if (lastPage.value && currentPage.value >= lastPage.value) {
     return;
+  }
+  
   loadingOld.value = true;
   try {
     currentPage.value++;
@@ -485,6 +500,16 @@ const loadOlderMessages = async () => {
       url: `chat/rooms/${currentRoomId.value}/messages?page=${currentPage.value}`,
       includeAuthHeader: true,
     });
+    
+    // Update lastPage from response
+    lastPage.value = messagesData.data.data.pagination.last_page;
+    
+    // Check again after getting the page info
+    if (currentPage.value > lastPage.value) {
+      loadingOld.value = false;
+      return;
+    }
+    
     const el = messagesContainer.value;
     if (!el) return;
     const oldScrollTop = el.scrollTop,
@@ -504,9 +529,8 @@ const loadOlderMessages = async () => {
 
     messages.value.unshift(...prepend);
     nextTick(() => {
-  el.scrollTop = oldScrollTop + (el.scrollHeight - oldScrollHeight);
-});
-    lastPage.value = messagesData.data.data.last_page;
+      el.scrollTop = oldScrollTop + (el.scrollHeight - oldScrollHeight);
+    });
   } catch (e) {
     console.error("Load older error:", e);
   } finally {
@@ -632,7 +656,15 @@ onMounted(async () => {
       const el = messagesContainer.value;
       if (!el) return;
       const onScroll = () => {
-        if (el.scrollTop <= 500) loadOlderMessages();
+        if (scrollTimeout.value) {
+          clearTimeout(scrollTimeout.value);
+        }
+        scrollTimeout.value = setTimeout(() => {
+          // Only fetch if user is very close to the top (within 100px)
+          if (el.scrollTop <= 100) {
+            loadOlderMessages();
+          }
+        }, 200);
       };
       el.removeEventListener("scroll", onScroll);
       el.addEventListener("scroll", onScroll);
@@ -650,7 +682,7 @@ onUnmounted(() => {
 
 .chat-wrapper {
   background-image: url(/images/new2.png);
-  @apply h-[calc(100vh-64px)] lg:h-[calc(100vh-80px)] bg-size-[80%] lg:bg-size-[35%];
+  @apply h-[calc(100svh-64px)] lg:h-[calc(100svh-80px)] bg-size-[80%] lg:bg-size-[35%];
   display: flex;
   border-radius: 8px;
   flex-direction: column;

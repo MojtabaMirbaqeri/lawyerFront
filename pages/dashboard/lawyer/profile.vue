@@ -1,5 +1,6 @@
 <template>
   <section class="flex space-y-3 flex-col">
+    
     <UTabs
       v-model="activeTab"
       color="primary"

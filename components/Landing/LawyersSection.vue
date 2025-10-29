@@ -57,7 +57,7 @@
           v-model="filtersStore.selectedFilters.sortBy"
           :content="false"
           :items="tabItems"
-          class="sort-tabs" :ui="{root:'primary-box sha'}" />
+          class="sort-tabs" :ui="{root:'primary-box sha', trigger:'shrink-0'}" />
         <div v-if="lawyersRef?.data?.length" class="lawyers-con">
           <NuxtLink
             v-for="lawyer in lawyersRef?.data"

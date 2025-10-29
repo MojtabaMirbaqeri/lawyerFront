@@ -156,7 +156,7 @@ const acceptHandle = async (id: number) => {
       :ui="{
         root: 'rounded-[7px] border border-gray-200 overflow-y-hidden',
         thead: 'bg-primary',
-        th: 'text-white text-center!',
+        th: 'text-white text-center! whitespace-nowrap',
         td: 'text-center whitespace-pre-line', // whitespace-pre-line برای نمایش صحیح اطلاعات بانک
       }"
     >

@@ -12,6 +12,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
   const adminRoutes = [
     // { title: "داشبورد", url: "/dashboard/admin", icon: "hugeicons:dashboard-square-01" },
     { title: "لیست وکلا", url: "/dashboard/admin/lawyerlist", icon: "lucide:inbox" },
+    { title: "چت", url: "/chat", icon: "lucide:inbox" },
     {
       title: "انتظار تایید",
       url: "/dashboard/admin/registerlawyer",

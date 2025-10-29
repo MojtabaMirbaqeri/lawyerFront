@@ -209,6 +209,7 @@ const subReply = async (comid) => {
     url: `reviews/${comid}/reply`,
     includeAuthHeader: true,
     body: bodyComment,
+    showMessage: false, // نمایش error از composable را غیرفعال می‌کنیم
   });
 
   isLoading.value = false;
@@ -246,7 +247,7 @@ const subReply = async (comid) => {
     });
   } else {
     useToast().add({
-      title: "در فرآیند ثبت دیدگاه خطایی رخ داده است!",
+      title: res.message || "در فرآیند ثبت دیدگاه خطایی رخ داده است!",
       icon: "ph:warning",
       color: "error",
     });
@@ -265,6 +266,7 @@ const subComment = async () => {
     url: "reviews",
     includeAuthHeader: true,
     body: bodyComment,
+    showMessage: false, // نمایش error از composable را غیرفعال می‌کنیم
   });
 
   isLoading.value = false;
@@ -278,7 +280,7 @@ const subComment = async () => {
     });
   } else {
     useToast().add({
-      title: "در فرآیند ثبت دیدگاه خطایی رخ داده است!",
+      title: res.message || "در فرآیند ثبت دیدگاه خطایی رخ داده است!",
       icon: "ph:warning",
       color: "error",
     });

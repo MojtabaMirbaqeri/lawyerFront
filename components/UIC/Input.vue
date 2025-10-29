@@ -12,6 +12,7 @@
         :type="type || 'text'"
         :name="name"
         :readonly="readonly"
+        :inputmode="inputmode"
         :autofocus="autofocus"
         :class="{ 'opacity-[0.5]': readonly }"
         :placeholder="placeholder || label"
@@ -31,6 +32,7 @@ const props = defineProps([
   "autofocus",
   "placeholder",
   "type",
+  "inputmode",
 ]);
 const state = defineModel();
 

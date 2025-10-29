@@ -240,7 +240,7 @@ const searchLawyer = async () => {
       :ui="{
         root: 'rounded-[7px] border border-gray-200 overflow-y-hidden',
         thead: 'bg-primary',
-        th: 'text-white',
+        th: 'text-white whitespace-nowrap',
       }" />
 
     <div class="flex justify-center py-4">

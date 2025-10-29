@@ -93,7 +93,11 @@
 
         </ul>
         <div class="py-3">
-          <DashboardLogoutBtn class="h-auto" />
+          <DashboardLogoutBtn v-if="$route.path.startsWith('/dashboard')" class="h-auto" />
+          <button @click="navigateTo('/dashboard')" v-if="$route.path.startsWith('/chat')" class="bg-blue-100 flex gap-2 items-center justify-start rounded-[7px] py-5 px-4 h-9 text-primary w-full text-right">
+            <UIcon name="hugeicons:dashboard-square-01" class="size-4.5!" />
+            <span>برگشت به داشبورد</span>
+          </button>
         </div>
       </div>
     </div>

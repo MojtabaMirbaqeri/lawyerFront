@@ -3,6 +3,7 @@
     v-model="selectedTab"
     color="primary"
     variant="link"
+    class="tabs-custom"
     :ui="ui"
     :content="content"
     :items="items"
@@ -60,6 +61,7 @@ const selectedTab = defineModel({
 });
 </script>
 <style scoped>
+@reference "tailwindcss";
 .text-box {
   white-space: pre-line; /* \n تبدیل میشه به اینتر */
 }
