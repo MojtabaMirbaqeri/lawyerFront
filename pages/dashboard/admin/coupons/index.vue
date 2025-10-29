@@ -141,6 +141,6 @@ const couponsRes = ref(
   })
 );
 useHead({
-  title: "مدیریت کپن‌ها | وکیلینجا",
+  title: "مدیریت کپن‌ها | وکیل وکیل",
 });
 </script>

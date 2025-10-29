@@ -2,8 +2,7 @@
   <div
     v-if="collapsible === 'none'"
     :class="sideBarStyles().collapsible({ class: props.class })"
-    v-bind="$attrs"
-  >
+    v-bind="$attrs">
     <slot />
   </div>
 
@@ -11,38 +10,32 @@
     <div
       :class="{ 'opacity-0! z-[-1]!': !useDashboardStore().openSidebar }"
       class="sidebar-overlay"
-      @click="closeSideBar"
-    ></div>
+      @click="closeSideBar"></div>
     <div
       class="mobile-sidebar z-30 h-screen w-[18rem] bg-white right-[-100%] fixed top-0"
-      :class="{ 'right-0!': useDashboardStore().openSidebar }"
-    >
+      :class="{ 'right-0!': useDashboardStore().openSidebar }">
       <div class="p-3 flex justify-between items-center">
         <div class="logo">
           <NuxtLink to="/">
-            <NuxtImg src="/images/logo.png" class="w-25" />
+            <NuxtImg src="/images/main-logo.svg" class="w-28" />
           </NuxtLink>
         </div>
         <div class="closeBtn">
-          <UIcon
-            name="solar:close-circle-linear"
-            class="size-5!"
-            @click="closeSideBar"
-          />
+          <UIcon name="solar:close-circle-linear" class="size-5!" @click="closeSideBar" />
         </div>
       </div>
       <div class="items w-full px-3 divide-y divide-gray-200">
-        <ul class="w-full flex flex-col gap-1.5 py-3" v-if="$route.path.startsWith('/dashboard')">
+        <ul
+          class="w-full flex flex-col gap-1.5 py-3"
+          v-if="$route.path.startsWith('/dashboard')">
           <li
             v-for="item in dashboardStore.sidebarRoutes"
             :key="item.url"
-            class="w-full flex items-center gap-2"
-          >
+            class="w-full flex items-center gap-2">
             <nuxt-link
               class="w-full flex items-center gap-2 ds-menu-item"
               :to="item.url"
-              @click="closeSideBar"
-            >
+              @click="closeSideBar">
               <UIcon :name="item.icon" class="size-4.5!" />
               {{ item.title }}
             </nuxt-link>
@@ -50,47 +43,37 @@
         </ul>
         <ul class="w-full flex flex-col gap-1.5 py-3" v-else>
           <li
-  v-for="item in chatStore.chatRooms"
-  :key="item.id"
-  class="w-full flex items-center gap-2"
->
-  <div
-    class="w-full flex items-center gap-2 ds-menu-item cursor-pointer"
-    @click="handleChatSidebar(item)"
-  >
-    <!-- پروفایل یا دایره رنگی -->
-    <template v-if="getChatPartner(item)?.profile">
-      <NuxtImg
-        :src="getChatPartner(item).profile"
-        alt="profile"
-        class="w-8 h-8 rounded-full object-cover"
-      />
-    </template>
-    <template v-else>
-      <div
-        class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold"
-        :style="{ backgroundColor: getColor(item.id) }"
-      >
-        {{
-          getInitials(
-            getChatPartner(item)?.name,
-            getChatPartner(item)?.family
-          )
-        }}
-      </div>
-    </template>
+            v-for="item in chatStore.chatRooms"
+            :key="item.id"
+            class="w-full flex items-center gap-2">
+            <div
+              class="w-full flex items-center gap-2 ds-menu-item cursor-pointer"
+              @click="handleChatSidebar(item)">
+              <!-- پروفایل یا دایره رنگی -->
+              <template v-if="getChatPartner(item)?.profile">
+                <NuxtImg
+                  :src="getChatPartner(item).profile"
+                  alt="profile"
+                  class="w-8 h-8 rounded-full object-cover" />
+              </template>
+              <template v-else>
+                <div
+                  class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold"
+                  :style="{ backgroundColor: getColor(item.id) }">
+                  {{
+                    getInitials(getChatPartner(item)?.name, getChatPartner(item)?.family)
+                  }}
+                </div>
+              </template>
 
-    <!-- نام طرف مقابل یا گروه -->
-    <div>
-      {{
-        getChatPartner(item)?.name +
-        " " +
-        (getChatPartner(item)?.family || "")
-      }}
-    </div>
-  </div>
-</li>
-
+              <!-- نام طرف مقابل یا گروه -->
+              <div>
+                {{
+                  getChatPartner(item)?.name + " " + (getChatPartner(item)?.family || "")
+                }}
+              </div>
+            </div>
+          </li>
         </ul>
         <div class="py-3">
           <DashboardLogoutBtn class="h-auto" />
@@ -105,8 +88,7 @@
     :data-state="state"
     :data-collapsible="state === 'collapsed' ? collapsible : ''"
     :data-variant="variant"
-    :data-side="side"
-  >
+    :data-side="side">
     <!-- This is what handles the sidebar gap on desktop  -->
     <div :class="sideBarStyles().sideBarWrapper({ variant })" />
     <div
@@ -118,8 +100,7 @@
           class: props.class,
         })
       "
-      v-bind="$attrs"
-    >
+      v-bind="$attrs">
       <div data-sidebar="sidebar" :class="sideBarStyles().sideBarInner()">
         <slot />
       </div>
@@ -134,36 +115,47 @@ import type { HTMLAttributes } from "vue";
 import { tv } from "tailwind-variants";
 
 const dashboardStore = useDashboardStore();
-const chatStore = useChatStore()
-const authStore = useAuthStore()
+const chatStore = useChatStore();
+const authStore = useAuthStore();
 
 const colors = [
-  "#F44336", "#E91E63", "#9C27B0", "#673AB7",
-  "#3F51B5", "#2196F3", "#03A9F4", "#00BCD4",
-  "#009688", "#4CAF50", "#8BC34A", "#CDDC39",
-  "#FFC107", "#FF9800", "#FF5722"
-]
+  "#F44336",
+  "#E91E63",
+  "#9C27B0",
+  "#673AB7",
+  "#3F51B5",
+  "#2196F3",
+  "#03A9F4",
+  "#00BCD4",
+  "#009688",
+  "#4CAF50",
+  "#8BC34A",
+  "#CDDC39",
+  "#FFC107",
+  "#FF9800",
+  "#FF5722",
+];
 
 // تابع انتخاب رنگ ثابت بر اساس id روم/کاربر
 const getColor = (id: number) => {
-  const index = id % colors.length
-  return colors[index]
-}
+  const index = id % colors.length;
+  return colors[index];
+};
 
 // گرفتن حروف اول
 const getInitials = (name?: string, family?: string) => {
-  if (!name && !family) return "?"
-  const first = name ? name.charAt(0) : ""
-  const last = family ? family.charAt(0) : ""
-  return (first + last).toUpperCase()
-}
+  if (!name && !family) return "?";
+  const first = name ? name.charAt(0) : "";
+  const last = family ? family.charAt(0) : "";
+  return (first + last).toUpperCase();
+};
 
 /**
  * در چت دو نفره، اطلاعات کاربر طرف مقابل را برمی‌گرداند
  * اگر گروه بود، اسم و عکس گروه را برمی‌گرداند
  */
 const getChatPartner = (room: any) => {
-  if (!room) return null
+  if (!room) return null;
 
   // اگر گروهی بود
   if (room.members.length > 2) {
@@ -171,23 +163,21 @@ const getChatPartner = (room: any) => {
       name: room.name,
       family: "",
       profile: room.profile_image || null,
-    }
+    };
   }
 
   // اگر دو نفره بود
   if (room.members.length === 2) {
-    const partner = room.members.find(
-      (member: any) => member.id !== authStore.user?.id
-    )
+    const partner = room.members.find((member: any) => member.id !== authStore.user?.id);
     return {
       name: partner?.name,
       family: partner?.family,
       profile: partner?.profile_image || null,
-    }
+    };
   }
 
-  return null
-}
+  return null;
+};
 
 const closeSideBar = () => {
   dashboardStore.openSidebar = false;
@@ -195,28 +185,27 @@ const closeSideBar = () => {
 };
 
 const handleChatSidebar = (item) => {
-  chatStore.selectRoom(item)
-  closeSideBar()
-}
+  chatStore.selectRoom(item);
+  closeSideBar();
+};
 
 const getChatName = (room) => {
-    // If the room has more than 2 members, it's a group chat. Return the room's name.
-    if (room.members.length > 2) {
-      return room.name;
-    }
-
-    // Find the member who is NOT the current logged-in user.
-    const otherUser = room.members.find(member => member.id !== userStore.user?.id);
-
-    // If we found the other user, return their full name.
-    if (otherUser) {
-      return `${otherUser.name} ${otherUser.family}`;
-    }
-
-    // As a fallback (e.g., a chat with only one person), return the original room name.
+  // If the room has more than 2 members, it's a group chat. Return the room's name.
+  if (room.members.length > 2) {
     return room.name;
-}
+  }
 
+  // Find the member who is NOT the current logged-in user.
+  const otherUser = room.members.find((member) => member.id !== userStore.user?.id);
+
+  // If we found the other user, return their full name.
+  if (otherUser) {
+    return `${otherUser.name} ${otherUser.family}`;
+  }
+
+  // As a fallback (e.g., a chat with only one person), return the original room name.
+  return room.name;
+};
 
 export const sideBarStyles = tv({
   slots: {
@@ -245,8 +234,7 @@ export const sideBarStyles = tv({
     },
     variant: {
       sidebar: {
-        sideBarWrapper:
-          "group-data-[collapsible=icon]:w-[--sidebar-width-icon]",
+        sideBarWrapper: "group-data-[collapsible=icon]:w-[--sidebar-width-icon]",
         sideBarWrapper2:
           "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l border-gray-300 bg-white",
       },

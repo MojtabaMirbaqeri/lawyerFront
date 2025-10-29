@@ -1,10 +1,8 @@
 <template>
-    <div>
-        Settings
-    </div>
+  <div>Settings</div>
 </template>
 <script setup>
 useHead({
-  title: "تنظیمات | وکیلینجا",
+  title: "تنظیمات | وکیل وکیل",
 });
 </script>

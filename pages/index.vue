@@ -16,7 +16,7 @@
 <script setup>
 const lawyersSectionRef = ref(null);
 useHead({
-  title: "وکیلینجا | مشاوره حقوقی آنلاین و رزرو وکیل",
+  title: "وکیل وکیل | مشاوره حقوقی آنلاین و رزرو وکیل",
 });
 </script>
 <style scoped>

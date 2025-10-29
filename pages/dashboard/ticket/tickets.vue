@@ -2,7 +2,9 @@
 <template>
   <section>
     <div class="ds-table-con">
-      <UICSecondaryBtn class="w-[10%] rounded-[8px]! ms-auto" @click="navigateTo('/dashboard/new/ticket')">
+      <UICSecondaryBtn
+        class="w-[10%] rounded-[8px]! ms-auto"
+        @click="navigateTo('/dashboard/new/ticket')">
         <span>ایجاد تیکت</span>
       </UICSecondaryBtn>
       <div class="flex flex-wrap lg:flex-nowrap gap-2 items-stretch">
@@ -15,23 +17,16 @@
             label="فیلتر"
             placeholder="فیلتر..."
             @change="searchHandle"
-            icon="solar:magnifer-linear"
-          />
+            icon="solar:magnifer-linear" />
         </div>
         <UICInput label="وضعیت">
           <template #input>
-            <UICSelect
-              :items="filterStore.ticketFilter.status"
-              v-model="status"
-            />
+            <UICSelect :items="filterStore.ticketFilter.status" v-model="status" />
           </template>
         </UICInput>
         <UICInput label="اولویت">
           <template #input>
-            <UICSelect
-              :items="filterStore.ticketFilter.priority"
-              v-model="priority"
-            />
+            <UICSelect :items="filterStore.ticketFilter.priority" v-model="priority" />
           </template>
         </UICInput>
         <UICInput label="دپارتمان">
@@ -40,12 +35,7 @@
           </template>
         </UICInput>
       </div>
-      <UICDataTable
-        :data="data"
-        :columns="columns"
-        :total="total"
-        v-model="page"
-      />
+      <UICDataTable :data="data" :columns="columns" :total="total" v-model="page" />
     </div>
   </section>
 </template>
@@ -84,12 +74,7 @@ const searchHandle = () => {
   }
 };
 
-const refetch = async (
-  page = null,
-  query = null,
-  setTotal = false,
-  search = null
-) => {
+const refetch = async (page = null, query = null, setTotal = false, search = null) => {
   console.log(search);
 
   const res = await useGet({
@@ -268,9 +253,8 @@ function getRowItems(row) {
   return items;
 }
 useHead({
-  title: "تیکت‌ها | وکیلینجا",
+  title: "تیکت‌ها | وکیل وکیل",
 });
 </script>
 
-<style>
-</style>
+<style></style>

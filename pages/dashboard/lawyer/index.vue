@@ -133,6 +133,6 @@ const ticketColumns = [
   },
 ];
 useHead({
-  title: "داشبورد | وکیلینجا",
+  title: "داشبورد | وکیل وکیل",
 });
 </script>

@@ -5,8 +5,7 @@
       color="primary"
       variant="link"
       :items="tabItems"
-      class="ds-table-con overflow-hidden"
-    >
+      class="ds-table-con overflow-hidden">
       <template #withdraw>
         <DashboardFinancialWithdrawal />
       </template>
@@ -43,6 +42,6 @@ const tabItems = ref([
 
 const activeTab = ref(tabItems.value[0].value);
 useHead({
-  title: "امور مالی | وکیلینجا",
+  title: "امور مالی | وکیل وکیل",
 });
 </script>

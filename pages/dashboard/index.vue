@@ -20,9 +20,8 @@ onMounted(() => {
   }
 });
 useHead({
-  title: "داشبورد | وکیلینجا",
+  title: "داشبورد | وکیل وکیل",
 });
 </script>
 
-<style>
-</style>
+<style></style>

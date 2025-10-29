@@ -2,9 +2,10 @@
   <header>
     <div class="container">
       <h1 class="header-title">
-        مشاوره آنلاین با
+        دریافت خدمات مشاوره از
         <ClientOnly>{{ useGlobalStore()?.lawyersCount?.toLocaleString() }}</ClientOnly>
-        نفر از بهترین متخصصین وکالت
+        وکیل متخصص <br />
+        در سراسر کشور
       </h1>
       <div class="w-full">
         <div class="relative z-50" ref="searchWrapper">

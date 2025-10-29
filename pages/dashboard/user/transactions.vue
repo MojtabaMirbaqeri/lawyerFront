@@ -125,6 +125,6 @@ const columns = ref([
 await refetch(page.value);
 
 useHead({
-  title: "تراکنش ها | وکیلینجا",
+  title: "تراکنش ها | وکیل وکیل",
 });
 </script>

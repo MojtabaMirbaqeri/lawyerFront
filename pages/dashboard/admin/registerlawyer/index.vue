@@ -1,16 +1,14 @@
 <template>
   <section>
     <div>
-        <DashboardAdminRegisterlawyerDataTable/>
+      <DashboardAdminRegisterlawyerDataTable />
     </div>
   </section>
 </template>
 <script setup>
 useHead({
-  title: "ثبت وکیل جدید | وکیلینجا",
+  title: "ثبت وکیل جدید | وکیل وکیل",
 });
 </script>
 
-<style>
-
-</style>
+<style></style>

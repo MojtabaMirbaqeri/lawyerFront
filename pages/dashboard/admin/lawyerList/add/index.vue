@@ -5,26 +5,19 @@
         :schema="schema"
         :state="state"
         class="space-y-4 flex gap-3 justify-between items-start flex-col w-full"
-        @submit="onSubmit"
-      >
+        @submit="onSubmit">
         <div class="grid grid-cols-1 lg:grid-cols-3 w-full gap-6">
           <UICInput
             v-model="state.phone"
             name="phone"
             label="لطفا شماره موبایل را وارد کنید"
             @input="filterDigits"
-            maxlength="11"
-          />
-          <UICInput
-            v-model="state.name"
-            name="name"
-            label="لطفا نام را وارد کنید"
-          />
+            maxlength="11" />
+          <UICInput v-model="state.name" name="name" label="لطفا نام را وارد کنید" />
           <UICInput
             v-model="state.lastName"
             name="lastName"
-            label="لطفا نام خانوادگی را وارد کنید"
-          />
+            label="لطفا نام خانوادگی را وارد کنید" />
           <div class="">
             <label for="">پایه</label>
             <UICSelect :items="bases" v-model="baseModel" />
@@ -35,7 +28,10 @@
           </div>
         </div>
 
-        <UICSecondaryBtn :disabled="isLoading" class="w-fit rounded-[8px]! h-[46px]" type="submit">
+        <UICSecondaryBtn
+          :disabled="isLoading"
+          class="w-fit rounded-[8px]! h-[46px]"
+          type="submit">
           ایجاد وکیل
         </UICSecondaryBtn>
       </UForm>
@@ -86,9 +82,7 @@ const schema = object({
       "شماره موبایل معتبر نیست"
     )
     .length(11, "شماره موبایل باید دقیقاً 11 رقم باشد"),
-  name: string()
-    .required("نام خود را وارد کنید")
-    .max(20, "حداکثر 20 کاراکتر مجاز است"),
+  name: string().required("نام خود را وارد کنید").max(20, "حداکثر 20 کاراکتر مجاز است"),
   lastName: string()
     .required("نام خانوادگی خود را وارد کنید")
     .max(25, "حداکثر 25 کاراکتر مجاز است"),
@@ -112,8 +106,7 @@ const onSubmit = async (event) => {
     base: baseModel.value,
     email: "",
     about: "",
-    education:
-      education.value.find((e) => e.id === educationModel.value)?.label || "",
+    education: education.value.find((e) => e.id === educationModel.value)?.label || "",
   };
 
   const res = await usePost({
@@ -140,6 +133,6 @@ const onSubmit = async (event) => {
   console.log(res.statusCode);
 };
 useHead({
-  title: "ایجاد وکیل جدید | وکیلینجا",
+  title: "ایجاد وکیل جدید | وکیل وکیل",
 });
 </script>

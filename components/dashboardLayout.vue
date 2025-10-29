@@ -4,7 +4,7 @@
       <ThingSidebar side="right">
         <ThingSheetHeader class="header">
           <NuxtLink to="/">
-            <NuxtImg src="/images/logo.png" alt="" class="w-25" />
+            <NuxtImg src="/images/main-logo.svg" alt="" class="w-30" />
           </NuxtLink>
         </ThingSheetHeader>
         <ThingSidebarContent class="px-2.5 divide-y divide-gray-200">
@@ -14,8 +14,7 @@
               <ThingSidebarMenu v-if="chatItems.length <= 0">
                 <ThingSidebarMenuItem
                   v-for="item in dashboardStore.sidebarRoutes"
-                  :key="item.url"
-                >
+                  :key="item.url">
                   <ThingSidebarMenuButton as-child class="ds-menu-item">
                     <NuxtLink :to="item.url">
                       <Icon :name="item.icon" class="size-4.5!" />
@@ -29,22 +28,19 @@
                   <ThingSidebarMenuButton
                     @click="chatStore.selectRoom(item)"
                     as-child
-                    class="ds-menu-item cursor-pointer flex items-center gap-2"
-                  >
+                    class="ds-menu-item cursor-pointer flex items-center gap-2">
                     <div class="flex items-center gap-2">
                       <!-- پروفایل یا دایره رنگی -->
                       <template v-if="getChatPartner(item)?.profile">
                         <NuxtImg
                           :src="getChatPartner(item).profile"
                           alt="profile"
-                          class="w-8 h-8 rounded-full object-cover"
-                        />
+                          class="w-8 h-8 rounded-full object-cover" />
                       </template>
                       <template v-else>
                         <div
                           class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold"
-                          :style="{ backgroundColor: getColor(item.id) }"
-                        >
+                          :style="{ backgroundColor: getColor(item.id) }">
                           {{
                             getInitials(
                               getChatPartner(item)?.name,
@@ -100,10 +96,21 @@ const chatRooms = ref(props.chatItems ? props.chatItems[0] : []);
 
 // رنگ‌های مختلف مثل تلگرام
 const colors = [
-  "#F44336", "#E91E63", "#9C27B0", "#673AB7",
-  "#3F51B5", "#2196F3", "#03A9F4", "#00BCD4",
-  "#009688", "#4CAF50", "#8BC34A", "#CDDC39",
-  "#FFC107", "#FF9800", "#FF5722"
+  "#F44336",
+  "#E91E63",
+  "#9C27B0",
+  "#673AB7",
+  "#3F51B5",
+  "#2196F3",
+  "#03A9F4",
+  "#00BCD4",
+  "#009688",
+  "#4CAF50",
+  "#8BC34A",
+  "#CDDC39",
+  "#FFC107",
+  "#FF9800",
+  "#FF5722",
 ];
 
 // تابع انتخاب رنگ ثابت بر اساس id روم/کاربر
@@ -138,15 +145,9 @@ const getChatPartner = (room) => {
 
   // اگر دو نفره بود
   if (room.members.length === 2) {
-    const partner = room.members.find(
-      (member) => member.id !== authStore.user?.id
-    );
-    console.log(
-      partner?.name,
-      partner?.family,  
-      partner?.profile_image || null,
-    );
-    
+    const partner = room.members.find((member) => member.id !== authStore.user?.id);
+    console.log(partner?.name, partner?.family, partner?.profile_image || null);
+
     return {
       name: partner?.name,
       family: partner?.family,

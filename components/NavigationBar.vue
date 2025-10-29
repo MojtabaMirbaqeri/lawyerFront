@@ -4,10 +4,9 @@
       <UIcon
         name="heroicons:bars-3-solid"
         class="size-7! lg:hidden!"
-        @click="useGlobalStore().toggleSidebar"
-      />
+        @click="useGlobalStore().toggleSidebar" />
       <div class="hidden lg:block w-[140px]">
-        <NuxtImg src="/images/logo.png" class="h-6" />
+        <NuxtImg src="/images/main-logo.svg" class="h-8" />
       </div>
       <nav class="desktop-nav">
         <NuxtLink to="/"> خانه </NuxtLink>
@@ -18,8 +17,7 @@
             side: 'bottom',
           }"
           :arrow="true"
-          mode="hover"
-        >
+          mode="hover">
           <span @click="navigateTo('/#lawyers')"> لیست وکلا </span>
 
           <template #content>
@@ -37,8 +35,7 @@
                   :items="provinces"
                   :ui="{
                     list: 'space-y-1.5',
-                  }"
-                />
+                  }" />
               </div>
               <div v-if="specialties.length > 0" class="space-y-1.5">
                 <h2 class="font-semibold">تخصص ها</h2>
@@ -53,8 +50,7 @@
                   :items="specialties"
                   :ui="{
                     list: 'space-y-1.5',
-                  }"
-                />
+                  }" />
               </div>
             </div>
           </template>
@@ -68,38 +64,32 @@
             <UButton
               color="secondary"
               class="text-secondary! gap-0.5 text-sm lg:text-[15px]"
-              variant="outline"
-            >
+              variant="outline">
               ورود / ثبت نام
               <UIcon name="mage:login" class="size-5! rotate-180" />
             </UButton>
           </NuxtLink>
           <UDropdownMenu v-else :items="dropdownItems" :ui="{ content: '' }">
             <UButton
-              :label="`${useAuthStore().user?.name} ${
-                useAuthStore().user?.family
-              }`"
+              :label="`${useAuthStore().user?.name} ${useAuthStore().user?.family}`"
               color="secondary"
               variant="outline"
               icon="solar:user-rounded-linear"
               class="text-secondary! gap-0.5 text-sm lg:text-[15px]"
-              :ui="{ leadingIcon: 'size-4.5!' }"
-            />
+              :ui="{ leadingIcon: 'size-4.5!' }" />
           </UDropdownMenu>
         </div>
       </ClientOnly>
     </div>
     <div
       class="mobile-sidebar"
-      :class="{ 'translate-x-0!': useGlobalStore().sidebarVisblity }"
-    >
+      :class="{ 'translate-x-0!': useGlobalStore().sidebarVisblity }">
       <div class="header">
         <UIcon
           name="hugeicons:cancel-01"
           class="size-6! p-2"
-          @click="useGlobalStore().sidebarVisblity = false"
-        />
-        <NuxtImg src="/images/logo.png" class="h-6" />
+          @click="useGlobalStore().sidebarVisblity = false" />
+        <NuxtImg src="/images/main-logo.svg" class="h-8" />
       </div>
       <div class="body">
         <hr class="text-gray-200" />
@@ -110,16 +100,13 @@
             label: 'py-2.5!',
             link: 'py-2.5!',
             list: 'space-y-1.5',
-          }"
-        />
+          }" />
         <NuxtLink
           :to="auth?.token ? '/dashboard' : '/register'"
-          class="w-full bg-blue-100/60 py-2.5 px-3 rounded-lg border-blue-200 border flex items-center gap-1.5 text-sm text-blue-500"
-        >
+          class="w-full bg-blue-100/60 py-2.5 px-3 rounded-lg border-blue-200 border flex items-center gap-1.5 text-sm text-blue-500">
           <UIcon
             :name="auth.token ? 'hugeicons:dashboard-square-01' : 'mage:login'"
-            class="size-4.5!"
-          />
+            class="size-4.5!" />
           {{ auth?.token ? "پنل کاربری" : "ورود / ثبت نام" }}
         </NuxtLink>
       </div>
@@ -128,8 +115,7 @@
       <div
         v-if="useGlobalStore().sidebarVisblity"
         class="mobile-overlay"
-        @click="useGlobalStore().sidebarVisblity = false"
-      />
+        @click="useGlobalStore().sidebarVisblity = false" />
     </Transition>
   </div>
 </template>
@@ -231,9 +217,7 @@ onMounted(async () => {
       },
     }));
 
-    const lawyersMenu = menuItems.value[0].find(
-      (item) => item.label === "لیست وکلا"
-    );
+    const lawyersMenu = menuItems.value[0].find((item) => item.label === "لیست وکلا");
     if (lawyersMenu) {
       // بخش تخصص ها - فقط اگر تخصص وجود داشته باشد
       if (specialties.value.length > 0) {
