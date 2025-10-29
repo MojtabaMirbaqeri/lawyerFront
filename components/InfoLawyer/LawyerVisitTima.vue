@@ -58,7 +58,7 @@ const isShowTable = computed(
   <UTable
     v-if="isShowTable === true"
     :data="data"
-    :ui="{ th: 'text-center!', td: 'text-center!' , tr:'even:bg-primary/10'}"
+    :ui="{ th: 'text-center! whitespace-nowrap', td: 'text-center!' , tr:'even:bg-primary/10'}"
     :columns="[
       { accessorKey: 'day', header: 'روز' },
       { accessorKey: 'start_Time', header: 'ساعت شروع کار' },

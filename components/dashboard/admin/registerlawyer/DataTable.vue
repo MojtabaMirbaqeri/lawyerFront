@@ -228,10 +228,7 @@ const rejectHandle = async (com, id) => {
     refetch(pagination.value.pageIndex);
     useToast().add({ title: "احراز هویت وکیل رد شد", color: "success" });
   }
-  else if(res.statusCode === 422){
-    useToast().add({ title: res.data.message, color: "error" });
-  }
-  else{
+  else if(res.statusCode === 500){
     useToast().add({ title: "مشکلی رخ داده است", color: "error" });
   }
 };
@@ -247,12 +244,7 @@ const acceptHandle = async (id) => {
     refetch(pagination.value.pageIndex);
     useToast().add({ title: "احراز هویت وکیل تایید شد", color: "success" });
   }
-  else if(res.statusCode === 422){
-    console.log(res);
-    
-    useToast().add({ title: res.data, color: "error" });
-  }
-  else{
+  else if(res.statusCode === 500){
     useToast().add({ title: "مشکلی رخ داده است", color: "error" });
   }
 };
@@ -275,7 +267,7 @@ const acceptHandle = async (id) => {
       :ui="{
         root: 'rounded-[7px] border border-gray-200 overflow-y-hidden',
         thead: 'bg-primary',
-        th: 'text-white text-center!',
+        th: 'text-white text-center! whitespace-nowrap',
         td: 'text-center',
       }">
       <template #status-cell="{ row }">

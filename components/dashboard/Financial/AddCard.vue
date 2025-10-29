@@ -153,7 +153,7 @@ async function onSubmit(event) {
     card_number: event.data.card_number.replace(/\s/g, ""),
     sheba_number: `IR${event.data.sheba_number}`,
   };
-  payload.bank_name = getBankByCardNumber(payload.card_number).bank_title;
+  payload.bank_name = getBankByCardNumber(payload.card_number)?.bank_title;
   try {
     const res = await usePost({
       url: "bank-cards",

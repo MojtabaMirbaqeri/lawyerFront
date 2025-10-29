@@ -23,7 +23,7 @@ export default defineNuxtPlugin(() => {
       if (!token) return;
 
       const config = useRuntimeConfig();
-      const host = config.public.websocketHost || "wss://dev.vakilinja.com";
+      const host = config.public.websocketHost || "wss://api.vakilvakil.com";
 
       window.Echo = new Echo({
         broadcaster: "socket.io",

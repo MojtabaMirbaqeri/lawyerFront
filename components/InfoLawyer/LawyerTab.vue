@@ -6,6 +6,7 @@
         :content="true"
         v-model="setdef"
         :items="items"
+        :ui="{ trigger:'shrink-0' }"
       />
     </div>
   </section>

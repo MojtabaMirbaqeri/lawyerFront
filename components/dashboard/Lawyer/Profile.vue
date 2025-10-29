@@ -74,9 +74,9 @@
       <div class="space-y-3">
         <div class="flex flex-col lg:flex-row gap-8">
           <div class="w-full lg:max-w-[400px] space-y-3">
-            <UICInput v-model="phonePrice" name="phone" placeholder="قیمت مشاوره تلفنی" label="قیمت مشاوره تلفنی"/>
-            <UICInput v-model="chatPrice" name="chat" placeholder="قیمت مشاوره تلفنی" label="قیمت مشاوره چت آنلاین"/>
-            <UICInput v-model="inPersonPrice" placeholder="قیمت مشاوره حضوری" name="inperon" label="قیمت مشاوره حضوری"/>
+            <UICInput v-model="phonePrice" name="phone" placeholder="قیمت مشاوره تلفنی (تومان)" label="قیمت مشاوره تلفنی"/>
+            <UICInput v-model="chatPrice" name="chat" placeholder="قیمت مشاوره چت آنلاین (تومان)" label="قیمت مشاوره چت آنلاین"/>
+            <UICInput v-model="inPersonPrice" placeholder="قیمت مشاوره حضوری (تومان)" name="inperon" label="قیمت مشاوره حضوری"/>
           </div>
           <DashboardLawyerGetLocation class="h-[250px]! w-full rounded-[8px] overflow-hidden" v-model="locationModel"/> 
         </div>

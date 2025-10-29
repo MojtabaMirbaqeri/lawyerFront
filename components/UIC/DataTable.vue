@@ -36,8 +36,8 @@ watch(
       :ui="{
         root: 'rounded-[7px] border border-gray-200 overflow-y-hidden',
         thead: 'bg-primary',
-        th: 'text-white text-center!',
-        td: 'text-center!',
+        th: 'text-white text-center! whitespace-nowrap',
+        td: 'text-center! whitespace-nowrap',
       }"
       :columns="columns"
       class="flex-1">

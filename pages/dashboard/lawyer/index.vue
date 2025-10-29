@@ -43,12 +43,13 @@ import { h, resolveComponent } from "vue";
 
 const UBadge = resolveComponent("UBadge");
 
-const comProfile = ref(80);
 
 const { data: dashboardRes } = await useGet({
   url: "lawyer/dashboard",
   includeAuthHeader: true,
 });
+
+const comProfile = ref(dashboardRes.data.profile_completion.completion_percentage);
 
 // ========== ستون‌های جدول نوبت‌های امروز ==========
 const appointmentColumns = [

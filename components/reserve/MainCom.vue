@@ -36,6 +36,31 @@
             <p class="text-sm text-left text-muted-foreground">
               300 / {{ dismodel.length }}
             </p>
+
+            <UFileUpload
+            v-model="fileModel"
+            label="پیوست فایل"
+            multiple
+            :ui="{
+              wrapper: 'flex-row items-center w-[140px]! py-[6px] px-[10px]',
+              base: 'p-0 w-[140px]!',
+              avatar: 'bg-transparent scale-[1.2]',
+              label: 'm-0',
+              root: '',
+              fileName: 'hidden lg:block',
+              file: 'w-fit gap-1',
+              fileSize: 'hidden lg:block',
+              files: 'flex-row items-start flex-wrap',
+            }"
+            icon="line-md:uploading-loop"
+            variant="button"
+            :disabled="fileModel.length === 4"
+            position="outside"
+            accept="image/*,.pdf,.txt,.xlsx,.docs" 
+            class="me-auto"
+            layout="list"
+          >
+          </UFileUpload>
           </div>
         </div>
         <div v-if="step === 2" class="step2 flex flex-col gap-3">
@@ -78,7 +103,7 @@ const data = await res.data;
 const lawyer = ref(data.data);
 
 const codeOffer = ref("");
-
+const fileModel = ref("");
 const route = useRoute();
 
 const addReserve = async () => {

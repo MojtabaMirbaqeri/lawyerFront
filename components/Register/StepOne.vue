@@ -21,6 +21,7 @@
       label="لطفا شماره موبایل خود را وارد کنید"
       maxlength="11"
       :autofocus="true"
+      inputmode="numeric"
       @input="filterDigits"
     />
 

@@ -116,6 +116,15 @@ const columns: TableColumn<Payment>[] = [
     header: "پایه",
   },
   {
+  accessorKey: "is_active",
+  header: "وضعیت",
+  cell: ({ row }) => {
+    const value = row.original.is_active
+    return value ? "فعال" : "غیرفعال"
+  },
+}
+,
+  {
     id: "actions",
     cell: ({ row }) => {
       return h(
@@ -231,7 +240,7 @@ const searchLawyer = async () => {
       :ui="{
         root: 'rounded-[7px] border border-gray-200 overflow-y-hidden',
         thead: 'bg-primary',
-        th: 'text-white',
+        th: 'text-white whitespace-nowrap',
       }" />
 
     <div class="flex justify-center py-4">

@@ -10,11 +10,11 @@ onMounted(() => {
 
   switch (authStore.user?.user_type) {
     case "admin":
-      navigateTo("/dashboard/admin");
+      navigateTo("/dashboard/admin/lawyerlist");
       break;
     case "lawyer":
       if (authStore.user?.lawyer_id) {
-        navigateTo("/dashboard/lawyer");
+        navigateTo("/dashboard/lawyer/profile");
       }
       break;
   }

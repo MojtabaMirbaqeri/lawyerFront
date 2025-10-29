@@ -107,7 +107,7 @@
                   icon="i-heroicons-plus"
                   variant="soft"
                   size="lg"
-                  @click="emit('openAddCardDrawer')"
+                  @click="emit('addCard')"
                 >
                   <span class="sm:hidden"> افزودن حساب </span>
                 </UButton>
@@ -166,7 +166,7 @@ import { toJalaali } from "jalaali-js";
 const withdrawForm = ref(null);
 
 // -- تعریف Event برای باز کردن Drawer --
-const emit = defineEmits(["openAddCardDrawer"]);
+const emit = defineEmits(["addCard"]);
 
 // -- کامپوننت‌های لازم برای جدول --
 const UBadge = resolveComponent("UBadge");
