@@ -238,7 +238,7 @@ const degreeOptions = [
   { id: "bachelor", label: "کارشناسی" },
   { id: "master", label: "کارشناسی ارشد" },
   { id: "phd", label: "دکترا" },
-  { id: "postgraduate", label: "فوق دکتری" },
+  { id: "law_degree", label: "فوق دکتری" },
 ];
 
 const educationSchema = object({
@@ -424,7 +424,7 @@ async function handleDelete(type, id) {
     historyRef.value = historyRef.value.filter((item) => item.id !== id);
     toast.add({ description: "آیتم با موفقیت حذف شد.", color: "success" });
   } else {
-    toast.add({ description: "خطا در حذف آیتم.", color: "error" });
+    toast.add({ description: res.message || "خطا در حذف آیتم.", color: "error" });
   }
 }
 

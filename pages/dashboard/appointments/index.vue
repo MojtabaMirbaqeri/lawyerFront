@@ -232,13 +232,20 @@
 	// تابع برای لغو کردن نوبت
 	const cancelAppointment = async (appointmentId) => {
 		try {
-			await useDelete({
+			const res = await useDelete({
 				url: `appointments/${appointmentId}`,
 				includeAuthHeader: true,
 			});
-			useToast().add({ title: "نوبت شما با موفقیت لغو شد", color: "success" });
-
-			refetch(page.value);
+			if (res.status) {
+				useToast().add({ title: "نوبت شما با موفقیت لغو شد", color: "success" });
+				refetch(page.value);
+			} else {
+				useToast().add({
+					title: res.message || "مشکلی رخ داده است لطفا مجددا تلاش کنید.",
+					icon: "solar:phone-linear",
+					color: "error",
+				});
+			}
 		} catch (error) {
 			console.error(`Failed to cancel appointment ${appointmentId}:`, error);
 			useToast().add({
