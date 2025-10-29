@@ -175,7 +175,7 @@ async function onSubmit(event) {
       });
     } else {
       toast.add({
-        description: res.data?.message || "خطا در افزودن کارت.",
+        description: res.message || res.data?.message || "خطا در افزودن کارت.",
         color: "error",
       });
     }
@@ -196,7 +196,7 @@ async function handleDelete(id) {
     bankCards.value = bankCards.value.filter((item) => item.id !== id);
     toast.add({ description: "کارت با موفقیت حذف شد.", color: "success" });
   } else {
-    toast.add({ description: "خطا در حذف آیتم.", color: "error" });
+    toast.add({ description: res.message || "خطا در حذف آیتم.", color: "error" });
   }
 }
 

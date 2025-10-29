@@ -128,6 +128,11 @@ function getRowItems(row) {
             title: "کد تخفیف با موفقیت حذف شد.",
             color: "success",
           });
+        } else {
+          useToast().add({
+            title: res.message || "خطا در حذف کد تخفیف.",
+            color: "error",
+          });
         }
       },
     },

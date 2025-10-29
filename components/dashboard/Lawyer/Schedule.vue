@@ -365,7 +365,7 @@ async function handleWorkplaceDelete(id) {
     workplacesList.value = workplacesList.value.filter((item) => item.id !== id);
     toast.add({ description: "محل کار با موفقیت حذف شد.", color: "success" });
   } else {
-    toast.add({ description: "خطا در حذف آیتم.", color: "error" });
+    toast.add({ description: res.message || "خطا در حذف آیتم.", color: "error" });
   }
 }
 

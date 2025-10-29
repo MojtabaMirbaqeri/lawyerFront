@@ -282,7 +282,7 @@ async function onSubmit(event) {
       state.amount = ""; // ریست کردن فرم
     } else {
       toast.add({
-        description: res.data?.message || "خطا در ثبت درخواست.",
+        description: res.message || res.data?.message || "خطا در ثبت درخواست.",
         color: "error",
       });
     }
