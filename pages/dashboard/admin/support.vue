@@ -244,7 +244,7 @@ function buildQuery(pageNum = 1, overrides = {}) {
 
 async function fetchLawyers(pageNum = 1, setTotal = false) {
   loading.value = true;
-  useLoaderStore().isVisible = true;
+  useLoaderStore().showLoader({ blur: true });
   try {
     const res = await useGet({
       url: "lawyers?per_page=25",
@@ -281,7 +281,7 @@ async function fetchLawyers(pageNum = 1, setTotal = false) {
     }
   } finally {
     loading.value = false;
-    useLoaderStore().isVisible = false;
+    useLoaderStore().hideLoader();
   }
 }
 
@@ -371,7 +371,7 @@ async function exportExcel() {
     return;
   }
   exporting.value = true;
-  useLoaderStore().isVisible = true;
+  useLoaderStore().showLoader({ blur: true });
   try {
     const res = await useGet({
       url: "lawyers",
@@ -436,7 +436,7 @@ async function exportExcel() {
     }
   } finally {
     exporting.value = false;
-    useLoaderStore().isVisible = false;
+    useLoaderStore().hideLoader();
   }
 }
 

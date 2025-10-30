@@ -57,7 +57,8 @@
           v-model="filtersStore.selectedFilters.sortBy"
           :content="false"
           :items="tabItems"
-          class="sort-tabs" :ui="{root:'primary-box sha', trigger:'shrink-0'}" />
+          class="sort-tabs"
+          :ui="{ root: 'primary-box sha', trigger: 'shrink-0' }" />
         <div v-if="lawyersRef?.data?.length" class="lawyers-con">
           <NuxtLink
             v-for="lawyer in lawyersRef?.data"
@@ -128,7 +129,6 @@ watch(currentLawyersPage, async (newPage, oldPage) => {
 });
 
 watch(filtersStore.selectedFilters, async () => {
-  console.log("triggered");
   const oldPage = currentLawyersPage.value;
   isFilterChange.value = true;
   currentLawyersPage.value = 1;
@@ -145,6 +145,9 @@ watch(filtersStore.selectedFilters, async () => {
 
 const isFirstLoad = ref(true);
 async function fetchLawyers() {
+  if (!isFirstLoad.value) {
+    useLoaderStore().showLoader({ blur: true });
+  }
   const { data } = await useGet({
     url: "lawyers",
     query: {
@@ -163,7 +166,9 @@ async function fetchLawyers() {
   if (!useGlobalStore().lawyersCount) {
     useGlobalStore().lawyersCount = data.meta.total;
   }
-
+  if (!isFirstLoad.value) {
+    useLoaderStore().hideLoader();
+  }
   nextTick(() => {
     // فقط بعد از اولین بار
     if (!isFirstLoad.value && lawyersListRef.value) {

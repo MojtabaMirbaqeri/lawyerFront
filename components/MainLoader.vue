@@ -1,6 +1,9 @@
 <template>
   <Transition name="page">
-    <div v-if="loaderStore.isVisible" class="loader-con">
+    <div
+      v-if="loaderStore.isVisible"
+      class="loader-con"
+      :class="{ 'bg-white/30! backdrop-blur-[12px]': loaderStore.isBlur }">
       <div class="dots"></div>
     </div>
   </Transition>
@@ -9,14 +12,13 @@
 const loaderStore = useLoaderStore();
 </script>
 
-
-
 <style scoped>
 @reference "tailwindcss";
 .loader-con {
-  @apply h-svh w-svw bg-white flex items-center justify-center fixed top-0 start-0 z-[101];
+  @apply h-svh w-svw bg-white fixed top-0 start-0 z-[101];
 }
 .dots {
+  @apply absolute -translate-1/2 top-1/2 left-1/2;
   width: 56px;
   height: 26.9px;
   background: radial-gradient(circle closest-side, var(--ui-primary) 90%, #0000) 0% 50%,
