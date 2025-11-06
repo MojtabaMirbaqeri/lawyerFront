@@ -1,4 +1,4 @@
-// stores/register.js
+// stores/loader.js
 import { defineStore } from "pinia";
 
 export const useLoaderStore = defineStore("loader", {

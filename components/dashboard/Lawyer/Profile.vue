@@ -5,8 +5,7 @@
         <div class="relative">
           <NuxtImg
             :src="profileImagePreview || '/images/null-avatar.png'"
-            class="size-14 lg:size-16 rounded-full"
-          />
+            class="size-14 lg:size-16 rounded-full" />
         </div>
         <div>
           <h1 class="text-base font-bold">
@@ -15,7 +14,7 @@
           <h1 class="text-sm text-gray">{{ authStore.user.phone }}</h1>
         </div>
       </div>
-      <div class="flex items-stretch gap-2">
+      <div class="flex flex-col sm:flex-row items-stretch gap-2">
         <UModal v-model:open="isProfileImageModalOpen" title="تصویر پروفایل">
           <UICSecondaryBtn class="w-full rounded-lg sm:w-auto">
             ویرایش تصویر
@@ -33,16 +32,10 @@
                 base: 'border-black/30',
                 wrapper: 'py-2',
               }"
-              @update:model-value="handleImageUpload"
-            />
+              @update:model-value="handleImageUpload" />
           </template>
         </UModal>
-        <UICSelect
-          v-model="formData.base"
-          disabled
-          class="w-auto"
-          :items="mappedTypes"
-        />
+        <UICSelect v-model="formData.base" disabled class="w-auto" :items="mappedTypes" />
       </div>
     </div>
     <div class="space-y-8 lg:space-y-10">
@@ -56,8 +49,7 @@
           :ui="{
             fieldset:
               'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3',
-          }"
-        />
+          }" />
       </div>
       <div class="space-y-3">
         <h1 class="font-semibold">خدمات شما</h1>
@@ -68,17 +60,30 @@
           value-key="id"
           :ui="{
             fieldset: 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3',
-          }"
-        />
+          }" />
       </div>
       <div class="space-y-3">
         <div class="flex flex-col lg:flex-row gap-8">
           <div class="w-full lg:max-w-[400px] space-y-3">
-            <UICInput v-model="phonePrice" name="phone" placeholder="قیمت مشاوره تلفنی (تومان)" label="قیمت مشاوره تلفنی"/>
-            <UICInput v-model="chatPrice" name="chat" placeholder="قیمت مشاوره چت آنلاین (تومان)" label="قیمت مشاوره چت آنلاین"/>
-            <UICInput v-model="inPersonPrice" placeholder="قیمت مشاوره حضوری (تومان)" name="inperon" label="قیمت مشاوره حضوری"/>
+            <UICInput
+              v-model="phonePrice"
+              name="phone"
+              placeholder="قیمت مشاوره تلفنی (تومان)"
+              label="قیمت مشاوره تلفنی" />
+            <UICInput
+              v-model="chatPrice"
+              name="chat"
+              placeholder="قیمت مشاوره چت آنلاین (تومان)"
+              label="قیمت مشاوره چت آنلاین" />
+            <UICInput
+              v-model="inPersonPrice"
+              placeholder="قیمت مشاوره حضوری (تومان)"
+              name="inperon"
+              label="قیمت مشاوره حضوری" />
           </div>
-          <DashboardLawyerGetLocation class="h-[250px]! w-full rounded-[8px] overflow-hidden" v-model="locationModel"/> 
+          <DashboardLawyerGetLocation
+            class="h-[250px]! w-full rounded-[8px] overflow-hidden"
+            v-model="locationModel" />
         </div>
         <h1 class="font-semibold">درباره شما</h1>
         <ThingTextarea
@@ -86,14 +91,12 @@
           v-model="formData.about"
           class="max-h-[250px]! min-h-[150px]"
           :maxlength="1500"
-          placeholder="وکیل پایه یک دادگستری..."
-        />
+          placeholder="وکیل پایه یک دادگستری..." />
         <div class="text-end">1500 / {{ formData.about.length }}</div>
         <UICSecondaryBtn
           :disabled="!hasChanges || isLoading"
           class="rounded-lg"
-          @click="updateProfile"
-        >
+          @click="updateProfile">
           {{ isLoading ? "در حال ارسال..." : "اعمال تغییرات" }}
         </UICSecondaryBtn>
       </div>
@@ -177,8 +180,10 @@ const hasChanges = computed(() => {
     formData.name !== initialData.name ||
     formData.family !== initialData.family ||
     formData.base !== initialData.base ||
-    JSON.stringify(formData.specialties.sort()) !== JSON.stringify(initialData.specialties.sort()) ||
-    JSON.stringify(formData.services.sort()) !== JSON.stringify(initialData.services.sort()) ||
+    JSON.stringify(formData.specialties.sort()) !==
+      JSON.stringify(initialData.specialties.sort()) ||
+    JSON.stringify(formData.services.sort()) !==
+      JSON.stringify(initialData.services.sort()) ||
     formData.about !== initialData.about ||
     formData.profile_image !== null ||
     locationChanged ||
@@ -213,9 +218,15 @@ const updateProfile = async () => {
     // بررسی و ارسال صحیح موقعیت - اگر خالی باشد null ارسال کن
     const lat = locationModel.value[0];
     const lng = locationModel.value[1];
-    
-    formDataToSend.append("latitude", (lat === '' || lat === null || lat === undefined) ? 0 : lat);
-    formDataToSend.append("longitude", (lng === '' || lng === null || lng === undefined) ? 0 : lng);
+
+    formDataToSend.append(
+      "latitude",
+      lat === "" || lat === null || lat === undefined ? 0 : lat
+    );
+    formDataToSend.append(
+      "longitude",
+      lng === "" || lng === null || lng === undefined ? 0 : lng
+    );
     formDataToSend.append("consultation_price_phone", phonePrice.value);
     formDataToSend.append("consultation_price_chat", chatPrice.value);
     formDataToSend.append("consultation_price_inperson", inPersonPrice.value);
@@ -254,18 +265,18 @@ const updateProfile = async () => {
         color: "success",
         description: "اطلاعات با موفقیت به‌روزرسانی شد",
       });
-    } else {
-      useToast().add({
-        color: "error",
-        description: "خطایی در به‌روزرسانی اطلاعات رخ داد",
-      });
+      // } else {
+      //   useToast().add({
+      //     color: "error",
+      //     description: "خطایی در به‌روزرسانی اطلاعات رخ داد",
+      //   });
     }
   } catch (error) {
     console.error("Error updating profile:", error);
-    useToast().add({
-      color: "error",
-      description: "خطایی در ارسال اطلاعات رخ داد",
-    });
+    // useToast().add({
+    //   color: "error",
+    //   description: "خطایی در ارسال اطلاعات رخ داد",
+    // });
   } finally {
     isLoading.value = false;
   }

@@ -15,8 +15,7 @@
               placeholder="نظر خود را درباره ی وکیل مورد نظر بنویسید..."
               :maxrows="6"
               v-model="userComment"
-              autoresize=""
-            />
+              autoresize="" />
             <div class="flex justify-between items-center mb-4">
               <UICMainBtn class="" @click="subComment"> ثبت نظر </UICMainBtn>
               <NuxtRating
@@ -25,17 +24,15 @@
                 dir="ltr"
                 style="direction: ltr !important"
                 :rating-content="[
-                  9.153, 5.408, 12.0, 2.0, 14.847, 5.408, 15.175, 5.996, 15.995,
-                  7.178, 17.325, 7.628, 17.961, 7.772, 21.943, 9.548, 19.72,
-                  13.43, 19.286, 13.937, 18.464, 15.117, 18.465, 16.577, 18.531,
-                  17.254, 18.145, 21.76, 13.925, 20.751, 13.328, 20.477, 12.0,
-                  20.025, 10.672, 20.477, 10.076, 20.751, 5.856, 21.761, 5.469,
-                  17.254, 5.535, 16.578, 5.535, 15.118, 4.714, 13.938, 4.28,
-                  13.43, 2.057, 9.548, 6.04, 7.772, 6.676, 7.628, 8.005, 7.178,
-                  8.825, 5.996,
+                  9.153, 5.408, 12.0, 2.0, 14.847, 5.408, 15.175, 5.996, 15.995, 7.178,
+                  17.325, 7.628, 17.961, 7.772, 21.943, 9.548, 19.72, 13.43, 19.286,
+                  13.937, 18.464, 15.117, 18.465, 16.577, 18.531, 17.254, 18.145, 21.76,
+                  13.925, 20.751, 13.328, 20.477, 12.0, 20.025, 10.672, 20.477, 10.076,
+                  20.751, 5.856, 21.761, 5.469, 17.254, 5.535, 16.578, 5.535, 15.118,
+                  4.714, 13.938, 4.28, 13.43, 2.057, 9.548, 6.04, 7.772, 6.676, 7.628,
+                  8.005, 7.178, 8.825, 5.996,
                 ]"
-                @rating-selected="addRate"
-              />
+                @rating-selected="addRate" />
             </div>
           </div>
         </div>
@@ -44,8 +41,7 @@
           <div
             v-for="comment in comments"
             :key="comment.id"
-            class="comment text-xs lg:text-sm p-4 flex flex-col gap-3 last:border-b-0 border-b border-[var(--ui-border)]"
-          >
+            class="comment text-xs lg:text-sm p-4 flex flex-col gap-3 last:border-b-0 border-b border-[var(--ui-border)]">
             <div class="info flex justify-between">
               <div class="username opacity-70">
                 {{ `${comment.user.name} ${comment.user.family}` }}
@@ -66,8 +62,7 @@
                     label="مشاهده ی بیشتر"
                     color="primary"
                     variant="link"
-                    class="underline p-0"
-                  />
+                    class="underline p-0" />
                 </template>
                 <template #default>
                   {{ comment.comment }}
@@ -75,11 +70,8 @@
               </UICDrawer>
             </div>
             <div
-              v-if="
-                !comment.has_replies && authStore.user?.user_type == 'lawyer'
-              "
-              class="lawyer-input-comment"
-            >
+              v-if="!comment.has_replies && authStore.user?.user_type == 'lawyer'"
+              class="lawyer-input-comment">
               <div class="">
                 <UCollapsible class="flex flex-col gap-2 w-full">
                   <UButton
@@ -88,8 +80,7 @@
                     trailing-icon="quill:reply"
                     class="text-right"
                     :ui="{ trailingIcon: 'cursor-pointer size-5!' }"
-                    block
-                  />
+                    block />
 
                   <template #content>
                     <UTextarea
@@ -102,13 +93,11 @@
                       }"
                       placeholder="نظر خود را درباره ی نظر کاربر مورد نظر بنویسید..."
                       :maxrows="6"
-                      autoresize=""
-                    />
+                      autoresize="" />
                     <UICMainBtn
                       :disabled="!lawyerComment[comment.id] || isLoading"
                       class="mb-4"
-                      @click="subReply(comment.id)"
-                    >
+                      @click="subReply(comment.id)">
                       ثبت نظر
                     </UICMainBtn>
                   </template>
@@ -117,8 +106,7 @@
             </div>
             <div
               v-if="comment.has_replies"
-              class="lawyer-comment rounded-[8px] p-4 flex flex-col gap-3 bg-[#f4f5f7]"
-            >
+              class="lawyer-comment rounded-[8px] p-4 flex flex-col gap-3 bg-[#f4f5f7]">
               <div class="" v-for="rep in comment.replies" :key="rep.id">
                 <div class="lawyer-info flex justify-between">
                   <div class="lawyer-username opacity-70">
@@ -142,8 +130,7 @@
           'bg-gray-500! cursor-no-drop!': currentPageComment == lastPage,
         }"
         class="mx-auto my-4"
-        @click="commentHandle"
-      >
+        @click="commentHandle">
         <span>مشاهده بیشتر</span>
       </UICSecondaryBtn>
     </div>
@@ -167,9 +154,7 @@ const comments = ref(await data.data);
 const commentHandle = async () => {
   currentPageComment.value++;
   const res = await useGet({
-    url: `lawyers/${useRoute().params.id}/reviews?page=${
-      currentPageComment.value
-    }`,
+    url: `lawyers/${useRoute().params.id}/reviews?page=${currentPageComment.value}`,
   });
   const data = await res.data;
   const newCom = ref(data.data);
@@ -205,12 +190,14 @@ const subReply = async (comid) => {
     comment: lawyerComment.value[comid],
   };
 
-  const res = await usePost({
-    url: `reviews/${comid}/reply`,
-    includeAuthHeader: true,
-    body: bodyComment,
-    showMessage: false, // نمایش error از composable را غیرفعال می‌کنیم
-  });
+  const res = await usePost(
+    {
+      url: `reviews/${comid}/reply`,
+      includeAuthHeader: true,
+      body: bodyComment,
+    },
+    false
+  );
 
   isLoading.value = false;
 
@@ -266,8 +253,7 @@ const subComment = async () => {
     url: "reviews",
     includeAuthHeader: true,
     body: bodyComment,
-    showMessage: false, // نمایش error از composable را غیرفعال می‌کنیم
-  });
+  },false);
 
   isLoading.value = false;
   if (res.statusCode == 201 || res.statusCode == 200) {
@@ -288,6 +274,4 @@ const subComment = async () => {
 };
 </script>
 
-<style>
-</style>
-
+<style></style>

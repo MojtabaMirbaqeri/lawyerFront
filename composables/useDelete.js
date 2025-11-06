@@ -40,9 +40,14 @@ export async function useDelete(
       },
     };
   } catch (error) {
-    const rawMessage =
-      error?.data?.message || error?.response?._data?.message || null;
-    
+    if (error.status == 500) {
+      useToast().add({
+        color: "error",
+        description: "خطای فنی رخ داده است.",
+      });
+    }
+    const rawMessage = error?.data?.message || error?.response?._data?.message || null;
+
     // Convert rawMessage to string if it's an object
     let errorMessage = null;
     if (rawMessage) {
