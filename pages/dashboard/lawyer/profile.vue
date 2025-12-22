@@ -18,7 +18,7 @@
         <DashboardLawyerExperience />
       </template>
       <template #schedule>
-        <DashboardLawyerSchedule />
+        <DashboardLawyerSchedule :lawyer-information="lawyerInformation.data" />
       </template>
       <template #authentication>
         <DashboardLawyerAuthentication :lawyer-information="lawyerInformation.data" />

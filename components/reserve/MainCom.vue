@@ -307,7 +307,7 @@ function generateDateButtons() {
     const iso = date.toISOString().split("T")[0];
     const weekdayIndex = getShamsiWeekdayIndex(date);
     const isHoliday = holidayDates.value.includes(iso) || weekdayIndex === 6;
-    const isWorkingDay = availableDays.hasOwnProperty(weekdayIndex);
+    const isWorkingDay = Object.prototype.hasOwnProperty.call(availableDays, weekdayIndex);
 
     dateButtons.value.push({
       iso,
@@ -342,8 +342,22 @@ const timeSlots = computed(() => {
   const endTime = toMinutes(config.end);
   const slots = [];
 
+  // چک کردن اینکه آیا تاریخ انتخابی امروز است
+  const today = new Date();
+  const todayISO = today.toISOString().split("T")[0];
+  const isToday = selectedDate.value === todayISO;
+  
+  // ساعت و دقیقه فعلی به دقیقه تبدیل می‌شود
+  const currentMinutes = isToday ? today.getHours() * 60 + today.getMinutes() : 0;
+
   for (let start = startTime; start + selectedDuration.value <= endTime; start += 30) {
     const end = start + selectedDuration.value;
+    
+    // اگر امروز است و ساعت شروع نوبت گذشته، نمایش نده
+    if (isToday && start <= currentMinutes) {
+      continue;
+    }
+    
     const isFree = !bookings.value.some(
       (b) => b.date === selectedDate.value && overlap(start, end, b.start, b.end)
     );

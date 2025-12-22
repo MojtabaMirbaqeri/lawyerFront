@@ -7,6 +7,12 @@ export default defineNuxtConfig({
       crawlLinks: false,
       failOnError: false,
     },
+    // Cache sitemap API and XMLs for 1 day (86400 seconds)
+    routeRules: {
+      "/api/sitemap-urls": { swr: 86400 },
+      "/sitemap.xml": { swr: 86400 },
+      "/sitemap-*.xml.gz": { swr: 86400 },
+    },
   },
   runtimeConfig: {
     public: {
@@ -19,12 +25,19 @@ export default defineNuxtConfig({
     pageTransition: { name: "page", mode: "out-in" },
     layoutTransition: { name: "page", mode: "out-in" },
     head: {
+      titleTemplate: "%s | وکیل وکیل",
+      htmlAttrs: {
+        dir: "rtl",
+        lang: "fa",
+      },
       meta: [
         { charset: "utf-8" },
         {
           name: "viewport",
-          content: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no",
+          content:
+            "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no",
         },
+        { name: "format-detection", content: "telephone=no" },
       ],
     },
   },
@@ -37,7 +50,19 @@ export default defineNuxtConfig({
     "@nuxtjs/leaflet",
     "nuxt-rating",
     "nuxt-countdown",
+    "@nuxtjs/sitemap",
+    "@nuxtjs/robots",
   ],
+  sitemap: {
+    sources: ["/api/sitemap-urls"],
+    sitemaps: true, // Enable multiple sitemaps for large datasets
+    defaultSitemapsChunkSize: 1000, // Chunk size for each sitemap file
+  },
+  site: {
+    url: process.env.SITE_URL || "https://vakilvakil.ir",
+    name: "وکیل وکیل",
+    defaultLocale: "fa",
+  },
   css: ["@/assets/css/main.css", "@/assets/Webfonts/fontiran.css"],
   ui: {
     colorMode: false,

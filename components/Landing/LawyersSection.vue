@@ -63,7 +63,9 @@
           <NuxtLink
             v-for="lawyer in lawyersRef?.data"
             :key="lawyer.id"
-            :to="`/${props.link}${lawyer.id}`">
+            :to="`/${props.link}${lawyer.id}/${(lawyer.name + ' ' + lawyer.family)
+              .trim()
+              .replace(/\s+/g, '-')}`">
             <LawyerCard :titlebtn="titlebtn" :lawyer-info="lawyer" />
           </NuxtLink>
         </div>
@@ -86,6 +88,8 @@
 <script setup>
 const filtersStore = useFiltersStore();
 const globalStore = useGlobalStore();
+const route = useRoute();
+const { readFromUrl, writeToUrl } = useUrlFilters();
 
 const props = defineProps(["link", "titlebtn"]);
 const lawyersRef = ref(null);
@@ -95,22 +99,39 @@ const currentLawyersPage = ref(1);
 const lawyersListRef = ref(null);
 
 const tabItems = ref(filtersStore.sortItems);
-filtersStore.selectedFilters.sortBy = tabItems.value[0].value;
 
 const lawyerTypes = [...filtersStore.lawyerTypes];
 lawyerTypes.unshift({
   id: 0,
   title: "همه",
 });
-filtersStore.selectedFilters.lawyerType = lawyerTypes[0].id;
 
 const scrollToElement = useScrollToElement(80);
 
 const isFilterChange = ref(false);
+const isInitialLoad = ref(true);
+
+// Read URL params FIRST before setting defaults
+const urlFilters = readFromUrl();
+
+// Set defaults or use URL values
+if (urlFilters.page) currentLawyersPage.value = urlFilters.page;
+filtersStore.selectedFilters.sortBy = urlFilters.sort || tabItems.value[0].value;
+filtersStore.selectedFilters.lawyerType = urlFilters.type || lawyerTypes[0].id;
+if (urlFilters.gender) filtersStore.selectedFilters.gender = urlFilters.gender;
+if (urlFilters.province) filtersStore.selectedFilters.province = urlFilters.province;
+if (urlFilters.specialty)
+  filtersStore.selectedFilters.lawyerSpecialty = urlFilters.specialty;
+if (urlFilters.city) filtersStore.selectedFilters.city = urlFilters.city;
+if (urlFilters.visit) filtersStore.selectedFilters.visitType = urlFilters.visit;
+if (urlFilters.search) filtersStore.selectedFilters.searchField = urlFilters.search;
 
 onMounted(async () => {
   const res = await fetch("/lawyer-sample.json");
   staticLawyerInfo.value = await res.json();
+
+  // Mark as loaded to enable URL sync
+  isInitialLoad.value = false;
 });
 
 watch(currentLawyersPage, async (newPage, oldPage) => {
@@ -125,6 +146,24 @@ watch(currentLawyersPage, async (newPage, oldPage) => {
     isFilterChange.value = false;
   }
 
+  // Update URL with new page (skip on initial load)
+  if (!isInitialLoad.value) {
+    writeToUrl(
+      {
+        sort: filtersStore.selectedFilters.sortBy,
+        page: newPage,
+        gender: filtersStore.selectedFilters.gender,
+        province: filtersStore.selectedFilters.province,
+        specialty: filtersStore.selectedFilters.lawyerSpecialty,
+        city: filtersStore.selectedFilters.city,
+        type: filtersStore.selectedFilters.lawyerType,
+        visit: filtersStore.selectedFilters.visitType,
+        search: filtersStore.selectedFilters.searchField,
+      },
+      true
+    );
+  }
+
   await fetchLawyers();
 });
 
@@ -132,6 +171,24 @@ watch(filtersStore.selectedFilters, async () => {
   const oldPage = currentLawyersPage.value;
   isFilterChange.value = true;
   currentLawyersPage.value = 1;
+
+  // Update URL with new filters (skip on initial load)
+  if (!isInitialLoad.value) {
+    writeToUrl(
+      {
+        sort: filtersStore.selectedFilters.sortBy,
+        page: 1,
+        gender: filtersStore.selectedFilters.gender,
+        province: filtersStore.selectedFilters.province,
+        specialty: filtersStore.selectedFilters.lawyerSpecialty,
+        city: filtersStore.selectedFilters.city,
+        type: filtersStore.selectedFilters.lawyerType,
+        visit: filtersStore.selectedFilters.visitType,
+        search: filtersStore.selectedFilters.searchField,
+      },
+      true
+    );
+  }
 
   // اگر در صفحه 1 هستیم، watch اجرا نمی‌شود، پس خودمان fetch کنیم
   if (globalStore.sidebarVisblity) {

@@ -116,7 +116,7 @@
       </section>
 
       <section>
-        <h2 class="text-xl font-bold mb-4 pb-2">جوایز و افتخارات</h2>
+        <h2 class="text-xl font-bold mb-4 pb-2">جوایز و افتخارات دوره ای تخصصی</h2>
         <UForm
           :schema="awardSchema"
           :state="awardState"

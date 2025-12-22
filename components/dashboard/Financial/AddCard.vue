@@ -20,8 +20,7 @@
           <UICInput
             v-model="state.card_holder_name"
             name="card_holder_name"
-            label="نام دارنده کارت"
-          />
+            label="نام دارنده کارت" />
           <UICInput name="card_number" label="شماره کارت">
             <template #input>
               <UInput
@@ -30,12 +29,10 @@
                 class="w-full"
                 :ui="{ base: 'field-base' }"
                 placeholder="XXXX XXXX XXXX XXXX"
-                maxlength="19"
-              />
+                maxlength="19" />
               <div class="absolute top-1/2 start-0 -translate-y-1/2 px-2.5">
                 <span
-                  v-html="useGetBankLogo(state.card_number?.replace(/\s/g, ''))"
-                ></span>
+                  v-html="useGetBankLogo(state.card_number?.replace(/\s/g, ''))"/>
               </div>
             </template>
           </UICInput>
@@ -48,22 +45,14 @@
                 class="w-full"
                 :ui="{ base: 'field-base' }"
                 placeholder="XXXXXXXXXXXXXXXXXXXXXXXX"
-                maxlength="24"
-              >
+                maxlength="24">
                 <template #trailing>
-                  <span class="text-gray-500 dark:text-gray-400 text-sm"
-                    >IR</span
-                  >
+                  <span class="text-gray-500 dark:text-gray-400 text-sm">IR</span>
                 </template>
-                <template #leading></template>
+                <template #leading/>
               </UInput>
             </template>
           </UICInput>
-          <UICInput
-            v-model="state.account_number"
-            name="account_number"
-            label="شماره حساب"
-          />
         </div>
         <UICSecondaryBtn type="submit" :disabled="isLoading">
           {{ isLoading ? "در حال افزودن..." : "افزودن کارت" }}
@@ -95,7 +84,6 @@ const bankCards = ref([]);
 const state = reactive({
   bank_name: "",
   card_holder_name: "",
-  account_number: "",
   card_number: "",
   sheba_number: "",
 });
@@ -119,7 +107,6 @@ watch(
 // -- اسکیما ولیدیشن با Yup --
 const schema = object({
   card_holder_name: string().required("نام دارنده کارت الزامی است"),
-  account_number: string().required("شماره حساب الزامی است"),
   card_number: string()
     .required("شماره کارت الزامی است")
     .transform((value) => value.replace(/\s/g, ""))
@@ -149,7 +136,6 @@ async function onSubmit(event) {
   const payload = {
     bank_name: null,
     card_holder_name: event.data.card_holder_name,
-    account_number: event.data.account_number,
     card_number: event.data.card_number.replace(/\s/g, ""),
     sheba_number: `IR${event.data.sheba_number}`,
   };
@@ -169,7 +155,6 @@ async function onSubmit(event) {
       Object.assign(state, {
         bank_name: "",
         card_holder_name: "",
-        account_number: "",
         card_number: "",
         sheba_number: "",
       });
@@ -207,34 +192,16 @@ const columns = [
   { accessorKey: "bank_name", header: "بانک" },
   { accessorKey: "card_holder_name", header: "نام دارنده" },
   {
-    accessorKey: "account_number",
-    header: "شماره حساب",
-    cell: ({ row }) =>
-      h(
-        "div",
-        { style: "direction:ltr !important;" },
-        row.original.account_number
-      ),
-  },
-  {
     accessorKey: "card_number",
     header: "شماره کارت",
     cell: ({ row }) =>
-      h(
-        "div",
-        { style: "direction:ltr !important;" },
-        row.original.card_number
-      ),
+      h("div", { style: "direction:ltr !important;" }, row.original.card_number),
   },
   {
     accessorKey: "sheba_number",
     header: "شماره شبا",
     cell: ({ row }) =>
-      h(
-        "div",
-        { style: "direction:ltr !important;" },
-        row.original.sheba_number
-      ),
+      h("div", { style: "direction:ltr !important;" }, row.original.sheba_number),
   },
   {
     id: "actions",

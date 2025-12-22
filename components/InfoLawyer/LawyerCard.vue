@@ -10,8 +10,7 @@
                 class="size-[74px]"
                 :show="show"
                 position="bottom-right"
-                :ui="{ base: 'bg-blue-400 size-3 right-[10%]' }"
-              >
+                :ui="{ base: 'bg-blue-400 size-3 right-[10%]' }">
                 <UAvatar
                   class="size-full"
                   :src="
@@ -19,21 +18,16 @@
                       ? config.public.imageBase + avatar
                       : '/images/null-avatar.png'
                   "
-                  :ui="{ image: 'object-[50%_0%]' }"
-                />
+                  :alt="fullname"
+                  :ui="{ image: 'object-[50%_0%]' }" />
               </UChip>
             </div>
             <div class="person-detail w-full">
-              <div
-                class="fullname font-semibold flex justify-between lg:justify-start lg:gap-2"
-              >
+              <h1
+                class="fullname font-semibold flex justify-between lg:justify-start lg:gap-2">
                 {{ fullname }}
-                <UICBadge
-                  v-if="active"
-                  value="فعال"
-                  icon="mynaui:clock-square-solid"
-                />
-              </div>
+                <UICBadge v-if="active" value="فعال" icon="mynaui:clock-square-solid" />
+              </h1>
               <div class="education">{{ education }}</div>
               <!-- <div class="experience">
                 تجربه: {{ experience !== null ? experience : 0 }} سال
@@ -46,8 +40,7 @@
                 variant="yellow"
                 icon-size="text-[14px]!"
                 :value="rate"
-                icon="ic:round-star"
-              />
+                icon="ic:round-star" />
               <!-- <UICBadge
               :value="`${visit} مشاوره آنلاین`"
               icon="solar:chat-dots-bold"
@@ -55,12 +48,15 @@
               <UICBadge
                 variant="gray"
                 :value="city || 'ثبت نشده'"
-                icon="material-symbols:location-on-rounded"
-              />
+                icon="material-symbols:location-on-rounded" />
             </div>
             <div class="buttons flex gap-2">
               <UICMainBtn
-                @click="navigateTo(`/lawyer/${$route.params.id}#comment`)"
+                @click="
+                  navigateTo(
+                    `/lawyer/${$route.params.id}/${fullname.trim().replace(/\s+/g, '-')}`
+                  )
+                "
                 >دیدگاه دیگران</UICMainBtn
               >
               <UICMainBtn @click="shareContent">اشتراک گذاری</UICMainBtn>
@@ -71,9 +67,7 @@
           <div class="mb-3">تخصص های من :</div>
           <div class="flex flex-wrap gap-4">
             <div class="" v-for="s in spc" :key="s">
-              <UICBadge
-                :value="'# ' + filterStore?.lawyerSpecialties[s]?.title"
-              />
+              <UICBadge :value="'# ' + filterStore?.lawyerSpecialties[s]?.title" />
             </div>
           </div>
         </div>

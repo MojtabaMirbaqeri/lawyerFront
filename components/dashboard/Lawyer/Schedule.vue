@@ -14,6 +14,14 @@
 
       <section>
         <USkeleton class="h-8 w-48 mb-6" />
+        <div class="space-y-3">
+          <USkeleton v-for="i in 3" :key="i" class="h-10 w-full max-w-[400px]" />
+        </div>
+        <USkeleton class="h-10 w-40 mt-4" />
+      </section>
+
+      <section>
+        <USkeleton class="h-8 w-48 mb-6" />
         <div class="space-y-2">
           <USkeleton v-for="i in 6" :key="i" class="h-12 w-full rounded-lg" />
         </div>
@@ -53,7 +61,7 @@
               name="address"
               label="آدرس محل کار"
               custom-class="md:col-span-3" />
-            <UICInput v-model="workplaceState.phone" name="phone" label="تلفن ثابت" />
+            <UICInput v-model="workplaceState.phone" name="phone" label="تلفن ثابت (اختیاری)" />
             <UICInput
               v-model="workplaceState.emergency_phone"
               name="emergency_phone"
@@ -70,7 +78,57 @@
         <UICDataTable class="mt-6" :columns="workplaceColumns" :data="workplacesList" />
       </section>
 
-      <hr class="text-gray-200" />
+      <hr class="text-gray-200" >
+
+      <section>
+        <h2 class="text-xl font-bold mb-4 pb-2 border-b border-gray-200">
+          قیمت گذاری مشاوره
+        </h2>
+        <UForm class="ds-form" @submit="onPricingSubmit">
+          <div class="w-full lg:max-w-[400px] space-y-4">
+            <div class="space-y-1">
+              <UICInput
+                :model-value="pricingDisplay.phone"
+                name="phone"
+                placeholder="قیمت مشاوره تلفنی (تومان)"
+                label="قیمت مشاوره تلفنی (تومان)"
+                @update:model-value="(val) => handlePriceInput('phone', val)" />
+              <p v-if="pricingDisplay.phone" class="text-xs text-gray-600 pr-1">
+                {{ numberToWords(pricingDisplay.phone) }}
+              </p>
+            </div>
+            <div class="space-y-1">
+              <UICInput
+                :model-value="pricingDisplay.chat"
+                name="chat"
+                placeholder="قیمت مشاوره چت آنلاین (تومان)"
+                label="قیمت مشاوره چت آنلاین (تومان)"
+                @update:model-value="(val) => handlePriceInput('chat', val)" />
+              <p v-if="pricingDisplay.chat" class="text-xs text-gray-600 pr-1">
+                {{ numberToWords(pricingDisplay.chat) }}
+              </p>
+            </div>
+            <div class="space-y-1">
+              <UICInput
+                :model-value="pricingDisplay.inperson"
+                name="inperson"
+                placeholder="قیمت مشاوره حضوری (تومان)"
+                label="قیمت مشاوره حضوری (تومان)"
+                @update:model-value="(val) => handlePriceInput('inperson', val)" />
+              <p v-if="pricingDisplay.inperson" class="text-xs text-gray-600 pr-1">
+                {{ numberToWords(pricingDisplay.inperson) }}
+              </p>
+            </div>
+          </div>
+          <UICSecondaryBtn
+            type="submit"
+            :disabled="isPricingLoading || !hasPricingChanges">
+            {{ isPricingLoading ? "در حال ثبت..." : "ثبت قیمت‌ها" }}
+          </UICSecondaryBtn>
+        </UForm>
+      </section>
+
+      <hr class="text-gray-200" >
 
       <section>
         <h2 class="text-xl font-bold mb-4 pb-2 border-b border-gray-200">
@@ -86,46 +144,29 @@
                 v-for="(day, index) in weeklyScheduleState"
                 :key="day.day_of_week"
                 v-slot:[day.slot]>
-                <div class="p-4 space-y-6 bg-gray-50/50">
+                <div class="p-4 space-y-4 bg-gray-50/50">
                   <div
                     v-for="type in consultationTypes"
                     :key="type.key"
-                    class="grid grid-cols-12 items-center gap-4">
-                    <div class="col-span-12 sm:col-span-3 flex items-center gap-x-3">
+                    class="space-y-3">
+                    <div class="flex items-center gap-x-3">
                       <USwitch
                         v-model="
                           weeklyScheduleState[index].schedules[type.key].enabled
                         " />
                       <label class="font-medium">{{ type.label }}</label>
                     </div>
-                    <div
-                      class="col-span-12 sm:col-span-9 grid grid-cols-2 gap-4"
-                      :class="{
-                        'opacity-50 pointer-events-none':
-                          !day.schedules[type.key].enabled,
-                      }">
-                      <UICInput
-                        :label="`ساعت شروع`"
-                        :name="`[${index}].schedules.${type.key}.start_time`">
-                        <template #input>
-                          <UInput
-                            v-model="
-                              weeklyScheduleState[index].schedules[type.key].start_time
-                            "
-                            type="time" />
-                        </template>
-                      </UICInput>
-                      <UICInput
-                        :label="`ساعت پایان`"
-                        :name="`[${index}].schedules.${type.key}.end_time`">
-                        <template #input>
-                          <UInput
-                            v-model="
-                              weeklyScheduleState[index].schedules[type.key].end_time
-                            "
-                            type="time" />
-                        </template>
-                      </UICInput>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pr-9">
+                      <UICTimePicker
+                        v-model="
+                          weeklyScheduleState[index].schedules[type.key].start_time
+                        "
+                        label="ساعت شروع"
+                        :disabled="!day.schedules[type.key].enabled" />
+                      <UICTimePicker
+                        v-model="weeklyScheduleState[index].schedules[type.key].end_time"
+                        label="ساعت پایان"
+                        :disabled="!day.schedules[type.key].enabled" />
                     </div>
                   </div>
                 </div>
@@ -145,16 +186,26 @@
 </template>
 
 <script setup>
-import { ref, reactive, h, resolveComponent, watch, computed } from "vue";
-import { object, string, number, array, boolean } from "yup";
+import { ref, reactive, h, resolveComponent, watch, computed, inject } from "vue";
+import { object, string, array, boolean } from "yup";
 
 // -- کامپوننت‌های لازم برای جدول --
 const UButton = resolveComponent("UButton");
 const UDropdownMenu = resolveComponent("UDropdownMenu");
 
+// -- Props --
+const props = defineProps({
+  lawyerInformation: {
+    type: Object,
+    required: true,
+  },
+});
+
 // -- متغیرهای State --
 const toast = useToast();
+const reFetchLawyer = inject("reFetchLawyerInformation");
 const isInitialLoading = ref(true);
+const { formatNumber, parseNumber, numberToWords } = useNumberFormat();
 
 // -- State بخش محل کار --
 const workplacesList = ref([]);
@@ -187,6 +238,41 @@ const consultationTypes = [
   { key: "phone", label: "مشاوره تلفنی" },
   { key: "chat", label: "مشاوره چت" },
 ];
+
+// -- State بخش قیمت گذاری --
+const pricingState = reactive({
+  phone: props.lawyerInformation.consultation_price_phone || "",
+  chat: props.lawyerInformation.consultation_price_chat || "",
+  inperson: props.lawyerInformation.consultation_price_inperson || "",
+});
+const initialPricingState = reactive({
+  phone: props.lawyerInformation.consultation_price_phone || "",
+  chat: props.lawyerInformation.consultation_price_chat || "",
+  inperson: props.lawyerInformation.consultation_price_inperson || "",
+});
+const isPricingLoading = ref(false);
+
+// Display values با فرمت سه رقمی
+const pricingDisplay = reactive({
+  phone: formatNumber(props.lawyerInformation.consultation_price_phone || ""),
+  chat: formatNumber(props.lawyerInformation.consultation_price_chat || ""),
+  inperson: formatNumber(props.lawyerInformation.consultation_price_inperson || ""),
+});
+
+const hasPricingChanges = computed(() => {
+  return (
+    pricingState.phone !== initialPricingState.phone ||
+    pricingState.chat !== initialPricingState.chat ||
+    pricingState.inperson !== initialPricingState.inperson
+  );
+});
+
+// هندلر برای فرمت کردن اعداد
+const handlePriceInput = (field, value) => {
+  const formatted = formatNumber(value);
+  pricingDisplay[field] = formatted;
+  pricingState[field] = parseNumber(formatted);
+};
 
 // -- منطق Fetch اولیه داده‌ها --
 async function fetchInitialData() {
@@ -305,9 +391,47 @@ const workplaceSchema = object({
   province_id: string().required("استان الزامی است"),
   city_id: string().required("شهر الزامی است"),
   address: string().required("آدرس الزامی است"),
-  phone: string().required("تلفن ثابت الزامی است"),
   emergency_phone: string(),
 });
+
+// ======== بخش قیمت گذاری ========
+async function onPricingSubmit() {
+  isPricingLoading.value = true;
+
+  const formDataToSend = new FormData();
+  formDataToSend.append("consultation_price_phone", pricingState.phone);
+  formDataToSend.append("consultation_price_chat", pricingState.chat);
+  formDataToSend.append("consultation_price_inperson", pricingState.inperson);
+
+  try {
+    const res = await usePost({
+      url: "lawyers/updateProfile",
+      includeAuthHeader: true,
+      body: formDataToSend,
+    });
+
+    if (res.statusCode == 200) {
+      toast.add({
+        description: "قیمت‌ها با موفقیت به‌روزرسانی شد.",
+        color: "success",
+      });
+
+      // آپدیت initial values
+      initialPricingState.phone = pricingState.phone;
+      initialPricingState.chat = pricingState.chat;
+      initialPricingState.inperson = pricingState.inperson;
+
+      await reFetchLawyer();
+    } else {
+      toast.add({ description: "خطا در به‌روزرسانی قیمت‌ها.", color: "error" });
+    }
+  } catch (err) {
+    console.error("Pricing submit error:", err);
+    toast.add({ description: "خطای سرور.", color: "error" });
+  } finally {
+    isPricingLoading.value = false;
+  }
+}
 
 async function onWorkplaceSubmit(event) {
   isWorkplaceLoading.value = true;

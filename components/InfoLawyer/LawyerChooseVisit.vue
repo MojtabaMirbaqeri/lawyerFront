@@ -18,7 +18,7 @@
       <div class="boxes">
         <InfoLawyerVisitBoxes v-model="activeBtn" :items="items" />
       </div>
-      <div class="sidebar-btn">
+      <div class="sidebar-btn p-5 lg:p-0">
         <div class="choosed-visit flex justify-between">
           <div class="title">{{ items[activeBtn-1]?.title }}</div>
           <div class="price">{{ items[activeBtn-1]?.price }}</div>

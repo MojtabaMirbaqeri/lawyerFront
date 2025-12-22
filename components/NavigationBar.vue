@@ -17,11 +17,12 @@
             side: 'bottom',
           }"
           :arrow="true"
+          :open-delay="0"
           mode="hover">
           <span @click="navigateTo('/#lawyers')"> لیست وکلا </span>
 
           <template #content>
-            <div class="lawyers-popover">
+            <div class="lawyers-popover" @click="lawyersPopoverVisiblity = false">
               <div class="space-y-1.5">
                 <h2 class="font-semibold">استان ها</h2>
                 <hr class="text-gray-200" />
@@ -209,12 +210,7 @@ onMounted(async () => {
     specialties.value = filtersStore.lawyerSpecialties.map((s) => ({
       label: s.title,
       id: String(s.id),
-      onSelect() {
-        filtersStore.clearFilters();
-        navigateTo("/");
-        filtersStore.selectedFilters.lawyerSpecialty = s.id;
-        lawyersPopoverVisiblity.value = false;
-      },
+      to: `/specialties/${encodeURIComponent(s.title.replace(/\s+/g, "-"))}`,
     }));
 
     const lawyersMenu = menuItems.value[0].find((item) => item.label === "لیست وکلا");
@@ -236,18 +232,12 @@ onMounted(async () => {
     }
 
     // 🔹 لود استان‌ها
-    const provincesRes = await fetch("/provinces.json");
-    const rawProvinces = await provincesRes.json();
+    const rawProvinces = await $fetch("/provinces.json");
 
     provinces.value = (rawProvinces || []).map((province) => ({
       label: province.name,
       id: String(province.id),
-      onSelect() {
-        filtersStore.clearFilters();
-        navigateTo("/");
-        filtersStore.setProvince(province.id);
-        lawyersPopoverVisiblity.value = false;
-      },
+      to: `/provinces/${province.en_name}`,
     }));
 
     // بخش استان ها

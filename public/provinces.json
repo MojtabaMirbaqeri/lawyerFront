@@ -2,156 +2,187 @@
     {
         "id": 1,
         "name": "آذربایجان شرقی",
+        "en_name": "east-azerbaijan",
         "amar_code": "3"
     },
     {
         "id": 2,
         "name": "آذربایجان غربی",
+        "en_name": "west-azerbaijan",
         "amar_code": "4"
     },
     {
         "id": 3,
         "name": "اردبیل",
+        "en_name": "ardabil",
         "amar_code": "24"
     },
     {
         "id": 4,
         "name": "اصفهان",
+        "en_name": "isfahan",
         "amar_code": "10"
     },
     {
         "id": 5,
         "name": "البرز",
+        "en_name": "alborz",
         "amar_code": "30"
     },
     {
         "id": 6,
         "name": "ایلام",
+        "en_name": "ilam",
         "amar_code": "16"
     },
     {
         "id": 7,
         "name": "بوشهر",
+        "en_name": "bushehr",
         "amar_code": "18"
     },
     {
         "id": 8,
         "name": "تهران",
+        "en_name": "tehran",
         "amar_code": "23"
     },
     {
         "id": 9,
         "name": "چهارمحال وبختیاری",
+        "en_name": "chaharmahal-bakhtiari",
         "amar_code": "14"
     },
     {
         "id": 10,
         "name": "خراسان جنوبی",
+        "en_name": "south-khorasan",
         "amar_code": "29"
     },
     {
         "id": 11,
         "name": "خراسان رضوی",
+        "en_name": "razavi-khorasan",
         "amar_code": "9"
     },
     {
         "id": 12,
         "name": "خراسان شمالی",
+        "en_name": "north-khorasan",
         "amar_code": "28"
     },
     {
         "id": 13,
         "name": "خوزستان",
+        "en_name": "khuzestan",
         "amar_code": "6"
     },
     {
         "id": 14,
         "name": "زنجان",
+        "en_name": "zanjan",
         "amar_code": "19"
     },
     {
         "id": 15,
         "name": "سمنان",
+        "en_name": "semnan",
         "amar_code": "20"
     },
     {
         "id": 16,
         "name": "سیستان وبلوچستان",
+        "en_name": "sistan-baluchestan",
         "amar_code": "11"
     },
     {
         "id": 17,
         "name": "فارس",
+        "en_name": "fars",
         "amar_code": "7"
     },
     {
         "id": 18,
         "name": "قزوین",
+        "en_name": "qazvin",
         "amar_code": "26"
     },
     {
         "id": 19,
         "name": "قم",
+        "en_name": "qom",
         "amar_code": "25"
     },
     {
         "id": 20,
         "name": "کردستان",
+        "en_name": "kurdistan",
         "amar_code": "12"
     },
     {
         "id": 21,
         "name": "کرمان",
+        "en_name": "kerman",
         "amar_code": "8"
     },
     {
         "id": 22,
         "name": "کرمانشاه",
+        "en_name": "kermanshah",
         "amar_code": "5"
     },
     {
         "id": 23,
         "name": "کهگیلویه وبویراحمد",
+        "en_name": "kohgiluyeh-boyer-ahmad",
         "amar_code": "17"
     },
     {
         "id": 24,
         "name": "گلستان",
+        "en_name": "golestan",
         "amar_code": "27"
     },
     {
         "id": 25,
         "name": "گیلان",
+        "en_name": "gilan",
         "amar_code": "1"
     },
     {
         "id": 26,
         "name": "لرستان",
+        "en_name": "lorestan",
         "amar_code": "15"
     },
     {
         "id": 27,
         "name": "مازندران",
+        "en_name": "mazandaran",
         "amar_code": "2"
     },
     {
         "id": 28,
         "name": "مرکزی",
+        "en_name": "markazi",
         "amar_code": "0"
     },
     {
         "id": 29,
         "name": "هرمزگان",
+        "en_name": "hormozgan",
         "amar_code": "22"
     },
     {
         "id": 30,
         "name": "همدان",
+        "en_name": "hamadan",
         "amar_code": "13"
     },
     {
         "id": 31,
         "name": "یزد",
+        "en_name": "yazd",
         "amar_code": "21"
     }
 ]

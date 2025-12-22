@@ -46,7 +46,7 @@
                   }" />
               </template>
             </UInput>
-  
+
             <!-- Suggest Box -->
             <Transition name="fade">
               <div v-if="showSuggestBox" class="suggest-box text-secondary">
@@ -54,7 +54,7 @@
                 <div v-if="loading" class="space-y-2">
                   <USkeleton v-for="i in 3" :key="i" class="h-20 w-full rounded-xl" />
                 </div>
-  
+
                 <!-- Lawyers list -->
                 <div
                   v-else-if="lawyers?.length"
@@ -62,7 +62,9 @@
                   <NuxtLink
                     v-for="lawyer in lawyers"
                     :key="lawyer.id"
-                    :to="`/lawyer/${lawyer.id}`">
+                    :to="`/lawyer/${lawyer.id}/${(lawyer.name + ' ' + lawyer.family)
+                      .trim()
+                      .replace(/\s+/g, '-')}`">
                     <LawyerProfile
                       class="border border-gray-200 p-3 rounded-xl"
                       :information="{
@@ -102,7 +104,7 @@
             </Transition>
           </div>
         </div>
-  
+
         <div class="space-y-1.5">
           <div class="latest-visit">
             <UIcon name="ic:round-access-alarms" class="size-4!" />
@@ -110,12 +112,17 @@
           </div>
           <p class="text-sm text-red-500">آخرین مشاوره دریافت شده در تخصص ثبت اسناد</p>
         </div>
-        <div class="p-2 cursor-pointer flex custom-bounce" @click="navigateTo('#lawyers')">
+        <div
+          class="p-2 cursor-pointer flex custom-bounce"
+          @click="navigateTo('#lawyers')">
           <UIcon name="proicons:chevron-down" class="size-6! text-[#1B1893]" />
         </div>
       </div>
       <div class="w-[40%] hidden lg:block">
-        <img src="/images/vector-lawyer.webp" alt="header-image" class="w-full h-full object-cover">
+        <img
+          src="/images/vector-lawyer.webp"
+          alt="header-image"
+          class="w-full h-full object-cover" />
       </div>
     </div>
   </header>

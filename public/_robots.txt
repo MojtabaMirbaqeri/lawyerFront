@@ -1,0 +1,23 @@
+# robots.txt for Vakil Vakil
+
+# Allow all search engines
+User-agent: *
+Allow: /
+
+# Disallow private areas
+Disallow: /dashboard
+Disallow: /dashboard/*
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /api
+
+# Allow important pages
+Allow: /lawyer/*
+Allow: /provinces/*
+Allow: /specialties/*
+
+# Crawl-delay (optional, prevents overwhelming server)
+# Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://vakilvakil.com/sitemap.xml

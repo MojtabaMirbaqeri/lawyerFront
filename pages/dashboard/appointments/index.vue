@@ -320,7 +320,7 @@
 				label: "نوبت مجدد",
 				icon: "solar:clock-circle-linear",
 				onSelect() {
-					navigateTo(`/lawyer/${row.original.lawyerId}`);
+					navigateTo(`/lawyer/${row.original.lawyerId}/${row.original.lawyer.trim().replace(/\s+/g, '-')}`);
 				},
 			});
 		}

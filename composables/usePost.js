@@ -28,12 +28,12 @@ export async function usePost(
       pending: false,
     };
   } catch (error) {
-    if(error.status == 500){
-		useToast().add({
-          color: "error",
-          description: "خطای فنی رخ داده است.",
-        });
-	}
+    if (error.status == 500) {
+      useToast().add({
+        color: "error",
+        description: "خطای فنی رخ داده است.",
+      });
+    }
     const rawMessage =
       error?.data?.data?.errors ||
       error?.data?.message ||
@@ -57,7 +57,7 @@ export async function usePost(
           }
         });
 
-        errorMessage = messages.join(" ");
+        errorMessage = messages[0];
       }
     }
 
