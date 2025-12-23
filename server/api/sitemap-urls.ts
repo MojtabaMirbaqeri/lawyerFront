@@ -41,105 +41,54 @@ export default defineEventHandler(async (event) => {
     console.error("Sitemap: Failed to fetch specialties", e);
   }
 
-  // 3. Add Lawyers
-  const fetchLawyersPage = async (page: number) => {
-    try {
-      // Using a smaller per_page to avoid timeouts, but large enough to be efficient.
-      // 100 items * 1200 pages = 120,000 records.
-      const response = await $fetch<any>(`${apiEndpoint}lawyers`, {
-        query: {
-          page: page,
-          per_page: 50,
-        },
-        retry: 3, // Nuxt 3 fetch retry
-        retryDelay: 1000,
-      });
-      return response;
-    } catch (e) {
-      console.error(`Failed to fetch lawyers page ${page}`, e);
-      return null;
-    }
-  };
-
-  const processLawyers = (lawyers: any[]) => {
-    // DEBUG: Check raw data format for the first item
-    if (lawyers.length > 0) {
-      console.log("DEBUG RAW LAWYER DATA:", {
-        id: lawyers[0].id,
-        name: lawyers[0].lawyer_info?.name,
-        family: lawyers[0].lawyer_info?.family,
-      });
-    }
-
-    return lawyers.map((l) => {
-      const name = l.lawyer_info?.name || "";
-      const family = l.lawyer_info?.family || "";
-      const fullname = `${name} ${family}`.trim().replace(/\s+/g, "-").replace(/%/g, "");
-
-      // Construct URL: /lawyer/ID/Slug (No manual encoding needed, sitemap module handles it)
-      return {
-        loc: `/lawyer/${l.id}/${fullname}`,
-        // parsing date safely
-        lastmod: l.updated_at
-          ? new Date(l.updated_at).toISOString()
-          : new Date().toISOString(),
-        changefreq: "weekly",
-        priority: 0.9,
-      };
-    });
-  };
-
+  // 3. Add Lawyers (From Local JSON Files)
   try {
-    // Fetch first page to determine total pages
-    const firstPage = await fetchLawyersPage(1);
-    if (!firstPage || !firstPage.data) return urls;
+    const fs = await import("node:fs");
+    const path = await import("node:path");
 
-    // Add first page lawyers
-    urls.push(...processLawyers(firstPage.data));
+    // We have 4 parts: lawyers_part_1.json to lawyers_part_4.json
+    const fileNames = [
+      "lawyers_part_1.json",
+      "lawyers_part_2.json",
+      "lawyers_part_3.json",
+      "lawyers_part_4.json",
+    ];
 
-    const total = firstPage.meta?.total || firstPage.total || 0;
-    const perPage = firstPage.meta?.per_page || firstPage.per_page || 50;
-    const lastPage = firstPage.meta?.last_page || Math.ceil(total / perPage);
+    for (const fileName of fileNames) {
+      const filePath = path.join(process.cwd(), "public", "lawyers", fileName);
 
-    console.log(
-      `Sitemap: Found ${total} lawyers. Fetching remaining ${lastPage - 1} pages...`
-    );
+      if (fs.existsSync(filePath)) {
+        // Read and parse the file synchronously (it's fast enough for 4 files)
+        const fileContent = fs.readFileSync(filePath, "utf-8");
+        const lawyersList = JSON.parse(fileContent);
 
-    // Fetch remaining pages in batches to control concurrency
-    const BATCH_SIZE = 10;
-    // In Development, limit to 5 pages (250 lawyers) to avoid long waits
-    const maxPages = import.meta.dev ? Math.min(6, lastPage) : lastPage;
+        if (Array.isArray(lawyersList)) {
+          lawyersList.forEach((l: any) => {
+            // Data shape: { id, first_name, last_name }
+            const name = l.first_name || "";
+            const family = l.last_name || "";
+            const fullname = `${name} ${family}`
+              .trim()
+              .replace(/\s+/g, "-")
+              .replace(/%/g, "");
 
-    for (let i = 2; i <= maxPages; i += BATCH_SIZE) {
-      const batchPromises = [];
-      const end = Math.min(i + BATCH_SIZE - 1, maxPages);
-
-      for (let j = i; j <= end; j++) {
-        batchPromises.push(fetchLawyersPage(j));
-      }
-
-      const results = await Promise.all(batchPromises);
-
-      results.forEach((res) => {
-        if (res && res.data) {
-          urls.push(...processLawyers(res.data));
+            urls.push({
+              loc: `/lawyer/${l.id}/${fullname}`,
+              changefreq: "weekly",
+              priority: 0.9,
+              // File doesn't have date, use current date or omit lastmod to save bytes
+              // lastmod: new Date().toISOString()
+            });
+          });
         }
-      });
-
-      // Log progress every 5 batches (50 pages)
-      const batchIndex = Math.floor((i - 2) / BATCH_SIZE);
-      if (batchIndex % 5 === 0) {
-        console.log(
-          `Sitemap: Processed pages ${i} to ${Math.min(
-            i + BATCH_SIZE - 1,
-            lastPage
-          )} (${Math.round((i / lastPage) * 100)}%)`
-        );
+      } else {
+        console.warn(`Sitemap: File not found ${filePath}`);
       }
     }
-  } catch (error) {
-    console.error("Sitemap: Generic error generating lawyer urls", error);
+  } catch (e) {
+    console.error("Sitemap: Failed to read lawyer json files", e);
   }
 
+  // Remove API fetching logic
   return urls;
 });
