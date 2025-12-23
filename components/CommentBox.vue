@@ -5,15 +5,13 @@
         :detail="{
           name: `${commentDetail?.user?.name} ${commentDetail?.user?.family}`,
           text: 'مراجعه کننده:',
-        }"
-      />
+        }" />
       <div class="badge-group">
         <UICBadge
           variant="yellow"
           icon-size="size-5!"
           :value="4.8"
-          icon="ic:round-star"
-        />
+          icon="ic:round-star" />
         <UICBadge variant="gray" :value="commentDetail?.created_at_formatted" />
       </div>
     </div>
@@ -31,8 +29,7 @@
               label="مشاهده ی بیشتر"
               color="primary"
               variant="link"
-              class="underline p-0 ps-1 cursor-pointer"
-            />
+              class="underline p-0 ps-1 cursor-pointer" />
           </template>
           <template #default>
             {{ commentDetail?.comment }}
@@ -45,11 +42,8 @@
       <NuxtLink :to="`lawyer/${commentDetail?.lawyer?.id}`">
         <div class="lawyer-tag">
           <NuxtImg
-            :src="
-              commentDetail?.lawyer.profile_image || '/images/null-avatar.png'
-            "
-            class="lawyer-avatar"
-          />
+            :src="commentDetail?.lawyer.profile_image || '/images/nullavatar.png'"
+            class="lawyer-avatar" />
           {{ commentDetail?.lawyer.full_name }}
         </div>
       </NuxtLink>

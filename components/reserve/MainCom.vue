@@ -38,29 +38,28 @@
             </p>
 
             <UFileUpload
-            v-model="fileModel"
-            label="پیوست فایل"
-            multiple
-            :ui="{
-              wrapper: 'flex-row items-center w-[140px]! py-[6px] px-[10px]',
-              base: 'p-0 w-[140px]!',
-              avatar: 'bg-transparent scale-[1.2]',
-              label: 'm-0',
-              root: '',
-              fileName: 'hidden lg:block',
-              file: 'w-fit gap-1',
-              fileSize: 'hidden lg:block',
-              files: 'flex-row items-start flex-wrap',
-            }"
-            icon="line-md:uploading-loop"
-            variant="button"
-            :disabled="fileModel.length === 4"
-            position="outside"
-            accept="image/*,.pdf,.txt,.xlsx,.docs" 
-            class="me-auto"
-            layout="list"
-          >
-          </UFileUpload>
+              v-model="fileModel"
+              label="پیوست فایل"
+              multiple
+              :ui="{
+                wrapper: 'flex-row items-center w-[140px]! py-[6px] px-[10px]',
+                base: 'p-0 w-[140px]!',
+                avatar: 'bg-transparent scale-[1.2]',
+                label: 'm-0',
+                root: '',
+                fileName: 'hidden lg:block',
+                file: 'w-fit gap-1',
+                fileSize: 'hidden lg:block',
+                files: 'flex-row items-start flex-wrap',
+              }"
+              icon="line-md:uploading-loop"
+              variant="button"
+              :disabled="fileModel.length === 4"
+              position="outside"
+              accept="image/*,.pdf,.txt,.xlsx,.docs"
+              class="me-auto"
+              layout="list">
+            </UFileUpload>
           </div>
         </div>
         <div v-if="step === 2" class="step2 flex flex-col gap-3">
@@ -80,7 +79,7 @@
       </div>
       <div class="left sticky z-10 flex-col gap-3 top-[90px] lg:w-[350px] shrink-0 flex">
         <UICProfileDetail
-          src="/images/null-avatar.png"
+          src="/images/nullavatar.png"
           :fullname="`${lawyer.name} ${lawyer.family}`"
           skill="وکیل پایه یک دادگستری"
           :active-day="activeDay"
@@ -263,7 +262,7 @@ onMounted(() => {
 watch(
   () => deftime.value,
   (newVal) => {
-    console.log(newVal)
+    console.log(newVal);
     if (step.value === 1) {
       detailPrice.value = useCalculatePrice(newVal, basePrice);
     }
@@ -307,7 +306,10 @@ function generateDateButtons() {
     const iso = date.toISOString().split("T")[0];
     const weekdayIndex = getShamsiWeekdayIndex(date);
     const isHoliday = holidayDates.value.includes(iso) || weekdayIndex === 6;
-    const isWorkingDay = Object.prototype.hasOwnProperty.call(availableDays, weekdayIndex);
+    const isWorkingDay = Object.prototype.hasOwnProperty.call(
+      availableDays,
+      weekdayIndex
+    );
 
     dateButtons.value.push({
       iso,
@@ -346,18 +348,18 @@ const timeSlots = computed(() => {
   const today = new Date();
   const todayISO = today.toISOString().split("T")[0];
   const isToday = selectedDate.value === todayISO;
-  
+
   // ساعت و دقیقه فعلی به دقیقه تبدیل می‌شود
   const currentMinutes = isToday ? today.getHours() * 60 + today.getMinutes() : 0;
 
   for (let start = startTime; start + selectedDuration.value <= endTime; start += 30) {
     const end = start + selectedDuration.value;
-    
+
     // اگر امروز است و ساعت شروع نوبت گذشته، نمایش نده
     if (isToday && start <= currentMinutes) {
       continue;
     }
-    
+
     const isFree = !bookings.value.some(
       (b) => b.date === selectedDate.value && overlap(start, end, b.start, b.end)
     );

@@ -16,7 +16,7 @@
                   :src="
                     avatar !== null
                       ? config.public.imageBase + avatar
-                      : '/images/null-avatar.png'
+                      : '/images/nullavatar.png'
                   "
                   :alt="fullname"
                   :ui="{ image: 'object-[50%_0%]' }" />

@@ -4,7 +4,7 @@
       <div class="flex gap-3 items-center">
         <div class="relative">
           <NuxtImg
-            :src="profileImagePreview || '/images/null-avatar.png'"
+            :src="profileImagePreview || '/images/nullavatar.png'"
             class="size-14 lg:size-16 rounded-full" />
         </div>
         <div>

@@ -14,7 +14,7 @@
               ? `${useRuntimeConfig().public.imageBase}${
                   information.lawyer_info.profile_image
                 }`
-              : '/images/null-avatar.png'
+              : '/images/nullavatar.png'
           "
           :ui="{
             image: 'object-[50%_0%]',
