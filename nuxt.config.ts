@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     routeRules: {
       "/api/sitemap-urls": { swr: 86400 },
       "/sitemap.xml": { swr: 86400 },
+      "/sitemap_index.xml": { swr: 86400 }, // Add explicit rule for index
       "/sitemap-*.xml.gz": { swr: 86400 },
     },
   },
