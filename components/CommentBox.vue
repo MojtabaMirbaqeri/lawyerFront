@@ -42,9 +42,9 @@
       <NuxtLink :to="`lawyer/${commentDetail?.lawyer?.id}`">
         <div class="lawyer-tag">
           <NuxtImg
-            :src="commentDetail?.lawyer.profile_image || '/images/nullavatar.png'"
+            :src="commentDetail?.lawyer?.profile_image || '/images/nullavatar.png'"
             class="lawyer-avatar" />
-          {{ commentDetail?.lawyer.full_name }}
+          {{ commentDetail?.lawyer?.full_name }}
         </div>
       </NuxtLink>
     </div>

@@ -58,6 +58,11 @@ export default defineNuxtConfig({
     sources: ["/api/sitemap-urls"],
     sitemaps: true, // Enable multiple sitemaps for large datasets
     defaultSitemapsChunkSize: 1000, // Chunk size for each sitemap file
+    // Performance optimizations
+    cacheMaxAgeSeconds: 86400, // Cache for 1 day
+    // Only generate sitemap when GENERATE_SITEMAP env is set
+    enabled:
+      process.env.GENERATE_SITEMAP === "true" || process.env.NODE_ENV === "development",
   },
   site: {
     url: process.env.SITE_URL || "https://vakilvakil.ir",
