@@ -103,15 +103,6 @@
           <!-- Soft top accent (replaces harsh line) -->
           <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#1e3a5f]/25 to-transparent" />
           <!-- Vector: minimal document (گوشه کارت) -->
-          <svg
-            viewBox="0 0 48 56"
-            class="absolute top-4 end-4 w-14 h-auto text-[#1e3a5f]/[0.07] pointer-events-none"
-            aria-hidden="true"
-          >
-            <path d="M8 4 L40 4 L40 48 Q40 52 36 52 L12 52 Q8 52 8 48 Z" fill="none" stroke="currentColor" stroke-width="1.2" />
-            <line x1="14" y1="14" x2="34" y2="14" stroke="currentColor" stroke-width="0.8" opacity="0.6" />
-            <line x1="14" y1="22" x2="30" y2="22" stroke="currentColor" stroke-width="0.8" opacity="0.4" />
-          </svg>
           <div class="p-5 sm:p-6 md:p-8">
             <slot />
           </div>

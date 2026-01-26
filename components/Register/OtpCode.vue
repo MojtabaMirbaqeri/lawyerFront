@@ -8,7 +8,7 @@
       پیامک شد.
     </p>
 
-    <div class="otp-wrapper">
+    <div class="otp-wrapper flex justify-center">
       <UPinInput
         ref="otpInputRef"
         v-model="otpVal"
@@ -84,6 +84,8 @@ onMounted(async () => {
       input.setAttribute("type", "text");
       input.setAttribute("inputmode", "numeric");
       input.setAttribute("pattern", "[0-9]*");
+      input.style.direction = "ltr";
+      input.style.textAlign = "center";
     });
   });
 });
@@ -174,7 +176,15 @@ const otpHandle = async () => {
   direction: ltr;
 }
 
+.otp-wrapper :deep(.otp) {
+  display: flex;
+  justify-content: center;
+  direction: ltr !important;
+}
+
 .otp-wrapper :deep(input) {
   @apply rounded-xl border-2 border-slate-200 text-center text-lg font-semibold transition focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20;
+  direction: ltr !important;
+  text-align: center !important;
 }
 </style>
