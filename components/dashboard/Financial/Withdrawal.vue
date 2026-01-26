@@ -29,10 +29,10 @@
         <div class="space-y-1">
           <h2 class="text-xl font-bold">درخواست برداشت</h2>
           <div
-            class="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg"
+            class="flex items-center justify-between p-3 bg-[#f4f6fa] border border-[#d1d9e8] rounded-lg"
           >
             <span class="text-sm text-gray-600">موجودی:</span>
-            <span class="text-lg font-semibold text-blue-600 dark:text-blue-400"
+            <span class="text-lg font-semibold text-[#152a47] dark:text-[#2d5a87]"
               >{{ walletBalance.toLocaleString() }}
               <span class="text-sm">تومان</span></span
             >
@@ -103,7 +103,7 @@
                   </template>
                 </USelectMenu>
                 <UButton
-                  class="justify-center border border-blue-200 px-2.5"
+                  class="justify-center border border-[#d1d9e8] px-2.5"
                   icon="i-heroicons-plus"
                   variant="soft"
                   size="lg"

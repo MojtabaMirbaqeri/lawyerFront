@@ -83,7 +83,7 @@
           </div>
           <div class="rounded-xl border border-slate-200/80 bg-white/80 p-4 shadow-sm backdrop-blur-sm">
             <div class="flex items-center gap-3">
-              <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-primary">
+              <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#e8edf5] text-primary">
                 <UIcon name="hugeicons:calendar-03" class="size-5" />
               </div>
               <div>

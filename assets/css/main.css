@@ -345,17 +345,17 @@ html {
   }
 
   .ds-menu-item {
-    @apply py-2.5! px-3! lg:py-5! lg:px-4! overflow-clip rounded-md! relative hover:text-blue-500;
+    @apply py-2.5! px-3! lg:py-5! lg:px-4! overflow-clip rounded-md! relative hover:text-[#1e3a5f];
     transition: all 0.3s !important;
   }
 
   .ds-menu-item::before {
     content: " ";
-    @apply absolute h-[85%]! w-[9px] rounded-full bg-blue-500 translate-x-[calc(100%+1px)] start-0 transition-all duration-300;
+    @apply absolute h-[85%]! w-[9px] rounded-full bg-[#1e3a5f] translate-x-[calc(100%+1px)] start-0 transition-all duration-300;
   }
 
   .ds-menu-item.router-link-active {
-    @apply text-blue-500 bg-blue-100/80 before:bg-blue-500 before:translate-x-1/2!;
+    @apply text-[#1e3a5f] bg-[#e8edf5] before:bg-[#1e3a5f] before:translate-x-1/2!;
   }
 
   .ds-form {

@@ -311,7 +311,7 @@ watch(
 // آرایه‌ای از رنگ‌ها برای پس‌زمینه آواتارها
 const avatarColors = [
   "bg-red-500",
-  "bg-blue-500",
+  "bg-[#1e3a5f]",
   "bg-green-500",
   "bg-yellow-500",
   "bg-indigo-500",
@@ -619,7 +619,7 @@ const getFileIconColor = (file) => {
   if (file.localUrl) return "text-green-500";
   if (mime.includes("pdf")) return "text-red-500";
   if (mime.includes("word") || mime.includes("document"))
-    return "text-blue-500";
+    return "text-[#1e3a5f]";
   if (mime.includes("zip") || mime.includes("rar") || mime.includes("archive"))
     return "text-yellow-600";
   return "text-gray-500";
@@ -729,7 +729,7 @@ onUnmounted(() => {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 .chat-bubble.me .bubble-content {
-  @apply bg-blue-500;
+  @apply bg-[#1e3a5f];
   color: #fff;
   border-bottom-right-radius: 4px;
 }

@@ -60,7 +60,7 @@ console.log(authStore.user);
 @reference "tailwindcss";
 
 .left-message {
-  @apply ms-auto w-fit max-w-[80%] rounded-[8px] bg-blue-500 text-white py-3 px-4;
+  @apply ms-auto w-fit max-w-[80%] rounded-[8px] bg-[#1e3a5f] text-white py-3 px-4;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .right-message {

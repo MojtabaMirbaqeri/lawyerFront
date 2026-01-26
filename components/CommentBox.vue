@@ -76,7 +76,7 @@ defineProps({
 }
 
 .user-avatar {
-  @apply size-10 rounded-full bg-blue-100 relative shrink-0;
+  @apply size-10 rounded-full bg-[#e8edf5] relative shrink-0;
 }
 
 .user-info {
@@ -106,6 +106,6 @@ defineProps({
 }
 
 .lawyer-avatar {
-  @apply rounded-full size-7 shadow-[0_0_0_4px] shadow-blue-100;
+  @apply rounded-full size-7 shadow-[0_0_0_4px] shadow-[#e8edf5];
 }
 </style>
