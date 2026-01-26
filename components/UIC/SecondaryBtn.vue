@@ -31,7 +31,7 @@ const variantClasses = computed(() => {
     case "red":
       return "bg-transparent! border border-red-500 text-red-500!";
     default:
-      return "bg-blue-400 text-white";
+      return "bg-[#1e3a5f] text-white";
   }
 });
 </script>
