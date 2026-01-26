@@ -1,12 +1,13 @@
 <template>
-  <RegisterCardHeader title="آپلود مدارک" />
+  <div class="flex flex-col gap-6 w-full">
+    <RegisterCardHeader title="آپلود مدارک" />
 
-  <UForm
-    :schema="schema"
-    :state="state"
-    class="w-full space-y-7"
-    @submit="onSubmit"
-  >
+    <UForm
+      :schema="schema"
+      :state="state"
+      class="w-full space-y-6"
+      @submit="onSubmit"
+    >
     <UICInput
       v-model="state.IDCardPic"
       type="file"
@@ -50,11 +51,15 @@
         />
       </template>
     </UICInput>
-    <UICSecondaryBtn
-      type="submit"
-      :disabled="auth.loading"
-    > تایید </UICSecondaryBtn>
-  </UForm>
+      <UICSecondaryBtn
+        type="submit"
+        :disabled="auth.loading"
+        class="w-full rounded-xl h-12 text-base font-semibold bg-[#1e3a5f] hover:opacity-90 transition"
+      >
+        تأیید
+      </UICSecondaryBtn>
+    </UForm>
+  </div>
 </template>
 <script setup>
 import * as yup from "yup";

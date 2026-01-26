@@ -1,36 +1,42 @@
 <template>
-  <RegisterCardHeader title="اطلاعات تکمیلی" />
-  <UForm
-    :schema="currentSchema"
-    :state="state"
-    class="w-full space-y-6"
-    @submit="submit"
-  >
-    <UICInput v-model="state.name" name="name" label="نام" />
-    <UICInput v-model="state.lastName" name="lastName" label="نام خانوادگی" />
+  <div class="flex flex-col gap-6 w-full">
+    <RegisterCardHeader title="اطلاعات تکمیلی" />
+    <UForm
+      :schema="currentSchema"
+      :state="state"
+      class="w-full space-y-5"
+      @submit="submit"
+    >
+      <UICInput v-model="state.name" name="name" label="نام" />
+      <UICInput v-model="state.lastName" name="lastName" label="نام خانوادگی" />
 
-    <template v-if="userType === 'lawyer'">
-      <UICInput
-        v-model="state.nationalCode"
-        name="nationalCode"
-        label="کد ملی"
-      />
-      <UICInput
-        v-model="state.licenseNumber"
-        name="licenseNumber"
-        label="شماره پروانه"
-      />
-      <UICInput name="lawyerType" label="پایه">
-        <template #input>
-          <UICSelect v-model="state.lawyerType" :items="mappedTypes" />
-        </template>
-      </UICInput>
-    </template>
+      <template v-if="userType === 'lawyer'">
+        <UICInput
+          v-model="state.nationalCode"
+          name="nationalCode"
+          label="کد ملی"
+        />
+        <UICInput
+          v-model="state.licenseNumber"
+          name="licenseNumber"
+          label="شماره پروانه"
+        />
+        <UICInput name="lawyerType" label="پایه">
+          <template #input>
+            <UICSelect v-model="state.lawyerType" :items="mappedTypes" />
+          </template>
+        </UICInput>
+      </template>
 
-    <UICSecondaryBtn type="submit" :disabled="auth.loading">
-      تایید
-    </UICSecondaryBtn>
-  </UForm>
+      <UICSecondaryBtn
+        type="submit"
+        :disabled="auth.loading"
+        class="w-full rounded-xl h-12 text-base font-semibold bg-[#1e3a5f] hover:opacity-90 transition"
+      >
+        تأیید
+      </UICSecondaryBtn>
+    </UForm>
+  </div>
 </template>
 
 <script setup>

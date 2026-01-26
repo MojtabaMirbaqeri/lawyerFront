@@ -23,6 +23,6 @@ useHead({
 <style>
 @reference "tailwindcss";
 .steps-con .secondary-btn {
-  @apply w-full rounded-[8px]! justify-center h-[40px] sm:h-[46px];
+  @apply w-full justify-center;
 }
 </style>
