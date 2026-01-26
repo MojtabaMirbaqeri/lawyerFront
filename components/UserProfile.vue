@@ -3,7 +3,7 @@
     <div class="user-avatar">
       <UIcon
         name="hugeicons:user-circle-02"
-        class="size-6! absolute -translate-1/2 top-1/2 end-1/2 text-primary"
+        class="size-6! absolute -translate-1/2 top-1/2 end-1/2 text-[#1e3a5f]"
       />
     </div>
     <div

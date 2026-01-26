@@ -1,12 +1,12 @@
 <template>
   <div class="filters-con">
     <div class="header">
-      <UIcon name="system-uicons:filtering" class="size-6! text-primary" />
+      <UIcon name="system-uicons:filtering" class="size-6! text-[#1e3a5f]" />
       <h3>فیلتر ها</h3>
       <Transition name="page">
         <div
           v-if="filtersStore.hasActiveFilters"
-          class="text-blue-500 ms-auto me-1.5 cursor-pointer hover:text-blue-700 transition-colors"
+          class="text-[#1e3a5f] ms-auto me-1.5 cursor-pointer hover:opacity-80 transition-colors"
           @click="clearAllFilters">
           پاکسازی فیلتر ها
         </div>
@@ -43,7 +43,7 @@
               label-key="title"
               :ui="{
                 base: ' rounded-full w-full py-2.5 cursor-pointer',
-                leadingIcon: 'text-primary size-5!',
+                leadingIcon: 'text-[#1e3a5f] size-5!',
                 trailingIcon: 'size-5!',
               }"
               placeholder="تخصص مورد نظر خود را انتخاب کنید"
@@ -61,7 +61,7 @@
             <button
               v-for="id in filtersVal.lawyerSpecialty"
               :key="id"
-              class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm border border-blue-200"
+              class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#1e3a5f]/10 text-[#1e3a5f] text-sm border border-[#1e3a5f]/30"
               @click="removeSpecialty(id)">
               <UIcon name="hugeicons:cancel-01" class="size-4.5!" />
               <span>

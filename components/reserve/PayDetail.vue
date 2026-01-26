@@ -6,7 +6,7 @@
       <div class="flex flex-col gap-3">
         <div class="top">
           <div
-            class="bg-primary/10! flex flex-col gap-3 p-3 border rounded-[8px] text-primary border-primary!"
+            class="bg-[#1e3a5f]/10 flex flex-col gap-3 p-3 border rounded-[8px] text-[#1e3a5f] border-[#1e3a5f]"
           >
             <div class="tax flex justify-between">
               <div class="title">قیمت اصلی</div>
@@ -17,7 +17,7 @@
               <div class="price">{{ detailPrice.offerValue }} تومان</div>
             </div>
             <USeparator class="opacity-30" color="primary" />
-            <div class="top border-b border-primary/30 pb-2">
+            <div class="top border-b border-[#1e3a5f]/30 pb-2">
               <div class="tax flex justify-between">
                 <div class="title">قیمت نهایی</div>
                 <div class="price">{{ detailPrice.price }} تومان</div>

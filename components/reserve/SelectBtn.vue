@@ -63,7 +63,7 @@ const props = defineProps({
   },
   activeClass: {
     type: String,
-    default: "text-primary! border-primary!",
+    default: "text-[#1e3a5f]! border-[#1e3a5f]!",
   },
   multiple: {
     type: Boolean,

@@ -272,7 +272,7 @@ const acceptHandle = async (id) => {
       }">
       <template #status-cell="{ row }">
         <div
-          :class="{ 'text-primary!': row.original.status === 'approved' }"
+          :class="{ 'text-[#1e3a5f]!': row.original.status === 'approved' }"
           class="text-red-500"
           v-if="row.original.status != 'pending'">
           {{ row.original.status === "approved" ? "تایید شده" : "تایید نشده" }}
