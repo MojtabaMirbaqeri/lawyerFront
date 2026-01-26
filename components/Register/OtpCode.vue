@@ -2,7 +2,7 @@
   <RegisterCardHeader title="کد تایید را وارد کنید" />
   <span
     >کد تایید برای شماره
-    <span class="text-primary">{{ registerStore.userInformation.phone }}</span>
+    <span class="text-[#1e3a5f]">{{ registerStore.userInformation.phone }}</span>
     پیامک شد</span
   >
 
@@ -19,7 +19,7 @@
     <div class="send-again flex">
       <span
         @click="timerStartHandle"
-        class="text-primary cursor-pointer"
+        class="text-[#1e3a5f] cursor-pointer"
         :class="{ 'mix-blend-luminosity': counting }"
         v-if="!counting">
         دریافت مجدد

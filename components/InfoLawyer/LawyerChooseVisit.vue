@@ -9,7 +9,7 @@
           >
             <UIcon
               name="solar:question-circle-linear"
-              class="size-6 text-primary"
+              class="size-6 text-[#1e3a5f]"
             />
           </div>
         </div>

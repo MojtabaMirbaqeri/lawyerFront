@@ -1,193 +1,146 @@
 <template>
   <header>
+    <!-- Background Elements -->
+    <div class="hero-bg">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="grid-pattern"></div>
+    </div>
+    
     <div class="container">
-      <div class="flex items-center justify-between flex-col gap-4">
-        <h1 class="header-title">
-          دریافت خدمات مشاوره از
-          <ClientOnly>{{ useGlobalStore()?.lawyersCount?.toLocaleString() }}</ClientOnly>
-          وکیل متخصص <br />
-          در سراسر کشور
-        </h1>
-        <div class="w-full">
-          <div class="relative z-50" ref="searchWrapper">
-            <UInput
-              v-model="lawyerNameFilter"
-              class="w-full relative z-10"
-              name="laweyerNameFilter"
-              placeholder="جست و جوی وکلا"
-              :ui="{
-                base: 'w-full rounded-full border bg-[#E1E1E3] border-[#00000047] py-3 md:text-base  ring-0 focus-visible:ring-0 ps-[134px] sm:ps-[178px]',
-                trailing: 'pe-0 m-1',
-                leading: 'ps-0 m-1.5',
-              }"
-              @keydown.enter="search"
-              @focus="handleFocus">
-              <template #trailing>
-                <div class="search-btn" @click="search">
-                  <UIcon name="hugeicons:search-02" class="size-6! text-[#919191]" />
-                </div>
-              </template>
-              <template #leading>
-                <USelectMenu
-                  v-model="filtersStore.selectedFilters.province"
-                  class="h-full"
-                  :ui="{
-                    base: 'font-semibold bg-[#E1E1E3] ring-[#00000047]! text-xs sm:text-sm rounded-full w-[120px] sm:w-[160px]',
-                    itemLabel: 'text-[13px]! sm:text-sm!',
-                    leadingIcon: 'text-[#919191] size-5!',
-                    trailingIcon: 'size-4! text-[#919191]',
-                  }"
-                  :items="provinces"
-                  value-key="id"
-                  label-key="name"
-                  icon="i-ph-map-pin-duotone"
-                  :search-input="{
-                    placeholder: 'جستجو...',
-                  }" />
-              </template>
-            </UInput>
-
+      <div class="hero-grid">
+        <!-- Content Side -->
+        <div class="hero-content">
+          <div class="hero-badge">
+            <UIcon name="heroicons:sparkles-solid" class="size-4!" />
+            پلتفرم هوشمند حقوقی
+          </div>
+          
+          <h1 class="hero-title">
+            دسترسی آسان به
+            <span class="title-highlight">بهترین وکلای</span>
+            کشور
+          </h1>
+          
+          <p class="hero-description">
+            با وکیل‌وکیل در کمترین زمان به مشاوره حقوقی تخصصی دسترسی پیدا کنید.
+            بیش از ۱۲۷ هزار وکیل متخصص آماده پاسخگویی هستند.
+          </p>
+          
+          <!-- Search Box -->
+          <div class="search-box" ref="searchWrapper">
+            <div class="search-inner">
+              <UInput
+                v-model="lawyerNameFilter"
+                class="w-full"
+                name="lawyerNameFilter"
+                placeholder="نام وکیل یا تخصص را جستجو کنید..."
+                :ui="{
+                  base: 'w-full rounded-xl border-0 bg-transparent py-4 text-base ring-0 focus-visible:ring-0 pe-24',
+                }"
+                @keydown.enter="search"
+                @focus="handleFocus">
+              </UInput>
+              <button class="search-btn" @click="search">
+                <UIcon name="heroicons:magnifying-glass-solid" class="size-5!" />
+              </button>
+            </div>
+            
             <!-- Suggest Box -->
             <Transition name="fade">
-              <div v-if="showSuggestBox" class="suggest-box text-secondary">
-                <!-- Loader -->
+              <div v-if="showSuggestBox" class="suggest-box">
                 <div v-if="loading" class="space-y-2">
-                  <USkeleton v-for="i in 3" :key="i" class="h-20 w-full rounded-xl" />
+                  <USkeleton v-for="i in 3" :key="i" class="h-16 w-full rounded-xl" />
                 </div>
-
-                <!-- Lawyers list -->
-                <div
-                  v-else-if="lawyers?.length"
-                  class="max-h-72 overflow-y-auto flex flex-col gap-2">
+                <div v-else-if="lawyers?.length" class="max-h-60 overflow-y-auto flex flex-col gap-2">
                   <NuxtLink
                     v-for="lawyer in lawyers"
                     :key="lawyer.id"
-                    :to="`/lawyer/${lawyer.id}/${(lawyer.name + ' ' + lawyer.family)
-                      .trim()
-                      .replace(/\s+/g, '-')}`">
-                    <LawyerProfile
-                      class="border border-gray-200 p-3 rounded-xl"
-                      :information="{
-                        ...lawyer,
-                        lawyer_info: {
-                          name: lawyer.name,
-                          family: lawyer.family,
-                          profile_image: lawyer.profile_image,
-                        },
-                      }"
-                      :show="true"
-                      :show-experience="false"
-                      :ui="{
-                        base: 'items-start! w-full!',
-                        avatar: 'size-14! lg:size-16!',
-                        name: 'justify-between!',
-                      }">
-                      <template #badges>
-                        <UICBadge
-                          variant="yellow"
-                          icon-size="size-4! lg:size-5!"
-                          :value="Number(lawyer.average_rating).toFixed(1)"
-                          icon="ic:round-star" />
-                      </template>
-                    </LawyerProfile>
+                    :to="`/lawyer/${lawyer.id}/${(lawyer.name + ' ' + lawyer.family).trim().replace(/\s+/g, '-')}`"
+                    class="suggestion-item">
+                    <div class="flex items-center gap-3">
+                      <div class="size-12 rounded-full bg-gray-100 overflow-hidden">
+                        <NuxtImg v-if="lawyer.profile_image" :src="lawyer.profile_image" class="w-full h-full object-cover" />
+                      </div>
+                      <div>
+                        <h4 class="font-semibold text-gray-800">{{ lawyer.name }} {{ lawyer.family }}</h4>
+                        <p class="text-sm text-gray-500">{{ lawyer.specialty || 'وکیل دادگستری' }}</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-1 text-yellow-500">
+                      <UIcon name="heroicons:star-solid" class="size-4!" />
+                      <span class="font-bold">{{ Number(lawyer.average_rating).toFixed(1) }}</span>
+                    </div>
                   </NuxtLink>
                 </div>
-                <div
-                  v-else
-                  class="flex items-center gap-2 p-4 justify-center border border-gray-200 rounded-xl bg-gray-50">
-                  <UIcon
-                    name="hugeicons:information-diamond"
-                    class="align-middle size-6!" />
-                  <h1 class="font-semibold text-lg">وکیلی یافت نشد</h1>
+                <div v-else class="text-center py-4 text-gray-500">
+                  وکیلی یافت نشد
                 </div>
               </div>
             </Transition>
           </div>
-        </div>
-
-        <div class="space-y-1.5">
-          <div class="latest-visit">
-            <UIcon name="ic:round-access-alarms" class="size-4!" />
-            7 دقیقه پیش
+          
+          <!-- Quick Actions -->
+          <div class="quick-actions">
+            <button class="quick-btn" @click="navigateTo('/#lawyers')">
+              <UIcon name="heroicons:squares-2x2-solid" class="size-5!" />
+              مشاهده همه وکلا
+            </button>
+            <button class="quick-btn" @click="navigateTo('tel:+982110014488')">
+              <UIcon name="heroicons:phone-solid" class="size-5!" />
+              تماس با پشتیبانی
+            </button>
           </div>
-          <p class="text-sm text-red-500">آخرین مشاوره دریافت شده در تخصص ثبت اسناد</p>
         </div>
-        <div
-          class="p-2 cursor-pointer flex custom-bounce"
-          @click="navigateTo('#lawyers')">
-          <UIcon name="proicons:chevron-down" class="size-6! text-[#1B1893]" />
+        
+        <!-- Image Side -->
+        <div class="hero-visual">
+          <div class="visual-card">
+            <img src="/images/vector-lawyer.webp" alt="Lawyer" class="main-image" />
+          </div>
+          
+          <!-- Floating Cards -->
+          <div class="floating-card floating-card--top">
+            <UIcon name="heroicons:shield-check-solid" class="size-6! text-green-500" />
+            <span>وکلای تأیید شده</span>
+          </div>
+          
+          <div class="floating-card floating-card--bottom">
+            <UIcon name="heroicons:star-solid" class="size-6! text-yellow-500" />
+            <span>امتیاز ۴.۹ از ۵</span>
+          </div>
         </div>
-      </div>
-      <div class="w-[40%] hidden lg:block">
-        <img
-          src="/images/vector-lawyer.webp"
-          alt="header-image"
-          class="w-full h-full object-cover" />
       </div>
     </div>
   </header>
 </template>
 
 <script setup>
-defineEmits(["scrollToLawyers"]);
 const filtersStore = useFiltersStore();
-
-const provinces = ref(null);
-onMounted(async () => {
-  const provincesRes = await fetch("/provinces.json");
-  provinces.value = await provincesRes.json();
-  provinces.value.unshift({
-    id: 0,
-    name: "ایران",
-  });
-  filtersStore.selectedFilters.province = provinces.value[0].id;
-
-  document.addEventListener("click", handleClickOutside);
-});
-onUnmounted(() => {
-  document.removeEventListener("click", handleClickOutside);
-});
-
-const lawyerNameFilter = ref(filtersStore.selectedFilters.searchField || "");
-
-// این رو اضافه کن
-watch(
-  () => filtersStore.selectedFilters.searchField,
-  (newValue) => {
-    lawyerNameFilter.value = newValue || "";
-  }
-);
 const searchWrapper = ref(null);
+const lawyerNameFilter = ref('');
 const showSuggestBox = ref(false);
 const loading = ref(false);
 const lawyers = ref([]);
 
-// Debounced search function
 let searchTimeout = null;
 
 const performSearch = async (searchQuery) => {
   if (searchQuery.length >= 3) {
     showSuggestBox.value = true;
     loading.value = true;
-
     try {
       const { data, status } = await useGet({
         url: "lawyer-search/suggestions",
-        query: {
-          query: searchQuery,
-          per_page: 5,
-        },
+        query: { query: searchQuery, per_page: 5 },
       });
-
       if (status && data.data.data?.lawyers) {
         lawyers.value = data.data.data.lawyers;
-        console.log(lawyers.value);
       } else {
         lawyers.value = [];
       }
     } catch (error) {
       lawyers.value = [];
-      console.error("Search error:", error);
     } finally {
       loading.value = false;
     }
@@ -198,20 +151,18 @@ const performSearch = async (searchQuery) => {
 };
 
 watch(lawyerNameFilter, (val) => {
-  // Clear previous timeout
-  if (searchTimeout) {
-    clearTimeout(searchTimeout);
-  }
-
-  // Set new timeout for debounce (500ms delay)
-  searchTimeout = setTimeout(() => {
-    performSearch(val);
-  }, 800);
+  if (searchTimeout) clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => performSearch(val), 500);
 });
 
 const search = () => {
   filtersStore.selectedFilters.searchField = lawyerNameFilter.value;
   showSuggestBox.value = false;
+  navigateTo('/#lawyers');
+};
+
+const handleFocus = () => {
+  if (lawyerNameFilter.value.length >= 3) showSuggestBox.value = true;
 };
 
 const handleClickOutside = (e) => {
@@ -220,17 +171,10 @@ const handleClickOutside = (e) => {
   }
 };
 
-const handleFocus = () => {
-  if (lawyerNameFilter.value.length >= 3) {
-    showSuggestBox.value = true;
-  }
-};
-
-// Clean up timeout on component unmount
+onMounted(() => document.addEventListener("click", handleClickOutside));
 onUnmounted(() => {
-  if (searchTimeout) {
-    clearTimeout(searchTimeout);
-  }
+  document.removeEventListener("click", handleClickOutside);
+  if (searchTimeout) clearTimeout(searchTimeout);
 });
 </script>
 
@@ -238,40 +182,143 @@ onUnmounted(() => {
 @reference "tailwindcss";
 
 header {
-  @apply p-5 px-1 pt-9 rounded-b-[40px] bg-[#EEEEF8] text-center text-white;
+  @apply relative min-h-[90vh] flex items-center py-20 lg:py-0 overflow-hidden;
+  background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #1a2f4a 100%);
 }
 
-.container {
-  @apply flex flex-row-reverse items-center justify-center lg:gap-6 lg:justify-between;
+.hero-bg {
+  @apply absolute inset-0 overflow-hidden pointer-events-none;
 }
 
-.header-title {
-  @apply text-[24px] md:text-[32px] font-bold pb-2 text-[#242397];
+.blob {
+  @apply absolute rounded-full opacity-30;
+  filter: blur(100px);
+}
+
+.blob-1 {
+  @apply w-[600px] h-[600px] -top-40 -end-40;
+  background: linear-gradient(135deg, #2d5a87, #f59e0b);
+  animation: blob-float 8s ease-in-out infinite;
+}
+
+.blob-2 {
+  @apply w-[500px] h-[500px] -bottom-40 -start-40;
+  background: linear-gradient(135deg, #1e3a5f, #3b7ab5);
+  animation: blob-float 10s ease-in-out infinite 2s;
+}
+
+@keyframes blob-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -30px) scale(1.1); }
+}
+
+.grid-pattern {
+  @apply absolute inset-0 opacity-[0.03];
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.hero-grid {
+  @apply grid lg:grid-cols-2 gap-12 lg:gap-16 items-center;
+}
+
+.hero-content {
+  @apply text-center lg:text-start;
+}
+
+.hero-badge {
+  @apply inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-white mb-6;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hero-title {
+  @apply text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6;
+}
+
+.title-highlight {
+  @apply relative;
+  color: #fbbf24;
+}
+
+.hero-description {
+  @apply text-lg text-white/80 max-w-xl mb-8 mx-auto lg:mx-0;
+}
+
+.search-box {
+  @apply relative max-w-xl mx-auto lg:mx-0 mb-6;
+}
+
+.search-inner {
+  @apply relative flex items-center rounded-2xl overflow-hidden;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
 }
 
 .search-btn {
-  @apply aspect-square h-full border border-[#00000047] bg-[#EEEEF8] rounded-full flex items-center justify-center cursor-pointer hover:opacity-70 transition duration-300;
-}
-
-.latest-visit {
-  @apply w-max mx-auto text-red-500 p-1 px-1.5 flex items-center gap-1.5 text-sm leading-3 rounded-full border border-dashed border-red-500;
-}
-
-@keyframes bounce-custom {
-  0%,
-  100% {
-    transform: translateY(-6px);
-  }
-  50% {
-    transform: translateY(6px);
-  }
-}
-
-.custom-bounce {
-  animation: bounce-custom 2s infinite;
+  @apply absolute end-2 size-12 rounded-xl flex items-center justify-center text-[#1e3a5f];
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
 }
 
 .suggest-box {
-  @apply absolute top-1/2 start-0 w-full p-3 rounded-b-xl bg-white border border-gray-200 flex flex-col gap-2 pt-10 text-start shadow-lg;
+  @apply absolute top-full mt-2 w-full p-3 rounded-2xl bg-white;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+.suggestion-item {
+  @apply flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors;
+}
+
+.quick-actions {
+  @apply flex flex-wrap justify-center lg:justify-start gap-3;
+}
+
+.quick-btn {
+  @apply flex items-center gap-2 px-5 py-3 rounded-xl text-white font-medium transition-all;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.quick-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.hero-visual {
+  @apply relative hidden lg:block;
+}
+
+.visual-card {
+  @apply relative rounded-3xl overflow-hidden;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.main-image {
+  @apply w-full h-auto;
+}
+
+.floating-card {
+  @apply absolute flex items-center gap-2 px-4 py-3 rounded-xl bg-white shadow-xl font-medium text-gray-800;
+  animation: float 4s ease-in-out infinite;
+}
+
+.floating-card--top {
+  @apply top-10 -start-10;
+  animation-delay: 0s;
+}
+
+.floating-card--bottom {
+  @apply bottom-10 -end-10;
+  animation-delay: 2s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 </style>

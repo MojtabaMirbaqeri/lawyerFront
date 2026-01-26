@@ -1,17 +1,31 @@
 <template>
-  <section id="faq">
-    <h2 class="sec-header mb-2 lg:mb-3">سوالات متداول</h2>
+  <section id="faq" class="faq-section">
+    <!-- Section Header -->
+    <div class="section-header">
+      <h2 class="sec-header">
+        <span class="gradient-text">سوالات</span> متداول
+      </h2>
+      <p class="section-subtitle">پاسخ به پرسش‌های رایج درباره خدمات مشاوره حقوقی</p>
+    </div>
+    
     <UAccordion
       :items="faqItems"
       :ui="{
-        root: 'space-y-2 lg:space-y-3',
-        item: 'bg-white border border-b! border-gray-200  rounded-lg lg:rounded-xl overflow-hidden ',
-        trigger: 'text-base px-3 py-4 lg:p-4 gap-3 lg:text-lg ',
-        body: 'text-base p-3 bg-primary/12 whitespace-break-spaces',
+        root: 'space-y-3 lg:space-y-4',
+        item: 'bg-white border border-gray-100 rounded-xl lg:rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300',
+        trigger: 'text-base px-4 py-4 lg:p-5 gap-3 lg:text-lg font-medium hover:bg-gray-50/50',
+        body: 'text-base p-4 lg:p-5 bg-gradient-to-br from-[#1e3a5f]/5 to-[#1e3a5f]/10 whitespace-break-spaces border-t border-gray-100',
       }"
-    />
+    >
+      <template #leading="{ index }">
+        <div class="faq-number">
+          {{ index + 1 }}
+        </div>
+      </template>
+    </UAccordion>
   </section>
 </template>
+
 <script setup>
 const faqItems = [
   {
@@ -40,6 +54,33 @@ const faqItems = [
   },
 ];
 </script>
+
 <style scoped>
 @reference "tailwindcss";
+
+.faq-section {
+  @apply relative py-16 lg:py-20;
+}
+
+.section-header {
+  @apply text-center mb-10;
+}
+
+.section-subtitle {
+  @apply text-gray-500 text-base lg:text-lg mt-2;
+}
+
+.faq-number {
+  @apply size-8 lg:size-9 flex items-center justify-center rounded-lg text-[#1e3a5f] font-bold text-sm lg:text-base;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, #1e3a5f, #2d5a87);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 </style>

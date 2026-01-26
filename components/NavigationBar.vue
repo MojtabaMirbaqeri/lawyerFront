@@ -1,5 +1,5 @@
 <template>
-  <div id="navBar">
+  <div id="navBar" :class="{ 'nav-scrolled': isScrolled }">
     <div class="container">
       <UIcon
         name="heroicons:bars-3-solid"
@@ -64,7 +64,7 @@
           <NuxtLink v-if="!auth.token" :to="'/register'">
             <UButton
               color="secondary"
-              class="text-secondary! gap-0.5 text-sm lg:text-[15px]"
+              class="nav-btn"
               variant="outline">
               ورود / ثبت نام
               <UIcon name="mage:login" class="size-5! rotate-180" />
@@ -76,7 +76,7 @@
               color="secondary"
               variant="outline"
               icon="solar:user-rounded-linear"
-              class="text-secondary! gap-0.5 text-sm lg:text-[15px]"
+              class="nav-btn"
               :ui="{ leadingIcon: 'size-4.5!' }" />
           </UDropdownMenu>
         </div>
@@ -104,7 +104,7 @@
           }" />
         <NuxtLink
           :to="auth?.token ? '/dashboard' : '/register'"
-          class="w-full bg-blue-100/60 py-2.5 px-3 rounded-lg border-blue-200 border flex items-center gap-1.5 text-sm text-blue-500">
+          class="mobile-auth-btn">
           <UIcon
             :name="auth.token ? 'hugeicons:dashboard-square-01' : 'mage:login'"
             class="size-4.5!" />
@@ -120,12 +120,14 @@
     </Transition>
   </div>
 </template>
+
 <script setup>
 const auth = useAuthStore();
 await auth.ensureUser();
 
-const filtersStore = useFiltersStore(); // استور تخصص‌ها
+const filtersStore = useFiltersStore();
 const lawyersPopoverVisiblity = ref(false);
+const isScrolled = ref(false);
 
 const provinces = ref([]);
 const specialties = ref([]);
@@ -182,12 +184,12 @@ const menuItems = ref([
         {
           label: "تخصص ها",
           icon: "i-lucide-target",
-          children: [], // اینجا تخصص‌ها میاد
+          children: [],
         },
         {
           label: "استان ها",
           icon: "lucide:building-2",
-          children: [], // استان‌ها اینجا لود می‌شن
+          children: [],
         },
       ],
     },
@@ -205,8 +207,15 @@ const menuItems = ref([
 ]);
 
 onMounted(async () => {
+  // Scroll detection for glassmorphism effect
+  const handleScroll = () => {
+    isScrolled.value = window.scrollY > 20;
+  };
+  window.addEventListener('scroll', handleScroll);
+  handleScroll();
+
   try {
-    // 🔹 ست کردن تخصص‌ها
+    // Set specialties
     specialties.value = filtersStore.lawyerSpecialties.map((s) => ({
       label: s.title,
       id: String(s.id),
@@ -215,7 +224,6 @@ onMounted(async () => {
 
     const lawyersMenu = menuItems.value[0].find((item) => item.label === "لیست وکلا");
     if (lawyersMenu) {
-      // بخش تخصص ها - فقط اگر تخصص وجود داشته باشد
       if (specialties.value.length > 0) {
         const specialtyMenu = lawyersMenu.children.find(
           (child) => child.label === "تخصص ها"
@@ -224,14 +232,13 @@ onMounted(async () => {
           specialtyMenu.children = specialties.value;
         }
       } else {
-        // اگر تخصص وجود نداشت، آن را از لیست حذف کن
         lawyersMenu.children = lawyersMenu.children.filter(
           (child) => child.label !== "تخصص ها"
         );
       }
     }
 
-    // 🔹 لود استان‌ها
+    // Load provinces
     const rawProvinces = await $fetch("/provinces.json");
 
     provinces.value = (rawProvinces || []).map((province) => ({
@@ -240,7 +247,6 @@ onMounted(async () => {
       to: `/provinces/${province.en_name}`,
     }));
 
-    // بخش استان ها
     if (lawyersMenu) {
       const provinceMenu = lawyersMenu.children.find(
         (child) => child.label === "استان ها"
@@ -253,43 +259,87 @@ onMounted(async () => {
     console.error("fetch provinces or cities error:", err);
   }
 });
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', () => {});
+});
 </script>
 
 <style scoped>
 @reference "tailwindcss";
+
 #navBar {
   @apply sticky top-0 start-0 z-[100] py-2 h-16;
   @apply w-full;
-  @apply bg-white shadow-lg;
+  @apply bg-white/80;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+}
+
+#navBar.nav-scrolled {
+  @apply bg-white/95;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .container {
   @apply flex items-center gap-6;
 }
+
 .mobile-sidebar {
-  @apply fixed h-lvh w-[75svw] max-w-[420px]  bg-[#ffffff] top-0 translate-x-[100%] z-10 overflow-y-auto shadow-lg;
+  @apply fixed h-lvh w-[75svw] max-w-[420px] bg-white top-0 translate-x-[100%] z-10 overflow-y-auto;
   @apply transition-all duration-[450ms] ease-in-out;
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.1);
 }
+
 .mobile-overlay {
-  @apply fixed top-0 start-0 h-lvh w-svw bg-black/[10] backdrop-blur-sm;
+  @apply fixed top-0 start-0 h-lvh w-svw bg-black/20 backdrop-blur-sm;
 }
+
 .mobile-sidebar .header {
   @apply flex items-center justify-between h-16 bg-white px-4 sticky top-0! start-0! z-10;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
+
 .mobile-sidebar .body {
   @apply px-4 space-y-3 pb-4;
 }
+
 .desktop-nav {
   @apply items-center gap-5 text-base mx-auto hidden lg:flex;
 }
+
 .desktop-nav .router-link-exact-active {
-  @apply text-blue-500;
+  @apply font-medium;
+  color: #1e3a5f;
 }
+
 .desktop-nav a,
 .desktop-nav span {
-  @apply transition-all duration-300 hover:text-blue-500!;
+  @apply transition-all duration-300 cursor-pointer;
 }
+.desktop-nav a:hover,
+.desktop-nav span:hover {
+  color: #1e3a5f;
+}
+
 .lawyers-popover {
   @apply p-4 grid grid-cols-2 gap-6 w-[480px];
 }
+
+.nav-btn {
+  @apply text-sm lg:text-[15px] gap-1 rounded-xl border-gray-200 transition-all;
+}
+.nav-btn:hover {
+  border-color: #1e3a5f;
+  color: #1e3a5f;
+}
+
+.mobile-auth-btn {
+  @apply w-full py-2.5 px-3 rounded-xl flex items-center gap-1.5 text-sm font-medium text-[#1e3a5f];
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+}
 </style>
+

@@ -1,5 +1,5 @@
 <template>
-  <span class="back text-primary" @click="handleClick()">
+  <span class="back text-[#1e3a5f]" @click="handleClick()">
     <UIcon name="proicons:chevron-right" class="size-5! lg:size-4!" />
     <span class="hidden lg:block">بازگشت</span>
   </span>

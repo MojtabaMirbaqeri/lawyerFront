@@ -38,7 +38,7 @@ defineProps({
   },
   activeClass: {
     type: String,
-    default: "bg-primary/10! border-primary!",
+    default: "bg-[#1e3a5f]/10 border-[#1e3a5f]",
   },
 });
 </script>

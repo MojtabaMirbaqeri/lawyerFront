@@ -1,15 +1,22 @@
 <template>
-  <section id="visit-guide">
-    <div class="guide-con bg-primary/5">
-      <h2 class="sec-header mb-2 lg:mb-3">راهنمای مشاوره آنلاین</h2>
+  <section id="visit-guide" class="visit-guide-section">
+    <!-- Section Header -->
+    <div class="section-header">
+      <h2 class="sec-header">
+        <span class="gradient-text">راهنمای</span> مشاوره آنلاین
+      </h2>
+      <p class="section-subtitle">با چند گام ساده به بهترین وکلای کشور دسترسی پیدا کنید</p>
+    </div>
+    
+    <div class="guide-con">
       <div class="space-y-2.5">
-        <h2>
+        <div class="info-banner">
           <UIcon
-            name="hugeicons:information-diamond"
-            class="align-middle me-0.5 size-5!"
+            name="heroicons:information-circle-solid"
+            class="align-middle me-1 size-5! text-indigo-500"
           />
           برای مشاهده جزئیات هر شیوه مشاوره روی آن کلیک کنید
-        </h2>
+        </div>
         <div>
           <UICSelectButton
             v-model="visitType"
@@ -22,30 +29,30 @@
       </div>
       <hr class="text-gray-200" />
       <div class="space-y-2.5">
-        <h2>در چت وکیل در فضای چت از طریق پیام به شما مشاوره می دهد</h2>
+        <h3 class="guide-description">در چت وکیل در فضای چت از طریق پیام به شما مشاوره می دهد</h3>
         <UAccordion
           :items="items"
           :ui="{
-            root: 'space-y-2 lg:space-y-3',
-            item: 'border-b-0 bg-white rounded-lg lg:rounded-xl overflow-hidden',
-            trigger: 'text-base px-3 py-2.5 lg:p-3.5 gap-3 lg:text-lg ',
-            body: 'text-base p-3 bg-primary/12 whitespace-break-spaces',
+            root: 'space-y-3 lg:space-y-4',
+            item: 'border-b-0 bg-white rounded-xl lg:rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow',
+            trigger: 'text-base px-4 py-3.5 lg:p-4 gap-3 lg:text-lg font-medium',
+            body: 'text-base p-4 bg-gradient-to-br from-indigo-50/50 to-purple-50/50 whitespace-break-spaces border-t border-gray-100',
           }"
         >
           <template #leading="{ item }">
-            <div class="size-9 lg:size-10 relative rounded-full bg-primary/12">
+            <div class="icon-wrapper">
               <UIcon
                 :name="item?.icon"
-                class="absolute -translate-1/2 top-1/2 end-1/2 size-4.5! lg:size-5!"
+                class="absolute -translate-1/2 top-1/2 end-1/2 size-5! lg:size-5.5! text-white"
               />
             </div>
           </template>
         </UAccordion>
       </div>
     </div>
-    <div class="vector-con"></div>
   </section>
 </template>
+
 <script setup>
 const { visitTypes } = useFiltersStore();
 
@@ -101,11 +108,48 @@ const items = ref([
   },
 ]);
 </script>
+
 <style scoped>
 @reference "tailwindcss";
-#visit-guide {
+
+.visit-guide-section {
+  @apply relative py-4;
 }
+
+.section-header {
+  @apply text-center mb-6;
+}
+
+.section-subtitle {
+  @apply text-gray-500 text-sm lg:text-base mt-1;
+}
+
 .guide-con {
-  @apply rounded-2xl p-4 border border-gray-200 space-y-3;
+  @apply rounded-2xl lg:rounded-3xl p-5 lg:p-6 border border-gray-100 space-y-4;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.03) 0%, rgba(139, 92, 246, 0.03) 100%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.info-banner {
+  @apply flex items-center gap-1 text-gray-600 bg-white/80 rounded-xl px-4 py-2.5 text-sm lg:text-base;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.guide-description {
+  @apply text-gray-700 font-medium;
+}
+
+.icon-wrapper {
+  @apply size-10 lg:size-11 relative rounded-xl;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 </style>

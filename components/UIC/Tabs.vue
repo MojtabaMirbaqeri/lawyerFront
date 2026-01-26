@@ -1,7 +1,7 @@
 <template>
   <UTabs
     v-model="selectedTab"
-    color="primary"
+    color="amber"
     variant="link"
     class="tabs-custom"
     :ui="ui"
@@ -20,7 +20,7 @@
           <div v-html="item.dis" class="text-box" v-else>
           </div>
           <div
-            class="read-more text-primary cursor-pointer"
+            class="read-more text-[#1e3a5f] cursor-pointer"
             @click="showMore = !showMore"
             v-if="item.dis.length > 300"
           >

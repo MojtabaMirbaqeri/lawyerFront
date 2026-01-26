@@ -174,7 +174,7 @@ const columns = [
             },
             variant: "primary",
             class: [
-              "px-4  border! border-primary text-primary",
+              "px-4  border! border-[#1e3a5f] text-[#1e3a5f]",
               disabled ? "opacity-50 border-gray-300 cursor-not-allowed!" : "",
             ],
           },

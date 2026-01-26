@@ -1,199 +1,227 @@
 <template>
-  <footer id="footer" class="bg-primary/90">
-    <div class="footer-con">
-      <div class="lg:py-4">
-        <div
-          class="divide-y divide-gray-200 lg:divide-y-0 lg:flex flex-row items-center gap-12 lg:container">
-          <!-- <div class="partners lg:grow">
-            <div class="container lg:p-0!">
-              <div>
-                <div class="text-base">همراهان وکیل وکیل:</div>
-              </div>
-              <div class="grow">
-                <div class="container partners-logos">
-                  <NuxtImg
-                    v-for="partner in partners"
-                    :key="partner"
-                    :src="`/images/footer/${partner}`"
-                    class="h-6 lg:h-8"
-                  />
-                </div>
-              </div>
-            </div>
-          </div> -->
-          <div>
-            <div class="container help">
-              <h3 class="text-primary">نیاز به راهنمایی دارید؟</h3>
-              <NuxtLink to="tel:+982110014488" external>
-                <UICSecondaryBtn> 021-10014488 </UICSecondaryBtn>
-              </NuxtLink>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div
-          class="container flex flex-col lg:flex-row lg:items-start gap-2.5 py-6! lg:gap-8 lg:justify-between lg:py-6!">
-          <div class="flex justify-between items-center lg:flex-col lg:items-start gap-4">
-            <NuxtImg src="/images/main-logo.svg" class="h-8" />
-            <div class="social-networks">
+  <footer id="footer">
+    <!-- Main Footer -->
+    <div class="footer-main">
+      <div class="container">
+        <div class="footer-grid">
+          <!-- Brand Section -->
+          <div class="footer-brand">
+            <NuxtImg src="/images/main-logo.svg" class="h-10 mb-4" />
+            <p class="brand-tagline">
+              پلتفرم هوشمند رزرو نوبت وکیل و دریافت مشاوره حقوقی آنلاین
+            </p>
+            <div class="social-links">
               <NuxtLink
                 v-for="social in socials"
-                :key="social"
-                target="_blank"
+                :key="social.name"
                 :to="social.src"
-                class="social bg-primary/12">
-                <UIcon :name="social.icon" />
+                target="_blank"
+                class="social-link">
+                <UIcon :name="social.icon" class="size-5!" />
               </NuxtLink>
             </div>
           </div>
-          <div class="p-4 bg-gray-100 lg:max-w-[540px] rounded-[20px] space-y-2">
-            <h4 class="font-bold">دانلود اپلیکیشن وکیل وکیل</h4>
-            <p>
-              دسترسی راحت‌تر و سریع‌تر به وکلا، شما می‌توانید با انتخاب دکمه‌های زیر اقدام
-              به دانلود اپ وکیل وکیل کنید.
-            </p>
-            <div class="download-links">
-              <NuxtLink to="#">
-                <NuxtImg src="/images/footer/GooglePlayDownloadApp.svg" />
-              </NuxtLink>
-              <NuxtLink to="#">
-                <NuxtImg src="/images/footer/MyketShareDownloadApp.svg" />
-              </NuxtLink>
-              <NuxtLink to="#">
-                <NuxtImg src="/images/footer/CafeBazzarDownloadApp.svg" />
-              </NuxtLink>
-              <NuxtLink to="#">
-                <NuxtImg src="/images/footer/GooglePlayDownloadApp.svg" />
-              </NuxtLink>
-            </div>
+
+          <!-- Quick Links -->
+          <div class="footer-links">
+            <h4 class="footer-title">دسترسی سریع</h4>
+            <ul class="links-list">
+              <li><NuxtLink to="/">خانه</NuxtLink></li>
+              <li><NuxtLink to="/#lawyers">لیست وکلا</NuxtLink></li>
+              <li><NuxtLink to="/#faq">سوالات متداول</NuxtLink></li>
+              <li><NuxtLink to="/register">ورود / ثبت‌نام</NuxtLink></li>
+            </ul>
           </div>
-          <div
-            class="grid grid-cols-2 mx-5 lg:mx-0 py-2 gap-y-2.5 text-primary lg:shrink-0 lg:gap-y-3">
-            <NuxtLink to="/"> خانه</NuxtLink>
-            <NuxtLink to="/register"> ثبت نام و ورود </NuxtLink>
-            <NuxtLink to="#"> درباره ما </NuxtLink>
-            <NuxtLink to="#faq"> سوالات متداول </NuxtLink>
-            <NuxtLink to="#"> ارتباط با ما</NuxtLink>
-            <NuxtLink to="#"> راهنمای مشاوره آنلاین</NuxtLink>
+
+          <!-- Services -->
+          <div class="footer-links">
+            <h4 class="footer-title">خدمات</h4>
+            <ul class="links-list">
+              <li><a href="#">مشاوره تلفنی</a></li>
+              <li><a href="#">مشاوره چت</a></li>
+              <li><a href="#">مشاوره ویدیویی</a></li>
+              <li><a href="#">مشاوره حضوری</a></li>
+            </ul>
+          </div>
+
+          <!-- Contact & Support -->
+          <div class="footer-contact">
+            <h4 class="footer-title">پشتیبانی</h4>
+            <div class="contact-box">
+              <div class="contact-icon">
+                <UIcon name="heroicons:phone-solid" class="size-6!" />
+              </div>
+              <div>
+                <p class="contact-label">تماس با ما</p>
+                <a href="tel:+982110014488" class="contact-number">021-10014488</a>
+              </div>
+            </div>
+            <div class="download-section">
+              <p class="download-label">دانلود اپلیکیشن</p>
+              <div class="download-badges">
+                <NuxtLink to="#">
+                  <NuxtImg src="/images/footer/GooglePlayDownloadApp.svg" class="download-badge" />
+                </NuxtLink>
+                <NuxtLink to="#">
+                  <NuxtImg src="/images/footer/CafeBazzarDownloadApp.svg" class="download-badge" />
+                </NuxtLink>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div>
-        <div class="container licenses">
-          <NuxtLink v-for="license in licenses" :key="license.name" :to="license.src">
-            <NuxtImg :src="license.image" />
-          </NuxtLink>
+
+        <!-- Trust Badges - یک باکس واحد -->
+        <div class="trust-badges">
+          <div class="badges-row">
+            <NuxtLink
+              v-for="license in licenses"
+              :key="license.name"
+              :to="license.src"
+              class="badge-item">
+              <NuxtImg :src="license.image" :alt="license.name" />
+            </NuxtLink>
+          </div>
         </div>
       </div>
     </div>
-    <div class="copy-right">
+
+    <!-- Copyright -->
+    <div class="copyright">
       <div class="container">
-        1404 - تمامی حقوق مادی و معنوی این وبسایت متعلق به وکیل وکیل می‌باشد.
+        <p>© 1404 تمامی حقوق مادی و معنوی این وب‌سایت متعلق به <strong>وکیل‌وکیل</strong> می‌باشد.</p>
       </div>
     </div>
   </footer>
 </template>
-<script setup>
-const partners = ["Aparat.svg", "Filimo.svg", "Takhfifan.svg"];
 
+<script setup>
 const socials = [
-  {
-    name: "instagram",
-    icon: "hugeicons:instagram",
-    src: "https://www.instagram.com/vakilvakil_com",
-  },
-  {
-    name: "telegram",
-    icon: "hugeicons:telegram",
-    src: "https://t.me/vakilvakil_com",
-  },
-  {
-    name: "aparat",
-    icon: "simple-icons:aparat",
-    src: "https://www.aparat.com/vakilvakil_com",
-  },
+  { name: 'instagram', icon: 'mdi:instagram', src: 'https://www.instagram.com/vakilvakil_com' },
+  { name: 'telegram', icon: 'mdi:telegram', src: 'https://t.me/vakilvakil_com' },
+  { name: 'aparat', icon: 'simple-icons:aparat', src: 'https://www.aparat.com/vakilvakil_com' },
 ];
 
 const licenses = [
-  {
-    name: "enamad",
-    image: "/images/footer/enamad-logo.webp",
-    src: "/enamad",
-  },
-  {
-    name: "anjoman senfi",
-    image: "/images/footer/anjoman-senfi.webp",
-    src: "#",
-  },
-  {
-    name: "rasane digital",
-    image: "/images/footer/rasane-digital.webp",
-    src: "#",
-  },
-  {
-    name: "kasb online",
-    image: "/images/footer/kasb-online.webp",
-    src: "#",
-  },
+  { name: 'enamad', image: '/images/footer/enamad-logo.webp', src: '/enamad' },
+  { name: 'anjoman senfi', image: '/images/footer/anjoman-senfi.webp', src: '#' },
+  { name: 'rasane digital', image: '/images/footer/rasane-digital.webp', src: '#' },
+  { name: 'kasb online', image: '/images/footer/kasb-online.webp', src: '#' },
 ];
 </script>
+
 <style scoped>
 @reference "tailwindcss";
 
 #footer {
-  @apply text-sm lg:text-base mt-14 lg:mt-20;
+  @apply mt-0;
 }
 
-.container {
-  @apply py-0;
+.footer-main {
+  @apply py-12 lg:py-16 border-t border-gray-200;
+  background-color: #f8fafd;
 }
 
-.footer-con {
-  @apply bg-white rounded-b-3xl;
-  @apply flex flex-col divide-y divide-gray-200;
+.footer-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12;
 }
 
-.partners > .container {
-  @apply flex flex-col lg:flex-row lg:items-center items-stretch py-5 gap-2 lg:gap-6;
+.footer-brand {
+  @apply lg:col-span-1;
 }
 
-.partners-logos {
-  @apply flex items-center justify-between lg:p-0!;
+.brand-tagline {
+  @apply text-gray-500 text-sm leading-relaxed mb-6;
 }
 
-.help {
-  @apply flex justify-between items-center py-5! gap-6 lg:p-0!;
+.social-links {
+  @apply flex items-center gap-3;
 }
 
-.social-networks {
-  @apply flex items-center gap-2.5 flex-row-reverse;
+.social-link {
+  @apply size-10 rounded-xl flex items-center justify-center text-gray-500 transition-all;
+  background: #f3f4f6;
 }
 
-.social-networks .social {
-  @apply size-8 lg:size-9 rounded-full relative;
+.social-link:hover {
+  @apply text-white;
+  background: #1e3a5f;
+  transform: translateY(-2px);
 }
 
-.social-networks .social .iconify {
-  @apply absolute -translate-1/2 top-1/2 end-1/2 size-4.5! lg:size-5.5!;
+.footer-title {
+  @apply text-gray-900 font-bold text-lg mb-5;
 }
 
-.copy-right {
-  @apply pt-3 lg:pt-5 pb-2 lg:pb-3 text-white text-sm;
+.links-list {
+  @apply space-y-3;
 }
 
-.download-links {
-  @apply grid grid-cols-2 gap-4 w-fit mx-auto pt-2;
-}
-.download-links img {
-  @apply h-10;
+.links-list a {
+  @apply text-gray-500 hover:text-[#1e3a5f] transition-colors text-sm;
 }
 
-.licenses {
-  @apply flex items-center gap-4 lg:gap-8 justify-center py-4;
+.footer-contact {
+  @apply space-y-5;
 }
 
-.licenses img {
-  @apply w-14 lg:w-16;
+.contact-box {
+  @apply flex items-center gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200;
+}
+
+.contact-icon {
+  @apply size-12 rounded-xl flex items-center justify-center text-white shrink-0;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+}
+
+.contact-label {
+  @apply text-gray-400 text-xs mb-1;
+}
+
+.contact-number {
+  @apply text-gray-900 font-bold text-lg;
+}
+
+.download-section {
+  @apply mt-4;
+}
+
+.download-label {
+  @apply text-gray-500 text-sm mb-3;
+}
+
+.download-badges {
+  @apply flex gap-3;
+}
+
+.download-badge {
+  @apply h-9 rounded-lg transition-transform hover:scale-105;
+}
+
+.trust-badges {
+  @apply mt-10 rounded-2xl p-6 lg:p-8 bg-gray-50 border border-gray-200;
+}
+
+.badges-row {
+  @apply flex flex-wrap items-center justify-center gap-6 lg:gap-10;
+}
+
+.badge-item {
+  @apply flex items-center justify-center transition-transform duration-200 hover:scale-105;
+}
+
+.badge-item img {
+  @apply h-12 w-auto lg:h-14 object-contain;
+}
+
+.copyright {
+  @apply py-4 text-center bg-gray-100 border-t border-gray-200;
+}
+
+.copyright p {
+  @apply text-gray-500 text-sm;
+}
+
+.copyright strong {
+  @apply text-gray-700 font-bold;
 }
 </style>

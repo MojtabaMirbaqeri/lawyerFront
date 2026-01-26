@@ -1,16 +1,40 @@
 <template>
   <main>
+    <!-- Hero Section -->
     <LandingHeader />
-
-    <div class="container pt-0 space-y-14 lg:space-y-20">
+    
+    <!-- Trust Bar -->
+    <LandingTrustBar />
+    
+    <!-- Services Section -->
+    <LandingServicesSection />
+    
+    <!-- Lawyers Section -->
+    <div class="container">
       <LandingLawyersSection
         ref="lawyersSectionRef"
         link="lawyer/"
         :titlebtn="'رزرو مشاوره'" />
+    </div>
+    
+    <!-- Why Choose Us -->
+    <LandingWhyChooseUs />
+    
+    <!-- How It Works -->
+    <LandingHowItWorks />
+    
+    <!-- Comments Section -->
+    <div class="container">
       <LandingCommentsSection />
-      <LandingVisitGuideSection />
+    </div>
+    
+    <!-- FAQ Section -->
+    <div class="container">
       <LandingFaqSection />
     </div>
+    
+    <!-- CTA Section (آخرین فراخوان قبل از فوتر) -->
+    <LandingCtaSection />
   </main>
 </template>
 <script setup>
@@ -69,6 +93,6 @@ useHead({
 @reference "tailwindcss";
 
 main .container > section {
-  @apply pt-4 lg:pt-5 scroll-mt-16;
+  @apply scroll-mt-20;
 }
 </style>

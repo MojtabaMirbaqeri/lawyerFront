@@ -51,7 +51,7 @@ const props = defineProps({
 
 const defaultThing = {
   base: "px-4 py-2 rounded-full border border-gray-300 text-sm lg:text-base transition cursor-pointer",
-  active: "bg-primary! border-transparent! text-white!",
+  active: "bg-amber-500! border-transparent! text-white!",
   disabled:
     "bg-gray-100 opacity-60 text-gray-500 border-gray-200 cursor-not-allowed",
   nonworking: "bg-yellow-50 text-yellow-700 border-yellow-300",

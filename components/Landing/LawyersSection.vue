@@ -1,85 +1,82 @@
 <template>
-  <section id="lawyers" class="space-y-4">
-    <div class="space-y-4">
-      <div>
-        <!-- <UICDrawer
-          title="lawyer types"
-          description="Categorization of lawyers by type"
-        >
-          <template #button>
-            <UICSecondaryBtn>
-              مشاهده همه <UIcon name="proicons:chevron-left" />
-            </UICSecondaryBtn>
-          </template>
-          <template #default>
-            <div class="flex flex-col gap-2 text-black">
-              <div
-                v-for="type in lawyerTypes"
-                :key="type.id"
-                class="flex items-center justify-between py-2 px-2 rounded-lg bg-gray-100 border border-gray-200 transition-all duration-200 cursor-pointer"
-                :class="{
-                  'bg-gray-200!  border-gray-400!':
-                    type.id == filtersStore.selectedFilters.lawyerType,
-                }"
-                @click="filtersStore.selectedFilters.lawyerType = type.id"
-              >
-                {{ type.title }}
-                <UIcon name="proicons:chevron-left" class="ms-auto" />
-              </div>
-            </div>
-          </template>
-        </UICDrawer> -->
-        <UICSelectButton
-          v-model="filtersStore.selectedFilters.lawyerType"
-          :items="lawyerTypes" />
-      </div>
-      <UICDrawer
-        v-model="filtersStore.drawerVisiblity"
-        title="filters"
-        description="filter laywers"
-        class="overflow-y-auto!">
-        <template #button>
-          <div class="filters-trigger primary-box">
-            <UChip inset :show="filtersStore.hasActiveFilters" position="bottom-right">
-              <UIcon name="system-uicons:filtering" class="size-6! text-primary" />
-            </UChip>
-            فیلتر ها
-            <UIcon name="proicons:chevron-left" class="ms-auto" />
-          </div>
-        </template>
-        <template #default><LandingFilters /></template>
-      </UICDrawer>
+  <section id="lawyers" class="lawyers-section">
+    <!-- Section Header -->
+    <div class="section-header">
+      <h2 class="sec-header">
+        لیست <span class="gradient-text">وکلای متخصص</span>
+      </h2>
+      <p class="section-subtitle">بهترین وکلا را با توجه به تخصص و رتبه‌بندی انتخاب کنید</p>
     </div>
-    <div ref="lawyersListRef" class="lg:flex gap-4 xl:gap-5 items-start">
-      <LandingSidebar class="hidden lg:block sticky top-[80px] grow-0 shrink" />
-      <main class="space-y-4 grow shrink-0">
-        <UICTabs
-          v-model="filtersStore.selectedFilters.sortBy"
-          :content="false"
-          :items="tabItems"
-          class="sort-tabs"
-          :ui="{ root: 'primary-box sha', trigger: 'shrink-0' }" />
-        <div v-if="lawyersRef?.data?.length" class="lawyers-con">
+    
+    <!-- Type Filter -->
+    <div class="type-filter">
+      <UICSelectButton
+        v-model="filtersStore.selectedFilters.lawyerType"
+        :items="lawyerTypes" />
+    </div>
+    
+    <!-- Mobile Filter Trigger -->
+    <UICDrawer
+      v-model="filtersStore.drawerVisiblity"
+      title="filters"
+      description="filter laywers"
+      class="overflow-y-auto! lg:hidden">
+      <template #button>
+        <div class="filters-trigger">
+          <UChip inset :show="filtersStore.hasActiveFilters" position="bottom-right">
+            <UIcon name="heroicons:funnel-solid" class="size-5! text-[#1e3a5f]" />
+          </UChip>
+          <span>فیلترها</span>
+          <UIcon name="heroicons:chevron-left-solid" class="size-4! ms-auto" />
+        </div>
+      </template>
+      <template #default><LandingFilters /></template>
+    </UICDrawer>
+    
+    <!-- Main Content -->
+    <div ref="lawyersListRef" class="lawyers-layout">
+      <!-- Sidebar Filters -->
+      <aside class="filters-sidebar">
+        <LandingSidebar />
+      </aside>
+      
+      <!-- Lawyers Grid -->
+      <main class="lawyers-main">
+        <!-- Sort Tabs -->
+        <div class="sort-bar">
+          <span class="sort-label">مرتب‌سازی:</span>
+          <UICTabs
+            v-model="filtersStore.selectedFilters.sortBy"
+            :content="false"
+            :items="tabItems"
+            :ui="{ trigger: 'shrink-0 text-sm' }" />
+        </div>
+        
+        <!-- Lawyers Grid -->
+        <div v-if="lawyersRef?.data?.length" class="lawyers-grid">
           <NuxtLink
             v-for="lawyer in lawyersRef?.data"
             :key="lawyer.id"
-            :to="`/${props.link}${lawyer.id}/${(lawyer.name + ' ' + lawyer.family)
-              .trim()
-              .replace(/\s+/g, '-')}`">
+            :to="`/${props.link}${lawyer.id}/${(lawyer.name + ' ' + lawyer.family).trim().replace(/\s+/g, '-')}`">
             <LawyerCard :titlebtn="titlebtn" :lawyer-info="lawyer" />
           </NuxtLink>
         </div>
+        
+        <!-- Empty State -->
         <Transition name="fade">
           <LawyerCard
             v-if="staticLawyerInfo && (!lawyersRef?.data?.length || lawyersRef.data == 0)"
             :lawyer-info="staticLawyerInfo"
             :is-empty="true" />
         </Transition>
-        <UICPagination
-          v-model="currentLawyersPage"
-          class="w-fit! mx-auto"
-          :total="lawyersRef.meta.total"
-          :page-size="lawyersRef.meta.per_page" />
+        
+        <!-- Pagination -->
+        <div class="pagination-wrapper">
+          <UICPagination
+            v-model="currentLawyersPage"
+            :total="lawyersRef.meta.total"
+            :page-size="lawyersRef.meta.per_page" />
+        </div>
       </main>
     </div>
   </section>
@@ -240,17 +237,79 @@ await fetchLawyers();
 
 <style scoped>
 @reference "tailwindcss";
+
+.lawyers-section {
+  @apply space-y-6 py-16 lg:py-20;
+}
+
+.section-header {
+  @apply text-center mb-8;
+}
+
+.section-subtitle {
+  @apply text-gray-500 text-base lg:text-lg mt-2;
+}
+
+.type-filter {
+  @apply mb-4;
+}
+
 .filters-trigger {
-  @apply cursor-pointer flex items-center gap-2 font-semibold lg:hidden;
+  @apply cursor-pointer flex items-center gap-3 font-semibold;
+  @apply bg-white rounded-2xl py-3.5 px-5;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.filters-trigger:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+.lawyers-layout {
+  @apply flex gap-6 lg:gap-8 items-start mt-6;
+}
+
+.filters-sidebar {
+  @apply hidden lg:block w-72 shrink-0 sticky top-[90px];
+}
+
+.filters-sidebar :deep(.sidebar) {
+  @apply rounded-2xl overflow-hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.lawyers-main {
+  @apply grow space-y-6;
+}
+
+.sort-bar {
+  @apply flex items-center gap-3 bg-white rounded-2xl px-5 py-3;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.sort-label {
+  @apply text-gray-500 text-sm hidden sm:block;
+}
+
+.lawyers-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5;
+}
+
+.pagination-wrapper {
+  @apply flex justify-center pt-6;
 }
 </style>
+
 <style>
 @reference "tailwindcss";
-.sort-tabs .tabs-list::before {
-  @apply hidden sm:block h-full text-sm pe-4 text-[var(--ui-gray)];
-  content: "مرتب سازی بر اساس:";
-}
-.lawyers-con {
-  @apply flex flex-col gap-3;
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, #1e3a5f, #2d5a87);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 </style>
+
+

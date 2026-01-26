@@ -55,7 +55,7 @@
               label="مبلغ (تومان)"
             />
             <span
-              class="text-primary text-sm absolute end-0 top-full cursor-pointer mt-0.5"
+              class="text-[#1e3a5f] text-sm absolute end-0 top-full cursor-pointer mt-0.5"
               @click="fillWithFullBalance"
               >همه موجودی</span
             >
