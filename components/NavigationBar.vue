@@ -56,15 +56,6 @@
       <!-- Spacer: keeps logo+nav right, actions left (RTL) -->
       <div class="nav-spacer flex-1 min-w-0" aria-hidden="true" />
 
-      <!-- Mobile menu trigger -->
-      <button
-        type="button"
-        class="nav-menu-btn lg:hidden!"
-        aria-label="منو"
-        @click="useGlobalStore().toggleSidebar">
-        <UIcon name="heroicons:bars-3-solid" class="size-6!" />
-      </button>
-
       <!-- Left (RTL): Get Consultation (accent) + Login/Register (rounded, shadow) -->
       <ClientOnly>
         <div class="nav-actions">
@@ -84,57 +75,58 @@
         </div>
       </ClientOnly>
     </div>
-
-    <!-- Mobile sidebar -->
-    <div
-      class="mobile-sidebar"
-      :class="{ 'translate-x-0!': useGlobalStore().sidebarVisblity }">
-      <div class="mobile-sidebar-header">
-        <button
-          type="button"
-          class="mobile-close"
-          aria-label="بستن"
-          @click="useGlobalStore().sidebarVisblity = false">
-          <UIcon name="hugeicons:cancel-01" class="size-6!" />
-        </button>
-        <NuxtLink to="/" class="mobile-logo" @click="useGlobalStore().sidebarVisblity = false">
-          <UIcon name="lucide:scale" class="size-5! text-[#1e3a5f]" />
-          <span class="logo-text text-[#1e3a5f]">وکیل‌وکیل</span>
-        </NuxtLink>
-      </div>
-      <div class="mobile-sidebar-body">
-        <hr class="mobile-divider" />
-        <UNavigationMenu
-          orientation="vertical"
-          :items="menuItems"
-          :ui="{ label: 'py-2.5!', link: 'py-2.5!', list: 'space-y-1.5' }" />
-        <NuxtLink
-          :to="auth?.token ? '/dashboard' : '/register'"
-          class="mobile-auth-btn"
-          @click="useGlobalStore().sidebarVisblity = false">
-          <UIcon
-            :name="auth.token ? 'hugeicons:dashboard-square-01' : 'heroicons:user-solid'"
-            class="size-4.5!" />
-          {{ auth?.token ? "پنل کاربری" : "ورود / ثبت نام" }}
-        </NuxtLink>
-      </div>
-    </div>
-    <Transition name="fade">
-      <div
-        v-if="useGlobalStore().sidebarVisblity"
-        class="mobile-overlay"
-        @click="useGlobalStore().sidebarVisblity = false"
-        aria-hidden="true" />
-    </Transition>
   </header>
+
+  <!-- نوار ناوبری ثابت پایین (فقط موبایل)، مثل نمونه تصویر -->
+  <nav
+    class="mobile-bottom-nav lg:!hidden"
+    aria-label="منوی اصلی">
+    <NuxtLink to="/" class="bottom-nav-item" :class="{ 'bottom-nav-item--active': isActive('/') }">
+      <UIcon name="lucide:house" class="bottom-nav-icon" />
+      <span class="bottom-nav-label">خانه</span>
+    </NuxtLink>
+    <NuxtLink to="/#lawyers" class="bottom-nav-item" :class="{ 'bottom-nav-item--active': isLawyersActive }">
+      <UIcon name="lucide:layout-list" class="bottom-nav-icon" />
+      <span class="bottom-nav-label">لیست وکلا</span>
+    </NuxtLink>
+    <NuxtLink to="/#lawyers" class="bottom-nav-item bottom-nav-item--center">
+      <span class="bottom-nav-center-btn">
+        <UIcon name="heroicons:chat-bubble-left-right-solid" class="size-6!" />
+      </span>
+      <span class="bottom-nav-label">مشاوره</span>
+    </NuxtLink>
+    <NuxtLink to="#faq" class="bottom-nav-item" :class="{ 'bottom-nav-item--active': isActive('#faq') }">
+      <UIcon name="lucide:help-circle" class="bottom-nav-icon" />
+      <span class="bottom-nav-label">سوالات</span>
+    </NuxtLink>
+    <NuxtLink
+      :to="auth?.token ? '/dashboard' : '/register'"
+      class="bottom-nav-item"
+      :class="{ 'bottom-nav-item--active': isActive('/register') || isActive('/dashboard') }">
+      <UIcon name="heroicons:user-solid" class="bottom-nav-icon" />
+      <span class="bottom-nav-label">{{ auth?.token ? "پنل" : "ورود" }}</span>
+    </NuxtLink>
+  </nav>
 </template>
 
 <script setup>
+const route = useRoute();
 const auth = useAuthStore();
 await auth.ensureUser();
 
 const filtersStore = useFiltersStore();
 const lawyersPopoverVisiblity = ref(false);
+
+function isActive(path) {
+  if (path === "/") return route.path === "/" && !route.hash;
+  if (path === "#faq") return route.hash === "#faq";
+  if (path === "/register") return route.path === "/register";
+  if (path === "/dashboard") return route.path.startsWith("/dashboard");
+  return false;
+}
+const isLawyersActive = computed(
+  () => route.path === "/" && (route.hash === "#lawyers" || route.hash === "lawyers")
+);
 const isScrolled = ref(false);
 
 const provinces = ref([]);
@@ -261,6 +253,7 @@ onUnmounted(() => {
   --nav-text: #0f172a;
   --nav-text-muted: #475569;
   --nav-border: rgba(0, 0, 0, 0.06);
+  --header-height: 80px;
 }
 
 #navBar.premium-nav {
@@ -392,47 +385,54 @@ onUnmounted(() => {
   @apply cursor-pointer border-0 font-medium;
 }
 
-/* Mobile sidebar */
-.mobile-sidebar {
-  @apply fixed top-0 start-0 h-lvh w-[85svw] max-w-[380px] z-[110] overflow-y-auto;
-  @apply transition-transform duration-300 ease-out;
-  transform: translateX(100%);
-  background: #ffffff;
-  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.08);
-  border-inline-start: 1px solid var(--nav-border);
+/* نوار ناوبری ثابت پایین (موبایل)، مثل نمونه تصویر */
+.mobile-bottom-nav {
+  @apply fixed bottom-0 left-0 right-0 z-[100] flex items-center justify-around;
+  @apply bg-white border-t border-gray-200/80;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  padding-top: 0.5rem;
+  min-height: 56px;
+  box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.06);
 }
 
-.mobile-sidebar-header {
-  @apply flex items-center justify-between gap-3 h-16 px-5 sticky top-0 z-10 bg-white;
-  border-bottom: 1px solid var(--nav-border);
+.bottom-nav-item {
+  @apply flex flex-col items-center justify-center gap-0.5 px-2 py-2 rounded-xl no-underline transition-colors min-w-0 flex-1;
+  color: var(--nav-text-muted);
+  max-width: 5rem;
 }
 
-.mobile-close {
-  @apply flex items-center justify-center size-10 rounded-xl text-gray-500;
-}
-.mobile-close:hover {
-  @apply bg-gray-100 text-gray-700;
+.bottom-nav-item:hover {
+  color: var(--nav-accent);
 }
 
-.mobile-logo {
-  @apply flex items-center gap-2 no-underline text-[var(--nav-text)];
+.bottom-nav-item--active {
+  color: var(--nav-accent);
+}
+.bottom-nav-item--active .bottom-nav-icon {
+  color: var(--nav-accent);
 }
 
-.mobile-sidebar-body {
-  @apply px-5 py-5 space-y-2;
+.bottom-nav-icon {
+  @apply size-5 shrink-0;
+  color: inherit;
 }
 
-.mobile-divider {
-  @apply border-gray-200 mb-3;
+.bottom-nav-label {
+  @apply text-[10px] font-medium truncate w-full text-center;
 }
 
-.mobile-auth-btn {
-  @apply w-full mt-4 py-3 px-5 rounded-xl flex items-center justify-center gap-2 text-[15px] font-bold text-white no-underline;
+/* آیتم وسط: دکمه برجسته (مشاوره) */
+.bottom-nav-item--center {
+  @apply flex-none max-w-none;
+}
+
+.bottom-nav-center-btn {
+  @apply flex items-center justify-center size-12 rounded-2xl text-white transition-all;
   background: var(--nav-accent);
-  box-shadow: 0 2px 8px rgba(30, 58, 95, 0.25);
+  box-shadow: 0 4px 14px rgba(30, 58, 95, 0.35);
 }
-.mobile-auth-btn:hover {
+.bottom-nav-item--center:hover .bottom-nav-center-btn {
   background: var(--nav-accent-soft);
-  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+  box-shadow: 0 6px 18px rgba(30, 58, 95, 0.4);
 }
 </style>
