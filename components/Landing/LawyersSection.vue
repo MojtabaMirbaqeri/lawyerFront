@@ -15,23 +15,25 @@
         :items="lawyerTypes" />
     </div>
     
-    <!-- Mobile Filter Trigger -->
-    <UICDrawer
-      v-model="filtersStore.drawerVisiblity"
-      title="filters"
-      description="filter laywers"
-      class="overflow-y-auto! lg:hidden">
-      <template #button>
-        <div class="filters-trigger">
-          <UChip inset :show="filtersStore.hasActiveFilters" position="bottom-right">
-            <UIcon name="heroicons:funnel-solid" class="size-5! text-[#1e3a5f]" />
-          </UChip>
-          <span>فیلترها</span>
-          <UIcon name="heroicons:chevron-left-solid" class="size-4! ms-auto" />
-        </div>
-      </template>
-      <template #default><LandingFilters /></template>
-    </UICDrawer>
+    <!-- Phone-only Filter Trigger -->
+    <div class="sm:hidden">
+      <UICDrawer
+        v-model="filtersStore.drawerVisiblity"
+        title="filters"
+        description="filter laywers"
+        class="overflow-y-auto!">
+        <template #button>
+          <div class="filters-trigger">
+            <UChip inset :show="filtersStore.hasActiveFilters" position="bottom-right">
+              <UIcon name="heroicons:funnel-solid" class="size-5! text-[#1e3a5f]" />
+            </UChip>
+            <span>فیلترها</span>
+            <UIcon name="heroicons:chevron-left-solid" class="size-4! ms-auto" />
+          </div>
+        </template>
+        <template #default><LandingFilters /></template>
+      </UICDrawer>
+    </div>
     
     <!-- Main Content -->
     <div ref="lawyersListRef" class="lawyers-layout">
