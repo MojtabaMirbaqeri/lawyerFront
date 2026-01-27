@@ -81,7 +81,7 @@
           </div>
           
           <!-- Quick Actions -->
-          <div class="quick-actions">
+          <div class="quick-actions" :class="{ 'quick-actions--dropdown-open': showSuggestBox }">
             <button class="quick-btn" @click="navigateTo('/#lawyers')">
               <UIcon name="heroicons:squares-2x2-solid" class="size-5!" />
               مشاهده همه وکلا
@@ -249,7 +249,7 @@ header {
 }
 
 .search-box {
-  @apply relative max-w-xl mx-auto lg:mx-0 mb-6;
+  @apply relative max-w-xl mx-auto lg:mx-0 mb-6 overflow-visible;
 }
 
 .search-inner {
@@ -265,7 +265,7 @@ header {
 }
 
 .suggest-box {
-  @apply absolute top-full mt-2 w-full p-3 rounded-2xl bg-white;
+  @apply absolute top-full left-0 right-0 z-50 mt-3 w-full p-3 rounded-2xl bg-white;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
 }
 
@@ -274,7 +274,11 @@ header {
 }
 
 .quick-actions {
-  @apply flex flex-wrap justify-center lg:justify-start gap-3;
+  @apply flex flex-wrap justify-center lg:justify-start gap-3 transition-[margin] duration-200;
+}
+
+.quick-actions--dropdown-open {
+  margin-top: calc(0.75rem + 15rem + 0.5rem);
 }
 
 .quick-btn {
