@@ -206,6 +206,7 @@ async function fetchLawyers() {
     url: "lawyers",
     query: {
       page: currentLawyersPage.value,
+      per_page: 12,
       base_id: filtersStore.selectedFilters.lawyerType,
       "specialty_id[]": filtersStore.selectedFilters.lawyerSpecialty || [],
       gender: filtersStore.selectedFilters.gender,

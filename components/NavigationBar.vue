@@ -1,112 +1,119 @@
 <template>
-  <div id="navBar" :class="{ 'nav-scrolled': isScrolled }">
-    <div class="container">
-      <UIcon
-        name="heroicons:bars-3-solid"
-        class="size-7! lg:hidden!"
-        @click="useGlobalStore().toggleSidebar" />
-      <div class="hidden lg:block w-[140px]">
-        <NuxtImg src="/images/main-logo.svg" class="h-8" />
-      </div>
+  <header id="navBar" :class="{ 'nav-scrolled': isScrolled }" class="premium-nav">
+    <div class="nav-container">
+      <!-- Right (RTL): Logo + horizontal nav (Home, Lawyers, FAQ, Contact) -->
+      <NuxtLink to="/" class="logo-block">
+        <span class="logo-icon" aria-hidden="true">
+          <UIcon name="lucide:scale" class="size-5!" />
+        </span>
+        <span class="logo-text">وکیل‌وکیل</span>
+      </NuxtLink>
+
       <nav class="desktop-nav">
-        <NuxtLink to="/"> خانه </NuxtLink>
+        <NuxtLink to="/" class="nav-link">خانه</NuxtLink>
         <UPopover
           v-model:open="lawyersPopoverVisiblity"
-          :content="{
-            align: 'start',
-            side: 'bottom',
-          }"
+          :content="{ align: 'start', side: 'bottom' }"
           :arrow="true"
           :open-delay="0"
           mode="hover">
-          <span @click="navigateTo('/#lawyers')"> لیست وکلا </span>
-
+          <span class="nav-link nav-link--dropdown">
+            لیست وکلا
+            <UIcon
+              name="heroicons:chevron-down-solid"
+              class="nav-link-chevron size-4! shrink-0"
+              :class="{ 'nav-link-chevron--open': lawyersPopoverVisiblity }" />
+          </span>
           <template #content>
             <div class="lawyers-popover" @click="lawyersPopoverVisiblity = false">
               <div class="space-y-1.5">
-                <h2 class="font-semibold">استان ها</h2>
-                <hr class="text-gray-200" />
+                <h2 class="popover-heading">استان ها</h2>
+                <hr class="popover-divider" />
                 <UNavigationMenu
-                  class="max-h-64! overflow-y-auto"
-                  :style="{
-                    scrollbarWidth: 'thin',
-                    scrollbarColor: '#c0c0c0 transparent',
-                  }"
+                  class="max-h-64! overflow-y-auto popover-list"
+                  :style="{ scrollbarWidth: 'thin', scrollbarColor: '#c0c0c0 transparent' }"
                   orientation="vertical"
                   :items="provinces"
-                  :ui="{
-                    list: 'space-y-1.5',
-                  }" />
+                  :ui="{ list: 'space-y-1.5' }" />
               </div>
               <div v-if="specialties.length > 0" class="space-y-1.5">
-                <h2 class="font-semibold">تخصص ها</h2>
-                <hr class="text-gray-200" />
+                <h2 class="popover-heading">تخصص ها</h2>
+                <hr class="popover-divider" />
                 <UNavigationMenu
-                  class="max-h-64! overflow-y-auto"
-                  :style="{
-                    scrollbarWidth: 'thin',
-                    scrollbarColor: '#c0c0c0 transparent',
-                  }"
+                  class="max-h-64! overflow-y-auto popover-list"
+                  :style="{ scrollbarWidth: 'thin', scrollbarColor: '#c0c0c0 transparent' }"
                   orientation="vertical"
                   :items="specialties"
-                  :ui="{
-                    list: 'space-y-1.5',
-                  }" />
+                  :ui="{ list: 'space-y-1.5' }" />
               </div>
             </div>
           </template>
         </UPopover>
-        <NuxtLink to="#faq"> سوالات متداول </NuxtLink>
-        <NuxtLink to="#comments"> دیدگاه کاربران </NuxtLink>
+        <NuxtLink to="#faq" class="nav-link">سوالات متداول</NuxtLink>
+        <a href="tel:+982110014488" class="nav-link">تماس با ما</a>
       </nav>
+
+      <!-- Spacer: keeps logo+nav right, actions left (RTL) -->
+      <div class="nav-spacer flex-1 min-w-0" aria-hidden="true" />
+
+      <!-- Mobile menu trigger -->
+      <button
+        type="button"
+        class="nav-menu-btn lg:hidden!"
+        aria-label="منو"
+        @click="useGlobalStore().toggleSidebar">
+        <UIcon name="heroicons:bars-3-solid" class="size-6!" />
+      </button>
+
+      <!-- Left (RTL): Get Consultation (accent) + Login/Register (rounded, shadow) -->
       <ClientOnly>
-        <div class="ms-auto lg:ms-0 lg:w-[140px] flex justify-end">
-          <NuxtLink v-if="!auth.token" :to="'/register'">
-            <UButton
-              color="secondary"
-              class="nav-btn"
-              variant="outline">
-              ورود / ثبت نام
-              <UIcon name="mage:login" class="size-5! rotate-180" />
-            </UButton>
+        <div class="nav-actions">
+          <NuxtLink to="/#lawyers" class="btn-consultation">
+            دریافت مشاوره
+          </NuxtLink>
+          <NuxtLink v-if="!auth.token" to="/register" class="btn-login">
+            <UIcon name="heroicons:user-solid" class="size-4!" />
+            ورود / ثبت نام
           </NuxtLink>
           <UDropdownMenu v-else :items="dropdownItems" :ui="{ content: '' }">
-            <UButton
-              :label="`${useAuthStore().user?.name} ${useAuthStore().user?.family}`"
-              color="secondary"
-              variant="outline"
-              icon="solar:user-rounded-linear"
-              class="nav-btn"
-              :ui="{ leadingIcon: 'size-4.5!' }" />
+            <button type="button" class="btn-login btn-login--user">
+              <UIcon name="heroicons:user-solid" class="size-4!" />
+              <span>{{ useAuthStore().user?.name }} {{ useAuthStore().user?.family }}</span>
+            </button>
           </UDropdownMenu>
         </div>
       </ClientOnly>
     </div>
+
+    <!-- Mobile sidebar -->
     <div
       class="mobile-sidebar"
       :class="{ 'translate-x-0!': useGlobalStore().sidebarVisblity }">
-      <div class="header">
-        <UIcon
-          name="hugeicons:cancel-01"
-          class="size-6! p-2"
-          @click="useGlobalStore().sidebarVisblity = false" />
-        <NuxtImg src="/images/main-logo.svg" class="h-8" />
+      <div class="mobile-sidebar-header">
+        <button
+          type="button"
+          class="mobile-close"
+          aria-label="بستن"
+          @click="useGlobalStore().sidebarVisblity = false">
+          <UIcon name="hugeicons:cancel-01" class="size-6!" />
+        </button>
+        <NuxtLink to="/" class="mobile-logo" @click="useGlobalStore().sidebarVisblity = false">
+          <UIcon name="lucide:scale" class="size-5! text-[#1e3a5f]" />
+          <span class="logo-text text-[#1e3a5f]">وکیل‌وکیل</span>
+        </NuxtLink>
       </div>
-      <div class="body">
-        <hr class="text-gray-200" />
+      <div class="mobile-sidebar-body">
+        <hr class="mobile-divider" />
         <UNavigationMenu
           orientation="vertical"
           :items="menuItems"
-          :ui="{
-            label: 'py-2.5!',
-            link: 'py-2.5!',
-            list: 'space-y-1.5',
-          }" />
+          :ui="{ label: 'py-2.5!', link: 'py-2.5!', list: 'space-y-1.5' }" />
         <NuxtLink
           :to="auth?.token ? '/dashboard' : '/register'"
-          class="mobile-auth-btn">
+          class="mobile-auth-btn"
+          @click="useGlobalStore().sidebarVisblity = false">
           <UIcon
-            :name="auth.token ? 'hugeicons:dashboard-square-01' : 'mage:login'"
+            :name="auth.token ? 'hugeicons:dashboard-square-01' : 'heroicons:user-solid'"
             class="size-4.5!" />
           {{ auth?.token ? "پنل کاربری" : "ورود / ثبت نام" }}
         </NuxtLink>
@@ -116,9 +123,10 @@
       <div
         v-if="useGlobalStore().sidebarVisblity"
         class="mobile-overlay"
-        @click="useGlobalStore().sidebarVisblity = false" />
+        @click="useGlobalStore().sidebarVisblity = false"
+        aria-hidden="true" />
     </Transition>
-  </div>
+  </header>
 </template>
 
 <script setup>
@@ -181,41 +189,31 @@ const menuItems = ref([
       defaultOpen: true,
       to: "/#lawyers",
       children: [
-        {
-          label: "تخصص ها",
-          icon: "i-lucide-target",
-          children: [],
-        },
-        {
-          label: "استان ها",
-          icon: "lucide:building-2",
-          children: [],
-        },
+        { label: "تخصص ها", icon: "i-lucide-target", children: [] },
+        { label: "استان ها", icon: "lucide:building-2", children: [] },
       ],
-    },
-    {
-      label: "دیدگاه کاربران",
-      icon: "lucide:circle-help",
-      to: "#comments",
     },
     {
       label: "سوالات متداول",
       icon: "lucide:messages-square",
       to: "#faq",
     },
+    {
+      label: "تماس با ما",
+      icon: "lucide:phone",
+      to: "tel:+982110014488",
+    },
   ],
 ]);
 
 onMounted(async () => {
-  // Scroll detection for glassmorphism effect
   const handleScroll = () => {
     isScrolled.value = window.scrollY > 20;
   };
-  window.addEventListener('scroll', handleScroll);
+  window.addEventListener("scroll", handleScroll);
   handleScroll();
 
   try {
-    // Set specialties
     specialties.value = filtersStore.lawyerSpecialties.map((s) => ({
       label: s.title,
       id: String(s.id),
@@ -224,122 +222,217 @@ onMounted(async () => {
 
     const lawyersMenu = menuItems.value[0].find((item) => item.label === "لیست وکلا");
     if (lawyersMenu) {
-      if (specialties.value.length > 0) {
-        const specialtyMenu = lawyersMenu.children.find(
-          (child) => child.label === "تخصص ها"
-        );
-        if (specialtyMenu) {
-          specialtyMenu.children = specialties.value;
-        }
-      } else {
-        lawyersMenu.children = lawyersMenu.children.filter(
-          (child) => child.label !== "تخصص ها"
-        );
+      const specialtyMenu = lawyersMenu.children.find((c) => c.label === "تخصص ها");
+      if (specialtyMenu && specialties.value.length > 0) {
+        specialtyMenu.children = specialties.value;
+      } else if (specialtyMenu) {
+        lawyersMenu.children = lawyersMenu.children.filter((c) => c.label !== "تخصص ها");
       }
     }
 
-    // Load provinces
     const rawProvinces = await $fetch("/provinces.json");
-
-    provinces.value = (rawProvinces || []).map((province) => ({
-      label: province.name,
-      id: String(province.id),
-      to: `/provinces/${province.en_name}`,
+    provinces.value = (rawProvinces || []).map((p) => ({
+      label: p.name,
+      id: String(p.id),
+      to: `/provinces/${p.en_name}`,
     }));
 
-    if (lawyersMenu) {
-      const provinceMenu = lawyersMenu.children.find(
-        (child) => child.label === "استان ها"
-      );
-      if (provinceMenu) {
-        provinceMenu.children = provinces.value;
-      }
+    const lawyersMenuForProvinces = menuItems.value[0].find((item) => item.label === "لیست وکلا");
+    if (lawyersMenuForProvinces) {
+      const provinceMenu = lawyersMenuForProvinces.children.find((c) => c.label === "استان ها");
+      if (provinceMenu) provinceMenu.children = provinces.value;
     }
   } catch (err) {
-    console.error("fetch provinces or cities error:", err);
+    console.error("fetch provinces or specialties error:", err);
   }
 });
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', () => {});
+  window.removeEventListener("scroll", () => {});
 });
 </script>
 
 <style scoped>
 @reference "tailwindcss";
 
-#navBar {
-  @apply sticky top-0 start-0 z-[100] py-2 h-16;
-  @apply w-full;
-  @apply bg-white/80;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: all 0.3s ease;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+.premium-nav {
+  --nav-accent: #1e3a5f;
+  --nav-accent-soft: #2d5a87;
+  --nav-text: #0f172a;
+  --nav-text-muted: #475569;
+  --nav-border: rgba(0, 0, 0, 0.06);
 }
 
-#navBar.nav-scrolled {
-  @apply bg-white/95;
+#navBar.premium-nav {
+  @apply sticky top-0 start-0 z-[100] w-full;
+  min-height: 80px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--nav-border);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.25s ease;
+}
+
+#navBar.premium-nav.nav-scrolled {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-.container {
-  @apply flex items-center gap-6;
+.nav-container {
+  @apply flex items-center gap-6 lg:gap-10 w-full max-w-[1400px] mx-auto px-5 lg:px-10;
+  min-height: 80px;
 }
 
-.mobile-sidebar {
-  @apply fixed h-lvh w-[75svw] max-w-[420px] bg-white top-0 translate-x-[100%] z-10 overflow-y-auto;
-  @apply transition-all duration-[450ms] ease-in-out;
-  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.1);
+/* Right (RTL): Logo + nav with clean spacing */
+.logo-block {
+  @apply flex items-center gap-2.5 shrink-0 no-underline;
+  color: var(--nav-text);
 }
 
-.mobile-overlay {
-  @apply fixed top-0 start-0 h-lvh w-svw bg-black/20 backdrop-blur-sm;
+.logo-icon {
+  @apply flex items-center justify-center size-8 rounded-lg shrink-0;
+  background: rgba(30, 58, 95, 0.08);
+  color: var(--nav-accent);
 }
 
-.mobile-sidebar .header {
-  @apply flex items-center justify-between h-16 bg-white px-4 sticky top-0! start-0! z-10;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+.logo-text {
+  @apply text-lg lg:text-xl font-bold tracking-tight;
+  font-family: inherit;
+  color: var(--nav-text);
+  letter-spacing: -0.02em;
 }
 
-.mobile-sidebar .body {
-  @apply px-4 space-y-3 pb-4;
+.logo-block:hover .logo-text {
+  color: var(--nav-accent);
 }
 
+/* Horizontal nav next to logo */
 .desktop-nav {
-  @apply items-center gap-5 text-base mx-auto hidden lg:flex;
+  @apply hidden lg:flex items-center gap-8 min-w-0;
 }
 
-.desktop-nav .router-link-exact-active {
-  @apply font-medium;
-  color: #1e3a5f;
+.nav-link {
+  @apply py-2 text-[15px] font-semibold transition-colors no-underline whitespace-nowrap;
+  color: var(--nav-text-muted);
 }
 
-.desktop-nav a,
-.desktop-nav span {
-  @apply transition-all duration-300 cursor-pointer;
-}
-.desktop-nav a:hover,
-.desktop-nav span:hover {
-  color: #1e3a5f;
+.nav-link:hover {
+  color: var(--nav-accent);
 }
 
+.nav-link--dropdown {
+  @apply inline-flex items-center gap-1 cursor-pointer;
+}
+
+.nav-link-chevron {
+  @apply transition-transform duration-200 text-current opacity-70;
+}
+.nav-link-chevron--open {
+  transform: rotate(180deg);
+}
+
+.desktop-nav a.router-link-exact-active,
+.desktop-nav a.router-link-active {
+  color: var(--nav-accent);
+}
+
+/* Popover */
 .lawyers-popover {
-  @apply p-4 grid grid-cols-2 gap-6 w-[480px];
+  @apply p-4 grid grid-cols-2 gap-6 w-[480px] bg-white rounded-2xl;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
+  border: 1px solid var(--nav-border);
+}
+.popover-heading {
+  @apply font-semibold text-gray-800;
+}
+.popover-divider {
+  @apply border-gray-200;
+}
+.popover-list {
+  @apply text-gray-700;
 }
 
-.nav-btn {
-  @apply text-sm lg:text-[15px] gap-1 rounded-xl border-gray-200 transition-all;
+/* Mobile menu button */
+.nav-menu-btn {
+  @apply flex items-center justify-center size-10 rounded-xl text-gray-600;
 }
-.nav-btn:hover {
-  border-color: #1e3a5f;
-  color: #1e3a5f;
+.nav-menu-btn:hover {
+  @apply bg-gray-100 text-gray-800;
+}
+
+/* Left (RTL): Get Consultation (accent) + Login/Register (rounded, shadow) */
+.nav-actions {
+  @apply flex items-center gap-3 shrink-0;
+}
+
+.btn-consultation {
+  @apply hidden lg:inline-flex items-center justify-center px-5 py-2.5 rounded-xl text-[15px] font-bold text-white transition-all no-underline;
+  background: var(--nav-accent);
+  box-shadow: 0 2px 8px rgba(30, 58, 95, 0.25);
+}
+
+.btn-consultation:hover {
+  background: var(--nav-accent-soft);
+  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+}
+
+.btn-login {
+  @apply inline-flex items-center gap-2 px-4 lg:px-5 py-2.5 rounded-xl text-[14px] lg:text-[15px] font-semibold transition-all no-underline;
+  color: var(--nav-accent);
+  background: #ffffff;
+  border: 1px solid rgba(30, 58, 95, 0.2);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.btn-login:hover {
+  background: rgba(30, 58, 95, 0.04);
+  border-color: rgba(30, 58, 95, 0.35);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.btn-login--user {
+  @apply cursor-pointer border-0 font-medium;
+}
+
+/* Mobile sidebar */
+.mobile-sidebar {
+  @apply fixed top-0 start-0 h-lvh w-[85svw] max-w-[380px] z-[110] overflow-y-auto;
+  @apply transition-transform duration-300 ease-out;
+  transform: translateX(100%);
+  background: #ffffff;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.08);
+  border-inline-start: 1px solid var(--nav-border);
+}
+
+.mobile-sidebar-header {
+  @apply flex items-center justify-between gap-3 h-16 px-5 sticky top-0 z-10 bg-white;
+  border-bottom: 1px solid var(--nav-border);
+}
+
+.mobile-close {
+  @apply flex items-center justify-center size-10 rounded-xl text-gray-500;
+}
+.mobile-close:hover {
+  @apply bg-gray-100 text-gray-700;
+}
+
+.mobile-logo {
+  @apply flex items-center gap-2 no-underline text-[var(--nav-text)];
+}
+
+.mobile-sidebar-body {
+  @apply px-5 py-5 space-y-2;
+}
+
+.mobile-divider {
+  @apply border-gray-200 mb-3;
 }
 
 .mobile-auth-btn {
-  @apply w-full py-2.5 px-3 rounded-xl flex items-center gap-1.5 text-sm font-medium text-[#1e3a5f];
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+  @apply w-full mt-4 py-3 px-5 rounded-xl flex items-center justify-center gap-2 text-[15px] font-bold text-white no-underline;
+  background: var(--nav-accent);
+  box-shadow: 0 2px 8px rgba(30, 58, 95, 0.25);
+}
+.mobile-auth-btn:hover {
+  background: var(--nav-accent-soft);
+  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
 }
 </style>
-
