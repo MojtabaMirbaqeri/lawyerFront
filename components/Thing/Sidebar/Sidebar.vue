@@ -14,99 +14,127 @@
       @click="closeSideBar"
     ></div>
     <div
-      class="mobile-sidebar z-30 h-screen w-[18rem] bg-white right-[-100%] fixed top-0"
+      class="mobile-sidebar z-30 h-screen w-[18rem] bg-gradient-to-b from-[#1e3a5f] to-[#0b1726] text-white right-[-100%] fixed top-0 shadow-2xl overflow-hidden"
       :class="{ 'right-0!': useDashboardStore().openSidebar }"
     >
-      <div class="p-3 flex justify-between items-center">
-        <div class="logo">
-          <NuxtLink to="/">
-            <NuxtImg src="/images/main-logo.svg" class="w-28" />
-          </NuxtLink>
-        </div>
-        <div class="closeBtn">
-          <UIcon
-            name="solar:close-circle-linear"
-            class="size-5!"
-            @click="closeSideBar"
-          />
-        </div>
+      <!-- Decorative Elements -->
+      <div
+        class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20"
+      >
+        <div
+          class="absolute top-[-10%] right-[-10%] w-40 h-40 bg-white/10 rounded-full blur-3xl"
+        ></div>
+        <div
+          class="absolute bottom-[-10%] left-[-10%] w-40 h-40 bg-[#f59e0b]/10 rounded-full blur-3xl"
+        ></div>
       </div>
-      <div class="items w-full px-3 divide-y divide-gray-200">
-        <ul
-          class="w-full flex flex-col gap-1.5 py-3"
-          v-if="$route.path.startsWith('/dashboard')"
-        >
-          <li
-            v-for="item in dashboardStore.sidebarRoutes"
-            :key="item.url"
-            class="w-full flex items-center gap-2"
-          >
-            <nuxt-link
-              class="w-full flex items-center gap-2 ds-menu-item"
-              :to="item.url"
-              @click="closeSideBar"
-            >
-              <UIcon :name="item.icon" class="size-4.5!" />
-              {{ item.title }}
-            </nuxt-link>
-          </li>
-        </ul>
-        <ul class="w-full flex flex-col gap-1.5 py-3" v-else>
-          <li
-            v-for="item in chatStore.chatRooms"
-            :key="item.id"
-            class="w-full flex items-center gap-2"
-          >
-            <div
-              class="w-full flex items-center gap-2 ds-menu-item cursor-pointer"
-              @click="handleChatSidebar(item)"
-            >
-              <!-- پروفایل یا دایره رنگی -->
-              <template v-if="getChatPartner(item)?.profile">
-                <NuxtImg
-                  :src="getChatPartner(item).profile"
-                  alt="profile"
-                  class="w-8 h-8 rounded-full object-cover"
-                />
-              </template>
-              <template v-else>
-                <div
-                  class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold"
-                  :style="{ backgroundColor: getColor(item.id) }"
-                >
-                  {{
-                    getInitials(
-                      getChatPartner(item)?.name,
-                      getChatPartner(item)?.family,
-                    )
-                  }}
-                </div>
-              </template>
 
-              <!-- نام طرف مقابل یا گروه -->
-              <div>
-                {{
-                  getChatPartner(item)?.name +
-                  " " +
-                  (getChatPartner(item)?.family || "")
-                }}
+      <div class="relative z-10 flex flex-col h-full">
+        <!-- Header -->
+        <div
+          class="p-6 flex justify-between items-center border-b border-white/10"
+        >
+          <div class="logo">
+            <NuxtLink to="/">
+              <NuxtImg
+                src="/images/main-logo.svg"
+                class="w-28 brightness-0 invert"
+              />
+            </NuxtLink>
+          </div>
+          <div class="closeBtn">
+            <UIcon
+              name="solar:close-circle-linear"
+              class="size-6 cursor-pointer text-white/70 hover:text-white transition-colors"
+              @click="closeSideBar"
+            />
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="flex-1 overflow-y-auto px-4 py-4 space-y-1">
+          <ul class="space-y-2" v-if="$route.path.startsWith('/dashboard')">
+            <li v-for="item in dashboardStore.sidebarRoutes" :key="item.url">
+              <nuxt-link
+                class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group"
+                active-class="bg-white/15 backdrop-blur-md shadow-lg border border-white/10 text-white font-medium"
+                :class="[
+                  $route.path === item.url
+                    ? ''
+                    : 'text-gray-300 hover:text-white hover:bg-white/5',
+                ]"
+                :to="item.url"
+                @click="closeSideBar"
+              >
+                <UIcon
+                  :name="item.icon"
+                  class="size-5 transition-transform duration-300 group-hover:scale-110"
+                  :class="$route.path === item.url ? 'text-[#f59e0b]' : ''"
+                />
+                <span class="text-sm tracking-wide">{{ item.title }}</span>
+              </nuxt-link>
+            </li>
+          </ul>
+          <ul class="space-y-2" v-else>
+            <li v-for="item in chatStore.chatRooms" :key="item.id">
+              <div
+                class="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-300 hover:bg-white/5 group"
+                :class="{
+                  'bg-white/15 backdrop-blur-md':
+                    chatStore.selectedRoom === item.id,
+                }"
+                @click="handleChatSidebar(item)"
+              >
+                <!-- Profile Logic -->
+                <template v-if="getChatPartner(item)?.profile">
+                  <NuxtImg
+                    :src="getChatPartner(item).profile"
+                    alt="profile"
+                    class="w-9 h-9 rounded-full object-cover ring-2 ring-white/20"
+                  />
+                </template>
+                <template v-else>
+                  <div
+                    class="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold shadow-lg"
+                    :style="{ backgroundColor: getColor(item.id) }"
+                  >
+                    {{
+                      getInitials(
+                        getChatPartner(item)?.name,
+                        getChatPartner(item)?.family,
+                      )
+                    }}
+                  </div>
+                </template>
+
+                <!-- نام طرف مقابل یا گروه -->
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium truncate text-white">
+                    {{
+                      getChatPartner(item)?.name +
+                      " " +
+                      (getChatPartner(item)?.family || "")
+                    }}
+                  </p>
+                </div>
               </div>
-            </div>
-          </li>
-        </ul>
-        <div class="py-3">
-          <DashboardLogoutBtn
-            v-if="$route.path.startsWith('/dashboard')"
-            class="h-auto"
-          />
-          <button
-            @click="navigateTo('/dashboard')"
-            v-if="$route.path.startsWith('/chat')"
-            class="bg-[#e8edf5] flex gap-2 items-center justify-start rounded-[7px] py-5 px-4 h-9 text-[#1e3a5f] w-full text-right"
-          >
-            <UIcon name="hugeicons:dashboard-square-01" class="size-4.5!" />
-            <span>برگشت به داشبورد</span>
-          </button>
+            </li>
+          </ul>
+
+          <div class="py-3 mt-auto">
+            <DashboardLogoutBtn
+              v-if="$route.path.startsWith('/dashboard')"
+              class="w-full"
+            />
+            <button
+              @click="navigateTo('/dashboard')"
+              v-if="$route.path.startsWith('/chat')"
+              class="w-full flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white py-3 rounded-xl transition-all border border-white/5"
+            >
+              <UIcon name="solar:arrow-right-linear" class="size-5" />
+              <span>بازگشت به داشبورد</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -350,7 +378,7 @@ const getChatName = (room) => {
 
   // Find the member who is NOT the current logged-in user.
   const otherUser = room.members.find(
-    (member) => member.id !== userStore.user?.id,
+    (member) => member.id !== authStore.user?.id,
   );
 
   // If we found the other user, return their full name.
