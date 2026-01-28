@@ -3,53 +3,8 @@
     <ClientOnly>
       <dashboard-layout :chat-items="chatItems || []" />
       <div class="w-full">
-        <!-- وقتی هیچ اتاقی انتخاب نشده -->
-        <nav
-          class="dashboard-nav"
-          v-if="chatStore.chatRooms?.length <= 0 || chatStore.selectedRoom == 0"
-        >
-          <UIcon
-            name="solar:hamburger-menu-outline"
-            class="size-6! lg:hidden!"
-            @click="openSideBarHandle"
-          />
-          <UserProfile
-            :reverse="true"
-            :detail="{
-              name: `${authStore?.user?.name} ${authStore?.user?.family}`,
-              text: authStore?.user?.phone,
-            }"
-          />
-
-          <UIcon
-            v-if="$route.path == '/chat'"
-            name="ic:round-arrow-back-ios-new"
-            class="size-5! hidden! cursor-pointer lg:block!"
-            @click="navigateTo('/dashboard')"
-          />
-        </nav>
-
-        <!-- وقتی اتاق انتخاب شده -->
-        <nav class="dashboard-nav" v-else>
-          <UIcon
-            name="solar:hamburger-menu-outline"
-            class="size-6! lg:hidden!"
-            @click="openSideBarHandle"
-          />
-          <UserProfile
-            :reverse="true"
-            :detail="{
-              name: roomName,
-              text: chatStore?.roomInfo?.phone,
-            }"
-          />
-          <UIcon
-            v-if="$route.path == '/chat'"
-            name="ic:round-arrow-back-ios-new"
-            class="size-5! hidden! cursor-pointer lg:block!"
-            @click="navigateTo('/dashboard')"
-          />
-        </nav>
+        <!-- Header Component -->
+        <ThingHeader />
 
         <div
           class="space-y-4"
@@ -72,11 +27,13 @@
             }"
           />
           <slot
-            v-if="!(
-              authStore.user?.user_type == 'lawyer' &&
-              authStore.user?.lawyer_id == null &&
-              $route.path == '/dashboard/lawyer'
-            )"
+            v-if="
+              !(
+                authStore.user?.user_type == 'lawyer' &&
+                authStore.user?.lawyer_id == null &&
+                $route.path == '/dashboard/lawyer'
+              )
+            "
           />
         </div>
       </div>
@@ -103,7 +60,10 @@ const roomName = computed(() => {
 
   // گروه
   if (room.members?.length > 2) {
-    return room.name || `${authStore.user?.name ?? ""} ${authStore.user?.family ?? ""}`.trim();
+    return (
+      room.name ||
+      `${authStore.user?.name ?? ""} ${authStore.user?.family ?? ""}`.trim()
+    );
   }
 
   // چت خصوصی (پیدا کردن فرد مقابل)
@@ -130,7 +90,7 @@ watch(
       console.log("Room Name updated:", roomName.value);
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 
