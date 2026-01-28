@@ -34,7 +34,7 @@
           </li>
           <li class="flex items-center gap-3 text-slate-300/80 text-sm">
             <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/10">
-              <UIcon name="solar:phone-call-linear" class="size-4 text-white" />
+              <UIcon name="solar:incoming-call-linear" class="size-4 text-white" />
             </span>
             پشتیبانی در تمام مراحل
           </li>
