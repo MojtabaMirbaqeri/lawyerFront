@@ -6,7 +6,7 @@
         class="size-full"
         :show="show"
         position="bottom-right"
-        :ui="{ base: 'bg-blue-400 size-3 right-[10%]' }">
+        :ui="{ base: 'bg-[#1e3a5f] size-3 right-[10%]' }">
         <UAvatar
           class="size-full"
           :src="

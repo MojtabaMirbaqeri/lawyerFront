@@ -35,7 +35,7 @@ defineProps({
 }
 
 .user-avatar {
-  @apply size-9 lg:size-10 rounded-full bg-blue-100 relative shrink-0;
+  @apply size-9 lg:size-10 rounded-full bg-[#e8edf5] relative shrink-0;
 }
 
 .user-info {

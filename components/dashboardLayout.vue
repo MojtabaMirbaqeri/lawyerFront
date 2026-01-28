@@ -67,7 +67,7 @@
           <ThingSidebarGroup>
             <ThingSidebarGroupContent>
               <DashboardLogoutBtn  v-if="$route.path.startsWith('/dashboard')"/>
-              <button @click="navigateTo('/dashboard')" v-if="$route.path.startsWith('/chat')" class="bg-blue-100 flex gap-2 items-center lg:hidden justify-start rounded-[7px] py-5 px-4 h-9 text-[#1e3a5f] w-full text-right">
+              <button @click="navigateTo('/dashboard')" v-if="$route.path.startsWith('/chat')" class="bg-[#e8edf5] flex gap-2 items-center lg:hidden justify-start rounded-[7px] py-5 px-4 h-9 text-[#1e3a5f] w-full text-right">
                 <Icon name="hugeicons:dashboard-square-01" class="size-4.5!" />
                 <span>برگشت به داشبورد</span>
               </button>

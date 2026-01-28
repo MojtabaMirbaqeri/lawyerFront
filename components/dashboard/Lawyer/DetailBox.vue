@@ -57,7 +57,7 @@ const statItems = computed(() => {
       value: props.stats.income?.total_earned,
       unit: "تومان",
       icon: "i-solar-wallet-money-linear",
-      bgColor: "bg-blue-500! dark:bg-blue-600!",
+      bgColor: "bg-[#1e3a5f]! dark:bg-[#152a47]!",
       textColor: "text-white",
     },
     {

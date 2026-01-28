@@ -14,17 +14,17 @@
     <div class="card-header">
       <!-- Avatar -->
       <div class="avatar-wrapper">
-        <UChip
+        <!-- <UChip
           inset
           :show="lawyerInfo?.lawyer_info?.is_active"
           position="bottom-right"
-          :ui="{ base: 'bg-green-500 size-3.5 ring-2 ring-white right-[8%]' }">
+          :ui="{ base: 'bg-green-500 size-3.5 ring-2 ring-white right-[8%]' }"> -->
           <UAvatar
             class="size-full"
             :src="lawyerInfo?.profile_image ? config.public.imageBase + lawyerInfo.profile_image : '/images/nullavatar.png'"
             :alt="`${lawyerInfo?.name} ${lawyerInfo?.family}`"
             :ui="{ image: 'object-[50%_0%]' }" />
-        </UChip>
+        <!-- </UChip> -->
       </div>
       
       <!-- Rating Badge -->
@@ -37,12 +37,12 @@
     <!-- Lawyer Info -->
     <div class="lawyer-info">
       <h3 class="lawyer-name">{{ lawyerInfo?.name }} {{ lawyerInfo?.family }}</h3>
-      <p class="lawyer-title">{{ lawyerInfo?.lawyer_info?.education || 'وکیل دادگستری' }}</p>
+      <p class="lawyer-title">{{ lawyerInfo?.base || 'وکیل دادگستری' }}</p>
       
       <!-- Location -->
       <div class="lawyer-location">
         <UIcon name="heroicons:map-pin-solid" class="size-4!" />
-        <span>{{ lawyerInfo?.city?.name || lawyerInfo?.province?.name || 'ایران' }}</span>
+        <span>{{ lawyerInfo?.city || lawyerInfo?.province || 'ایران' }}</span>
       </div>
     </div>
 

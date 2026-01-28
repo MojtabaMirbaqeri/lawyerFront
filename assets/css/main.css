@@ -9,10 +9,10 @@
   --ui-gray: #4f6470;
   --ui-content: #042f48;
 
-  /* Gradient: Navy → Blue (هماهنگ با primary) */
+  /* Gradient: Navy → Darker Navy (Premium) */
   --gradient-start: #1e3a5f;
-  --gradient-mid: #2d5a87;
-  --gradient-end: #3b7ab5;
+  --gradient-mid: #152b46;
+  --gradient-end: #0b1726;
 
   /* Accent: طلایی ملایم برای دکمه و حالت فعال */
   --accent: #f59e0b;
@@ -42,7 +42,6 @@ html {
    ======================================== */
 
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0) rotate(0deg);
@@ -54,7 +53,6 @@ html {
 }
 
 @keyframes float-delayed {
-
   0%,
   100% {
     transform: translateY(0) rotate(0deg);
@@ -66,7 +64,6 @@ html {
 }
 
 @keyframes blob-pulse {
-
   0%,
   100% {
     transform: scale(1) translate(0, 0);
@@ -107,7 +104,6 @@ html {
 }
 
 @keyframes glow-pulse {
-
   0%,
   100% {
     box-shadow: 0 0 20px rgba(30, 58, 95, 0.35);
@@ -163,9 +159,9 @@ html {
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-.glow-primary {
-  box-shadow: 0 0 30px rgba(30, 58, 95, 0.35);
-}
+  .glow-primary {
+    box-shadow: 0 0 30px rgba(30, 58, 95, 0.35);
+  }
 
   .glow-gold {
     box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
@@ -176,17 +172,33 @@ html {
      ======================================== */
 
   .gradient-primary {
-    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-mid) 50%, var(--gradient-end) 100%);
+    background: linear-gradient(
+      135deg,
+      var(--gradient-start) 0%,
+      var(--gradient-mid) 50%,
+      var(--gradient-end) 100%
+    );
   }
 
   .gradient-animated {
-    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end), var(--gradient-mid), var(--gradient-start));
+    background: linear-gradient(
+      135deg,
+      var(--gradient-start),
+      var(--gradient-mid),
+      var(--gradient-end),
+      var(--gradient-mid),
+      var(--gradient-start)
+    );
     background-size: 400% 400%;
     animation: gradient-shift 8s ease infinite;
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    background: linear-gradient(
+      135deg,
+      var(--gradient-start),
+      var(--gradient-end)
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -210,7 +222,12 @@ html {
   }
 
   .animate-shimmer {
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
     background-size: 200% 100%;
     animation: shimmer 2s infinite;
   }
@@ -249,14 +266,22 @@ html {
   }
 
   .card-gradient-border::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     border-radius: inherit;
     padding: 2px;
-    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    background: linear-gradient(
+      135deg,
+      var(--gradient-start),
+      var(--gradient-end)
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     opacity: 0;
@@ -271,17 +296,17 @@ html {
      BUTTON STYLES
      ======================================== */
 
-.btn-gradient {
-  @apply text-white font-semibold py-3 px-6 rounded-xl;
-  background: linear-gradient(135deg, var(--ui-primary), var(--gradient-mid));
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(30, 58, 95, 0.35);
-}
+  .btn-gradient {
+    @apply text-white font-semibold py-3 px-6 rounded-xl;
+    background: linear-gradient(135deg, var(--ui-primary), var(--gradient-mid));
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(30, 58, 95, 0.35);
+  }
 
-.btn-gradient:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.35);
-}
+  .btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.35);
+  }
 
   .btn-glass {
     @apply py-2.5 px-5 rounded-xl font-medium;
@@ -345,17 +370,17 @@ html {
   }
 
   .ds-menu-item {
-    @apply py-2.5! px-3! lg:py-5! lg:px-4! overflow-clip rounded-md! relative hover:text-blue-500;
+    @apply py-2.5! px-3! lg:py-5! lg:px-4! overflow-clip rounded-md! relative hover:text-[#1e3a5f];
     transition: all 0.3s !important;
   }
 
   .ds-menu-item::before {
     content: " ";
-    @apply absolute h-[85%]! w-[9px] rounded-full bg-blue-500 translate-x-[calc(100%+1px)] start-0 transition-all duration-300;
+    @apply absolute h-[85%]! w-[9px] rounded-full bg-[#1e3a5f] translate-x-[calc(100%+1px)] start-0 transition-all duration-300;
   }
 
   .ds-menu-item.router-link-active {
-    @apply text-blue-500 bg-blue-100/80 before:bg-blue-500 before:translate-x-1/2!;
+    @apply text-[#1e3a5f] bg-[#e8edf5] before:bg-[#1e3a5f] before:translate-x-1/2!;
   }
 
   .ds-form {
@@ -383,11 +408,19 @@ html {
   }
 
   .blob-primary {
-    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid));
+    background: linear-gradient(
+      135deg,
+      var(--gradient-start),
+      var(--gradient-mid)
+    );
   }
 
   .blob-secondary {
-    background: linear-gradient(135deg, var(--gradient-mid), var(--gradient-end));
+    background: linear-gradient(
+      135deg,
+      var(--gradient-mid),
+      var(--gradient-end)
+    );
   }
 
   .blob-gold {
@@ -465,7 +498,9 @@ button {
    ======================================== */
 
 .hover-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .hover-lift:hover {

@@ -20,7 +20,7 @@ const props = defineProps({
 
 const variantClasses = {
   yellow: "text-[#feb900] bg-[#fff9e7]",
-  blue: "text-blue-500 bg-blue-100",
+  blue: "text-[#1e3a5f] bg-[#e8edf5]",
   gray: "text-black !bg-gray-100",
   red: "text-red-500 !bg-red-100",
   green: "text-green-500 !bg-green-100",
