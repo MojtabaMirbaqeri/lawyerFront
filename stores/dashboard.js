@@ -10,39 +10,60 @@ export const useDashboardStore = defineStore("dashboard", () => {
   const commonRoutes = [];
 
   const adminRoutes = [
-    // { title: "داشبورد", url: "/dashboard/admin", icon: "hugeicons:dashboard-square-01" },
-    { title: "لیست وکلا", url: "/dashboard/admin/lawyerlist", icon: "lucide:inbox" },
-    { title: "چت", url: "/chat", icon: "lucide:inbox" },
-    {
-      title: "انتظار تایید",
-      url: "/dashboard/admin/registerlawyer",
-      icon: "material-symbols:fingerprint",
+    { 
+      title: "داشبورد", 
+      url: "/dashboard/admin", 
+      icon: "lucide:layout-dashboard" 
+    },
+    { 
+      title: "مدیریت وکلا", 
+      url: "/dashboard/admin/lawyerlist", 
+      icon: "lucide:scale" 
     },
     {
-      title: "لیست کاربران",
+      title: "تایید وکلا",
+      url: "/dashboard/admin/registerlawyer",
+      icon: "lucide:user-check",
+    },
+    {
+      title: "کاربران",
       url: "/dashboard/admin/users",
-      icon: "solar:users-group-two-rounded-linear",
+      icon: "lucide:users",
     },
     {
       title: "تیکت‌ها",
       url: "/dashboard/admin/tickets",
-      icon: "hugeicons:message-multiple-02",
+      icon: "lucide:ticket",
     },
     {
       title: "دیدگاه‌ها",
       url: "/dashboard/admin/comments",
-      icon: "hugeicons:comment-01",
+      icon: "lucide:message-circle",
     },
-    { title: "کد تخفیف", url: "/dashboard/admin/coupons", icon: "hugeicons:coupon-01" },
+    { 
+      title: "کد تخفیف", 
+      url: "/dashboard/admin/coupons", 
+      icon: "lucide:tag" 
+    },
     {
-      title: "صورت حساب",
+      title: "امور مالی",
       url: "/dashboard/admin/billing",
-      icon: "solar:bill-list-linear",
+      icon: "lucide:wallet",
     },
     {
-      title: "پشتیبانی",
+      title: "گزارشات",
       url: "/dashboard/admin/support",
-      icon: "solar:headphones-round-outline",
+      icon: "lucide:flag",
+    },
+    { 
+      title: "چت", 
+      url: "/chat", 
+      icon: "lucide:message-square" 
+    },
+    {
+      title: "تنظیمات",
+      url: "/dashboard/admin/settings",
+      icon: "lucide:settings",
     },
   ];
 
@@ -52,32 +73,32 @@ export const useDashboardStore = defineStore("dashboard", () => {
         {
           title: "داشبورد",
           url: "/dashboard/lawyer",
-          icon: "hugeicons:dashboard-square-01",
+          icon: "lucide:layout-dashboard",
         },
         {
           title: "پروفایل",
           url: "/dashboard/lawyer/profile",
-          icon: "solar:user-circle-linear",
+          icon: "lucide:user",
         },
         {
-          title: "امور مالی",
-          url: "/dashboard/lawyer/financial",
-          icon: "solar:wallet-money-linear",
-        },
-        {
-          title: "فعالیت ها",
+          title: "نوبت‌ها",
           url: "/dashboard/appointments",
-          icon: "solar:history-linear",
-        },
-        {
-          title: "تیکت‌ها",
-          url: "/dashboard/ticket/tickets",
-          icon: "hugeicons:message-multiple-02",
+          icon: "lucide:calendar",
         },
         {
           title: "مدیریت چت",
           url: "/dashboard/lawyer/chats",
-          icon: "hugeicons:message-multiple-02",
+          icon: "lucide:message-square",
+        },
+        {
+          title: "امور مالی",
+          url: "/dashboard/lawyer/financial",
+          icon: "lucide:wallet",
+        },
+        {
+          title: "تیکت‌ها",
+          url: "/dashboard/ticket/tickets",
+          icon: "lucide:ticket",
         },
       ];
     } else {
@@ -85,29 +106,32 @@ export const useDashboardStore = defineStore("dashboard", () => {
         {
           title: "داشبورد",
           url: "/dashboard",
-          icon: "hugeicons:dashboard-square-01",
+          icon: "lucide:layout-dashboard",
         },
       ];
     }
   });
 
   const userRoutes = [
-    // { title: "داشبورد", url: "/dashboard", icon: "hugeicons:dashboard-square-01" },
-    { title: "تراکنش ها", url: "/dashboard/user/transactions", icon: "lucide:clock" },
+    { 
+      title: "نوبت‌های من", 
+      url: "/dashboard/appointments", 
+      icon: "lucide:calendar" 
+    },
+    { 
+      title: "تراکنش‌ها", 
+      url: "/dashboard/user/transactions", 
+      icon: "lucide:credit-card" 
+    },
     {
       title: "تیکت‌ها",
       url: "/dashboard/ticket/tickets",
-      icon: "hugeicons:message-multiple-02",
+      icon: "lucide:ticket",
     },
     {
-      title: "نوبت‌های من",
-      url: "/dashboard/appointments",
-      icon: "lucide:calendar-clock",
-    },
-    {
-      title: "لیست چت ها",
+      title: "چت",
       url: "/chat",
-      icon: "solar:chat-round-line-outline",
+      icon: "lucide:message-square",
     },
   ];
 

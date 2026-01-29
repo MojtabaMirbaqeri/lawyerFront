@@ -1,59 +1,160 @@
 <template>
-  <section class="flex space-y-3 flex-col">
-    <UForm :schema="schema" :state="state" class="ds-form" @submit="onSubmit">
-      <div class="ds-form-grid">
-        <!-- نام و نام خانوادگی readonly -->
-        <UICInput
-          v-model="state.full_name"
-          name="full_name"
-          label="نام و نام خانوادگی"
-          readonly
-          disabled />
+  <section class="personal-info-section">
+    <UForm :schema="schema" :state="state" class="personal-info-form" @submit="onSubmit">
+      <!-- گروه هویت -->
+      <UICFormSection
+        title="اطلاعات هویتی"
+        description="اطلاعات پایه هویتی شما برای احراز هویت و نمایش در پروفایل"
+        icon="lucide:user"
+        required
+      >
+        <div class="form-grid">
+          <!-- نام و نام خانوادگی readonly -->
+          <div class="form-field">
+            <label class="form-label">
+              نام و نام خانوادگی
+              <span class="text-gray-400 text-xs mr-1">(غیرقابل تغییر)</span>
+            </label>
+            <div class="form-input-readonly">
+              <Icon name="lucide:user" class="w-4 h-4 text-gray-400" />
+              <span>{{ state.full_name }}</span>
+            </div>
+          </div>
 
-        <!-- جنسیت -->
-        <UICInput name="gender" label="جنسیت">
-          <template #input>
+          <!-- جنسیت -->
+          <div class="form-field">
+            <label class="form-label">
+              جنسیت
+              <span class="required-star">*</span>
+            </label>
             <UICSelect
               v-model="state.gender"
               :items="[
                 { id: 'male', label: 'مرد' },
                 { id: 'female', label: 'زن' },
-              ]" />
-          </template>
-        </UICInput>
+              ]"
+            />
+            <p class="form-hint">جنسیت شما در پروفایل عمومی نمایش داده می‌شود</p>
+          </div>
 
-        <!-- نام پدر -->
-        <UICInput v-model="state.father_name" name="father_name" label="نام پدر" />
+          <!-- نام پدر -->
+          <div class="form-field">
+            <label class="form-label">
+              نام پدر
+              <span class="required-star">*</span>
+            </label>
+            <UInput
+              v-model="state.father_name"
+              placeholder="نام پدر را وارد کنید"
+              :ui="{ base: 'input-dashboard' }"
+            />
+            <p class="form-hint">برای تایید هویت و صدور گواهی استفاده می‌شود</p>
+          </div>
 
-        <!-- تاریخ تولد (شمسی: YYYY/MM/DD) -->
-        <UICInput name="birth_date" label="تاریخ تولد (شمسی)">
-          <template #input>
-            <PersianDate v-model="state.birth_date" :column="1" mode="single">
-              <template #icon>
-                <UIcon name="solar:calendar-linear" class="h-full! w-5!" />
-              </template>
-            </PersianDate>
-          </template>
-        </UICInput>
+          <!-- تاریخ تولد -->
+          <div class="form-field">
+            <label class="form-label">
+              تاریخ تولد
+              <span class="required-star">*</span>
+            </label>
+            <div class="date-picker-wrap">
+              <PersianDate 
+                v-model="state.birth_date" 
+                :column="1" 
+                mode="single"
+                format="YYYY-MM-DD"
+                display-format="jYYYY/jMM/jDD"
+              >
+                <template #icon>
+                  <Icon name="lucide:calendar" class="h-full w-5 text-gray-400" />
+                </template>
+              </PersianDate>
+            </div>
+            <p class="form-hint">تاریخ به صورت شمسی نمایش داده می‌شود</p>
+          </div>
+        </div>
+      </UICFormSection>
 
-        <!-- استان -->
-        <UICInput name="province_id" label="استان">
-          <template #input>
-            <UICSelect v-model="state.province_id" :items="provinces" />
-          </template>
-        </UICInput>
+      <!-- گروه محل سکونت -->
+      <UICFormSection
+        title="محل سکونت"
+        description="آدرس محل سکونت شما برای نمایش در نتایج جستجو"
+        icon="lucide:map-pin"
+        required
+      >
+        <div class="form-grid">
+          <!-- استان -->
+          <div class="form-field">
+            <label class="form-label">
+              استان
+              <span class="required-star">*</span>
+            </label>
+            <UICSelect 
+              v-model="state.province_id" 
+              :items="provinces"
+              :loading="isFetching"
+              placeholder="انتخاب استان"
+            />
+          </div>
 
-        <!-- شهر -->
-        <UICInput name="city_id" label="شهر">
-          <template #input>
-            <UICSelect v-model="state.city_id" :items="cities" />
-          </template>
-        </UICInput>
+          <!-- شهر -->
+          <div class="form-field">
+            <label class="form-label">
+              شهر
+              <span class="required-star">*</span>
+            </label>
+            <UICSelect 
+              v-model="state.city_id" 
+              :items="cities"
+              :loading="isFetching"
+              placeholder="انتخاب شهر"
+              :disabled="!state.province_id"
+            />
+            <p v-if="!state.province_id" class="form-hint text-amber-600">
+              <Icon name="lucide:alert-circle" class="w-3 h-3 inline" />
+              ابتدا استان را انتخاب کنید
+            </p>
+          </div>
+        </div>
+      </UICFormSection>
+
+      <!-- دکمه ذخیره و وضعیت -->
+      <div class="form-actions">
+        <div class="form-status">
+          <Transition name="fade" mode="out-in">
+            <div v-if="saveSuccess" class="save-success">
+              <Icon name="lucide:check-circle" class="w-4 h-4" />
+              <span>ذخیره شد</span>
+            </div>
+            <div v-else-if="isChanged" class="unsaved-changes">
+              <Icon name="lucide:alert-circle" class="w-4 h-4" />
+              <span>تغییرات ذخیره نشده</span>
+            </div>
+          </Transition>
+        </div>
+        
+        <div class="form-buttons">
+          <button 
+            v-if="isChanged"
+            type="button" 
+            class="btn-ghost"
+            @click="resetForm"
+            :disabled="isLoading"
+          >
+            <Icon name="lucide:rotate-ccw" class="w-4 h-4" />
+            بازنشانی
+          </button>
+          <button 
+            type="submit" 
+            class="btn-primary"
+            :disabled="!isChanged || isLoading || isFetching"
+          >
+            <Icon v-if="isLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
+            <Icon v-else name="lucide:check" class="w-4 h-4" />
+            {{ isLoading ? "در حال ذخیره..." : "ذخیره تغییرات" }}
+          </button>
+        </div>
       </div>
-
-      <UICSecondaryBtn type="submit" :disabled="!isChanged || isLoading || isFetching">
-        {{ isLoading ? "در حال ارسال..." : "ثبت اطلاعات" }}
-      </UICSecondaryBtn>
     </UForm>
   </section>
 </template>
@@ -68,23 +169,38 @@ const props = defineProps({
     required: true,
   },
 });
+
+const emit = defineEmits(['update:changes', 'saved']);
 const reFetchLawyer = inject("reFetchLawyerInformation");
 
 const isLoading = ref(false);
 const isFetching = ref(false);
+const saveSuccess = ref(false);
 const provinces = ref([]);
 const cities = ref([]);
 
-const li = props.lawyerInformation?.lawyer_info || {};
-
-const state = reactive({
-  full_name: `${props.lawyerInformation.name} ${props.lawyerInformation.family}`,
-  gender: li.gender || "male",
-  father_name: li.father_name || "",
-  birth_date: li.birth_date ? new Date(li.birth_date).toISOString().split("T")[0] : "",
-  province_id: li.province_id ? String(li.province_id) : "",
-  city_id: li.city_id ? String(li.city_id) : "",
+// Handle both nested {data: {...}} and flat {...} structures
+const lawyerData = computed(() => {
+  const info = props.lawyerInformation;
+  return info?.data || info;
 });
+
+const li = computed(() => lawyerData.value?.lawyer_info || {});
+
+const getInitialState = () => {
+  const data = lawyerData.value || {};
+  const info = data.lawyer_info || {};
+  return {
+    full_name: `${data.name || ''} ${data.family || ''}`.trim(),
+    gender: info.gender || "male",
+    father_name: info.father_name || "",
+    birth_date: info.birth_date ? new Date(info.birth_date).toISOString().split("T")[0] : "",
+    province_id: info.province_id ? String(info.province_id) : "",
+    city_id: info.city_id ? String(info.city_id) : "",
+  };
+};
+
+const state = reactive(getInitialState());
 
 const initialState = reactive({ ...state });
 
@@ -93,6 +209,14 @@ const isChanged = computed(() => {
     (key) => String(state[key] || "") !== String(initialState[key] || "")
   );
 });
+
+watch(isChanged, (val) => {
+  emit('update:changes', 'personal_information', val);
+});
+
+const resetForm = () => {
+  Object.assign(state, { ...initialState });
+};
 
 onMounted(async () => {
   isFetching.value = true;
@@ -155,7 +279,7 @@ const schema = object({
   father_name: string().required("نام پدر الزامی است"),
   birth_date: string()
     .required("تاریخ تولد الزامی است")
-    .matches(/^\d{4}-\d{2}-\d{2}$/, "تاریخ تولد وارد شده نامعتبر است"),
+    .matches(/^\d{4}-\d{2}-\d{2}$/, "فرمت تاریخ باید YYYY-MM-DD باشد"),
   province_id: mixed().required("استان الزامی است"),
   city_id: mixed().required("شهر الزامی است"),
 });
@@ -180,11 +304,19 @@ const onSubmit = async () => {
     });
     if (res.statusCode === 200 || res.statusCode === 201) {
       await reFetchLawyer();
+      Object.assign(initialState, { ...state });
+      
+      saveSuccess.value = true;
+      setTimeout(() => {
+        saveSuccess.value = false;
+      }, 3000);
+      
       useToast().add({
         title: "اطلاعات با موفقیت به‌روز شد",
         color: "success",
       });
-      Object.assign(initialState, { ...state });
+      
+      emit('saved');
     } else {
       useToast().add({ title: "به‌روزرسانی با خطا مواجه شد", color: "error" });
       console.error("updatePersonalInfo error:", res);
@@ -197,17 +329,107 @@ const onSubmit = async () => {
   }
 };
 </script>
+
+<style scoped>
+@reference "tailwindcss";
+
+.personal-info-section {
+  @apply flex flex-col gap-6;
+}
+
+.personal-info-form {
+  @apply flex flex-col gap-6;
+}
+
+.form-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+}
+
+.form-field {
+  @apply flex flex-col gap-2;
+}
+
+.form-label {
+  @apply text-sm font-medium text-gray-700;
+}
+
+.required-star {
+  @apply text-red-500 mr-0.5;
+}
+
+.form-hint {
+  @apply text-xs text-gray-500 flex items-center gap-1;
+}
+
+.form-input-readonly {
+  @apply flex items-center gap-2 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-600;
+}
+
+.date-picker-wrap {
+  @apply relative;
+}
+
+.form-actions {
+  @apply flex items-center justify-between gap-4 pt-6 border-t border-gray-100;
+}
+
+.form-status {
+  @apply min-h-[24px];
+}
+
+.save-success {
+  @apply flex items-center gap-2 text-sm text-green-600;
+}
+
+.unsaved-changes {
+  @apply flex items-center gap-2 text-sm text-amber-600;
+}
+
+.form-buttons {
+  @apply flex items-center gap-3;
+}
+
+.btn-ghost,
+.btn-primary {
+  @apply inline-flex items-center gap-2;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+@media (max-width: 640px) {
+  .form-actions {
+    @apply flex-col items-stretch;
+  }
+  
+  .form-buttons {
+    @apply justify-end;
+  }
+}
+</style>
+
 <style>
 @reference "tailwindcss";
+
 .pdp {
-  @apply h-[40px] lg:h-[42px];
+  @apply h-[42px];
 }
+
 .pdp-group {
   @apply h-full!;
 }
+
 .pdp-input {
-  @apply h-full!;
+  @apply h-full! rounded-lg! border-gray-200!;
 }
+
 .pdp-icon {
   @apply h-full! max-h-none!;
 }
