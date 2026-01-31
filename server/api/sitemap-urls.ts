@@ -10,6 +10,18 @@ export default defineEventHandler(async (event) => {
     priority?: number;
   }[] = [];
 
+  // 0. Static pages
+  urls.push({
+    loc: "/lawyers",
+    priority: 0.9,
+    changefreq: "weekly",
+  });
+  urls.push({
+    loc: "/faq",
+    priority: 0.8,
+    changefreq: "monthly",
+  });
+
   // 1. Add Provinces
   provinces.forEach((p) => {
     // Check if en_name exists, otherwise fallback to index or handle error

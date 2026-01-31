@@ -82,7 +82,7 @@
           
           <!-- Quick Actions -->
           <div class="quick-actions" :class="{ 'quick-actions--dropdown-open': showSuggestBox }">
-            <button class="quick-btn" @click="navigateTo('/#lawyers')">
+            <button class="quick-btn" @click="navigateTo('/lawyers')">
               <UIcon name="heroicons:squares-2x2-solid" class="size-5!" />
               مشاهده همه وکلا
             </button>
@@ -158,7 +158,7 @@ watch(lawyerNameFilter, (val) => {
 const search = () => {
   filtersStore.selectedFilters.searchField = lawyerNameFilter.value;
   showSuggestBox.value = false;
-  navigateTo('/#lawyers');
+  navigateTo('/lawyers');
 };
 
 const handleFocus = () => {

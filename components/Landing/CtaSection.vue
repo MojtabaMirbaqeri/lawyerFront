@@ -14,7 +14,7 @@
           همین الان با بهترین وکلای کشور مشاوره کنید
         </p>
         <div class="cta-buttons">
-          <button class="cta-btn cta-btn--primary" @click="navigateTo('/#lawyers')">
+          <button class="cta-btn cta-btn--primary" @click="navigateTo('/lawyers')">
             <UIcon name="heroicons:calendar-days-solid" class="size-5!" />
             رزرو وقت مشاوره
           </button>

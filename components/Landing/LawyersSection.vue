@@ -1,20 +1,20 @@
 <template>
   <section id="lawyers" class="lawyers-section">
-    <!-- Section Header -->
-    <div class="section-header">
+    <!-- Section Header (hidden on dedicated /lawyers page) -->
+    <div v-if="!hideSectionHeader" class="section-header">
       <h2 class="sec-header">
         لیست <span class="gradient-text">وکلای متخصص</span>
       </h2>
       <p class="section-subtitle">بهترین وکلا را با توجه به تخصص و رتبه‌بندی انتخاب کنید</p>
     </div>
-    
+
     <!-- Type Filter -->
     <div class="type-filter">
       <UICSelectButton
         v-model="filtersStore.selectedFilters.lawyerType"
         :items="lawyerTypes" />
     </div>
-    
+
     <!-- Phone-only Filter Trigger -->
     <div class="sm:hidden">
       <UICDrawer
@@ -90,7 +90,11 @@ const globalStore = useGlobalStore();
 const route = useRoute();
 const { readFromUrl, writeToUrl } = useUrlFilters();
 
-const props = defineProps(["link", "titlebtn"]);
+const props = defineProps({
+  link: { type: String, default: "lawyer/" },
+  titlebtn: { type: String, default: "رزرو مشاوره" },
+  hideSectionHeader: { type: Boolean, default: false },
+});
 const lawyersRef = ref(null);
 
 const staticLawyerInfo = ref(null);
@@ -295,7 +299,7 @@ await fetchLawyers();
 }
 
 .lawyers-grid {
-  @apply grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5;
+  @apply grid grid-cols-1 md:grid-cols-3 gap-5;
 }
 
 .pagination-wrapper {
