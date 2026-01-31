@@ -77,14 +77,16 @@
             }"
           />
           
-          <!-- Page Slot -->
-          <slot
-            v-if="!(
+          <!-- Page Slot: با v-show تا با عوض شدن شرط، کامپوننت unmount نشه و خطای emitsOptions/exposed نده -->
+          <div
+            v-show="!(
               authStore.user?.user_type == 'lawyer' &&
               authStore.user?.lawyer_id == null &&
-              $route.path == '/dashboard/lawyer'
+              $route.path === '/dashboard/lawyer'
             )"
-          />
+          >
+            <slot />
+          </div>
         </main>
       </div>
       

@@ -100,30 +100,31 @@ const props = defineProps({
 const isLoading = ref(false);
 const isProfileImageModalOpen = ref(false);
 
+const lawyerInfo = computed(() => props.lawyerInformation?.lawyer_info ?? {});
 const formData = reactive({
-  name: authStore.user.name,
-  family: authStore.user.family,
-  base: Number(props.lawyerInformation.lawyer_info.base_lawyer.id),
-  specialties: (props.lawyerInformation.lawyer_info.specialties || []).map(Number),
-  services: (props.lawyerInformation.lawyer_info.services || []).map(Number),
-  about: props.lawyerInformation.about || "",
+  name: authStore.user?.name ?? "",
+  family: authStore.user?.family ?? "",
+  base: Number(lawyerInfo.value?.base_lawyer?.id) || 0,
+  specialties: (lawyerInfo.value?.specialties || []).map(Number),
+  services: (lawyerInfo.value?.services || []).map(Number),
+  about: lawyerInfo.value?.about || props.lawyerInformation?.about || "",
   profile_image: null,
 });
 
 // --- INITIAL STATE (با ref) ---
 const initialData = reactive({
-  name: authStore.user.name,
-  family: authStore.user.family,
-  base: Number(props.lawyerInformation.lawyer_info.base_lawyer.id),
-  specialties: (props.lawyerInformation.lawyer_info.specialties || []).map(Number),
-  services: (props.lawyerInformation.lawyer_info.services || []).map(Number),
-  about: props.lawyerInformation.about || "",
+  name: authStore.user?.name ?? "",
+  family: authStore.user?.family ?? "",
+  base: Number(lawyerInfo.value?.base_lawyer?.id) || 0,
+  specialties: (lawyerInfo.value?.specialties || []).map(Number),
+  services: (lawyerInfo.value?.services || []).map(Number),
+  about: lawyerInfo.value?.about || props.lawyerInformation?.about || "",
 });
 
 // --- PREVIEW & MAPPED ---
 const profileImagePreview = ref(
-  props.lawyerInformation.lawyer_info?.profile_image
-    ? config.public.imageBase + props.lawyerInformation.lawyer_info.profile_image
+  lawyerInfo.value?.profile_image
+    ? config.public.imageBase + lawyerInfo.value.profile_image
     : null
 );
 

@@ -96,9 +96,9 @@ defineEmits(['toggle-collapse']);
 // Data
 const chatRooms = ref(props.chatItems ? props.chatItems[0] : []);
 
-// Check if route is active
+// Check if route is active (exact match only, so parent items like Dashboard don't stay active on sub-pages)
 const isActiveRoute = (url) => {
-  return route.path === url || route.path.startsWith(url + '/');
+  return route.path === url;
 };
 
 // Colors for chat avatars

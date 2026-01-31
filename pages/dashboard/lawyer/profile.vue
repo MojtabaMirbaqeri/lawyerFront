@@ -337,7 +337,10 @@ const handleTabChange = (newTab) => {
     pendingTab.value = newTab;
     saveBarRef.value.showConfirmModal();
   } else {
-    activeTab.value = newTab;
+    // تعویض تب در تیک بعدی تا خطای emitsOptions هنگام patch رخ ندهد
+    nextTick(() => {
+      activeTab.value = newTab;
+    });
   }
 };
 
