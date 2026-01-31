@@ -27,8 +27,8 @@
             <h4 class="footer-title">دسترسی سریع</h4>
             <ul class="links-list">
               <li><NuxtLink to="/">خانه</NuxtLink></li>
-              <li><NuxtLink to="/#lawyers">لیست وکلا</NuxtLink></li>
-              <li><NuxtLink to="/#faq">سوالات متداول</NuxtLink></li>
+              <li><NuxtLink to="/lawyers">لیست وکلا</NuxtLink></li>
+              <li><NuxtLink to="/faq">سوالات متداول</NuxtLink></li>
               <li><NuxtLink to="/register">ورود / ثبت‌نام</NuxtLink></li>
             </ul>
           </div>

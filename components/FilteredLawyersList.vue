@@ -111,6 +111,6 @@ await fetchLawyers();
 <style scoped>
 @reference "tailwindcss";
 .lawyers-con {
-  @apply flex flex-col gap-3;
+  @apply grid grid-cols-1 md:grid-cols-3 gap-5;
 }
 </style>

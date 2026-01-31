@@ -49,7 +49,7 @@
             </div>
           </template>
         </UPopover>
-        <NuxtLink to="#faq" class="nav-link">سوالات متداول</NuxtLink>
+        <NuxtLink to="/faq" class="nav-link">سوالات متداول</NuxtLink>
         <a href="tel:+982110014488" class="nav-link">تماس با ما</a>
       </nav>
 
@@ -59,7 +59,7 @@
       <!-- Left (RTL): Get Consultation (accent) + Login/Register (rounded, shadow) -->
       <ClientOnly>
         <div class="nav-actions">
-          <NuxtLink to="/#lawyers" class="btn-consultation">
+          <NuxtLink to="/lawyers" class="btn-consultation">
             دریافت مشاوره
           </NuxtLink>
           <NuxtLink v-if="!auth.token" to="/register" class="btn-login">
@@ -85,17 +85,17 @@
       <UIcon name="lucide:house" class="bottom-nav-icon" />
       <span class="bottom-nav-label">خانه</span>
     </NuxtLink>
-    <NuxtLink to="/#lawyers" class="bottom-nav-item" :class="{ 'bottom-nav-item--active': isLawyersActive }">
+    <NuxtLink to="/lawyers" class="bottom-nav-item" :class="{ 'bottom-nav-item--active': isLawyersActive }">
       <UIcon name="lucide:layout-list" class="bottom-nav-icon" />
       <span class="bottom-nav-label">لیست وکلا</span>
     </NuxtLink>
-    <NuxtLink to="/#lawyers" class="bottom-nav-item bottom-nav-item--center">
+    <NuxtLink to="/lawyers" class="bottom-nav-item bottom-nav-item--center">
       <span class="bottom-nav-center-btn">
         <UIcon name="heroicons:chat-bubble-left-right-solid" class="size-6!" />
       </span>
       <span class="bottom-nav-label">مشاوره</span>
     </NuxtLink>
-    <NuxtLink to="#faq" class="bottom-nav-item" :class="{ 'bottom-nav-item--active': isActive('#faq') }">
+    <NuxtLink to="/faq" class="bottom-nav-item" :class="{ 'bottom-nav-item--active': isActive('/faq') }">
       <UIcon name="lucide:help-circle" class="bottom-nav-icon" />
       <span class="bottom-nav-label">سوالات</span>
     </NuxtLink>
@@ -119,13 +119,13 @@ const lawyersPopoverVisiblity = ref(false);
 
 function isActive(path) {
   if (path === "/") return route.path === "/" && !route.hash;
-  if (path === "#faq") return route.hash === "#faq";
+  if (path === "/faq") return route.path === "/faq" || (route.path === "/" && route.hash === "#faq");
   if (path === "/register") return route.path === "/register";
   if (path === "/dashboard") return route.path.startsWith("/dashboard");
   return false;
 }
 const isLawyersActive = computed(
-  () => route.path === "/" && (route.hash === "#lawyers" || route.hash === "lawyers")
+  () => route.path === "/lawyers" || (route.path === "/" && (route.hash === "#lawyers" || route.hash === "lawyers"))
 );
 const isScrolled = ref(false);
 
@@ -179,8 +179,9 @@ const menuItems = ref([
       label: "لیست وکلا",
       icon: "lucide:layout-list",
       defaultOpen: true,
-      to: "/#lawyers",
+      to: "/lawyers",
       children: [
+        { label: "همه وکلا", icon: "lucide:users", to: "/lawyers" },
         { label: "تخصص ها", icon: "i-lucide-target", children: [] },
         { label: "استان ها", icon: "lucide:building-2", children: [] },
       ],
@@ -188,7 +189,7 @@ const menuItems = ref([
     {
       label: "سوالات متداول",
       icon: "lucide:messages-square",
-      to: "#faq",
+      to: "/faq",
     },
     {
       label: "تماس با ما",
@@ -427,7 +428,7 @@ onUnmounted(() => {
 }
 
 .bottom-nav-center-btn {
-  @apply flex items-center justify-center size-12 rounded-2xl text-white transition-all;
+  @apply flex items-center justify-center size-12 rounded-2xl transition-all;
   background: var(--nav-accent);
   box-shadow: 0 4px 14px rgba(30, 58, 95, 0.35);
 }

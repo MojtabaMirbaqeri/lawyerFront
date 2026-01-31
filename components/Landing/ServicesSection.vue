@@ -86,7 +86,7 @@ const services = [
 ];
 
 const selectService = (id) => {
-  navigateTo(`/#lawyers?service=${id}`);
+  navigateTo(`/lawyers?service=${id}`);
 };
 </script>
 
