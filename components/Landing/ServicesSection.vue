@@ -13,8 +13,8 @@
           v-for="service in services" 
           :key="service.id"
           class="service-card"
-          :class="{ 'service-card--featured': service.featured }"
-          @click="selectService(service.id)">
+          :class="{ 'service-card--featured': service.featured, 'service-card--coming-soon': service.comingSoon }"
+          @click="!service.comingSoon && selectService(service.id)">
           <div class="service-icon" :style="{ background: service.gradient }">
             <UIcon :name="service.icon" class="size-8!" />
           </div>
@@ -31,9 +31,9 @@
               <span>{{ feature }}</span>
             </div>
           </div>
-          <button class="service-btn">
-            انتخاب 
-            <UIcon name="heroicons:arrow-left-solid" class="size-4!" />
+          <button type="button" class="service-btn" :disabled="service.comingSoon">
+            {{ service.comingSoon ? 'به زودی' : 'انتخاب' }}
+            <UIcon v-if="!service.comingSoon" name="heroicons:arrow-left-solid" class="size-4!" />
           </button>
         </div>
       </div>
@@ -71,6 +71,7 @@ const services = [
     gradient: 'linear-gradient(135deg, #f59e0b, #d97706)',
     price: '120,000',
     featured: false,
+    comingSoon: true,
     features: ['جلسه ۴۵ دقیقه‌ای', 'اشتراک صفحه', 'ضبط جلسه']
   },
   {
@@ -130,6 +131,20 @@ const selectService = (id) => {
   content: 'پرطرفدار';
   @apply absolute -top-3 end-4 px-3 py-1 text-xs font-bold text-[#1e3a5f] rounded-full;
   background: linear-gradient(135deg, #fbbf24, #f59e0b);
+}
+
+.service-card--coming-soon::before {
+  content: 'به زودی';
+  @apply absolute -top-3 end-4 px-3 py-1 text-xs font-bold text-white rounded-full;
+  background: linear-gradient(135deg, #94a3b8, #64748b);
+}
+
+.service-card--coming-soon {
+  @apply opacity-95;
+}
+
+.service-card--coming-soon .service-btn:disabled {
+  @apply cursor-not-allowed opacity-80;
 }
 
 .service-icon {

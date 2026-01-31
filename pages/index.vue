@@ -6,16 +6,17 @@
     <!-- Trust Bar -->
     <LandingTrustBar />
     
-    <!-- Services Section -->
-    <LandingServicesSection />
-    
-    <!-- Lawyers Section -->
-    <div class="container">
+        <!-- Lawyers Section -->
+        <div class="container">
       <LandingLawyersSection
         ref="lawyersSectionRef"
         link="lawyer/"
         :titlebtn="'رزرو مشاوره'" />
     </div>
+    
+    <!-- Services Section -->
+    <LandingServicesSection />
+    
     
     <!-- Why Choose Us -->
     <LandingWhyChooseUs />
