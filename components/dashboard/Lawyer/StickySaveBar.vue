@@ -23,27 +23,33 @@
   </Transition>
 
   <!-- Confirm Modal -->
-  <UModal v-model:open="showConfirmModal">
+  <UModal
+    v-model:open="showConfirmModal"
+    :ui="{
+      width: 'max-w-sm',
+      content: 'rounded-2xl shadow-2xl border border-gray-200 bg-white overflow-hidden',
+      transition: 'transition-all duration-200 ease-out',
+    }"
+  >
     <template #content>
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3 class="modal-title">تغییرات ذخیره نشده</h3>
-          <button @click="showConfirmModal = false" class="btn-icon">
+      <div class="confirm-modal">
+        <div class="confirm-modal-header">
+          <h3 class="confirm-modal-title">تغییرات ذخیره نشده</h3>
+          <button type="button" @click="showConfirmModal = false" class="confirm-modal-close" aria-label="بستن">
             <Icon name="lucide:x" class="w-5 h-5" />
           </button>
         </div>
-        <div class="modal-body">
-          <div class="flex items-center gap-3 p-4 bg-amber-50 rounded-lg border border-amber-100">
-            <Icon name="lucide:alert-triangle" class="w-6 h-6 text-amber-500" />
-            <p class="text-sm text-amber-700">شما تغییراتی دارید که ذخیره نشده‌اند. آیا می‌خواهید قبل از ترک صفحه ذخیره کنید؟</p>
-          </div>
+        <div class="confirm-modal-body">
+          <p class="confirm-modal-message">
+            شما تغییراتی دارید که ذخیره نشده‌اند. آیا می‌خواهید قبل از ترک صفحه ذخیره کنید؟
+          </p>
         </div>
-        <div class="modal-footer">
-          <button @click="handleDiscardChanges" class="btn-secondary">
+        <div class="confirm-modal-footer">
+          <button type="button" @click="handleDiscardChanges" class="confirm-btn secondary">
             <Icon name="lucide:x" class="w-4 h-4" />
             نادیده بگیر
           </button>
-          <button @click="handleSaveAndContinue" class="btn-primary">
+          <button type="button" @click="handleSaveAndContinue" class="confirm-btn primary">
             <Icon name="lucide:check" class="w-4 h-4" />
             ذخیره و ادامه
           </button>
@@ -143,28 +149,46 @@ defineExpose({
   opacity: 0;
 }
 
-/* Modal Styles */
-.modal-content {
-  @apply bg-white rounded-xl w-full max-w-md;
+/* Confirm Modal */
+.confirm-modal {
+  @apply w-full;
 }
 
-.modal-header {
-  @apply flex items-center justify-between px-6 py-4 border-b border-gray-100;
+.confirm-modal-header {
+  @apply flex items-center justify-between gap-4 px-5 py-4;
+  border-bottom: 1px solid rgb(243 244 246);
 }
 
-.modal-title {
-  @apply text-lg font-semibold text-gray-900;
+.confirm-modal-title {
+  @apply text-base font-semibold text-gray-900;
 }
 
-.modal-body {
-  @apply px-6 py-5;
+.confirm-modal-close {
+  @apply p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors;
 }
 
-.modal-footer {
-  @apply flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100;
+.confirm-modal-body {
+  @apply px-5 py-4;
 }
 
-.btn-secondary {
-  @apply inline-flex items-center gap-2;
+.confirm-modal-message {
+  @apply text-sm text-gray-600 leading-relaxed;
+}
+
+.confirm-modal-footer {
+  @apply flex items-center justify-end gap-3 px-5 py-4;
+  border-top: 1px solid rgb(243 244 246);
+}
+
+.confirm-btn {
+  @apply inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors;
+}
+
+.confirm-btn.secondary {
+  @apply text-gray-700 bg-gray-100 hover:bg-gray-200;
+}
+
+.confirm-btn.primary {
+  @apply text-white bg-blue-600 hover:bg-blue-700;
 }
 </style>
