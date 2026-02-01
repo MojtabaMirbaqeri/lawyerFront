@@ -136,25 +136,26 @@ const getChatPartner = (room) => {
 @reference "tailwindcss";
 
 .dashboard-sidebar {
-  @apply fixed top-0 right-0 h-screen z-50 flex flex-col;
+  @apply fixed top-0 right-0 h-screen z-50 flex flex-col transition-all! duration-300;
   width: 280px;
   background: var(--sidebar-bg);
   border-left: 1px solid var(--sidebar-border);
-  transition: width 0.2s ease;
+
 }
 
 .dashboard-sidebar.collapsed {
   width: 80px;
+  overflow: hidden !important;
 }
 
 @media (max-width: 1023px) {
   .dashboard-sidebar {
-    @apply -translate-x-full;
+    @apply translate-x-full;
     transition: transform 0.2s ease;
   }
   
   .dashboard-sidebar.open {
-    @apply translate-x-0;
+
   }
 }
 
@@ -192,7 +193,7 @@ const getChatPartner = (room) => {
 
 /* Navigation */
 .sidebar-nav {
-  @apply flex-1 overflow-y-auto py-4;
+  @apply flex-1 overflow-y-auto overflow-x-clip py-4;
 }
 
 .nav-section {

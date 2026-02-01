@@ -2,8 +2,12 @@
   <div class="dashboard-wrapper">
     <ClientOnly>
       <!-- Sidebar -->
-      <dashboard-layout :chat-items="chatItems || []" :collapsed="sidebarCollapsed" @toggle-collapse="toggleSidebar" />
-      
+      <dashboard-layout
+        :class="{ 'translate-x-0!': mobileSidebarOpen }"
+        :chat-items="chatItems || []"
+        :collapsed="sidebarCollapsed"
+        @toggle-collapse="toggleSidebar" />
+
       <!-- Main Content Area -->
       <div class="dashboard-main" :class="{ 'sidebar-collapsed': sidebarCollapsed }">
         <!-- Dashboard Header -->
@@ -13,7 +17,7 @@
             <button @click="openMobileSidebar" class="mobile-menu-btn lg:hidden">
               <Icon name="lucide:menu" class="w-5 h-5" />
             </button>
-            
+
             <!-- Breadcrumb -->
             <nav class="breadcrumb hidden lg:flex">
               <NuxtLink to="/dashboard" class="breadcrumb-item">
@@ -22,7 +26,7 @@
               <span class="breadcrumb-separator">/</span>
               <span class="breadcrumb-current">{{ currentPageTitle }}</span>
             </nav>
-            
+
             <!-- Header Actions -->
             <div class="header-actions">
               <!-- Search -->
@@ -30,18 +34,23 @@
                 <Icon name="lucide:search" class="search-icon" />
                 <input type="text" placeholder="جستجو..." class="search-input" />
               </div>
-              
+
               <!-- Notifications -->
               <button class="header-icon-btn relative">
                 <Icon name="lucide:bell" class="w-5 h-5" />
-                <span v-if="notificationCount > 0" class="notification-badge">{{ notificationCount }}</span>
+                <span v-if="notificationCount > 0" class="notification-badge">{{
+                  notificationCount
+                }}</span>
               </button>
-              
+
               <!-- User Menu -->
               <div class="user-menu">
                 <div class="user-avatar">
                   <template v-if="authStore.user?.profile_image">
-                    <img :src="authStore.user.profile_image" alt="Profile" class="avatar avatar-md" />
+                    <img
+                      :src="authStore.user.profile_image"
+                      alt="Profile"
+                      class="avatar avatar-md" />
                   </template>
                   <template v-else>
                     <div class="avatar-placeholder avatar-md">
@@ -62,7 +71,9 @@
         <main class="dashboard-content">
           <!-- Warning Alert for Lawyers Pending Verification -->
           <UAlert
-            v-if="authStore.user?.user_type == 'lawyer' && authStore.user?.lawyer_id == null"
+            v-if="
+              authStore.user?.user_type == 'lawyer' && authStore.user?.lawyer_id == null
+            "
             title="در انتظار تایید"
             description="احراز هویت شما در حال بررسی است. پس از تایید، به تمام امکانات دسترسی خواهید داشت."
             color="warning"
@@ -74,25 +85,28 @@
               title: 'font-semibold text-sm',
               description: 'text-sm',
               root: 'items-center rounded-xl border border-amber-200 bg-amber-50',
-            }"
-          />
-          
+            }" />
+
           <!-- Page Slot: با v-show تا با عوض شدن شرط، کامپوننت unmount نشه و خطای emitsOptions/exposed نده -->
           <div
-            v-show="!(
-              authStore.user?.user_type == 'lawyer' &&
-              authStore.user?.lawyer_id == null &&
-              $route.path === '/dashboard/lawyer'
-            )"
-          >
+            v-show="
+              !(
+                authStore.user?.user_type == 'lawyer' &&
+                authStore.user?.lawyer_id == null &&
+                $route.path === '/dashboard/lawyer'
+              )
+            ">
             <slot />
           </div>
         </main>
       </div>
-      
+
       <!-- Mobile Sidebar Overlay -->
       <Transition name="fade">
-        <div v-if="mobileSidebarOpen" class="mobile-overlay" @click="closeMobileSidebar"></div>
+        <div
+          v-if="mobileSidebarOpen"
+          class="mobile-overlay"
+          @click="closeMobileSidebar"></div>
       </Transition>
     </ClientOnly>
   </div>
@@ -131,32 +145,36 @@ const closeMobileSidebar = () => {
 const currentPageTitle = computed(() => {
   const path = route.path;
   const routes = dashboardStore.sidebarRoutes || [];
-  const currentRoute = routes.find(r => path.startsWith(r.url));
-  return currentRoute?.title || 'داشبورد';
+  const currentRoute = routes.find((r) => path.startsWith(r.url));
+  return currentRoute?.title || "داشبورد";
 });
 
 // User info
 const userName = computed(() => {
   const user = authStore.user;
-  if (!user) return '';
-  return `${user.name || ''} ${user.family || ''}`.trim() || 'کاربر';
+  if (!user) return "";
+  return `${user.name || ""} ${user.family || ""}`.trim() || "کاربر";
 });
 
 const userInitials = computed(() => {
   const user = authStore.user;
-  if (!user) return '?';
-  const first = user.name?.charAt(0) || '';
-  const last = user.family?.charAt(0) || '';
-  return (first + last).toUpperCase() || '?';
+  if (!user) return "?";
+  const first = user.name?.charAt(0) || "";
+  const last = user.family?.charAt(0) || "";
+  return (first + last).toUpperCase() || "?";
 });
 
 const userRoleLabel = computed(() => {
   const type = authStore.user?.user_type;
-  switch(type) {
-    case 'admin': return 'مدیر سیستم';
-    case 'lawyer': return 'وکیل';
-    case 'user': return 'کاربر';
-    default: return '';
+  switch (type) {
+    case "admin":
+      return "مدیر سیستم";
+    case "lawyer":
+      return "وکیل";
+    case "user":
+      return "کاربر";
+    default:
+      return "";
   }
 });
 
@@ -165,7 +183,9 @@ const roomName = computed(() => {
   const room = chatStore.roomInfo;
   if (!room) return "";
   if (room.members?.length > 2) {
-    return room.name || `${authStore.user?.name ?? ""} ${authStore.user?.family ?? ""}`.trim();
+    return (
+      room.name || `${authStore.user?.name ?? ""} ${authStore.user?.family ?? ""}`.trim()
+    );
   }
   const other = room.members?.find((m) => m.id !== authStore.user.id);
   if (!other) return "";
@@ -189,9 +209,12 @@ watch(
 );
 
 // Close mobile sidebar on route change
-watch(() => route.path, () => {
-  closeMobileSidebar();
-});
+watch(
+  () => route.path,
+  () => {
+    closeMobileSidebar();
+  },
+);
 </script>
 
 <style scoped>
