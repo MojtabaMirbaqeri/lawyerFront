@@ -5,7 +5,7 @@
       <NuxtLink to="/" class="logo-link">
         <NuxtImg v-if="!collapsed" src="/images/main-logo.svg" alt="Logo" class="logo-full" />
         <div v-else class="logo-mini">
-          <Icon name="lucide:scale" class="w-6 h-6 text-white" />
+          <Icon name="custom:logo" class="size-6! text-white" />
         </div>
       </NuxtLink>
       
@@ -22,7 +22,7 @@
         <template v-for="item in dashboardStore.sidebarRoutes" :key="item.url">
           <NuxtLink :to="item.url" class="nav-item" :class="{ 'active': isActiveRoute(item.url) }">
             <div class="nav-icon">
-              <Icon :name="item.icon" class="w-5 h-5" />
+              <Icon :name="item.icon" class="size-4.5!" />
             </div>
             <span v-if="!collapsed" class="nav-label">{{ item.title }}</span>
             <div v-if="collapsed" class="nav-tooltip">{{ item.title }}</div>
@@ -211,7 +211,7 @@ const getChatPartner = (room) => {
 }
 
 .nav-item {
-  @apply flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 relative;
+  @apply flex items-center gap-3 px-3 py-3 rounded-lg mb-1 relative;
   color: var(--sidebar-text);
   transition: all 0.15s ease;
 }
@@ -260,7 +260,7 @@ const getChatPartner = (room) => {
 }
 
 .collapsed .nav-icon {
-  @apply w-10 h-10 rounded-lg;
+  @apply size-9! rounded-lg;
 }
 
 /* Chat Items */
