@@ -195,6 +195,11 @@ const getChatPartner = (room) => {
   @apply flex-1 overflow-y-auto py-4;
 }
 
+.dashboard-sidebar.collapsed .sidebar-nav {
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
 .nav-section {
   @apply px-3;
 }

@@ -198,12 +198,12 @@ watch(() => route.path, () => {
 @reference "tailwindcss";
 
 .dashboard-wrapper {
-  @apply flex min-h-screen;
+  @apply flex min-h-screen overflow-x-hidden;
   background: var(--surface-subtle);
 }
 
 .dashboard-main {
-  @apply flex-1 flex flex-col min-h-screen transition-all duration-200;
+  @apply flex-1 flex flex-col min-h-screen min-w-0 overflow-x-hidden transition-all duration-200;
   margin-right: 280px;
 }
 
