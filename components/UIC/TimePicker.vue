@@ -1,29 +1,29 @@
 <template>
-  <div class="space-y-2">
+  <div class="ui-time-picker space-y-2">
     <label v-if="label" class="block text-sm font-medium text-gray-700">
       {{ label }}
     </label>
-    <div class="flex items-center gap-1.5">
-      <!-- دقیقه -->
-      <div class="w-20">
-        <UICSelect
-          :model-value="minuteValue"
-          :items="minutes"
-          :disabled="disabled"
-          placeholder="دقیقه"
-          @update:model-value="updateMinute" />
-      </div>
-
-      <span class="text-lg font-bold text-gray-400 px-0.5">:</span>
-
-      <!-- ساعت -->
-      <div class="w-20">
+    <div class="time-picker-row flex items-end gap-2">
+      <!-- ساعت (در RTL سمت راست نمایش داده می‌شود) -->
+      <div class="time-part flex flex-col gap-1">
+        <span class="time-part-label text-xs font-medium text-gray-500">ساعت</span>
         <UICSelect
           :model-value="hourValue"
           :items="hours"
           :disabled="disabled"
-          placeholder="ساعت"
+          placeholder="۰۰"
           @update:model-value="updateHour" />
+      </div>
+      <span class="time-separator text-lg font-bold text-gray-400 pb-1" aria-hidden="true">:</span>
+      <!-- دقیقه -->
+      <div class="time-part flex flex-col gap-1">
+        <span class="time-part-label text-xs font-medium text-gray-500">دقیقه</span>
+        <UICSelect
+          :model-value="minuteValue"
+          :items="minutes"
+          :disabled="disabled"
+          placeholder="۰۰"
+          @update:model-value="updateMinute" />
       </div>
     </div>
   </div>
@@ -91,3 +91,19 @@ const updateMinute = (newMinute) => {
   emit("update:modelValue", `${hour}:${newMinute}`);
 };
 </script>
+
+<style scoped>
+@reference "tailwindcss";
+
+.time-picker-row {
+  @apply flex-row;
+}
+
+.time-part {
+  @apply min-w-[4.5rem];
+}
+
+.time-part-label {
+  @apply block;
+}
+</style>
