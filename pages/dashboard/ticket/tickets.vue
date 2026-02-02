@@ -16,7 +16,7 @@
             :ui="{ base: 'h-[42px]' }"
             label="فیلتر"
             placeholder="فیلتر..."
-            @change="searchHandle"
+            @input="debouncedSearch"
             icon="solar:magnifer-linear" />
         </div>
         <UICInput label="وضعیت">
@@ -72,6 +72,14 @@ const searchHandle = () => {
     refetch(null, null, true, globalFilter.value);
     page.value = 1;
   }
+};
+
+let searchTimeout = null;
+const debouncedSearch = () => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    searchHandle();
+  }, 400);
 };
 
 const refetch = async (page = null, query = null, setTotal = false, search = null) => {

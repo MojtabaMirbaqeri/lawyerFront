@@ -126,7 +126,7 @@
         </div>
       </div>
 
-      <!-- Tab Content -->
+      <!-- Tab Content (ref برای اسکرول بعد از کلیک چک‌لیست در موبایل) -->
       <div class="profile-tab-content">
         <Transition name="fade" mode="out-in">
           <KeepAlive>
@@ -337,7 +337,6 @@ const handleTabChange = (newTab) => {
     pendingTab.value = newTab;
     saveBarRef.value.showConfirmModal();
   } else {
-    // تعویض تب در تیک بعدی تا خطای emitsOptions هنگام patch رخ ندهد
     nextTick(() => {
       activeTab.value = newTab;
     });

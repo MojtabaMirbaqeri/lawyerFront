@@ -13,12 +13,6 @@
         description="زمان‌های در دسترس بودن شما برای ارائه مشاوره"
         icon="lucide:calendar-clock"
       >
-        <template #actions>
-          <button @click="copyFromSaturday" class="btn-sm-secondary" title="کپی از شنبه به همه روزها">
-            <Icon name="lucide:copy" class="w-4 h-4" />
-            کپی از شنبه
-          </button>
-        </template>
 
         <!-- Global Settings -->
         <div class="schedule-settings">
@@ -175,7 +169,7 @@
           <div class="schedule-buttons">
             <button 
               @click="saveSchedule" 
-              class="btn-primary"
+              class="btn-primary flex items-center justify-center gap-2"
               :disabled="isLoading || hasValidationErrors"
             >
               <Icon v-if="isLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
@@ -434,15 +428,15 @@ fetchSchedule();
 }
 
 .setting-label {
-  @apply flex items-center gap-1.5 text-sm font-medium text-gray-600;
+  @apply flex items-center gap-1.5 text-sm font-medium text-gray-600 shrink-0;
 }
 
 .setting-options {
-  @apply flex gap-1;
+  @apply flex flex-wrap gap-2;
 }
 
 .option-btn {
-  @apply px-3 py-1.5 text-xs font-medium rounded-lg border border-gray-200 bg-white text-gray-600 transition-colors;
+  @apply px-4 py-2 text-xs font-medium rounded-lg border border-gray-200 bg-white text-gray-600 transition-colors whitespace-nowrap;
 }
 
 .option-btn.active {
@@ -610,7 +604,24 @@ fetchSchedule();
 
 @media (max-width: 768px) {
   .schedule-settings {
-    @apply flex-col items-start;
+    @apply flex-col gap-4 p-3;
+  }
+
+  .setting-group {
+    @apply flex-col items-stretch gap-2 w-full;
+  }
+
+  .setting-label {
+    @apply text-xs;
+  }
+
+  .setting-options {
+    @apply grid grid-cols-2 gap-2;
+  }
+
+  .option-btn {
+    @apply py-3 text-sm justify-center min-w-0 w-full;
+    padding-inline: 1rem;
   }
   
   .schedule-actions {
