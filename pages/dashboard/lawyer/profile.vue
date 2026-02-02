@@ -127,7 +127,7 @@
       </div>
 
       <!-- Tab Content (ref برای اسکرول بعد از کلیک چک‌لیست در موبایل) -->
-      <div ref="tabContentRef" class="profile-tab-content">
+      <div class="profile-tab-content">
         <Transition name="fade" mode="out-in">
           <KeepAlive>
             <component 
@@ -161,7 +161,6 @@ import { useToast } from '#imports';
 const authStore = useAuthStore();
 const toast = useToast();
 const saveBarRef = ref(null);
-const tabContentRef = ref(null);
 
 // State
 const lawyerInfo = ref(null);
@@ -333,31 +332,19 @@ const handleChanges = (tabValue, hasChanges) => {
   pendingChanges.value[tabValue] = hasChanges;
 };
 
-const handleTabChange = (newTab, onSwitched) => {
+const handleTabChange = (newTab) => {
   if (globalHasChanges.value && saveBarRef.value) {
     pendingTab.value = newTab;
     saveBarRef.value.showConfirmModal();
   } else {
-    // تعویض تب در تیک بعدی تا خطای emitsOptions هنگام patch رخ ندهد
     nextTick(() => {
       activeTab.value = newTab;
-      nextTick(() => {
-        onSwitched?.();
-      });
     });
   }
 };
 
-const scrollToTabContent = () => {
-  nextTick(() => {
-    setTimeout(() => {
-      tabContentRef.value?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
-    }, 80);
-  });
-};
-
 const navigateToSection = (sectionId) => {
-  handleTabChange(sectionId, scrollToTabContent);
+  handleTabChange(sectionId);
 };
 
 // Save functions

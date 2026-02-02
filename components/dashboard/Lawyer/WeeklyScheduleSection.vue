@@ -13,12 +13,6 @@
         description="زمان‌های در دسترس بودن شما برای ارائه مشاوره"
         icon="lucide:calendar-clock"
       >
-        <template #actions>
-          <button @click="copyFromSaturday" class="btn-sm-secondary" title="کپی از شنبه به همه روزها">
-            <Icon name="lucide:copy" class="w-4 h-4" />
-            کپی از شنبه
-          </button>
-        </template>
 
         <!-- Global Settings -->
         <div class="schedule-settings">
@@ -175,7 +169,7 @@
           <div class="schedule-buttons">
             <button 
               @click="saveSchedule" 
-              class="btn-primary"
+              class="btn-primary flex items-center justify-center gap-2"
               :disabled="isLoading || hasValidationErrors"
             >
               <Icon v-if="isLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
