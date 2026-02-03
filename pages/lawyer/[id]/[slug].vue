@@ -3,7 +3,14 @@
     <!-- Breadcrumb -->
     <section class="border-b border-slate-200/80 bg-white/90 backdrop-blur-sm">
       <div class="container">
-        <UICBreadCrumb :items="breadcrumbItems" />
+        <ClientOnly>
+          <UICBreadCrumb :items="breadcrumbItems" />
+          <template #fallback>
+            <nav aria-label="breadcrumb" class="p-1.5 text-sm font-medium text-gray-500">
+              وکیل وکیل
+            </nav>
+          </template>
+        </ClientOnly>
       </div>
     </section>
 
@@ -272,13 +279,15 @@
 </template>
 
 <script setup>
+import provincesData from '~/public/provinces.json';
+
 const route = useRoute();
 const config = useRuntimeConfig();
 const filterStore = useFiltersStore();
 
 const res = await useGet({ url: `lawyers/${route.params.id}` }, '');
 const data = await res.data;
-const lawyer = ref(data.data);
+const lawyer = ref(data?.data ?? {});
 
 const fullname = computed(
   () =>
@@ -288,11 +297,24 @@ const fullname = computed(
 const commentHash = computed(() => route.path + '#comment');
 
 const breadcrumbItems = computed(() => {
-  const arr = [{ label: 'وکیل وکیل' }];
-  if (lawyer.value?.province) arr.push({ label: lawyer.value.province });
-  if (lawyer.value?.city) arr.push({ label: lawyer.value.city });
-  arr.push({ label: fullname.value });
-  return arr;
+  const base = [{ label: 'وکیل وکیل', to: '/' }];
+  const info = lawyer.value;
+  if (!info || typeof info !== 'object') return base;
+  const provinceName = info.province;
+  const provinceEnName = provinceName
+    ? (provincesData.find((p) => p.name === provinceName)?.en_name ?? null)
+    : null;
+  if (provinceName && provinceEnName) {
+    base.push({ label: provinceName, to: `/provinces/${provinceEnName}` });
+  }
+  if (info.city) {
+    base.push({
+      label: info.city,
+      to: provinceEnName ? `/provinces/${provinceEnName}` : '/lawyers',
+    });
+  }
+  base.push({ label: fullname.value });
+  return base;
 });
 
 const result = await useGet({

@@ -101,7 +101,8 @@
               <Icon name="lucide:chevron-left" class="w-5 h-5" />
             </button>
           </div>
-          <div class="calendar-grid">
+          <div class="calendar-scroll-wrap">
+            <div class="calendar-grid">
             <div v-for="day in weekDays" :key="day.date" class="calendar-day-column">
               <div class="calendar-day-header-cell" :class="{ 'today': day.isToday }">
                 <span class="day-name">{{ day.name }}</span>
@@ -118,6 +119,7 @@
                 </div>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -515,12 +517,17 @@ const rebookAppointment = (apt) => {
   @apply flex items-center justify-center gap-4;
 }
 
+.calendar-scroll-wrap {
+  @apply min-w-0 overflow-x-auto -mx-1 px-1;
+  -webkit-overflow-scrolling: touch;
+}
+
 .calendar-grid {
-  @apply grid grid-cols-7 gap-2;
+  @apply grid grid-cols-7 gap-2 min-w-0;
 }
 
 .calendar-day-column {
-  @apply bg-gray-50 rounded-lg overflow-hidden;
+  @apply bg-gray-50 rounded-lg overflow-hidden min-w-0;
 }
 
 .calendar-day-header-cell {
@@ -548,7 +555,7 @@ const rebookAppointment = (apt) => {
 }
 
 .calendar-event {
-  @apply p-2 rounded text-xs;
+  @apply p-2 rounded text-xs min-w-0;
 }
 
 .event-success {
@@ -572,15 +579,62 @@ const rebookAppointment = (apt) => {
 }
 
 .event-title {
-  @apply block truncate;
+  @apply block truncate min-w-0;
 }
 
 .event-type {
-  @apply block text-[10px] opacity-70;
+  @apply block text-[10px] opacity-70 truncate min-w-0;
 }
 
 .calendar-empty-day {
   @apply text-center text-gray-300 py-4;
+}
+
+@media (max-width: 768px) {
+  .calendar-scroll-wrap {
+    @apply -mx-3 px-3;
+  }
+
+  .calendar-grid {
+    min-width: 560px;
+    @apply gap-1.5;
+  }
+
+  .calendar-day-column {
+    min-width: 72px;
+  }
+
+  .calendar-day-header-cell {
+    @apply p-2;
+  }
+
+  .day-name {
+    @apply text-[10px];
+  }
+
+  .day-number {
+    @apply text-sm;
+  }
+
+  .calendar-day-content {
+    @apply p-1.5 min-h-[80px] space-y-1;
+  }
+
+  .calendar-event {
+    @apply p-1.5 text-[10px];
+  }
+
+  .event-time {
+    @apply text-[10px];
+  }
+
+  .event-title {
+    @apply text-[10px] max-w-full;
+  }
+
+  .event-type {
+    @apply text-[9px];
+  }
 }
 
 .btn-primary,
