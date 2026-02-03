@@ -64,19 +64,20 @@
       <div class="card-dashboard-body py-4!">
         <div class="action-bar">
           <div class="action-bar-start">
-            <select v-model="statusFilter" @change="applyFilters" class="select-dashboard w-40!">
-              <option value="">همه وضعیت‌ها</option>
-              <option value="reserved">رزرو شده</option>
-              <option value="pending_payment">در انتظار پرداخت</option>
-              <option value="done">تکمیل شده</option>
-              <option value="cancelled">لغو شده</option>
-            </select>
-            <select v-model="typeFilter" @change="applyFilters" class="select-dashboard w-36!">
-              <option value="">همه انواع</option>
-              <option value="inperson">حضوری</option>
-              <option value="phone">تلفنی</option>
-              <option value="chat">چت</option>
-            </select>
+            <UICSelect
+              v-model="statusFilter"
+              :items="statusFilterItems"
+              placeholder="همه وضعیت‌ها"
+              class="w-40!"
+              @update:model-value="applyFilters"
+            />
+            <UICSelect
+              v-model="typeFilter"
+              :items="typeFilterItems"
+              placeholder="همه انواع"
+              class="w-36!"
+              @update:model-value="applyFilters"
+            />
           </div>
           <div class="action-bar-end">
             <button v-if="statusFilter || typeFilter" @click="clearFilters" class="btn-ghost text-sm!">
@@ -232,11 +233,27 @@ const viewMode = ref('list');
 const page = ref(1);
 const total = ref(0);
 const data = ref([]);
-const statusFilter = ref('');
-const typeFilter = ref('');
+const statusFilter = ref(null);
+const typeFilter = ref(null);
 const isCancelModalOpen = ref(false);
 const appointmentToCancelId = ref(null);
 const currentWeekOffset = ref(0);
+
+// Filter items for UICSelect
+const statusFilterItems = [
+  { id: null, label: 'همه وضعیت‌ها' },
+  { id: 'reserved', label: 'رزرو شده' },
+  { id: 'pending_payment', label: 'در انتظار پرداخت' },
+  { id: 'done', label: 'تکمیل شده' },
+  { id: 'cancelled', label: 'لغو شده' },
+];
+
+const typeFilterItems = [
+  { id: null, label: 'همه انواع' },
+  { id: 'inperson', label: 'حضوری' },
+  { id: 'phone', label: 'تلفنی' },
+  { id: 'chat', label: 'چت' },
+];
 
 // Status counts
 const statusCounts = ref({ reserved: 0, pending_payment: 0, done: 0, cancelled: 0 });
@@ -309,8 +326,8 @@ const applyFilters = () => {
 };
 
 const clearFilters = () => {
-  statusFilter.value = '';
-  typeFilter.value = '';
+  statusFilter.value = null;
+  typeFilter.value = null;
   refetch(1, true);
 };
 
@@ -497,7 +514,7 @@ const rebookAppointment = (apt) => {
 }
 
 .view-btn {
-  @apply p-2 text-gray-500 transition-colors;
+  @apply p-2 text-gray-500 transition-colors flex;
 }
 
 .view-btn:hover {

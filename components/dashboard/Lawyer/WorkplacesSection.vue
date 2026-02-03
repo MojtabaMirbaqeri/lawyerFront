@@ -11,8 +11,7 @@
       <UICFormSection
         title="محل‌های کار"
         description="آدرس دفتر یا محل‌های کاری که موکلین می‌توانند به شما مراجعه کنند"
-        icon="lucide:building-2"
-      >
+        icon="lucide:building-2">
         <template #actions>
           <button @click="openAddModal" class="btn-sm-primary">
             <Icon name="lucide:plus" class="w-4 h-4" />
@@ -27,16 +26,14 @@
           title="محل کاری ثبت نشده"
           description="برای فعال‌سازی رزرو حضوری، حداقل یک محل کار اضافه کنید"
           action-text="افزودن محل کار"
-          @action="openAddModal"
-        />
+          @action="openAddModal" />
 
         <!-- Workplaces List -->
         <div v-else class="space-y-4">
-          <div 
-            v-for="workplace in workplacesList" 
+          <div
+            v-for="workplace in workplacesList"
             :key="workplace.id"
-            :class="['workplace-card', { 'highlighted': highlightedId === workplace.id }]"
-          >
+            :class="['workplace-card', { highlighted: highlightedId === workplace.id }]">
             <div class="workplace-icon">
               <Icon name="lucide:building-2" class="w-5 h-5" />
             </div>
@@ -72,82 +69,107 @@
       <template #content>
         <div class="modal-content-lg">
           <div class="modal-header">
-            <h3 class="modal-title">{{ editingWorkplace ? 'ویرایش محل کار' : 'افزودن محل کار جدید' }}</h3>
+            <h3 class="modal-title">
+              {{ editingWorkplace ? "ویرایش محل کار" : "افزودن محل کار جدید" }}
+            </h3>
             <button @click="showModal = false" class="btn-icon">
               <Icon name="lucide:x" class="w-5 h-5" />
             </button>
           </div>
-          
-          <UForm :schema="workplaceSchema" :state="formState" class="modal-body" @submit="onSubmit">
+
+          <UForm
+            :schema="workplaceSchema"
+            :state="formState"
+            class="modal-body"
+            @submit="onSubmit">
             <div class="form-grid-2">
               <!-- نام محل کار -->
               <div class="form-field md:col-span-2">
-                <label class="form-label">نام محل کار <span class="required-star">*</span></label>
-                <UInput v-model="formState.name" placeholder="مثال: دفتر وکالت مرکزی" />
-                <p class="form-hint">نامی که موکلین آن را می‌بینند</p>
+                <UICInput
+                  v-model="formState.name"
+                  name="name"
+                  label="نام محل کار"
+                  placeholder="مثال: دفتر وکالت مرکزی"
+                  required />
               </div>
 
               <!-- استان -->
               <div class="form-field">
-                <label class="form-label">استان <span class="required-star">*</span></label>
-                <UICSelect 
-                  v-model="formState.province_id" 
-                  :items="provinces"
-                  :loading="isFetchingProvinces"
-                  placeholder="انتخاب استان"
-                />
+                <UICInput name="province_id" label="استان" required>
+                  <template #input>
+                    <UICSelect
+                      v-model="formState.province_id"
+                      :items="provinces"
+                      :loading="isFetchingProvinces"
+                      placeholder="انتخاب استان" />
+                  </template>
+                </UICInput>
               </div>
 
               <!-- شهر -->
               <div class="form-field">
-                <label class="form-label">شهر <span class="required-star">*</span></label>
-                <UICSelect 
-                  v-model="formState.city_id" 
-                  :items="cities"
-                  :loading="isFetchingCities"
-                  placeholder="انتخاب شهر"
-                  :disabled="!formState.province_id"
-                />
+                <UICInput name="city_id" label="شهر" required>
+                  <template #input>
+                    <UICSelect
+                      v-model="formState.city_id"
+                      :items="cities"
+                      :loading="isFetchingCities"
+                      placeholder="انتخاب شهر"
+                      :disabled="!formState.province_id" />
+                  </template>
+                </UICInput>
               </div>
 
               <!-- آدرس -->
               <div class="form-field md:col-span-2">
-                <label class="form-label">آدرس کامل <span class="required-star">*</span></label>
-                <UTextarea 
-                  v-model="formState.address" 
+                <label class="form-label"
+                  >آدرس کامل <span class="required-star">*</span></label
+                >
+                <UTextarea
+                  v-model="formState.address"
                   placeholder="آدرس دقیق محل کار را وارد کنید"
-                  :rows="2"
-                />
+                  :rows="2" />
               </div>
 
               <!-- تلفن -->
               <div class="form-field">
-                <label class="form-label">تلفن ثابت</label>
-                <UInput v-model="formState.phone" placeholder="مثال: ۰۲۱-۱۲۳۴۵۶۷۸" dir="ltr" />
+                <UICInput
+                  v-model="formState.phone"
+                  name="phone"
+                  label="تلفن ثابت"
+                  placeholder="مثال: ۰۲۱-۱۲۳۴۵۶۷۸"
+                  dir="ltr" />
               </div>
 
               <!-- تلفن اضطراری -->
               <div class="form-field">
-                <label class="form-label">تلفن اضطراری</label>
-                <UInput v-model="formState.emergency_phone" placeholder="شماره موبایل یا ثابت" dir="ltr" />
+                <UICInput
+                  v-model="formState.emergency_phone"
+                  name="emergency_phone"
+                  label="تلفن اضطراری"
+                  placeholder="شماره موبایل یا ثابت"
+                  dir="ltr" />
               </div>
 
               <!-- نقشه -->
               <div class="form-field md:col-span-2">
                 <label class="form-label">موقعیت روی نقشه</label>
-                <p class="form-hint mb-2">برای کمک به موکلین در یافتن دفتر شما</p>
                 <DashboardLawyerGetLocation
                   v-model="formState.location"
-                  class="h-[250px] w-full rounded-lg overflow-hidden border border-gray-200"
-                />
+                  class="h-[250px] w-full rounded-lg overflow-hidden border border-gray-200" />
               </div>
             </div>
 
             <div class="modal-footer">
-              <button type="button" @click="showModal = false" class="btn-secondary">انصراف</button>
+              <button type="button" @click="showModal = false" class="btn-secondary">
+                انصراف
+              </button>
               <button type="submit" class="btn-primary" :disabled="isLoading">
-                <Icon v-if="isLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
-                {{ isLoading ? 'در حال ذخیره...' : 'ذخیره محل کار' }}
+                <Icon
+                  v-if="isLoading"
+                  name="lucide:loader-2"
+                  class="w-4 h-4 animate-spin" />
+                {{ isLoading ? "در حال ذخیره..." : "ذخیره محل کار" }}
               </button>
             </div>
           </UForm>
@@ -163,8 +185,7 @@
       confirm-text="حذف"
       variant="danger"
       :loading="isDeleting"
-      @confirm="executeDelete"
-    />
+      @confirm="executeDelete" />
   </div>
 </template>
 
@@ -175,7 +196,7 @@ const props = defineProps({
   lawyerInformation: { type: Object, required: true },
 });
 
-const emit = defineEmits(['update:changes', 'saved']);
+const emit = defineEmits(["update:changes", "saved"]);
 const toast = useToast();
 
 // State
@@ -275,12 +296,15 @@ async function fetchCities(provinceId) {
   }
 }
 
-watch(() => formState.province_id, (newVal, oldVal) => {
-  if (newVal !== oldVal) {
-    formState.city_id = "";
-    fetchCities(newVal);
-  }
-});
+watch(
+  () => formState.province_id,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      formState.city_id = "";
+      fetchCities(newVal);
+    }
+  },
+);
 
 // Modal functions
 function openAddModal() {
@@ -294,7 +318,7 @@ function openAddModal() {
     emergency_phone: "",
     location: [],
   });
-  
+
   // Set default province (Tehran)
   const tehran = provinces.value.find((p) => p.label === "تهران");
   if (tehran) {
@@ -302,7 +326,7 @@ function openAddModal() {
   } else if (provinces.value.length) {
     formState.province_id = provinces.value[0].id;
   }
-  
+
   showModal.value = true;
 }
 
@@ -323,7 +347,7 @@ function openEditModal(workplace) {
 
 async function onSubmit(event) {
   isLoading.value = true;
-  
+
   const body = {
     ...event.data,
     province_id: parseInt(event.data.province_id),
@@ -341,15 +365,20 @@ async function onSubmit(event) {
         includeAuthHeader: true,
         body,
       });
-      
+
       if (res.status) {
-        const index = workplacesList.value.findIndex(w => w.id === editingWorkplace.value.id);
+        const index = workplacesList.value.findIndex(
+          (w) => w.id === editingWorkplace.value.id,
+        );
         if (index !== -1) {
-          workplacesList.value[index] = { ...workplacesList.value[index], ...res.data.data };
+          workplacesList.value[index] = {
+            ...workplacesList.value[index],
+            ...res.data.data,
+          };
         }
         toast.add({ description: "محل کار با موفقیت ویرایش شد.", color: "success" });
         showModal.value = false;
-        emit('saved');
+        emit("saved");
       } else {
         toast.add({ description: "خطا در ویرایش محل کار.", color: "error" });
       }
@@ -364,10 +393,12 @@ async function onSubmit(event) {
       if (res.status && res.data.data) {
         workplacesList.value.push(res.data.data);
         highlightedId.value = res.data.data.id;
-        setTimeout(() => { highlightedId.value = null; }, 2000);
+        setTimeout(() => {
+          highlightedId.value = null;
+        }, 2000);
         toast.add({ description: "محل کار با موفقیت افزوده شد.", color: "success" });
         showModal.value = false;
-        emit('saved');
+        emit("saved");
       } else {
         toast.add({ description: "خطا در افزودن محل کار.", color: "error" });
       }
@@ -388,19 +419,21 @@ function confirmDelete(workplace) {
 
 async function executeDelete() {
   if (!deleteTarget.value) return;
-  
+
   isDeleting.value = true;
   try {
     const res = await useDelete({
       url: `workplaces/${deleteTarget.value.id}`,
       includeAuthHeader: true,
     });
-    
+
     if (res.status) {
-      workplacesList.value = workplacesList.value.filter((w) => w.id !== deleteTarget.value.id);
+      workplacesList.value = workplacesList.value.filter(
+        (w) => w.id !== deleteTarget.value.id,
+      );
       toast.add({ description: "محل کار با موفقیت حذف شد.", color: "success" });
       showDeleteConfirm.value = false;
-      emit('saved');
+      emit("saved");
     } else {
       toast.add({ description: res.message || "خطا در حذف.", color: "error" });
     }
@@ -435,8 +468,12 @@ fetchInitialData();
 }
 
 @keyframes highlight-fade {
-  0% { background-color: rgba(34, 197, 94, 0.2); }
-  100% { background-color: rgba(240, 253, 244, 1); }
+  0% {
+    background-color: rgba(34, 197, 94, 0.2);
+  }
+  100% {
+    background-color: rgba(240, 253, 244, 1);
+  }
 }
 
 .workplace-icon {
@@ -521,7 +558,7 @@ fetchInitialData();
   .workplace-card {
     @apply flex-col;
   }
-  
+
   .workplace-actions {
     @apply w-full justify-end pt-3 border-t border-gray-100 mt-3;
   }

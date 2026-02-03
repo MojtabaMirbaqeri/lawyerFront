@@ -48,7 +48,7 @@
           </div>
           <div class="pricing-card-body">
             <div class="price-input-wrap">
-              <UInput
+              <UICInput
                 :model-value="displayPrices.phone"
                 @update:model-value="(val) => handlePriceInput('phone', val)"
                 placeholder="قیمت را وارد کنید"
@@ -86,7 +86,7 @@
           </div>
           <div class="pricing-card-body">
             <div class="price-input-wrap">
-              <UInput
+              <UICInput
                 :model-value="displayPrices.chat"
                 @update:model-value="(val) => handlePriceInput('chat', val)"
                 placeholder="قیمت را وارد کنید"
@@ -122,7 +122,7 @@
           </div>
           <div class="pricing-card-body">
             <div class="price-input-wrap">
-              <UInput
+              <UICInput
                 :model-value="displayPrices.inperson"
                 @update:model-value="(val) => handlePriceInput('inperson', val)"
                 placeholder="قیمت را وارد کنید"

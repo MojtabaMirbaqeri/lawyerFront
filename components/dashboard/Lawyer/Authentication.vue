@@ -127,17 +127,28 @@
           <UForm :schema="schema" :state="state" @submit="onSubmit">
             <div class="form-grid-2">
               <div class="form-field">
-                <label class="form-label">پایه وکالت <span class="required-star">*</span></label>
-                <UICSelect v-model="state.lawyerType" :items="mappedTypes" />
+                <UICInput name="lawyerType" label="پایه وکالت" required>
+                  <template #input>
+                    <UICSelect v-model="state.lawyerType" :items="mappedTypes" />
+                  </template>
+                </UICInput>
               </div>
               <div class="form-field">
-                <label class="form-label">شماره پروانه <span class="required-star">*</span></label>
-                <UInput v-model="state.licenseNumber" placeholder="شماره پروانه وکالت" />
+                <UICInput
+                  v-model="state.licenseNumber"
+                  name="licenseNumber"
+                  label="شماره پروانه"
+                  placeholder="شماره پروانه وکالت"
+                  required />
               </div>
               <div class="form-field">
-                <label class="form-label">کد ملی <span class="required-star">*</span></label>
-                <UInput v-model="state.nationalCode" placeholder="۱۰ رقم" dir="ltr" />
-                <p class="form-hint">این اطلاعات محرمانه است و فقط برای احراز هویت استفاده می‌شود</p>
+                <UICInput
+                  v-model="state.nationalCode"
+                  name="nationalCode"
+                  label="کد ملی"
+                  placeholder="۱۰ رقم"
+                  dir="ltr"
+                  required />
               </div>
               <div class="form-field md:col-span-2">
                 <label class="form-label">تصویر کارت ملی <span class="required-star">*</span></label>
@@ -171,25 +182,33 @@
           <div class="form-grid-2">
             <!-- پایه وکیل -->
             <div class="form-field">
-              <label class="form-label">پایه وکالت <span class="required-star">*</span></label>
-              <UICSelect v-model="state.lawyerType" :items="mappedTypes" />
-              <p class="form-hint">پایه وکالت شما طبق پروانه</p>
+              <UICInput name="lawyerType" label="پایه وکالت" required>
+                <template #input>
+                  <UICSelect v-model="state.lawyerType" :items="mappedTypes" />
+                </template>
+              </UICInput>
             </div>
 
             <!-- شماره پروانه -->
             <div class="form-field">
-              <label class="form-label">شماره پروانه <span class="required-star">*</span></label>
-              <UInput v-model="state.licenseNumber" placeholder="شماره پروانه وکالت" />
+              <UICInput
+                v-model="state.licenseNumber"
+                name="licenseNumber"
+                label="شماره پروانه"
+                placeholder="شماره پروانه وکالت"
+                required />
             </div>
 
             <!-- کد ملی -->
             <div class="form-field md:col-span-2">
-              <label class="form-label">کد ملی <span class="required-star">*</span></label>
-              <UInput v-model="state.nationalCode" placeholder="۱۰ رقم" dir="ltr" class="max-w-xs" />
-              <p class="form-hint">
-                <Icon name="lucide:lock" class="w-3 h-3" />
-                این اطلاعات محرمانه است و فقط برای احراز هویت استفاده می‌شود
-              </p>
+              <UICInput
+                v-model="state.nationalCode"
+                name="nationalCode"
+                label="کد ملی"
+                placeholder="۱۰ رقم"
+                dir="ltr"
+                class="max-w-xs"
+                required />
             </div>
 
             <!-- تصویر کارت ملی -->
@@ -262,7 +281,7 @@
 
     <!-- Documents Preview Modal -->
     <UModal v-model:open="showDocumentsModal">
-      <template #content>
+      <template #body>
         <div class="modal-content">
           <div class="modal-header">
             <h3 class="modal-title">مدارک آپلود شده</h3>

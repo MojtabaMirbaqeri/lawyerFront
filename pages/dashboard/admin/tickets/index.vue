@@ -9,10 +9,16 @@
       <div class="flex items-center gap-3">
         <!-- View Toggle -->
         <div class="view-toggle">
-          <button @click="viewMode = 'kanban'" class="view-btn" :class="{ active: viewMode === 'kanban' }">
+          <button
+            @click="viewMode = 'kanban'"
+            class="view-btn"
+            :class="{ active: viewMode === 'kanban' }">
             <Icon name="lucide:columns-3" class="w-4 h-4" />
           </button>
-          <button @click="viewMode = 'list'" class="view-btn" :class="{ active: viewMode === 'list' }">
+          <button
+            @click="viewMode = 'list'"
+            class="view-btn"
+            :class="{ active: viewMode === 'list' }">
             <Icon name="lucide:list" class="w-4 h-4" />
           </button>
         </div>
@@ -66,20 +72,34 @@
           <div class="action-bar-start">
             <div class="search-box">
               <Icon name="lucide:search" class="icon" />
-              <input v-model="globalFilter" @change="searchHandle" type="text" placeholder="جستجوی تیکت..." class="w-64" />
+              <input
+                v-model="globalFilter"
+                @change="searchHandle"
+                type="text"
+                placeholder="جستجوی تیکت..."
+                class="w-64" />
             </div>
-            <select v-model="status" class="select-dashboard w-36!">
-              <option v-for="s in filterStore.ticketFilter.status" :key="s.id" :value="s.id">{{ s.label }}</option>
-            </select>
-            <select v-model="priority" class="select-dashboard w-36!">
-              <option v-for="p in filterStore.ticketFilter.priority" :key="p.id" :value="p.id">{{ p.label }}</option>
-            </select>
-            <select v-model="type" class="select-dashboard w-36!">
-              <option v-for="t in filterStore.ticketFilter.type" :key="t.id" :value="t.id">{{ t.label }}</option>
-            </select>
+            <UICSelect
+              v-model="status"
+              :items="filterStore.ticketFilter.status"
+              placeholder="وضعیت"
+              class="w-36!" />
+            <UICSelect
+              v-model="priority"
+              :items="filterStore.ticketFilter.priority"
+              placeholder="اولویت"
+              class="w-36!" />
+            <UICSelect
+              v-model="type"
+              :items="filterStore.ticketFilter.type"
+              placeholder="نوع"
+              class="w-36!" />
           </div>
           <div class="action-bar-end">
-            <button v-if="status || priority || type || globalFilter" @click="clearFilters" class="btn-ghost text-sm!">
+            <button
+              v-if="status || priority || type || globalFilter"
+              @click="clearFilters"
+              class="btn-ghost text-sm!">
               <Icon name="lucide:x" class="w-4 h-4" />
               پاک کردن فیلترها
             </button>
@@ -99,15 +119,23 @@
           <span class="kanban-count">{{ getColumnTickets(column.status).length }}</span>
         </div>
         <div class="kanban-cards">
-          <div v-for="ticket in getColumnTickets(column.status)" :key="ticket.ticketId" class="kanban-card" @click="openTicket(ticket)">
+          <div
+            v-for="ticket in getColumnTickets(column.status)"
+            :key="ticket.ticketId"
+            class="kanban-card"
+            @click="openTicket(ticket)">
             <div class="kanban-card-header">
               <span class="ticket-number">#{{ ticket.id }}</span>
-              <span class="badge" :class="getPriorityBadgeClass(ticket.priorityVal)">{{ ticket.priority }}</span>
+              <span class="badge" :class="getPriorityBadgeClass(ticket.priorityVal)">{{
+                ticket.priority
+              }}</span>
             </div>
             <h4 class="kanban-card-title">{{ ticket.ticketTitle }}</h4>
             <div class="kanban-card-footer">
               <div class="kanban-card-user">
-                <div class="avatar-placeholder avatar-xs">{{ getInitials(ticket.fullname) }}</div>
+                <div class="avatar-placeholder avatar-xs">
+                  {{ getInitials(ticket.fullname) }}
+                </div>
                 <span>{{ ticket.fullname }}</span>
               </div>
               <span class="kanban-card-type">{{ ticket.type }}</span>
@@ -121,66 +149,75 @@
     </div>
 
     <!-- List View -->
-    <div v-else class="card-dashboard">
-      <div class="overflow-x-auto">
-        <table class="table-dashboard">
-          <thead>
-            <tr>
-              <th>شماره تیکت</th>
-              <th>عنوان</th>
-              <th>کاربر</th>
-              <th>اولویت</th>
-              <th>دپارتمان</th>
-              <th>وضعیت</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="ticket in data" :key="ticket.ticketId" class="cursor-pointer" @click="openTicket(ticket)">
-              <td><span class="font-mono text-gray-600">#{{ ticket.id }}</span></td>
-              <td><span class="font-medium text-gray-900">{{ ticket.ticketTitle }}</span></td>
-              <td>
-                <div class="flex items-center gap-2">
-                  <div class="avatar-placeholder avatar-sm">{{ getInitials(ticket.fullname) }}</div>
-                  <span>{{ ticket.fullname }}</span>
-                </div>
-              </td>
-              <td><span class="badge" :class="getPriorityBadgeClass(ticket.priorityVal)">{{ ticket.priority }}</span></td>
-              <td><span class="text-gray-600">{{ ticket.type }}</span></td>
-              <td><span class="badge" :class="getStatusBadgeClass(ticket.statusVal)">{{ ticket.status }}</span></td>
-              <td>
-                <div class="flex items-center justify-end gap-1" @click.stop>
-                  <button @click="openTicket(ticket)" class="btn-icon" title="مشاهده">
-                    <Icon name="lucide:eye" class="w-4 h-4" />
-                  </button>
-                  <button v-if="ticket.statusVal !== 'closed'" @click="closeTicket(ticket)" class="btn-icon" title="بستن تیکت">
-                    <Icon name="lucide:archive" class="w-4 h-4" />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      
-      <!-- Pagination -->
-      <div class="flex items-center justify-between p-4 border-t border-gray-100">
-        <span class="text-sm text-gray-500">صفحه {{ page }} از {{ Math.ceil(total / 15) }}</span>
-        <UPagination v-model:page="page" :items-per-page="15" :total="total" :sibling-count="1"
-          :ui="{ list: 'gap-1', item: 'min-w-8 h-8 text-sm', first: 'hidden', last: 'hidden', prev: 'scale-x-[-1]', next: 'scale-x-[-1]' }"
-        />
-      </div>
-    </div>
+    <dashboard-admin-generic-table
+      v-else
+      :data="data"
+      :columns="tableColumns"
+      :current-page="page"
+      :total-items="total"
+      :items-per-page="15"
+      row-key="ticketId"
+      row-class="cursor-pointer"
+      :on-row-click="true"
+      empty-title="تیکتی یافت نشد"
+      empty-message="با تغییر فیلترها یا جستجو، تیکت‌ها را مشاهده کنید"
+      empty-icon="lucide:ticket"
+      @update:page="page = $event"
+      @row-click="openTicket"
+    >
+      <!-- Custom cell for ticket number -->
+      <template #cell-id="{ value }">
+        <span class="font-mono text-gray-600">#{{ value }}</span>
+      </template>
+
+      <!-- Custom cell for title -->
+      <template #cell-ticketTitle="{ value }">
+        <span class="font-medium text-gray-900">{{ value }}</span>
+      </template>
+
+      <!-- Custom cell for user -->
+      <template #cell-fullname="{ row }">
+        <div class="flex items-center gap-2">
+          <div class="avatar-placeholder avatar-sm">{{ getInitials(row.fullname) }}</div>
+          <span>{{ row.fullname }}</span>
+        </div>
+      </template>
+
+      <!-- Custom cell for priority -->
+      <template #cell-priority="{ row }">
+        <span class="badge" :class="getPriorityBadgeClass(row.priorityVal)">{{ row.priority }}</span>
+      </template>
+
+      <!-- Custom cell for type -->
+      <template #cell-type="{ value }">
+        <span class="text-gray-600">{{ value }}</span>
+      </template>
+
+      <!-- Custom cell for status -->
+      <template #cell-status="{ row }">
+        <span class="badge" :class="getStatusBadgeClass(row.statusVal)">{{ row.status }}</span>
+      </template>
+
+      <!-- Custom actions -->
+      <template #actions="{ row }">
+        <div class="flex items-center justify-end gap-1" @click.stop>
+          <button class="btn-icon" title="مشاهده" @click="openTicket(row)">
+            <Icon name="lucide:eye" class="w-4 h-4" />
+          </button>
+          <button v-if="row.statusVal !== 'closed'" class="btn-icon" title="بستن تیکت" @click="closeTicket(row)">
+            <Icon name="lucide:archive" class="w-4 h-4" />
+          </button>
+        </div>
+      </template>
+    </dashboard-admin-generic-table>
   </div>
 </template>
 
 <script setup>
-import { h, resolveComponent } from "vue";
-
 useHead({ title: "مدیریت تیکت‌ها | وکیلینجا" });
 
 const filterStore = useFiltersStore();
-const viewMode = ref('list');
+const viewMode = ref("list");
 const globalFilter = ref("");
 const status = ref(0);
 const priority = ref(0);
@@ -188,17 +225,33 @@ const type = ref(0);
 const page = ref(1);
 const selectQuery = ref();
 
+// Table configuration
+const tableColumns = [
+  { key: 'id', label: 'شماره تیکت' },
+  { key: 'ticketTitle', label: 'عنوان' },
+  { key: 'fullname', label: 'کاربر' },
+  { key: 'priority', label: 'اولویت' },
+  { key: 'type', label: 'دپارتمان' },
+  { key: 'status', label: 'وضعیت' },
+];
+
 // Kanban columns
 const kanbanColumns = [
-  { status: 'open', title: 'باز', color: 'blue' },
-  { status: 'in_progress', title: 'در حال بررسی', color: 'amber' },
-  { status: 'answered', title: 'پاسخ داده شده', color: 'green' },
-  { status: 'waiting_for_user', title: 'در انتظار کاربر', color: 'purple' },
-  { status: 'closed', title: 'بسته شده', color: 'gray' },
+  { status: "open", title: "باز", color: "blue" },
+  { status: "in_progress", title: "در حال بررسی", color: "amber" },
+  { status: "answered", title: "پاسخ داده شده", color: "green" },
+  { status: "waiting_for_user", title: "در انتظار کاربر", color: "purple" },
+  { status: "closed", title: "بسته شده", color: "gray" },
 ];
 
 // Status counts
-const statusCounts = ref({ open: 0, in_progress: 0, answered: 0, waiting_for_user: 0, closed: 0 });
+const statusCounts = ref({
+  open: 0,
+  in_progress: 0,
+  answered: 0,
+  waiting_for_user: 0,
+  closed: 0,
+});
 
 watch([status, priority, type], async (newVal) => {
   const obj = { status: newVal[0], priority: newVal[1], type: newVal[2] };
@@ -220,12 +273,12 @@ const clearFilters = () => {
   status.value = 0;
   priority.value = 0;
   type.value = 0;
-  globalFilter.value = '';
+  globalFilter.value = "";
   refetch(null, null, true);
 };
 
 const setStatusFilter = (statusVal) => {
-  const statusOption = filterStore.ticketFilter.status.find(s => s.value === statusVal);
+  const statusOption = filterStore.ticketFilter.status.find((s) => s.value === statusVal);
   if (statusOption) {
     status.value = statusOption.id;
   }
@@ -243,7 +296,7 @@ const refetch = async (pageNum = null, query = null, setTotal = false, search = 
       search: search ? search : undefined,
     },
   });
-  
+
   data.value = res.data.data.data.tickets.map((ticket) => ({
     id: ticket?.ticket_number,
     ticketTitle: ticket?.title,
@@ -262,15 +315,22 @@ const refetch = async (pageNum = null, query = null, setTotal = false, search = 
   }
 };
 
-watch(() => page.value, async (pageNum) => {
-  if (selectQuery.value?.status || selectQuery.value?.priority || selectQuery.value?.type) {
-    refetch(pageNum, selectQuery.value, true);
-  } else if (globalFilter.value) {
-    refetch(pageNum, null, null, globalFilter.value);
-  } else {
-    refetch(pageNum, null);
-  }
-});
+watch(
+  () => page.value,
+  async (pageNum) => {
+    if (
+      selectQuery.value?.status ||
+      selectQuery.value?.priority ||
+      selectQuery.value?.type
+    ) {
+      refetch(pageNum, selectQuery.value, true);
+    } else if (globalFilter.value) {
+      refetch(pageNum, null, null, globalFilter.value);
+    } else {
+      refetch(pageNum, null);
+    }
+  },
+);
 
 // Initial fetch
 const res = await useGet({ url: "tickets", includeAuthHeader: true });
@@ -289,13 +349,19 @@ const data = ref(
     fullname: `${ticket?.user?.name} ${ticket?.user?.family}`,
     ticketId: ticket?.id,
     createdAt: ticket?.created_at,
-  }))
+  })),
 );
 
 // Calculate status counts
 const calculateStatusCounts = () => {
-  statusCounts.value = { open: 0, in_progress: 0, answered: 0, waiting_for_user: 0, closed: 0 };
-  data.value.forEach(t => {
+  statusCounts.value = {
+    open: 0,
+    in_progress: 0,
+    answered: 0,
+    waiting_for_user: 0,
+    closed: 0,
+  };
+  data.value.forEach((t) => {
     if (statusCounts.value[t.statusVal] !== undefined) {
       statusCounts.value[t.statusVal]++;
     }
@@ -306,20 +372,36 @@ watch(data, calculateStatusCounts, { deep: true });
 
 // Helpers
 const getInitials = (name) => {
-  if (!name) return '?';
-  return name.split(' ').map(p => p.charAt(0)).join('').substring(0, 2);
+  if (!name) return "?";
+  return name
+    .split(" ")
+    .map((p) => p.charAt(0))
+    .join("")
+    .substring(0, 2);
 };
 
-const getColumnTickets = (statusVal) => data.value.filter(t => t.statusVal === statusVal);
+const getColumnTickets = (statusVal) =>
+  data.value.filter((t) => t.statusVal === statusVal);
 
 const getPriorityBadgeClass = (priority) => {
-  const classes = { high: 'badge-error', medium: 'badge-warning', low: 'badge-info', urgent: 'badge-error' };
-  return classes[priority] || 'badge-gray';
+  const classes = {
+    high: "badge-error",
+    medium: "badge-warning",
+    low: "badge-info",
+    urgent: "badge-error",
+  };
+  return classes[priority] || "badge-gray";
 };
 
 const getStatusBadgeClass = (status) => {
-  const classes = { open: 'badge-info', closed: 'badge-gray', in_progress: 'badge-warning', answered: 'badge-success', waiting_for_user: 'badge-warning' };
-  return classes[status] || 'badge-gray';
+  const classes = {
+    open: "badge-info",
+    closed: "badge-gray",
+    in_progress: "badge-warning",
+    answered: "badge-success",
+    waiting_for_user: "badge-warning",
+  };
+  return classes[status] || "badge-gray";
 };
 
 const openTicket = (ticket) => {
@@ -327,7 +409,10 @@ const openTicket = (ticket) => {
 };
 
 const closeTicket = async (ticket) => {
-  const postRes = await usePost({ url: `tickets/${ticket.ticketId}/close`, includeAuthHeader: true });
+  const postRes = await usePost({
+    url: `tickets/${ticket.ticketId}/close`,
+    includeAuthHeader: true,
+  });
   if (postRes.statusCode == 200) {
     useToast().add({ title: "تیکت با موفقیت بسته شد", color: "success" });
     refetch(page.value, selectQuery.value, true);
@@ -383,7 +468,7 @@ const closeTicket = async (ticket) => {
 }
 
 .view-btn {
-  @apply p-2 text-gray-500 transition-colors;
+  @apply p-2 text-gray-500 transition-colors flex;
 }
 
 .view-btn:hover {

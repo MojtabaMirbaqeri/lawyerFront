@@ -17,6 +17,5 @@ defineProps(["total", "pageSize"]);
       prev: 'scale-x-[-1]',
       next: 'scale-x-[-1]',
       last: 'hidden',
-    }"
-  />
+    }" />
 </template>

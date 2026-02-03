@@ -50,12 +50,45 @@
       </div>
 
       <!-- Table -->
-      <UICDataTable
-        v-model="page"
+      <dashboard-admin-generic-table
         :data="data"
-        :columns="columns"
-        :total="total"
-        :per-page="25" />
+        :columns="tableColumns"
+        :current-page="page"
+        :total-items="total"
+        :items-per-page="25"
+        row-key="user_id"
+        empty-title="وکیلی یافت نشد"
+        empty-message="با تغییر فیلترها یا جستجو، وکلا را مشاهده کنید"
+        empty-icon="lucide:scale"
+        @update:page="page = $event"
+      >
+        <!-- Custom cell for user_id -->
+        <template #cell-user_id="{ value }">
+          <span class="text-gray-600">#{{ value }}</span>
+        </template>
+
+        <!-- Custom cell for fullname -->
+        <template #cell-fullname="{ value }">
+          <span class="font-medium text-gray-900">{{ value }}</span>
+        </template>
+
+        <!-- Custom cell for phone -->
+        <template #cell-phone="{ value }">
+          <span class="font-mono text-gray-600">{{ value }}</span>
+        </template>
+
+        <!-- Custom actions -->
+        <template #actions="{ row }">
+          <div class="flex items-center justify-end gap-1">
+            <button class="btn-icon" title="گزارش" @click="openReport(row)">
+              <Icon name="lucide:file-text" class="w-4 h-4" />
+            </button>
+            <button class="btn-icon" title="مشاهده گزارش‌ها" @click="openReportList(row)">
+              <Icon name="lucide:list" class="w-4 h-4" />
+            </button>
+          </div>
+        </template>
+      </dashboard-admin-generic-table>
 
       <!-- Report Modal -->
       <UModal
@@ -315,56 +348,15 @@ function onSearch() {
 const UButton = resolveComponent("UButton");
 const UDropdownMenu = resolveComponent("UDropdownMenu");
 
-const columns = ref([
-  {
-    accessorKey: "user_id",
-    header: "شماره کاربر",
-    cell: ({ row }) => `#${row.getValue("user_id")}`,
-  },
-  { accessorKey: "fullname", header: "نام و نام خانوادگی" },
-  { accessorKey: "national_code", header: "کدملی" },
-  { accessorKey: "phone", header: "تلفن" },
-  { accessorKey: "province", header: "استان" },
-  { accessorKey: "base", header: "پایه" },
-  {
-    id: "actions",
-    header: "فعالیت",
-    cell: ({ row }) => {
-      return h(
-        "div",
-        { class: "text-center" },
-        h(
-          UDropdownMenu,
-          {
-            content: { align: "end" },
-            items: [
-              { type: "label", label: "فعالیت ها" },
-              {
-                label: "گزارش",
-                icon: "solar:pen-outline",
-                onSelect: () => openReport(row.original),
-              },
-              {
-                label: "مشاهده گزارش‌ها",
-                icon: "solar:documents-linear",
-                onSelect: () => openReportList(row.original),
-              },
-            ],
-            "aria-label": "Actions dropdown",
-          },
-          () =>
-            h(UButton, {
-              icon: "i-lucide-ellipsis-vertical",
-              color: "neutral",
-              variant: "ghost",
-              class: "ml-auto",
-              "aria-label": "Actions dropdown",
-            })
-        )
-      );
-    },
-  },
-]);
+const tableColumns = [
+  { key: 'user_id', label: 'شماره کاربر' },
+  { key: 'fullname', label: 'نام و نام خانوادگی' },
+  { key: 'national_code', label: 'کدملی' },
+  { key: 'phone', label: 'تلفن' },
+  { key: 'province', label: 'استان' },
+  { key: 'base', label: 'پایه' },
+];
+
 
 async function exportExcel() {
   if (!total.value || total.value < 1) {

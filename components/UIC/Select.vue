@@ -46,7 +46,7 @@ const clearSelection = () => {
         :placeholder="placeholder"
         :ui="{
           base: 'w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm bg-white transition-all duration-150 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none h-[42px] appearance-none cursor-pointer',
-          trailing: 'absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none',
+          trailing: 'absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none pe-0',
           trailingIcon: 'w-4 h-4 text-gray-400',
         }"
         class="uic-select"

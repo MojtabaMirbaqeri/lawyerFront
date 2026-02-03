@@ -6,8 +6,7 @@
         title="اطلاعات هویتی"
         description="اطلاعات پایه هویتی شما برای احراز هویت و نمایش در پروفایل"
         icon="lucide:user"
-        required
-      >
+        required>
         <div class="form-grid">
           <!-- نام و نام خانوادگی readonly -->
           <div class="form-field">
@@ -16,24 +15,21 @@
               label="نام و نام خانوادگی"
               hint="غیرقابل تغییر"
               readonly
-              icon="lucide:user"
-            />
+              icon="lucide:user" />
           </div>
 
           <!-- جنسیت -->
           <div class="form-field">
-            <label class="form-label">
-              جنسیت
-              <span class="required-star">*</span>
-            </label>
-            <UICSelect
-              v-model="state.gender"
-              :items="[
-                { id: 'male', label: 'مرد' },
-                { id: 'female', label: 'زن' },
-              ]"
-            />
-            <p class="form-hint">جنسیت شما در پروفایل عمومی نمایش داده می‌شود</p>
+            <UICInput name="gender" label="جنسیت">
+              <template #input>
+                <UICSelect
+                  v-model="state.gender"
+                  :items="[
+                    { id: 'male', label: 'مرد' },
+                    { id: 'female', label: 'زن' },
+                  ]" />
+              </template>
+            </UICInput>
           </div>
 
           <!-- نام پدر -->
@@ -44,30 +40,22 @@
               label="نام پدر"
               placeholder="نام پدر را وارد کنید"
               hint="برای تایید هویت و صدور گواهی استفاده می‌شود"
-              required
-            />
+              required />
           </div>
 
           <!-- تاریخ تولد -->
           <div class="form-field">
-            <label class="form-label">
-              تاریخ تولد
-              <span class="required-star">*</span>
-            </label>
-            <div class="date-picker-wrap">
-              <PersianDate 
-                v-model="state.birth_date" 
-                :column="1" 
-                mode="single"
-                format="YYYY-MM-DD"
-                display-format="jYYYY/jMM/jDD"
-              >
-                <template #icon>
-                  <Icon name="lucide:calendar" class="h-full w-5 text-gray-400" />
-                </template>
-              </PersianDate>
-            </div>
-            <p class="form-hint">تاریخ به صورت شمسی نمایش داده می‌شود</p>
+            <UICInput name="birth_date" label="تاریخ تولد" required>
+              <template #input>
+                <div class="date-picker-wrap">
+                  <PersianDate v-model="state.birth_date" :column="1" mode="single">
+                    <template #icon>
+                      <UIcon name="solar:calendar-linear" class="h-full! w-5!" />
+                    </template>
+                  </PersianDate>
+                </div>
+              </template>
+            </UICInput>
           </div>
         </div>
       </UICFormSection>
@@ -77,36 +65,33 @@
         title="محل سکونت"
         description="آدرس محل سکونت شما برای نمایش در نتایج جستجو"
         icon="lucide:map-pin"
-        required
-      >
+        required>
         <div class="form-grid">
           <!-- استان -->
           <div class="form-field">
-            <label class="form-label">
-              استان
-              <span class="required-star">*</span>
-            </label>
-            <UICSelect 
-              v-model="state.province_id" 
-              :items="provinces"
-              :loading="isFetching"
-              placeholder="انتخاب استان"
-            />
+            <UICInput name="province_id" label="استان" required>
+              <template #input>
+                <UICSelect
+                  v-model="state.province_id"
+                  :items="provinces"
+                  :loading="isFetching"
+                  placeholder="انتخاب استان" />
+              </template>
+            </UICInput>
           </div>
 
           <!-- شهر -->
           <div class="form-field">
-            <label class="form-label">
-              شهر
-              <span class="required-star">*</span>
-            </label>
-            <UICSelect 
-              v-model="state.city_id" 
-              :items="cities"
-              :loading="isFetching"
-              placeholder="انتخاب شهر"
-              :disabled="!state.province_id"
-            />
+            <UICInput name="city_id" label="شهر" required>
+              <template #input>
+                <UICSelect
+                  v-model="state.city_id"
+                  :items="cities"
+                  :loading="isFetching"
+                  placeholder="انتخاب شهر"
+                  :disabled="!state.province_id" />
+              </template>
+            </UICInput>
             <p v-if="!state.province_id" class="form-hint text-amber-600">
               <Icon name="lucide:alert-circle" class="w-3 h-3 inline" />
               ابتدا استان را انتخاب کنید
@@ -129,23 +114,21 @@
             </div>
           </Transition>
         </div>
-        
+
         <div class="form-buttons">
-          <button 
+          <button
             v-if="isChanged"
-            type="button" 
+            type="button"
             class="btn-ghost"
             @click="resetForm"
-            :disabled="isLoading"
-          >
+            :disabled="isLoading">
             <Icon name="lucide:rotate-ccw" class="w-4 h-4" />
             بازنشانی
           </button>
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             class="btn-primary"
-            :disabled="!isChanged || isLoading || isFetching"
-          >
+            :disabled="!isChanged || isLoading || isFetching">
             <Icon v-if="isLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
             <Icon v-else name="lucide:check" class="w-4 h-4" />
             {{ isLoading ? "در حال ذخیره..." : "ذخیره تغییرات" }}
@@ -167,7 +150,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['update:changes', 'saved']);
+const emit = defineEmits(["update:changes", "saved"]);
 const reFetchLawyer = inject("reFetchLawyerInformation");
 
 const isLoading = ref(false);
@@ -188,10 +171,12 @@ const getInitialState = () => {
   const data = lawyerData.value || {};
   const info = data.lawyer_info || {};
   return {
-    full_name: `${data.name || ''} ${data.family || ''}`.trim(),
+    full_name: `${data.name || ""} ${data.family || ""}`.trim(),
     gender: info.gender || "male",
     father_name: info.father_name || "",
-    birth_date: info.birth_date ? new Date(info.birth_date).toISOString().split("T")[0] : "",
+    birth_date: info.birth_date
+      ? new Date(info.birth_date).toISOString().split("T")[0]
+      : "",
     province_id: info.province_id ? String(info.province_id) : "",
     city_id: info.city_id ? String(info.city_id) : "",
   };
@@ -203,12 +188,12 @@ const initialState = reactive({ ...state });
 
 const isChanged = computed(() => {
   return ["gender", "father_name", "birth_date", "province_id", "city_id"].some(
-    (key) => String(state[key] || "") !== String(initialState[key] || "")
+    (key) => String(state[key] || "") !== String(initialState[key] || ""),
   );
 });
 
 watch(isChanged, (val) => {
-  emit('update:changes', 'personal_information', val);
+  emit("update:changes", "personal_information", val);
 });
 
 const resetForm = () => {
@@ -243,7 +228,7 @@ watch(
       return;
     }
     await fetchCities(newVal);
-  }
+  },
 );
 
 async function fetchCities(provinceId) {
@@ -302,18 +287,18 @@ const onSubmit = async () => {
     if (res.statusCode === 200 || res.statusCode === 201) {
       await reFetchLawyer();
       Object.assign(initialState, { ...state });
-      
+
       saveSuccess.value = true;
       setTimeout(() => {
         saveSuccess.value = false;
       }, 3000);
-      
+
       useToast().add({
         title: "اطلاعات با موفقیت به‌روز شد",
         color: "success",
       });
-      
-      emit('saved');
+
+      emit("saved");
     } else {
       useToast().add({ title: "به‌روزرسانی با خطا مواجه شد", color: "error" });
       console.error("updatePersonalInfo error:", res);
@@ -340,10 +325,6 @@ const onSubmit = async () => {
 
 .form-grid {
   @apply grid grid-cols-1 md:grid-cols-2 gap-6;
-}
-
-.form-field {
-  @apply flex flex-col gap-2;
 }
 
 .form-label {
@@ -401,7 +382,7 @@ const onSubmit = async () => {
   .form-actions {
     @apply flex-col items-stretch;
   }
-  
+
   .form-buttons {
     @apply justify-end;
   }
@@ -411,19 +392,5 @@ const onSubmit = async () => {
 <style>
 @reference "tailwindcss";
 
-.pdp {
-  @apply h-[42px];
-}
 
-.pdp-group {
-  @apply h-full!;
-}
-
-.pdp-input {
-  @apply h-full! rounded-lg! border-gray-200!;
-}
-
-.pdp-icon {
-  @apply h-full! max-h-none!;
-}
 </style>

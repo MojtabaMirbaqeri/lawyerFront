@@ -1,34 +1,35 @@
 <script setup lang="ts">
-import { h, resolveComponent } from "vue";
-import type { TableColumn } from "@nuxt/ui";
-import type { Row } from "@tanstack/vue-table";
-import { getPaginationRowModel } from "@tanstack/vue-table";
-
-const UButton = resolveComponent("UButton");
-const UDropdownMenu = resolveComponent("UDropdownMenu");
-const UBadge = resolveComponent("UBadge");
-
-const table = useTemplateRef("table");
 const filterStore = useFiltersStore();
+const config = useRuntimeConfig();
 
 // View mode
-const viewMode = ref<'list' | 'grid'>('list');
+const viewMode = ref<"list" | "grid">("list");
 
 // Filters
-const statusFilter = ref<string>('all');
-const baseFilter = ref<string>('all');
+const statusFilter = ref<string>("all");
+const baseFilter = ref<string>("all");
 const selectedRows = ref<Set<number>>(new Set());
 
 const statusOptions = [
-  { id: 'all', label: 'همه' },
-  { id: 'active', label: 'فعال' },
-  { id: 'inactive', label: 'غیرفعال' },
+  { id: "all", label: "همه" },
+  { id: "active", label: "فعال" },
+  { id: "inactive", label: "غیرفعال" },
 ];
 
 const baseOptions = computed(() => [
-  { id: 'all', label: 'همه پایه‌ها' },
+  { id: "all", label: "همه پایه‌ها" },
   ...filterStore.lawyerTypes.map((type) => ({ id: type.id, label: type.title })),
 ]);
+
+// Table columns configuration
+const tableColumns = [
+  { key: 'id', label: 'شناسه' },
+  { key: 'fullName', label: 'نام و نام خانوادگی' },
+  { key: 'national_code', label: 'کد ملی' },
+  { key: 'phone', label: 'شماره تماس' },
+  { key: 'base', label: 'پایه' },
+  { key: 'is_active', label: 'وضعیت' },
+];
 
 const refetch = async (page = null, total = false) => {
   const lawyersRef = ref(
@@ -38,19 +39,24 @@ const refetch = async (page = null, total = false) => {
         includeAuthHeader: false,
         query: page ? { page: page } : undefined,
       })
-    ).data
+    ).data,
   );
   data.value = lawyersRef.value.data.map((law) => {
+    const name = law.lawyer_info?.name || '';
+    const family = law.lawyer_info?.family || '';
+    const slug = `${name}-${family}`.toLowerCase().replace(/\s+/g, '-');
+    
     return {
       id: law.lawyer_info?.id,
       national_code: law.lawyer_info?.national_code,
       phone: law.phone,
-      fullName: `${law.lawyer_info?.name} ${law.lawyer_info?.family}`,
+      fullName: `${name} ${family}`,
+      slug: slug,
       base: law.lawyer_info?.base_lawyer?.title,
       baseId: law.lawyer_info?.base,
       edit_id: law.id,
       is_active: law.is_active,
-      profile_image: law.lawyer_info?.profile_image,
+      profile_image: config.public.imageBase + law.lawyer_info?.profile_image
     };
   });
 
@@ -70,16 +76,21 @@ const searchRefetch = async (query, start, page) => {
 
   data.value = lawyers.value.map((law) => {
     const base = filterStore.lawyerTypes.find((type) => law.base == type.id);
+    const name = law?.name || '';
+    const family = law?.family || '';
+    const slug = `${name}-${family}`.toLowerCase().replace(/\s+/g, '-');
+    
     return {
       id: law?.id,
       national_code: law?.national_code,
       phone: law.phone,
-      fullName: `${law?.name} ${law?.family}`,
+      fullName: `${name} ${family}`,
+      slug: slug,
       base: base?.title,
       baseId: law.base,
       edit_id: law.id,
       is_active: law.is_active,
-      profile_image: law?.profile_image,
+      profile_image: config.public.imageBase + law?.profile_image,
     };
   });
 
@@ -96,6 +107,7 @@ type Lawyer = {
   id: string;
   national_code: string;
   fullName: string;
+  slug: string;
   phone: string;
   base: string;
   baseId: number;
@@ -106,150 +118,77 @@ type Lawyer = {
 
 const data = ref(
   lawyersRef.value.data.map((law) => {
+    const name = law.lawyer_info?.name || '';
+    const family = law.lawyer_info?.family || '';
+    const slug = `${name}-${family}`.toLowerCase().replace(/\s+/g, '-');
+    
     return {
       id: law.lawyer_info?.id,
       national_code: law.lawyer_info?.national_code,
       phone: law.phone,
-      fullName: `${law.lawyer_info?.name} ${law.lawyer_info?.family}`,
+      fullName: `${name} ${family}`,
+      slug: slug,
       base: law.lawyer_info?.base_lawyer?.title,
       baseId: law.lawyer_info?.base,
       edit_id: law.id,
       is_active: law.is_active,
-      profile_image: law.lawyer_info?.profile_image,
+      profile_image: config.public.imageBase + law.lawyer_info?.profile_image
     };
-  })
+  }),
 );
 
 // Filtered data
 const filteredData = computed(() => {
   return data.value.filter((item) => {
-    const statusMatch = statusFilter.value === 'all' || 
-      (statusFilter.value === 'active' && item.is_active) || 
-      (statusFilter.value === 'inactive' && !item.is_active);
-    const baseMatch = baseFilter.value === 'all' || item.baseId === baseFilter.value;
+    const statusMatch =
+      statusFilter.value === "all" ||
+      (statusFilter.value === "active" && item.is_active) ||
+      (statusFilter.value === "inactive" && !item.is_active);
+    const baseMatch = baseFilter.value === "all" || item.baseId === baseFilter.value;
     return statusMatch && baseMatch;
   });
 });
 
-const columns: TableColumn<Lawyer>[] = [
-  {
-    accessorKey: "id",
-    header: "شناسه",
-    cell: ({ row }) => `#${row.getValue("id")}`,
-  },
-  {
-    accessorKey: "fullName",
-    header: "نام و نام خانوادگی",
-    cell: ({ row }) => {
-      const name = row.getValue("fullName") as string;
-      const profile = row.original.profile_image;
-      return h("div", { class: "flex items-center gap-3" }, [
-        profile 
-          ? h("img", { src: profile, class: "w-9 h-9 rounded-full object-cover", alt: name })
-          : h("div", { class: "avatar-placeholder avatar-sm" }, getInitials(name)),
-        h("span", { class: "font-medium text-gray-900" }, name),
-      ]);
-    },
-  },
-  {
-    accessorKey: "national_code",
-    header: "کد ملی",
-  },
-  {
-    accessorKey: "phone",
-    header: "شماره تماس",
-    cell: ({ row }) => h("span", { class: "font-mono text-gray-600" }, row.getValue("phone")),
-  },
-  {
-    accessorKey: "base",
-    header: "پایه",
-    cell: ({ row }) => h("span", { class: "badge badge-info" }, row.getValue("base")),
-  },
-  {
-    accessorKey: "is_active",
-    header: "وضعیت",
-    cell: ({ row }) => {
-      const value = row.original.is_active;
-      return h("span", { 
-        class: value ? "badge badge-success" : "badge badge-error" 
-      }, value ? "فعال" : "غیرفعال");
-    },
-  },
-  {
-    id: "actions",
-    header: "",
-    cell: ({ row }) => {
-      return h(
-        "div",
-        { class: "flex items-center justify-end gap-1" },
-        [
-          h(UButton, {
-            icon: "i-lucide-eye",
-            color: "neutral",
-            variant: "ghost",
-            size: "sm",
-            onClick: () => navigateTo(`/dashboard/admin/lawyerlist/edit/${row.original.edit_id}`),
-            "aria-label": "مشاهده",
-          }),
-          h(
-            UDropdownMenu,
-            {
-              content: { align: "end" },
-              items: getRowItems(row),
-              "aria-label": "Actions dropdown",
-            },
-            () =>
-              h(UButton, {
-                icon: "i-lucide-more-vertical",
-                color: "neutral",
-                variant: "ghost",
-                size: "sm",
-                "aria-label": "Actions dropdown",
-              })
-          ),
-        ]
-      );
-    },
-  },
-];
-
 function getInitials(name: string) {
-  if (!name) return '?';
-  const parts = name.split(' ');
-  return parts.map(p => p.charAt(0)).join('').substring(0, 2);
+  if (!name) return "?";
+  const parts = name.split(" ");
+  return parts
+    .map((p) => p.charAt(0))
+    .join("")
+    .substring(0, 2);
 }
 
-function getRowItems(row: Row<Lawyer>) {
+function getRowActions(row: any) {
   return [
     {
       label: "ویرایش",
       onSelect() {
-        navigateTo(`/dashboard/admin/lawyerlist/edit/${row.original.edit_id}`);
+        navigateTo(`/dashboard/admin/lawyerlist/edit/${row.edit_id}`);
       },
       icon: "lucide:edit",
     },
     {
       label: "مشاهده پروفایل",
       onSelect() {
-        navigateTo(`/lawyers/${row.original.edit_id}`);
+        navigateTo(`/lawyer/${row.edit_id}/${row.slug}`);
       },
       icon: "lucide:external-link",
     },
     {
-      type: "separator",
+      type: "separator" as const,
     },
     {
-      label: row.original.is_active ? "غیرفعال کردن" : "فعال کردن",
-      icon: row.original.is_active ? "lucide:user-x" : "lucide:user-check",
+      label: row.is_active ? "غیرفعال کردن" : "فعال کردن",
+      icon: row.is_active ? "lucide:user-x" : "lucide:user-check",
       async onSelect() {
         const res = await usePatch({
-          url: `lawyers/${row.original.edit_id}/toggle-active`,
+          url: `lawyers/${row.edit_id}/toggle-active`,
           includeAuthHeader: true,
           body: undefined,
         });
         if (res.statusCode === 200) {
           useToast().add({ 
-            title: row.original.is_active ? "وکیل غیرفعال شد" : "وکیل فعال شد", 
+            title: row.is_active ? "وکیل غیرفعال شد" : "وکیل فعال شد", 
             color: "success" 
           });
         }
@@ -276,7 +215,7 @@ watch(
     } else {
       refetch(page);
     }
-  }
+  },
 );
 
 const searchLawyer = async () => {
@@ -293,15 +232,15 @@ const toggleSelectAll = () => {
   if (selectedRows.value.size === filteredData.value.length) {
     selectedRows.value.clear();
   } else {
-    selectedRows.value = new Set(filteredData.value.map(d => d.edit_id));
+    selectedRows.value = new Set(filteredData.value.map((d) => d.edit_id));
   }
 };
 
 const bulkToggleActive = async (activate: boolean) => {
   // TODO: Implement bulk action API
-  useToast().add({ 
-    title: `${selectedRows.value.size} وکیل ${activate ? 'فعال' : 'غیرفعال'} شد`, 
-    color: "success" 
+  useToast().add({
+    title: `${selectedRows.value.size} وکیل ${activate ? "فعال" : "غیرفعال"} شد`,
+    color: "success",
   });
   selectedRows.value.clear();
   refetch(pagination.value.pageIndex);
@@ -347,40 +286,37 @@ const exportToExcel = () => {
                 @change="searchLawyer"
                 type="text"
                 placeholder="جستجوی نام، تلفن، کد ملی..."
-                class="w-72"
-              />
+                class="w-72" />
             </div>
 
             <!-- Status Filter -->
-            <select v-model="statusFilter" class="select-dashboard w-36!">
-              <option v-for="opt in statusOptions" :key="opt.id" :value="opt.id">
-                {{ opt.label }}
-              </option>
-            </select>
+            <UICSelect
+              v-model="statusFilter"
+              :items="statusOptions"
+              placeholder="وضعیت"
+              class="w-36!" />
 
             <!-- Base Filter -->
-            <select v-model="baseFilter" class="select-dashboard w-40!">
-              <option v-for="opt in baseOptions" :key="opt.id" :value="opt.id">
-                {{ opt.label }}
-              </option>
-            </select>
+            <UICSelect
+              v-model="baseFilter"
+              :items="baseOptions"
+              placeholder="پایه"
+              class="w-40!" />
           </div>
 
           <div class="action-bar-end">
             <!-- View Toggle -->
             <div class="view-toggle">
-              <button 
-                @click="viewMode = 'list'" 
-                class="view-btn" 
-                :class="{ active: viewMode === 'list' }"
-              >
+              <button
+                @click="viewMode = 'list'"
+                class="view-btn"
+                :class="{ active: viewMode === 'list' }">
                 <Icon name="lucide:list" class="w-4 h-4" />
               </button>
-              <button 
-                @click="viewMode = 'grid'" 
-                class="view-btn" 
-                :class="{ active: viewMode === 'grid' }"
-              >
+              <button
+                @click="viewMode = 'grid'"
+                class="view-btn"
+                :class="{ active: viewMode === 'grid' }">
                 <Icon name="lucide:grid-3x3" class="w-4 h-4" />
               </button>
             </div>
@@ -406,71 +342,96 @@ const exportToExcel = () => {
     </div>
 
     <!-- Data Table -->
-    <div class="card-dashboard" v-if="viewMode === 'list'">
-      <div class="overflow-x-auto">
-        <UTable
-          :data="filteredData"
-          :columns="columns"
-          class="flex-1"
-          :ui="{
-            root: 'min-w-full',
-            thead: 'bg-gray-50 border-b border-gray-200',
-            th: 'text-gray-600 text-xs font-semibold uppercase tracking-wider py-3 px-4',
-            td: 'py-3.5 px-4 text-sm',
-            tbody: 'divide-y divide-gray-100',
-            tr: 'hover:bg-gray-50 transition-colors',
-          }"
-        />
-      </div>
+    <dashboard-admin-generic-table
+      v-if="viewMode === 'list'"
+      :data="filteredData"
+      :columns="tableColumns"
+      :current-page="pagination.pageIndex"
+      :total-items="pagination.total"
+      :items-per-page="pagination.pageSize"
+      row-key="edit_id"
+      empty-title="وکیلی یافت نشد"
+      empty-message="با تغییر فیلترها یا جستجو، وکلا را مشاهده کنید"
+      empty-icon="lucide:scale"
+      @update:page="pagination.pageIndex = $event"
+    >
+      <!-- Custom cell for ID -->
+      <template #cell-id="{ value }">
+        <span class="text-gray-600">#{{ value }}</span>
+      </template>
 
-      <!-- Pagination -->
-      <div class="flex items-center justify-between p-4 border-t border-gray-100">
-        <span class="text-sm text-gray-500">
-          نمایش {{ (pagination.pageIndex - 1) * pagination.pageSize + 1 }} تا 
-          {{ Math.min(pagination.pageIndex * pagination.pageSize, pagination.total) }} از 
-          {{ pagination.total }} مورد
+      <!-- Custom cell for fullName with avatar -->
+      <template #cell-fullName="{ row }">
+        <div class="flex items-center gap-3">
+          <img v-if="row.profile_image" :src="row.profile_image" class="w-9 h-9 rounded-full object-cover" :alt="row.fullName" />
+          <div v-else class="avatar-placeholder avatar-sm">{{ getInitials(row.fullName) }}</div>
+          <span class="font-medium text-gray-900">{{ row.fullName }}</span>
+        </div>
+      </template>
+
+      <!-- Custom cell for phone -->
+      <template #cell-phone="{ value }">
+        <span class="font-mono text-gray-600">{{ value }}</span>
+      </template>
+
+      <!-- Custom cell for base -->
+      <template #cell-base="{ value }">
+        <span class="badge badge-info">{{ value }}</span>
+      </template>
+
+      <!-- Custom cell for status -->
+      <template #cell-is_active="{ value }">
+        <span class="badge" :class="value ? 'badge-success' : 'badge-error'">
+          {{ value ? 'فعال' : 'غیرفعال' }}
         </span>
-        <UPagination
-          v-model:page="pagination.pageIndex"
-          :items-per-page="pagination.pageSize"
-          :total="pagination.total"
-          show-edges
-          :sibling-count="1"
-          :ui="{
-            first: 'hidden',
-            prev: 'scale-x-[-1]',
-            next: 'scale-x-[-1]',
-            last: 'hidden',
-            list: 'gap-1',
-            item: 'min-w-8 h-8 text-sm',
-          }"
-          @update:page="(p) => (pagination.pageIndex = p)"
-        />
-      </div>
-    </div>
+      </template>
+
+      <!-- Custom actions -->
+      <template #actions="{ row }">
+        <div class="flex items-center justify-end gap-1">
+          <button class="btn-icon" title="مشاهده" @click="navigateTo(`/dashboard/admin/lawyerlist/edit/${row.edit_id}`)">
+            <Icon name="lucide:eye" class="w-4 h-4" />
+          </button>
+          <UDropdownMenu
+            :content="{ align: 'end' }"
+            :items="getRowActions(row)"
+          >
+            <button class="btn-icon">
+              <Icon name="lucide:more-vertical" class="w-4 h-4" />
+            </button>
+          </UDropdownMenu>
+        </div>
+      </template>
+    </dashboard-admin-generic-table>
 
     <!-- Grid View -->
     <div v-else class="lawyers-grid">
-      <div 
-        v-for="lawyer in filteredData" 
-        :key="lawyer.id" 
+      <div
+        v-for="lawyer in filteredData"
+        :key="lawyer.id"
         class="lawyer-card"
-        @click="navigateTo(`/dashboard/admin/lawyerlist/edit/${lawyer.edit_id}`)"
-      >
+        @click="navigateTo(`/dashboard/admin/lawyerlist/edit/${lawyer.edit_id}`)">
         <div class="lawyer-card-header">
           <div class="lawyer-avatar">
-            <img v-if="lawyer.profile_image" :src="lawyer.profile_image" :alt="lawyer.fullName" />
-            <div v-else class="avatar-placeholder avatar-lg">{{ getInitials(lawyer.fullName) }}</div>
+            <img
+              v-if="lawyer.profile_image"
+              :src="lawyer.profile_image"
+              :alt="lawyer.fullName" />
+            <div v-else class="avatar-placeholder avatar-lg">
+              {{ getInitials(lawyer.fullName) }}
+            </div>
           </div>
           <span class="badge" :class="lawyer.is_active ? 'badge-success' : 'badge-error'">
-            {{ lawyer.is_active ? 'فعال' : 'غیرفعال' }}
+            {{ lawyer.is_active ? "فعال" : "غیرفعال" }}
           </span>
         </div>
         <div class="lawyer-card-body">
           <h3 class="lawyer-name">{{ lawyer.fullName }}</h3>
           <span class="lawyer-base">{{ lawyer.base }}</span>
           <div class="lawyer-meta">
-            <span><Icon name="lucide:phone" class="w-3.5 h-3.5" /> {{ lawyer.phone }}</span>
+            <span
+              ><Icon name="lucide:phone" class="w-3.5 h-3.5" /> {{ lawyer.phone }}</span
+            >
           </div>
         </div>
       </div>
@@ -500,7 +461,7 @@ const exportToExcel = () => {
 }
 
 .view-btn {
-  @apply p-2 text-gray-500 transition-colors;
+  @apply p-2 text-gray-500 transition-colors flex;
 }
 
 .view-btn:hover {

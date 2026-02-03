@@ -35,7 +35,7 @@
               @update:model-value="handleImageUpload" />
           </template>
         </UModal>
-        <UICSelect v-model="formData.base" disabled class="w-auto" :items="mappedTypes" />
+        <UICSelect  v-model="formData.base" disabled class="w-full sm:max-w-60" :items="mappedTypes" />
       </div>
     </div>
     <div class="space-y-8 lg:space-y-10">
