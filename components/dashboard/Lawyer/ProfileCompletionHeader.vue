@@ -119,7 +119,7 @@ const checklistItems = computed(() => {
       cta: 'افزودن سابقه تحصیلی',
     },
     {
-      id: 'schedule',
+      id: 'workplaces',
       label: 'محل کار',
       weight: 20,
       status: props.hasWorkplace ? 'completed' : 'incomplete',
@@ -127,7 +127,7 @@ const checklistItems = computed(() => {
       cta: 'افزودن محل کار',
     },
     {
-      id: 'schedule',
+      id: 'pricing',
       label: 'قیمت‌گذاری',
       weight: 15,
       status: props.hasPricing ? 'completed' : 'incomplete',

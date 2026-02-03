@@ -11,14 +11,13 @@
         <div class="form-grid">
           <!-- نام و نام خانوادگی readonly -->
           <div class="form-field">
-            <label class="form-label">
-              نام و نام خانوادگی
-              <span class="text-gray-400 text-xs mr-1">(غیرقابل تغییر)</span>
-            </label>
-            <div class="form-input-readonly">
-              <Icon name="lucide:user" class="w-4 h-4 text-gray-400" />
-              <span>{{ state.full_name }}</span>
-            </div>
+            <UICInput
+              v-model="state.full_name"
+              label="نام و نام خانوادگی"
+              hint="غیرقابل تغییر"
+              readonly
+              icon="lucide:user"
+            />
           </div>
 
           <!-- جنسیت -->
@@ -39,16 +38,14 @@
 
           <!-- نام پدر -->
           <div class="form-field">
-            <label class="form-label">
-              نام پدر
-              <span class="required-star">*</span>
-            </label>
             <UICInput
               v-model="state.father_name"
+              name="father_name"
+              label="نام پدر"
               placeholder="نام پدر را وارد کنید"
-              :ui="{ base: 'input-dashboard' }"
+              hint="برای تایید هویت و صدور گواهی استفاده می‌شود"
+              required
             />
-            <p class="form-hint">برای تایید هویت و صدور گواهی استفاده می‌شود</p>
           </div>
 
           <!-- تاریخ تولد -->
@@ -359,10 +356,6 @@ const onSubmit = async () => {
 
 .form-hint {
   @apply text-xs text-gray-500 flex items-center gap-1;
-}
-
-.form-input-readonly {
-  @apply flex items-center gap-2 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-600;
 }
 
 .date-picker-wrap {

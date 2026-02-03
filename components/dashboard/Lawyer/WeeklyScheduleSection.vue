@@ -13,12 +13,6 @@
         description="زمان‌های در دسترس بودن شما برای ارائه مشاوره"
         icon="lucide:calendar-clock"
       >
-        <template #actions>
-          <button @click="copyFromSaturday" class="btn-sm-secondary" title="کپی از شنبه به همه روزها">
-            <Icon name="lucide:copy" class="w-4 h-4" />
-            کپی از شنبه
-          </button>
-        </template>
 
         <!-- Global Settings -->
         <div class="schedule-settings">
@@ -77,9 +71,6 @@
               </div>
               <div class="day-actions">
                 <!-- Slot Preview -->
-                <span v-if="hasAnySchedule(day)" class="slot-preview">
-                  {{ calculateTotalSlots(day) }} اسلات
-                </span>
                 <Icon 
                   :name="expandedDays.includes(index) ? 'lucide:chevron-up' : 'lucide:chevron-down'" 
                   class="w-5 h-5 text-gray-400" 
@@ -103,19 +94,25 @@
 
                   <Transition name="fade">
                     <div v-if="day.schedules[type.key].enabled" class="type-times">
-                      <div class="time-field">
-                        <label class="time-label">از ساعت</label>
-                        <UICTimePicker 
-                          v-model="day.schedules[type.key].start_time"
-                          placeholder="۰۰:۰۰"
-                        />
-                      </div>
-                      <div class="time-field">
-                        <label class="time-label">تا ساعت</label>
-                        <UICTimePicker 
-                          v-model="day.schedules[type.key].end_time"
-                          placeholder="۰۰:۰۰"
-                        />
+                      <div class="time-rows-inline">
+                        <div class="time-row">
+                          <span class="time-label-inline">از ساعت</span>
+                          <div class="time-picker-wrap">
+                            <UICTimePicker 
+                              v-model="day.schedules[type.key].start_time"
+                              placeholder="۰۰:۰۰"
+                            />
+                          </div>
+                        </div>
+                        <div class="time-row">
+                          <span class="time-label-inline">تا ساعت</span>
+                          <div class="time-picker-wrap">
+                            <UICTimePicker 
+                              v-model="day.schedules[type.key].end_time"
+                              placeholder="۰۰:۰۰"
+                            />
+                          </div>
+                        </div>
                       </div>
 
                       <!-- Validation Error -->
@@ -134,7 +131,7 @@
                       >
                         <Icon name="lucide:calendar-check" class="w-4 h-4" />
                         {{ calculateSlots(day.schedules[type.key].start_time, day.schedules[type.key].end_time) }} 
-                        اسلات {{ globalSessionDuration }} دقیقه‌ای
+                        ساعت و {{ globalSessionDuration }} دقیقه 
                       </div>
                     </div>
                   </Transition>
@@ -175,7 +172,7 @@
           <div class="schedule-buttons">
             <button 
               @click="saveSchedule" 
-              class="btn-primary"
+              class="btn-primary flex items-center justify-center gap-2"
               :disabled="isLoading || hasValidationErrors"
             >
               <Icon v-if="isLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
@@ -434,15 +431,15 @@ fetchSchedule();
 }
 
 .setting-label {
-  @apply flex items-center gap-1.5 text-sm font-medium text-gray-600;
+  @apply flex items-center gap-1.5 text-sm font-medium text-gray-600 shrink-0;
 }
 
 .setting-options {
-  @apply flex gap-1;
+  @apply flex flex-wrap gap-2;
 }
 
 .option-btn {
-  @apply px-3 py-1.5 text-xs font-medium rounded-lg border border-gray-200 bg-white text-gray-600 transition-colors;
+  @apply px-4 py-2 text-xs font-medium rounded-lg border border-gray-200 bg-white text-gray-600 transition-colors whitespace-nowrap;
 }
 
 .option-btn.active {
@@ -531,12 +528,20 @@ fetchSchedule();
   @apply mt-3 space-y-3;
 }
 
-.time-field {
-  @apply inline-flex flex-col gap-1 mr-4;
+.time-rows-inline {
+  @apply flex flex-wrap items-center gap-x-8 gap-y-3;
 }
 
-.time-label {
-  @apply text-xs text-gray-500;
+.time-row {
+  @apply flex items-center gap-3;
+}
+
+.time-picker-wrap {
+  @apply min-w-0;
+}
+
+.time-label-inline {
+  @apply text-sm font-medium text-gray-700 min-w-[5rem] shrink-0;
 }
 
 .time-error {
@@ -609,8 +614,45 @@ fetchSchedule();
 }
 
 @media (max-width: 768px) {
+  .time-rows-inline {
+    @apply flex-col items-stretch gap-y-5;
+  }
+
+  .time-row {
+    @apply w-full gap-2;
+  }
+
+  .time-label-inline {
+    @apply min-w-[4rem];
+  }
+
+  .time-picker-wrap {
+    @apply flex-1 min-w-0 w-full;
+  }
+
+  .time-picker-wrap :deep(.time-part) {
+    min-width: 3.5rem;
+  }
+
   .schedule-settings {
-    @apply flex-col items-start;
+    @apply flex-col gap-4 p-3;
+  }
+
+  .setting-group {
+    @apply flex-col items-stretch gap-2 w-full;
+  }
+
+  .setting-label {
+    @apply text-xs;
+  }
+
+  .setting-options {
+    @apply grid grid-cols-2 gap-2;
+  }
+
+  .option-btn {
+    @apply py-3 text-sm justify-center min-w-0 w-full;
+    padding-inline: 1rem;
   }
   
   .schedule-actions {

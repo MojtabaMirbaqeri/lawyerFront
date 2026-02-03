@@ -1,4 +1,6 @@
 <template>
+  <!-- نوار «تغییرات ذخیره نشده» فعلاً غیرفعال — نه موبایل نه دسکتاپ -->
+  <!--
   <Transition name="slide-up">
     <div v-if="hasChanges" class="sticky-save-bar">
       <div class="save-bar-content">
@@ -6,7 +8,6 @@
           <Icon name="lucide:alert-circle" class="w-5 h-5 text-amber-500" />
           <span class="save-bar-text">تغییرات ذخیره نشده</span>
         </div>
-        
         <div class="save-bar-actions">
           <button @click="$emit('reset')" class="btn-ghost" :disabled="isLoading">
             <Icon name="lucide:rotate-ccw" class="w-4 h-4" />
@@ -21,6 +22,7 @@
       </div>
     </div>
   </Transition>
+  -->
 
   <!-- Confirm Modal -->
   <UModal
