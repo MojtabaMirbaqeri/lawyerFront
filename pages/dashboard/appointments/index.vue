@@ -512,7 +512,7 @@ const rebookAppointment = (apt) => {
 }
 
 .view-btn {
-  @apply p-2 text-gray-500 transition-colors;
+  @apply p-2 text-gray-500 transition-colors flex;
 }
 
 .view-btn:hover {

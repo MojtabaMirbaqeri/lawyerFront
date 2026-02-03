@@ -57,126 +57,88 @@
     </div>
 
     <!-- Users Table -->
-    <div class="card-dashboard">
-      <div class="overflow-x-auto">
-        <table class="table-dashboard">
-          <thead>
-            <tr>
-              <th>کاربر</th>
-              <th>شماره تماس</th>
-              <th class="text-center">تیکت‌های فعال</th>
-              <th class="text-center">نوبت‌ها</th>
-              <th class="text-center">نظرات</th>
-              <th class="text-center">موجودی کیف پول</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="user in data" :key="user.phone">
-              <td>
-                <div class="flex items-center gap-3">
-                  <div class="avatar-placeholder avatar-sm">
-                    {{ getInitials(user.fullName) }}
-                  </div>
-                  <div>
-                    <span class="font-medium text-gray-900">{{
-                      user.fullName || "بدون نام"
-                    }}</span>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <span class="font-mono text-gray-600">{{ user.phone }}</span>
-              </td>
-              <td class="text-center">
-                <span v-if="user.activeTicket > 0" class="badge badge-info">
-                  {{ user.activeTicket }}
-                </span>
-                <span v-else class="text-gray-400">-</span>
-              </td>
-              <td class="text-center">
-                <span v-if="user.orders > 0" class="font-medium">{{ user.orders }}</span>
-                <span v-else class="text-gray-400">-</span>
-              </td>
-              <td class="text-center">
-                <span v-if="user.comments > 0" class="font-medium">{{
-                  user.comments
-                }}</span>
-                <span v-else class="text-gray-400">-</span>
-              </td>
-              <td class="text-center">
-                <span
-                  class="font-medium"
-                  :class="user.amount > 0 ? 'text-green-600' : 'text-gray-400'">
-                  {{ formatCurrency(user.amount) }}
-                </span>
-              </td>
-              <td>
-                <div class="flex items-center justify-end gap-1">
-                  <button
-                    @click="viewUserDetails(user)"
-                    class="btn-icon"
-                    title="مشاهده جزئیات">
-                    <Icon name="lucide:eye" class="w-4 h-4" />
-                  </button>
-                  <UDropdownMenu
-                    :content="{ align: 'end' }"
-                    :items="getUserActions(user)">
-                    <button class="btn-icon">
-                      <Icon name="lucide:more-vertical" class="w-4 h-4" />
-                    </button>
-                  </UDropdownMenu>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Empty State -->
-      <div v-if="data.length === 0" class="empty-state py-16">
-        <div class="empty-state-icon">
-          <Icon name="lucide:users" class="w-8 h-8" />
+    <dashboard-admin-generic-table
+      :data="data"
+      :columns="tableColumns"
+      :current-page="page"
+      :total-items="total"
+      :items-per-page="15"
+      row-key="phone"
+      empty-title="کاربری یافت نشد"
+      empty-message="با تغییر فیلترها یا جستجو، کاربران را پیدا کنید"
+      empty-icon="lucide:users"
+      @update:page="page = $event"
+    >
+      <!-- Custom cell for user info -->
+      <template #cell-fullName="{ row }">
+        <div class="flex items-center gap-3">
+          <div class="avatar-placeholder avatar-sm">
+            {{ getInitials(row.fullName) }}
+          </div>
+          <div>
+            <span class="font-medium text-gray-900">{{ row.fullName || 'بدون نام' }}</span>
+          </div>
         </div>
-        <h4 class="empty-state-title">کاربری یافت نشد</h4>
-        <p class="empty-state-description">
-          با تغییر فیلترها یا جستجو، کاربران را پیدا کنید
-        </p>
-      </div>
+      </template>
 
-      <!-- Pagination -->
-      <div
-        v-if="data.length > 0"
-        class="flex items-center justify-between p-4 border-t border-gray-100">
-        <span class="text-sm text-gray-500">
-          صفحه {{ page }} از {{ Math.ceil(total / 15) }}
+      <!-- Custom cell for phone -->
+      <template #cell-phone="{ value }">
+        <span class="font-mono text-gray-600">{{ value }}</span>
+      </template>
+
+      <!-- Custom cell for active tickets -->
+      <template #cell-activeTicket="{ value }">
+        <span v-if="value > 0" class="badge badge-info">{{ value }}</span>
+        <span v-else class="text-gray-400">-</span>
+      </template>
+
+      <!-- Custom cell for orders -->
+      <template #cell-orders="{ value }">
+        <span v-if="value > 0" class="font-medium">{{ value }}</span>
+        <span v-else class="text-gray-400">-</span>
+      </template>
+
+      <!-- Custom cell for comments -->
+      <template #cell-comments="{ value }">
+        <span v-if="value > 0" class="font-medium">{{ value }}</span>
+        <span v-else class="text-gray-400">-</span>
+      </template>
+
+      <!-- Custom cell for wallet amount -->
+      <template #cell-amount="{ value }">
+        <span class="font-medium" :class="value > 0 ? 'text-green-600' : 'text-gray-400'">
+          {{ formatCurrency(value) }}
         </span>
-        <UPagination
-          v-model:page="page"
-          :items-per-page="15"
-          :total="total"
-          :sibling-count="1"
-          :ui="{
-            list: 'gap-1',
-            item: 'min-w-8 h-8 text-sm',
-            first: 'hidden',
-            last: 'hidden',
-            prev: 'scale-x-[-1]',
-            next: 'scale-x-[-1]',
-          }" />
-      </div>
-    </div>
+      </template>
+
+      <!-- Custom actions -->
+      <template #actions="{ row }">
+        <div class="flex items-center justify-end gap-1">
+          <button class="btn-icon" title="مشاهده جزئیات" @click="viewUserDetails(row)">
+            <Icon name="lucide:eye" class="w-4 h-4" />
+          </button>
+          <UDropdownMenu
+            :content="{ align: 'end' }"
+            :items="getUserActions(row)"
+          >
+            <button class="btn-icon">
+              <Icon name="lucide:more-vertical" class="w-4 h-4" />
+            </button>
+          </UDropdownMenu>
+        </div>
+      </template>
+    </dashboard-admin-generic-table>
 
     <!-- User Details Modal -->
     <UModal v-model:open="showUserModal">
-      <template #content>
+      <template #body>
         <div class="modal-content">
-          <div class="modal-header">
+          <!-- <div class="modal-header">
             <h3 class="modal-title">جزئیات کاربر</h3>
             <button @click="showUserModal = false" class="btn-icon">
               <Icon name="lucide:x" class="w-5 h-5" />
             </button>
-          </div>
+          </div> -->
           <div class="modal-body" v-if="selectedUser">
             <div class="user-detail-header">
               <div class="avatar-placeholder avatar-xl">
@@ -222,7 +184,7 @@
 </template>
 
 <script setup>
-import { ref, watch, h } from "vue";
+import { ref, watch } from "vue";
 
 useHead({
   title: "مدیریت کاربران | وکیلینجا",
@@ -238,17 +200,38 @@ const activityFilter = ref("all");
 const showUserModal = ref(false);
 const selectedUser = ref(null);
 
-// Filter items for UICSelect
-const walletFilterItems = [
-  { id: "all", label: "همه کاربران" },
-  { id: "with_balance", label: "دارای موجودی" },
-  { id: "zero_balance", label: "بدون موجودی" },
+// Table configuration
+const tableColumns = [
+  { key: 'fullName', label: 'کاربر' },
+  { key: 'phone', label: 'شماره تماس' },
+  { key: 'activeTicket', label: 'تیکت‌های فعال', headerClass: 'text-center', cellClass: 'text-center' },
+  { key: 'orders', label: 'نوبت‌ها', headerClass: 'text-center', cellClass: 'text-center' },
+  { key: 'comments', label: 'نظرات', headerClass: 'text-center', cellClass: 'text-center' },
+  { key: 'amount', label: 'موجودی کیف پول', headerClass: 'text-center', cellClass: 'text-center', format: 'currency' },
 ];
 
-const activityFilterItems = [
-  { id: "all", label: "همه" },
-  { id: "active", label: "فعال" },
-  { id: "inactive", label: "غیرفعال" },
+const getUserActions = (user) => [
+  {
+    label: 'مشاهده نوبت‌ها',
+    icon: 'lucide:calendar',
+    onSelect: () => viewUserAppointments(user),
+  },
+  {
+    label: 'مشاهده تیکت‌ها',
+    icon: 'lucide:ticket',
+    onSelect: () => viewUserTickets(user),
+  },
+  { type: 'separator' },
+  {
+    label: 'ارسال نوتیفیکیشن',
+    icon: 'lucide:bell',
+    onSelect: () => sendNotification(user),
+  },
+  {
+    label: 'مسدود کردن',
+    icon: 'lucide:ban',
+    onSelect: () => blockUser(user),
+  },
 ];
 
 // Debounced search
@@ -330,49 +313,24 @@ const viewUserDetails = (user) => {
   showUserModal.value = true;
 };
 
-const getUserActions = (user) => [
-  {
-    label: "مشاهده نوبت‌ها",
-    icon: "lucide:calendar",
-    onSelect: () => {
-      // TODO: Navigate to user appointments
-      useToast().add({ title: "این قابلیت به زودی اضافه می‌شود", color: "info" });
-    },
-  },
-  {
-    label: "مشاهده تیکت‌ها",
-    icon: "lucide:ticket",
-    onSelect: () => {
-      // TODO: Navigate to user tickets
-      useToast().add({ title: "این قابلیت به زودی اضافه می‌شود", color: "info" });
-    },
-  },
-  { type: "separator" },
-  {
-    label: "ارسال نوتیفیکیشن",
-    icon: "lucide:bell",
-    onSelect: () => sendNotification(user),
-  },
-  {
-    label: "مسدود کردن",
-    icon: "lucide:ban",
-    onSelect: () => blockUser(user),
-  },
-];
-
-const sendNotification = (user) => {
-  // TODO: Implement notification sending
-  useToast().add({ title: `ارسال نوتیفیکیشن به ${user.fullName}`, color: "info" });
+const viewUserAppointments = () => {
+  useToast().add({ title: 'این قابلیت به زودی اضافه می‌شود', color: 'info' });
 };
 
-const blockUser = (user) => {
-  // TODO: Implement user blocking
-  useToast().add({ title: `این قابلیت به زودی اضافه می‌شود`, color: "warning" });
+const viewUserTickets = () => {
+  useToast().add({ title: 'این قابلیت به زودی اضافه می‌شود', color: 'info' });
+};
+
+const sendNotification = (user) => {
+  useToast().add({ title: `ارسال نوتیفیکیشن به ${user.fullName}`, color: 'info' });
+};
+
+const blockUser = () => {
+  useToast().add({ title: `این قابلیت به زودی اضافه می‌شود`, color: 'warning' });
 };
 
 const exportUsers = () => {
-  // TODO: Implement export
-  useToast().add({ title: "فایل اکسل در حال آماده‌سازی...", color: "info" });
+  useToast().add({ title: 'فایل اکسل در حال آماده‌سازی...', color: 'info' });
 };
 </script>
 

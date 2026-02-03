@@ -127,7 +127,7 @@
       </div>
 
       <!-- Tab Content (ref برای اسکرول بعد از کلیک چک‌لیست در موبایل) -->
-      <div class="profile-tab-content">
+      <div ref="profileTabContentRef" class="profile-tab-content">
         <Transition name="fade" mode="out-in">
           <KeepAlive>
             <component 
@@ -161,6 +161,7 @@ import { useToast } from '#imports';
 const authStore = useAuthStore();
 const toast = useToast();
 const saveBarRef = ref(null);
+const profileTabContentRef = ref(null);
 
 // State
 const lawyerInfo = ref(null);
@@ -337,14 +338,25 @@ const handleTabChange = (newTab) => {
     pendingTab.value = newTab;
     saveBarRef.value.showConfirmModal();
   } else {
-    nextTick(() => {
-      activeTab.value = newTab;
-    });
+    activeTab.value = newTab;
+    scrollToTabContent();
   }
 };
 
+const scrollToTabContent = () => {
+  nextTick(() => {
+    profileTabContentRef.value?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+  });
+};
+
 const navigateToSection = (sectionId) => {
-  handleTabChange(sectionId);
+  if (globalHasChanges.value && saveBarRef.value) {
+    pendingTab.value = sectionId;
+    saveBarRef.value.showConfirmModal();
+  } else {
+    activeTab.value = sectionId;
+    scrollToTabContent();
+  }
 };
 
 // Save functions
@@ -373,6 +385,7 @@ const discardChanges = () => {
   if (pendingTab.value) {
     activeTab.value = pendingTab.value;
     pendingTab.value = null;
+    scrollToTabContent();
   }
 };
 
@@ -381,6 +394,7 @@ const saveAndContinue = async () => {
   if (pendingTab.value) {
     activeTab.value = pendingTab.value;
     pendingTab.value = null;
+    scrollToTabContent();
   }
 };
 

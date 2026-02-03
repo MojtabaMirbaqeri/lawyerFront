@@ -35,7 +35,7 @@
               </div>
             </div>
             <div class="flex flex-col gap-1 min-w-0">
-              <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-[var(--ui-content)] tracking-tight">
+              <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-primary tracking-tight">
                 {{ fullname }}
               </h1>
               <p class="text-primary font-semibold">

@@ -60,7 +60,8 @@
                     class="suggestion-item">
                     <div class="flex items-center gap-3">
                       <div class="size-12 rounded-full bg-gray-100 overflow-hidden">
-                        <NuxtImg v-if="lawyer.profile_image" :src="lawyer.profile_image" class="w-full h-full object-cover" />
+                        <NuxtImg v-if="lawyer.profile_image" :src="config.public.imageBase + lawyer.profile_image" class="w-full h-full object-cover" />
+                        <NuxtImg v-else src="/images/nullavatar.png" class="w-full h-full object-cover" />
                       </div>
                       <div>
                         <h4 class="font-semibold text-gray-800">{{ lawyer.name }} {{ lawyer.family }}</h4>
@@ -122,6 +123,7 @@ const lawyerNameFilter = ref('');
 const showSuggestBox = ref(false);
 const loading = ref(false);
 const lawyers = ref([]);
+const config = useRuntimeConfig();
 
 let searchTimeout = null;
 
@@ -259,7 +261,7 @@ header {
 }
 
 .search-btn {
-  @apply absolute end-2 size-12 rounded-xl flex items-center justify-center text-[#1e3a5f];
+  @apply absolute end-[1%] size-12 rounded-[19px] flex items-center justify-center text-[#1e3a5f];
   background: linear-gradient(135deg, #fbbf24, #f59e0b);
   box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
 }

@@ -1,41 +1,52 @@
 <!-- eslint-disable vue/no-ref-as-operand -->
 <template>
-  <section>
-    <div class="ds-table-con">
+  <section class="tickets-page overflow-x-hidden">
+    <div class="ds-table-con tickets-container">
+      <!-- دکمه ایجاد: در موبایل تمام عرض -->
       <UICSecondaryBtn
-        class="w-[10%] rounded-[8px]! ms-auto"
+        class="ticket-create-btn w-full sm:w-auto rounded-[8px]! sm:ms-auto"
         @click="navigateTo('/dashboard/new/ticket')">
         <span>ایجاد تیکت</span>
       </UICSecondaryBtn>
-      <div class="flex flex-wrap lg:flex-nowrap gap-2 items-stretch">
-        <div class="max-w-[250px] w-full flex flex-col justify-between">
-          <label>فیلتر</label>
+
+      <!-- فیلترها: در موبایل گرید دو ستونه، از sm به بعد در یک ردیف -->
+      <div class="tickets-filters grid grid-cols-2 sm:flex sm:flex-wrap lg:flex-nowrap gap-2 items-stretch">
+        <div class="filter-search col-span-2 sm:max-w-[220px] lg:max-w-[250px] flex flex-col gap-1">
+          <label class="filter-label text-sm font-medium text-gray-700">جستجو</label>
           <UInput
             v-model="globalFilter"
-            class=""
-            :ui="{ base: 'h-[42px]' }"
-            label="فیلتر"
-            placeholder="فیلتر..."
+            :ui="{ base: 'h-[42px] w-full' }"
+            placeholder="جستجو در تیکت‌ها..."
             @input="debouncedSearch"
             icon="solar:magnifer-linear" />
         </div>
-        <UICInput label="وضعیت">
-          <template #input>
-            <UICSelect :items="filterStore.ticketFilter.status" v-model="status" />
-          </template>
-        </UICInput>
-        <UICInput label="اولویت">
-          <template #input>
-            <UICSelect :items="filterStore.ticketFilter.priority" v-model="priority" />
-          </template>
-        </UICInput>
-        <UICInput label="دپارتمان">
-          <template #input>
-            <UICSelect :items="filterStore.ticketFilter.type" v-model="type" />
-          </template>
-        </UICInput>
+        <div class="filter-field sm:min-w-[120px] sm:max-w-[160px]">
+          <UICInput label="وضعیت">
+            <template #input>
+              <UICSelect :items="filterStore.ticketFilter.status" v-model="status" />
+            </template>
+          </UICInput>
+        </div>
+        <div class="filter-field sm:min-w-[120px] sm:max-w-[160px]">
+          <UICInput label="اولویت">
+            <template #input>
+              <UICSelect :items="filterStore.ticketFilter.priority" v-model="priority" />
+            </template>
+          </UICInput>
+        </div>
+        <div class="filter-field col-span-2 sm:col-span-1 sm:min-w-[120px] sm:max-w-[160px]">
+          <UICInput label="دپارتمان">
+            <template #input>
+              <UICSelect :items="filterStore.ticketFilter.type" v-model="type" />
+            </template>
+          </UICInput>
+        </div>
       </div>
-      <UICDataTable :data="data" :columns="columns" :total="total" v-model="page" />
+
+      <!-- جدول: در موبایل داخل اسکرول افقی تا صفحه اسکرول نکند -->
+      <div class="table-scroll-wrap min-w-0 overflow-x-auto -mx-1 px-1">
+        <UICDataTable :data="data" :columns="columns" :total="total" v-model="page" />
+      </div>
     </div>
   </section>
 </template>
@@ -265,4 +276,19 @@ useHead({
 });
 </script>
 
-<style></style>
+<style scoped>
+@reference "tailwindcss";
+
+.tickets-page {
+  @apply min-w-0 w-full;
+}
+
+.tickets-container {
+  @apply min-w-0;
+}
+
+.table-scroll-wrap {
+  @apply min-w-0 overflow-x-auto;
+  -webkit-overflow-scrolling: touch;
+}
+</style>

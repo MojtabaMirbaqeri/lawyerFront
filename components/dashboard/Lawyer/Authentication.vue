@@ -281,7 +281,7 @@
 
     <!-- Documents Preview Modal -->
     <UModal v-model:open="showDocumentsModal">
-      <template #content>
+      <template #body>
         <div class="modal-content">
           <div class="modal-header">
             <h3 class="modal-title">مدارک آپلود شده</h3>

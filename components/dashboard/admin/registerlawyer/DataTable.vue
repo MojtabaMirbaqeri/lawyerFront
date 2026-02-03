@@ -1,8 +1,18 @@
 <script setup lang="ts">
-import { h, resolveComponent } from "vue";
-import type { TableColumn } from "@nuxt/ui";
-import type { Row } from "@tanstack/vue-table";
-import { getPaginationRowModel } from "@tanstack/vue-table";
+const filterStore = useFiltersStore();
+
+type RegisterLawyer = {
+  id: string;
+  national_code: string;
+  fullName: string;
+  phone: string;
+  edit_id: number;
+  status: "pending" | "approved" | "reject";
+  license: string;
+  base: string;
+  nationalCardImage: string;
+  licenseImage: string;
+};
 
 const refetch = async (page = undefined) => {
   const lawyersRef = ref(
@@ -14,8 +24,8 @@ const refetch = async (page = undefined) => {
       })
     ).data
   );
-  data.value = lawyersRef.value.data.map((law) => {
-    const base = filterStore.lawyerTypes.find((type) => law.base == type.id);
+  data.value = lawyersRef.value.data.map((law: any) => {
+    const base = filterStore.lawyerTypes.find((type: any) => law.base == type.id);
     return {
       id: law.user_id,
       national_code: law.national_code,
@@ -31,12 +41,6 @@ const refetch = async (page = undefined) => {
   });
 };
 
-const filterStore = useFiltersStore();
-const UButton = resolveComponent("UButton");
-const UDropdownMenu = resolveComponent("UDropdownMenu");
-
-const table = useTemplateRef("table");
-
 const lawyersRef = ref(
   (
     await useGet({
@@ -47,25 +51,9 @@ const lawyersRef = ref(
   ).data
 );
 
-console.log(lawyersRef.value.data);
-
-type Payment = {
-  id: string;
-  national_code: string;
-  fullName: string;
-  phone: string;
-  edit_id: number;
-  is_active: boolean;
-  status: "pending" | "approved" | "reject";
-  license: string;
-  base: string;
-  nationalCardImage: string;
-  licenseImage: string;
-};
-
-const data = ref(
-  lawyersRef.value.data.map((law) => {
-    const base = filterStore.lawyerTypes.find((type) => law.base == type.id);
+const data = ref<RegisterLawyer[]>(
+  lawyersRef.value.data.map((law: any) => {
+    const base = filterStore.lawyerTypes.find((type: any) => law.base == type.id);
 
     return {
       id: law.user_id,
@@ -82,45 +70,19 @@ const data = ref(
   })
 );
 
-const columns: TableColumn<Payment>[] = [
-  {
-    accessorKey: "id",
-    header: "شماره کاربر",
-    cell: ({ row }) => `#${row.getValue("id")}`,
-  },
-  {
-    accessorKey: "fullName",
-    header: "نام نام خانوادگی",
-  },
-  {
-    accessorKey: "national_code",
-    header: "کدملی",
-  },
-  {
-    accessorKey: "phone",
-    header: "تلفن",
-  },
-  {
-    accessorKey: "license",
-    header: "شماره پروانه",
-  },
-  {
-    accessorKey: "nationalCardImage",
-    header: "عکس کارت ملی",
-  },
-  {
-    accessorKey: "licenseImage",
-    header: "عکس پروانه وکیل",
-  },
-  {
-    accessorKey: "base",
-    header: "پایه",
-  },
-  {
-    accessorKey: "status",
-    header: "وضعیت",
-  },
+// تعریف ستون‌های جدول
+const tableColumns = [
+  { key: 'id', label: 'شماره کاربر', headerClass: 'text-center', cellClass: 'text-center' },
+  { key: 'fullName', label: 'نام نام خانوادگی', headerClass: 'text-center', cellClass: 'text-center' },
+  { key: 'national_code', label: 'کدملی', headerClass: 'text-center', cellClass: 'text-center' },
+  { key: 'phone', label: 'تلفن', headerClass: 'text-center', cellClass: 'text-center' },
+  { key: 'license', label: 'شماره پروانه', headerClass: 'text-center', cellClass: 'text-center' },
+  { key: 'nationalCardImage', label: 'عکس کارت ملی', headerClass: 'text-center', cellClass: 'text-center' },
+  { key: 'licenseImage', label: 'عکس پروانه وکیل', headerClass: 'text-center', cellClass: 'text-center' },
+  { key: 'base', label: 'پایه', headerClass: 'text-center', cellClass: 'text-center' },
+  { key: 'status', label: 'وضعیت', headerClass: 'text-center', cellClass: 'text-center' },
 ];
+
 const globalFilter = ref("");
 
 const pagination = ref({
@@ -138,9 +100,8 @@ watch(
         query: { q: globalFilter.value, page: pagination.value.pageIndex },
         includeAuthHeader: false,
       });
-      console.log(res.data.data);
-      data.value = res.data.data.map((law) => {
-        const base = filterStore.lawyerTypes.find((type) => law.base == type.id);
+      data.value = res.data.data.map((law: any) => {
+        const base = filterStore.lawyerTypes.find((type: any) => law.base == type.id);
         return {
           id: law.user_id,
           national_code: law.national_code,
@@ -171,8 +132,8 @@ const searchLawyer = async () => {
         })
       ).data
     );
-    data.value = lawyersRef.value.data.map((law) => {
-      const base = filterStore.lawyerTypes.find((type) => law.base == type.id);
+    data.value = lawyersRef.value.data.map((law: any) => {
+      const base = filterStore.lawyerTypes.find((type: any) => law.base == type.id);
       return {
         id: law.user_id,
         national_code: law.national_code,
@@ -194,9 +155,8 @@ const searchLawyer = async () => {
       query: { q: globalFilter.value },
       includeAuthHeader: false,
     });
-    console.log(res.data.data);
-    data.value = res.data.data.map((law) => {
-      const base = filterStore.lawyerTypes.find((type) => law.base == type.id);
+    data.value = res.data.data.map((law: any) => {
+      const base = filterStore.lawyerTypes.find((type: any) => law.base == type.id);
 
       return {
         id: law.user_id,
@@ -217,93 +177,110 @@ const searchLawyer = async () => {
   }
 };
 
-const rejectHandle = async (com, id) => {
+const rejectHandle = async (com: string, id: number) => {
   const res = await usePut({
     url: `register-lawyer/${id}/reject`,
     includeAuthHeader: true,
     body: { rejection_reason: com },
   });
-  // console.log(pagination.value.pageIndex);
   if (res.statusCode === 200) {
     refetch(pagination.value.pageIndex);
     useToast().add({ title: "احراز هویت وکیل رد شد", color: "success" });
-  }
-  else if(res.statusCode === 500){
+  } else if (res.statusCode === 500) {
     useToast().add({ title: "مشکلی رخ داده است", color: "error" });
   }
 };
 
-const acceptHandle = async (id) => {
+const acceptHandle = async (id: number) => {
   const res = await usePut({
     url: `register-lawyer/${id}/approve`,
     includeAuthHeader: true,
     body: undefined,
   });
-  // console.log(pagination.value.pageIndex);
   if (res.statusCode === 200) {
     refetch(pagination.value.pageIndex);
     useToast().add({ title: "احراز هویت وکیل تایید شد", color: "success" });
-  }
-  else if(res.statusCode === 500){
+  } else if (res.statusCode === 500) {
     useToast().add({ title: "مشکلی رخ داده است", color: "error" });
   }
 };
 </script>
 
 <template>
-  <div class="ds-table-con">
-    <div class="flex justify-between">
+  <div class="register-lawyer-table">
+    <!-- Search Bar -->
+    <div class="flex justify-between mb-4">
       <UInput
         v-model="globalFilter"
         class="max-w-[250px] w-full"
         placeholder="فیلتر..."
         icon="solar:magnifer-linear"
-        @change="searchLawyer" />
+        @change="searchLawyer"
+      />
     </div>
-    <UTable
-      :data="data"
-      :columns="columns"
-      class="flex-1"
-      :ui="{
-        root: 'rounded-[7px] border border-gray-200 overflow-y-hidden',
-        thead: 'bg-primary',
-        th: 'text-white text-center! whitespace-nowrap',
-        td: 'text-center',
-      }">
-      <template #status-cell="{ row }">
-        <div
-          :class="{ 'text-[#1e3a5f]!': row.original.status === 'approved' }"
-          class="text-red-500"
-          v-if="row.original.status != 'pending'">
-          {{ row.original.status === "approved" ? "تایید شده" : "تایید نشده" }}
-        </div>
-        <div v-else class="">
-          <UICChooseStatusModal
-            @reject="(com) => rejectHandle(com, row.original.edit_id)"
-            @accept="acceptHandle(row.original.edit_id)" />
-        </div>
-      </template>
-      <template #licenseImage-cell="{ row }">
-        <UICPictureModal title="عکس پروانه وکیل" :image="row.original.licenseImage" />
-      </template>
-      <template #nationalCardImage-cell="{ row }">
-        <UICPictureModal title="عکس پروانه وکیل" :image="row.original.licenseImage" />
-      </template>
-    </UTable>
 
-    <div class="flex justify-center py-4">
-      <UPagination
-        v-model:page="pagination.pageIndex"
-        :items-per-page="pagination.pageSize"
-        :total="pagination.total"
-        :default-page="1"
-        :ui="{
-          first: 'hidden',
-          prev: 'scale-x-[-1]',
-          next: 'scale-x-[-1]',
-          last: 'hidden',
-        }"
-        @update:page="(p) => (pagination.pageIndex = p)" />
-    </div>
+    <!-- Table -->
+    <dashboard-admin-generic-table
+      :data="data"
+      :columns="tableColumns"
+      :current-page="pagination.pageIndex"
+      :total-items="pagination.total"
+      :items-per-page="pagination.pageSize"
+      row-key="edit_id"
+      empty-title="درخواست ثبت وکیلی یافت نشد"
+      empty-message="هیچ درخواست ثبت وکیل جدیدی وجود ندارد"
+      empty-icon="lucide:user-check"
+      @update:page="pagination.pageIndex = $event"
+    >
+      <!-- Custom cell for ID -->
+      <template #cell-id="{ value }">
+        <span class="text-gray-600">#{{ value }}</span>
+      </template>
+
+      <!-- Custom cell for fullName -->
+      <template #cell-fullName="{ value }">
+        <span class="font-medium text-gray-900">{{ value }}</span>
+      </template>
+
+      <!-- Custom cell for phone -->
+      <template #cell-phone="{ value }">
+        <span class="font-mono text-gray-600">{{ value }}</span>
+      </template>
+
+      <!-- Custom cell for base -->
+      <template #cell-base="{ value }">
+        <span class="badge badge-info">{{ value }}</span>
+      </template>
+
+      <!-- Custom cell for national card image -->
+      <template #cell-nationalCardImage="{ row }">
+        <UICPictureModal title="عکس کارت ملی" :image="row.nationalCardImage" />
+      </template>
+
+      <!-- Custom cell for license image -->
+      <template #cell-licenseImage="{ row }">
+        <UICPictureModal title="عکس پروانه وکیل" :image="row.licenseImage" />
+      </template>
+
+      <!-- Custom cell for status -->
+      <template #cell-status="{ row }">
+        <div v-if="row.status !== 'pending'" :class="{ 'text-[#1e3a5f]': row.status === 'approved' }" class="text-red-500">
+          {{ row.status === "approved" ? "تایید شده" : "تایید نشده" }}
+        </div>
+        <div v-else>
+          <UICChooseStatusModal
+            @reject="(com) => rejectHandle(com, row.edit_id)"
+            @accept="acceptHandle(row.edit_id)"
+          />
+        </div>
+      </template>
+    </dashboard-admin-generic-table>
   </div>
 </template>
+
+<style scoped>
+@reference 'tailwindcss';
+.register-lawyer-table {
+  @apply space-y-4;
+}
+</style>

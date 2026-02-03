@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import type { TableColumn } from "@nuxt/ui";
-
 // --- تعریف نوع داده برای هر درخواست برداشت ---
 type WithdrawalRequest = {
   id: number;
   fullName: string;
   amount: string;
   status: string;
-  bankInfo: string;
+  bankInfo: any;
   createdAt: string;
 };
 
@@ -16,7 +14,7 @@ const refetch = async (page: number = 1) => {
   const response = await useGet({
     url: "withdrawal-requests/pending",
     includeAuthHeader: true,
-    query: { page, per_page: 10 }, // ارسال per_page در کوئری برای تمیزی بیشتر
+    query: { page, per_page: 10 },
   });
 
   const responseData = response.data;
@@ -34,7 +32,7 @@ const refetch = async (page: number = 1) => {
       createdAt: req.created_at
         ? new Date(req.created_at).toLocaleDateString("fa-IR")
         : "-",
-    })) ?? []; // استفاده از ?? [] برای جلوگیری از خطا در صورت خالی بودن پاسخ
+    })) ?? [];
 
   // به‌روزرسانی اطلاعات صفحه‌بندی
   pagination.value.total = responseData?.meta?.total || 0;
@@ -60,33 +58,23 @@ const data = ref<WithdrawalRequest[]>(
     createdAt: req.created_at
       ? new Date(req.created_at).toLocaleDateString("fa-IR")
       : "-",
-  })) ?? [] // استفاده از ?? [] برای جلوگیری از خطا
+  })) ?? []
 );
 
-// --- تعریف ستون‌های جدول ---
-const columns: TableColumn<WithdrawalRequest>[] = [
-  {
-    accessorKey: "id",
-    header: "شناسه",
-    cell: ({ row }) => `#${row.getValue("id")}`,
-  },
-  { accessorKey: "status", header: "وضعیت" },
-  { accessorKey: "amount", header: "مبلغ" },
-  {
-    accessorKey: "bankInfo",
-    header: "بانک مقصد",
-    cell: ({ row }) =>
-      `${row.original.bankInfo?.card_holder_name}\n${row.original.bankInfo?.card_holder_name}`,
-  },
-  { accessorKey: "createdAt", header: "تاریخ" },
-  { accessorKey: "actions", header: "فعالیت" },
+// --- تعریف ستون‌های جدول برای GenericTable ---
+const tableColumns = [
+  { key: 'id', label: 'شناسه', headerClass: 'text-center', cellClass: 'text-center' },
+  { key: 'status', label: 'وضعیت', headerClass: 'text-center', cellClass: 'text-center' },
+  { key: 'amount', label: 'مبلغ', headerClass: 'text-center', cellClass: 'text-center' },
+  { key: 'bankInfo', label: 'بانک مقصد', headerClass: 'text-center', cellClass: 'text-center' },
+  { key: 'createdAt', label: 'تاریخ', headerClass: 'text-center', cellClass: 'text-center' },
 ];
 
 // --- تنظیمات صفحه‌بندی ---
 const pagination = ref({
   pageIndex: 1,
   pageSize: initialData?.meta?.per_page || 10,
-  total: initialData?.meta?.total || 0, // مقدار اولیه برای جلوگیری از خطا
+  total: initialData?.meta?.total || 0,
 });
 
 // --- نظارت بر تغییر صفحه برای واکشی داده‌های جدید ---
@@ -109,14 +97,10 @@ const rejectHandle = async (comment: string, id: number) => {
   });
 
   if (res.statusCode === 200) {
-    // ۱. داده‌های صفحه فعلی را مجدداً واکشی کن
     useToast().add({ title: "درخواست برداشت با موفقیت رد شد", color: "success" });
     await refetch(pagination.value.pageIndex);
 
-    // ۲. بررسی کن آیا صفحه خالی شده و صفحه اول نیست
     if (data.value.length === 0 && pagination.value.pageIndex > 1) {
-      // ۳. اگر شرط برقرار بود، به صفحه قبل برو
-      // watcher به صورت خودکار refetch را برای صفحه جدید صدا می‌زند
       pagination.value.pageIndex--;
     }
   }
@@ -132,14 +116,10 @@ const acceptHandle = async (id: number) => {
   });
 
   if (res.statusCode === 200) {
-    // ۱. داده‌های صفحه فعلی را مجدداً واکشی کن
     useToast().add({ title: "درخواست برداشت با موفقیت تایید شد", color: "success" });
     await refetch(pagination.value.pageIndex);
 
-
-    // ۲. بررسی کن آیا صفحه خالی شده و صفحه اول نیست
     if (data.value.length === 0 && pagination.value.pageIndex > 1) {
-      // ۳. اگر شرط برقرار بود، به صفحه قبل برو
       pagination.value.pageIndex--;
     }
   }
@@ -148,42 +128,65 @@ const acceptHandle = async (id: number) => {
 </script>
 
 <template>
-  <div class="ds-table-con">
-    <UTable
+  <div class="withdrawal-table">
+    <dashboard-admin-generic-table
       :data="data"
-      :columns="columns"
-      class="flex-1"
-      :ui="{
-        root: 'rounded-[7px] border border-gray-200 overflow-y-hidden',
-        thead: 'bg-primary',
-        th: 'text-white text-center! whitespace-nowrap',
-        td: 'text-center whitespace-pre-line', // whitespace-pre-line برای نمایش صحیح اطلاعات بانک
-      }"
+      :columns="tableColumns"
+      :current-page="pagination.pageIndex"
+      :total-items="pagination.total"
+      :items-per-page="pagination.pageSize"
+      row-key="id"
+      empty-title="درخواست برداشتی یافت نشد"
+      empty-message="هیچ درخواست برداشت در انتظاری وجود ندارد"
+      empty-icon="lucide:wallet"
+      @update:page="pagination.pageIndex = $event"
     >
-      <template #actions-cell="{ row }">
-        <div>
+      <!-- Custom cell for ID -->
+      <template #cell-id="{ value }">
+        <span class="text-gray-600">#{{ value }}</span>
+      </template>
+
+      <!-- Custom cell for status -->
+      <template #cell-status="{ value }">
+        <span class="badge badge-warning">{{ value }}</span>
+      </template>
+
+      <!-- Custom cell for amount -->
+      <template #cell-amount="{ value }">
+        <span class="font-semibold text-green-600">{{ value }}</span>
+      </template>
+
+      <!-- Custom cell for bank info -->
+      <template #cell-bankInfo="{ value }">
+        <div class="text-sm whitespace-pre-line">
+          <div v-if="value?.card_holder_name">{{ value.card_holder_name }}</div>
+          <div v-if="value?.card_number">{{ value.card_number }}</div>
+          <div v-if="!value?.card_holder_name && !value?.card_number">{{ value || '-' }}</div>
+        </div>
+      </template>
+
+      <!-- Custom cell for date -->
+      <template #cell-createdAt="{ value }">
+        <span class="text-sm text-gray-600">{{ value }}</span>
+      </template>
+
+      <!-- Custom actions -->
+      <template #actions="{ row }">
+        <div class="flex items-center justify-center">
           <UICChooseStatusModal
-          next-word="درخواست برداشت"
-            @reject="(comment) => rejectHandle(comment, row.original.id)"
-            @accept="acceptHandle(row.original.id)"
+            next-word="درخواست برداشت"
+            @reject="(comment) => rejectHandle(comment, row.id)"
+            @accept="acceptHandle(row.id)"
           />
         </div>
       </template>
-    </UTable>
-
-    <div class="flex justify-center py-4">
-      <UPagination
-        v-model:page="pagination.pageIndex"
-        :items-per-page="pagination.pageSize"
-        :total="pagination.total"
-        :ui="{
-          first: 'hidden',
-          prev: 'scale-x-[-1]',
-          next: 'scale-x-[-1]',
-          last: 'hidden',
-        }"
-        @update:page="(p) => (pagination.pageIndex = p)"
-      />
-    </div>
+    </dashboard-admin-generic-table>
   </div>
 </template>
+
+<style scoped>
+@reference 'tailwindcss';
+.withdrawal-table {
+  @apply space-y-4;
+}
+</style>
