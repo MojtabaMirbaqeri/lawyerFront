@@ -17,8 +17,7 @@
     </template>
     <slot />
     <slot name="input">
-      <div class="uic-input-container" :class="{ 'has-icon': icon }">
-        <Icon v-if="icon" :name="icon" class="uic-input-icon" />
+      <div class="uic-input-container">
         <UInput
           v-model="state"
           :type="type || 'text'"
@@ -29,14 +28,13 @@
           :disabled="disabled"
           :class="[
             { 'opacity-50 cursor-not-allowed': readonly || disabled },
-            { 'pr-10': icon }
           ]"
           :placeholder="placeholder || label"
           :maxlength="maxlength"
           class="uic-input"
           :ui="{ 
             root: 'w-full', 
-            base: 'w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm bg-white transition-all duration-150 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none h-[42px]' 
+            base: 'w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm bg-white transition-all duration-150 focus:ring! focus:ring-blue-100 focus:outline-none h-[42px] border-0!' 
           }"
           @focus="onFocus"
         />
@@ -44,7 +42,6 @@
           {{ (state?.length || 0) }}/{{ maxlength }}
         </span>
       </div>
-      <p v-if="hint" class="uic-input-hint">{{ hint }}</p>
     </slot>
   </UFormField>
 </template>

@@ -27,23 +27,24 @@
                 @input="debouncedSearch"
                 type="text"
                 placeholder="جستجوی نام یا شماره تلفن..."
-                class="w-72"
-              />
+                class="w-72" />
             </div>
 
             <!-- Wallet Filter -->
-            <select v-model="walletFilter" @change="applyFilters" class="select-dashboard w-44!">
-              <option value="all">همه کاربران</option>
-              <option value="with_balance">دارای موجودی</option>
-              <option value="zero_balance">بدون موجودی</option>
-            </select>
+            <UICSelect
+              v-model="walletFilter"
+              :items="walletFilterItems"
+              placeholder="همه کاربران"
+              class="w-44!"
+              @update:model-value="applyFilters" />
 
             <!-- Activity Filter -->
-            <select v-model="activityFilter" @change="applyFilters" class="select-dashboard w-40!">
-              <option value="all">همه</option>
-              <option value="active">فعال</option>
-              <option value="inactive">غیرفعال</option>
-            </select>
+            <UICSelect
+              v-model="activityFilter"
+              :items="activityFilterItems"
+              placeholder="همه"
+              class="w-40!"
+              @update:model-value="applyFilters" />
           </div>
 
           <div class="action-bar-end">
@@ -78,7 +79,9 @@
                     {{ getInitials(user.fullName) }}
                   </div>
                   <div>
-                    <span class="font-medium text-gray-900">{{ user.fullName || 'بدون نام' }}</span>
+                    <span class="font-medium text-gray-900">{{
+                      user.fullName || "بدون نام"
+                    }}</span>
                   </div>
                 </div>
               </td>
@@ -96,23 +99,29 @@
                 <span v-else class="text-gray-400">-</span>
               </td>
               <td class="text-center">
-                <span v-if="user.comments > 0" class="font-medium">{{ user.comments }}</span>
+                <span v-if="user.comments > 0" class="font-medium">{{
+                  user.comments
+                }}</span>
                 <span v-else class="text-gray-400">-</span>
               </td>
               <td class="text-center">
-                <span class="font-medium" :class="user.amount > 0 ? 'text-green-600' : 'text-gray-400'">
+                <span
+                  class="font-medium"
+                  :class="user.amount > 0 ? 'text-green-600' : 'text-gray-400'">
                   {{ formatCurrency(user.amount) }}
                 </span>
               </td>
               <td>
                 <div class="flex items-center justify-end gap-1">
-                  <button @click="viewUserDetails(user)" class="btn-icon" title="مشاهده جزئیات">
+                  <button
+                    @click="viewUserDetails(user)"
+                    class="btn-icon"
+                    title="مشاهده جزئیات">
                     <Icon name="lucide:eye" class="w-4 h-4" />
                   </button>
                   <UDropdownMenu
                     :content="{ align: 'end' }"
-                    :items="getUserActions(user)"
-                  >
+                    :items="getUserActions(user)">
                     <button class="btn-icon">
                       <Icon name="lucide:more-vertical" class="w-4 h-4" />
                     </button>
@@ -130,11 +139,15 @@
           <Icon name="lucide:users" class="w-8 h-8" />
         </div>
         <h4 class="empty-state-title">کاربری یافت نشد</h4>
-        <p class="empty-state-description">با تغییر فیلترها یا جستجو، کاربران را پیدا کنید</p>
+        <p class="empty-state-description">
+          با تغییر فیلترها یا جستجو، کاربران را پیدا کنید
+        </p>
       </div>
 
       <!-- Pagination -->
-      <div v-if="data.length > 0" class="flex items-center justify-between p-4 border-t border-gray-100">
+      <div
+        v-if="data.length > 0"
+        class="flex items-center justify-between p-4 border-t border-gray-100">
         <span class="text-sm text-gray-500">
           صفحه {{ page }} از {{ Math.ceil(total / 15) }}
         </span>
@@ -150,8 +163,7 @@
             last: 'hidden',
             prev: 'scale-x-[-1]',
             next: 'scale-x-[-1]',
-          }"
-        />
+          }" />
       </div>
     </div>
 
@@ -189,7 +201,9 @@
                 <span class="user-stat-label">نظر</span>
               </div>
               <div class="user-stat">
-                <span class="user-stat-value text-green-600">{{ formatCurrency(selectedUser.amount) }}</span>
+                <span class="user-stat-value text-green-600">{{
+                  formatCurrency(selectedUser.amount)
+                }}</span>
                 <span class="user-stat-label">موجودی</span>
               </div>
             </div>
@@ -218,11 +232,24 @@ useHead({
 const page = ref(1);
 const total = ref(0);
 const data = ref([]);
-const searchQuery = ref('');
-const walletFilter = ref('all');
-const activityFilter = ref('all');
+const searchQuery = ref("");
+const walletFilter = ref("all");
+const activityFilter = ref("all");
 const showUserModal = ref(false);
 const selectedUser = ref(null);
+
+// Filter items for UICSelect
+const walletFilterItems = [
+  { id: "all", label: "همه کاربران" },
+  { id: "with_balance", label: "دارای موجودی" },
+  { id: "zero_balance", label: "بدون موجودی" },
+];
+
+const activityFilterItems = [
+  { id: "all", label: "همه" },
+  { id: "active", label: "فعال" },
+  { id: "inactive", label: "غیرفعال" },
+];
 
 // Debounced search
 let searchTimeout = null;
@@ -243,8 +270,8 @@ const fetchData = async (pageNumber, setTotal = false) => {
       query: {
         page: pageNumber,
         search: searchQuery.value || undefined,
-        wallet: walletFilter.value !== 'all' ? walletFilter.value : undefined,
-        activity: activityFilter.value !== 'all' ? activityFilter.value : undefined,
+        wallet: walletFilter.value !== "all" ? walletFilter.value : undefined,
+        activity: activityFilter.value !== "all" ? activityFilter.value : undefined,
       },
     });
 
@@ -283,14 +310,19 @@ const applyFilters = () => {
 
 // Utilities
 const getInitials = (name) => {
-  if (!name) return '?';
-  const parts = name.split(' ');
-  return parts.map(p => p.charAt(0)).join('').substring(0, 2) || '?';
+  if (!name) return "?";
+  const parts = name.split(" ");
+  return (
+    parts
+      .map((p) => p.charAt(0))
+      .join("")
+      .substring(0, 2) || "?"
+  );
 };
 
 const formatCurrency = (value) => {
-  if (!value) return '۰ تومان';
-  return new Intl.NumberFormat('fa-IR').format(value) + ' تومان';
+  if (!value) return "۰ تومان";
+  return new Intl.NumberFormat("fa-IR").format(value) + " تومان";
 };
 
 const viewUserDetails = (user) => {
@@ -300,47 +332,47 @@ const viewUserDetails = (user) => {
 
 const getUserActions = (user) => [
   {
-    label: 'مشاهده نوبت‌ها',
-    icon: 'lucide:calendar',
+    label: "مشاهده نوبت‌ها",
+    icon: "lucide:calendar",
     onSelect: () => {
       // TODO: Navigate to user appointments
-      useToast().add({ title: 'این قابلیت به زودی اضافه می‌شود', color: 'info' });
+      useToast().add({ title: "این قابلیت به زودی اضافه می‌شود", color: "info" });
     },
   },
   {
-    label: 'مشاهده تیکت‌ها',
-    icon: 'lucide:ticket',
+    label: "مشاهده تیکت‌ها",
+    icon: "lucide:ticket",
     onSelect: () => {
       // TODO: Navigate to user tickets
-      useToast().add({ title: 'این قابلیت به زودی اضافه می‌شود', color: 'info' });
+      useToast().add({ title: "این قابلیت به زودی اضافه می‌شود", color: "info" });
     },
   },
-  { type: 'separator' },
+  { type: "separator" },
   {
-    label: 'ارسال نوتیفیکیشن',
-    icon: 'lucide:bell',
+    label: "ارسال نوتیفیکیشن",
+    icon: "lucide:bell",
     onSelect: () => sendNotification(user),
   },
   {
-    label: 'مسدود کردن',
-    icon: 'lucide:ban',
+    label: "مسدود کردن",
+    icon: "lucide:ban",
     onSelect: () => blockUser(user),
   },
 ];
 
 const sendNotification = (user) => {
   // TODO: Implement notification sending
-  useToast().add({ title: `ارسال نوتیفیکیشن به ${user.fullName}`, color: 'info' });
+  useToast().add({ title: `ارسال نوتیفیکیشن به ${user.fullName}`, color: "info" });
 };
 
 const blockUser = (user) => {
   // TODO: Implement user blocking
-  useToast().add({ title: `این قابلیت به زودی اضافه می‌شود`, color: 'warning' });
+  useToast().add({ title: `این قابلیت به زودی اضافه می‌شود`, color: "warning" });
 };
 
 const exportUsers = () => {
   // TODO: Implement export
-  useToast().add({ title: 'فایل اکسل در حال آماده‌سازی...', color: 'info' });
+  useToast().add({ title: "فایل اکسل در حال آماده‌سازی...", color: "info" });
 };
 </script>
 

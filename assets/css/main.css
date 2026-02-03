@@ -1464,7 +1464,7 @@ button {
 
 /* Form Section */
 .form-section {
-  @apply bg-white rounded-xl border border-gray-100 overflow-hidden;
+  @apply bg-white rounded-xl border border-gray-100 overflow-visible;
   box-shadow: var(--shadow-sm);
 }
 
@@ -1822,4 +1822,20 @@ button {
 .collapse-leave-to {
   opacity: 0;
   max-height: 0;
+}
+
+.pdp {
+  @apply h-[42px];
+}
+
+.pdp-group {
+  @apply h-full!;
+}
+
+.pdp-input {
+  @apply h-full! rounded-e-[8px]! border-gray-200!;
+}
+
+.pdp-icon {
+  @apply h-full! max-h-none! rounded-s-[8px]!;
 }

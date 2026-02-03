@@ -16,7 +16,9 @@
     <!-- Stepper -->
     <div class="stepper-container">
       <div class="stepper">
-        <div class="step" :class="{ active: currentStep >= 1, completed: currentStep > 1 }">
+        <div
+          class="step"
+          :class="{ active: currentStep >= 1, completed: currentStep > 1 }">
           <div class="step-number">
             <Icon v-if="currentStep > 1" name="lucide:check" class="w-4 h-4" />
             <span v-else>۱</span>
@@ -24,7 +26,9 @@
           <span class="step-label">اطلاعات پایه</span>
         </div>
         <div class="step-line" :class="{ active: currentStep > 1 }"></div>
-        <div class="step" :class="{ active: currentStep >= 2, completed: currentStep > 2 }">
+        <div
+          class="step"
+          :class="{ active: currentStep >= 2, completed: currentStep > 2 }">
           <div class="step-number">
             <Icon v-if="currentStep > 2" name="lucide:check" class="w-4 h-4" />
             <span v-else>۲</span>
@@ -43,43 +47,45 @@
     <div class="card-dashboard">
       <div class="card-dashboard-body">
         <UForm :schema="schema" :state="state" @submit="onSubmit" class="form-container">
-          
           <!-- Step 1: Basic Info -->
           <div v-show="currentStep === 1" class="step-content">
             <h3 class="step-title">اطلاعات پایه</h3>
             <p class="step-description">اطلاعات اولیه وکیل را وارد کنید</p>
-            
+
             <div class="form-grid">
               <div class="form-group">
-                <label class="label-dashboard">نام <span class="text-red-500">*</span></label>
+                <label class="label-dashboard"
+                  >نام <span class="text-red-500">*</span></label
+                >
                 <input
                   v-model="state.name"
                   type="text"
                   class="input-dashboard"
-                  placeholder="نام وکیل"
-                />
+                  placeholder="نام وکیل" />
               </div>
-              
+
               <div class="form-group">
-                <label class="label-dashboard">نام خانوادگی <span class="text-red-500">*</span></label>
+                <label class="label-dashboard"
+                  >نام خانوادگی <span class="text-red-500">*</span></label
+                >
                 <input
                   v-model="state.lastName"
                   type="text"
                   class="input-dashboard"
-                  placeholder="نام خانوادگی"
-                />
+                  placeholder="نام خانوادگی" />
               </div>
-              
+
               <div class="form-group">
-                <label class="label-dashboard">شماره موبایل <span class="text-red-500">*</span></label>
+                <label class="label-dashboard"
+                  >شماره موبایل <span class="text-red-500">*</span></label
+                >
                 <input
                   v-model="state.phone"
                   type="tel"
                   class="input-dashboard ltr-force text-left!"
                   placeholder="09123456789"
                   maxlength="11"
-                  @input="filterDigits"
-                />
+                  @input="filterDigits" />
               </div>
 
               <div class="form-group">
@@ -88,8 +94,7 @@
                   v-model="state.email"
                   type="email"
                   class="input-dashboard ltr-force text-left!"
-                  placeholder="email@example.com"
-                />
+                  placeholder="email@example.com" />
               </div>
             </div>
           </div>
@@ -98,24 +103,26 @@
           <div v-show="currentStep === 2" class="step-content">
             <h3 class="step-title">تخصص و تحصیلات</h3>
             <p class="step-description">اطلاعات حرفه‌ای وکیل را وارد کنید</p>
-            
+
             <div class="form-grid">
               <div class="form-group">
-                <label class="label-dashboard">پایه وکالت <span class="text-red-500">*</span></label>
-                <select v-model="baseModel" class="select-dashboard">
-                  <option v-for="base in bases" :key="base.id" :value="base.id">
-                    {{ base.label }}
-                  </option>
-                </select>
+                <label class="label-dashboard"
+                  >پایه وکالت <span class="text-red-500">*</span></label
+                >
+                <UICSelect
+                  v-model="baseModel"
+                  :items="bases"
+                  placeholder="انتخاب پایه وکالت" />
               </div>
-              
+
               <div class="form-group">
-                <label class="label-dashboard">مدرک تحصیلی <span class="text-red-500">*</span></label>
-                <select v-model="educationModel" class="select-dashboard">
-                  <option v-for="edu in education" :key="edu.id" :value="edu.id">
-                    {{ edu.label }}
-                  </option>
-                </select>
+                <label class="label-dashboard"
+                  >مدرک تحصیلی <span class="text-red-500">*</span></label
+                >
+                <UICSelect
+                  v-model="educationModel"
+                  :items="education"
+                  placeholder="انتخاب مدرک تحصیلی" />
               </div>
 
               <div class="form-group lg:col-span-2">
@@ -123,8 +130,7 @@
                 <textarea
                   v-model="state.about"
                   class="input-dashboard h-24! resize-none"
-                  placeholder="توضیحات کوتاه درباره سوابق و تخصص‌های وکیل..."
-                ></textarea>
+                  placeholder="توضیحات کوتاه درباره سوابق و تخصص‌های وکیل..."></textarea>
               </div>
             </div>
           </div>
@@ -133,7 +139,7 @@
           <div v-show="currentStep === 3" class="step-content">
             <h3 class="step-title">تایید نهایی</h3>
             <p class="step-description">اطلاعات وارد شده را بررسی و تایید کنید</p>
-            
+
             <div class="preview-card">
               <div class="preview-header">
                 <div class="preview-avatar">
@@ -144,15 +150,15 @@
                   <span class="preview-badge">{{ getBaseLabel }}</span>
                 </div>
               </div>
-              
+
               <div class="preview-details">
                 <div class="preview-item">
                   <Icon name="lucide:phone" class="w-4 h-4 text-gray-400" />
-                  <span>{{ state.phone || '-' }}</span>
+                  <span>{{ state.phone || "-" }}</span>
                 </div>
                 <div class="preview-item">
                   <Icon name="lucide:mail" class="w-4 h-4 text-gray-400" />
-                  <span>{{ state.email || '-' }}</span>
+                  <span>{{ state.email || "-" }}</span>
                 </div>
                 <div class="preview-item">
                   <Icon name="lucide:graduation-cap" class="w-4 h-4 text-gray-400" />
@@ -172,8 +178,7 @@
               v-if="currentStep > 1"
               type="button"
               @click="prevStep"
-              class="btn-secondary"
-            >
+              class="btn-secondary">
               <Icon name="lucide:arrow-right" class="w-4 h-4" />
               مرحله قبل
             </button>
@@ -183,18 +188,15 @@
               type="button"
               @click="nextStep"
               class="btn-primary"
-              :disabled="!canProceed"
-            >
+              :disabled="!canProceed">
               مرحله بعد
               <Icon name="lucide:arrow-left" class="w-4 h-4" />
             </button>
-            <button
-              v-else
-              type="submit"
-              class="btn-primary"
-              :disabled="isLoading"
-            >
-              <Icon v-if="isLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
+            <button v-else type="submit" class="btn-primary" :disabled="isLoading">
+              <Icon
+                v-if="isLoading"
+                name="lucide:loader-2"
+                class="w-4 h-4 animate-spin" />
               <Icon v-else name="lucide:check" class="w-4 h-4" />
               ثبت وکیل
             </button>
@@ -246,11 +248,11 @@ const state = reactive({
 
 // Labels for preview
 const getBaseLabel = computed(() => {
-  return bases.find(b => b.id === baseModel.value)?.label || '';
+  return bases.find((b) => b.id === baseModel.value)?.label || "";
 });
 
 const getEducationLabel = computed(() => {
-  return education.value.find(e => e.id === educationModel.value)?.label || '';
+  return education.value.find((e) => e.id === educationModel.value)?.label || "";
 });
 
 // Validation
@@ -283,7 +285,7 @@ const schema = object({
     .required("لطفا شماره موبایل را وارد کنید")
     .matches(
       /^(098|0098|98|\+98|0)?9(0[0-5]|[1 3]\d|2[0-3]|9[0-9]|41)\d{7}$/g,
-      "شماره موبایل معتبر نیست"
+      "شماره موبایل معتبر نیست",
     )
     .length(11, "شماره موبایل باید دقیقاً 11 رقم باشد"),
   name: string().required("نام خود را وارد کنید").max(20, "حداکثر 20 کاراکتر مجاز است"),
@@ -302,7 +304,7 @@ function filterDigits(e: Event) {
 // Submit
 const onSubmit = async () => {
   isLoading.value = true;
-  
+
   const body = {
     phone: state.phone,
     name: state.name,
@@ -321,12 +323,15 @@ const onSubmit = async () => {
 
   if (res.statusCode === 201 || res.statusCode === 200) {
     useToast().add({ title: "وکیل با موفقیت ایجاد شد", color: "success" });
-    navigateTo('/dashboard/admin/lawyerlist');
+    navigateTo("/dashboard/admin/lawyerlist");
   } else if (res.statusCode === 422) {
     useToast().add({ title: "این شماره تلفن قبلا ثبت شده است", color: "error" });
     currentStep.value = 1;
   } else {
-    useToast().add({ title: "مشکلی رخ داده است. لطفا مجددا امتحان کنید", color: "error" });
+    useToast().add({
+      title: "مشکلی رخ داده است. لطفا مجددا امتحان کنید",
+      color: "error",
+    });
   }
 
   isLoading.value = false;

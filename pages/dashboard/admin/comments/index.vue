@@ -55,27 +55,32 @@
           <div class="action-bar-start">
             <div class="search-box">
               <Icon name="lucide:search" class="icon" />
-              <input v-model="searchQuery" @input="debouncedSearch" type="text" placeholder="جستجو در دیدگاه‌ها..." class="w-64" />
+              <input
+                v-model="searchQuery"
+                @input="debouncedSearch"
+                type="text"
+                placeholder="جستجو در دیدگاه‌ها..."
+                class="w-64" />
             </div>
-            <select v-model="statusFilter" @change="applyFilters" class="select-dashboard w-40!">
-              <option value="">همه وضعیت‌ها</option>
-              <option value="pending">در انتظار</option>
-              <option value="approved">تایید شده</option>
-              <option value="rejected">رد شده</option>
-            </select>
-            <select v-model="ratingFilter" @change="applyFilters" class="select-dashboard w-36!">
-              <option value="">همه امتیازها</option>
-              <option value="5">۵ ستاره</option>
-              <option value="4">۴ ستاره</option>
-              <option value="3">۳ ستاره</option>
-              <option value="2">۲ ستاره</option>
-              <option value="1">۱ ستاره</option>
-            </select>
+            <UICSelect
+              v-model="statusFilter"
+              :items="statusFilterItems"
+              placeholder="همه وضعیت‌ها"
+              class="w-40!"
+              @update:model-value="applyFilters" />
+            <UICSelect
+              v-model="ratingFilter"
+              :items="ratingFilterItems"
+              placeholder="همه امتیازها"
+              class="w-36!"
+              @update:model-value="applyFilters" />
           </div>
           <div class="action-bar-end">
             <!-- Bulk Actions -->
             <div v-if="selectedReviews.size > 0" class="flex items-center gap-2">
-              <span class="text-sm text-gray-600">{{ selectedReviews.size }} مورد انتخاب شده</span>
+              <span class="text-sm text-gray-600"
+                >{{ selectedReviews.size }} مورد انتخاب شده</span
+              >
               <button @click="bulkApprove" class="btn-success text-sm! py-1.5! px-3!">
                 <Icon name="lucide:check" class="w-4 h-4" />
                 تایید همه
@@ -95,17 +100,18 @@
       <div class="reviews-list">
         <div v-for="review in filteredData" :key="review.id" class="review-item">
           <div class="review-checkbox">
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               :checked="selectedReviews.has(review.id)"
               @change="toggleSelect(review.id)"
-              class="form-checkbox"
-            />
+              class="form-checkbox" />
           </div>
           <div class="review-content">
             <div class="review-header">
               <div class="review-user">
-                <div class="avatar-placeholder avatar-sm">{{ getInitials(review.fullname) }}</div>
+                <div class="avatar-placeholder avatar-sm">
+                  {{ getInitials(review.fullname) }}
+                </div>
                 <div>
                   <span class="review-user-name">{{ review.fullname }}</span>
                   <span class="review-date">{{ review.created_at }}</span>
@@ -113,9 +119,18 @@
               </div>
               <div class="review-meta">
                 <div class="review-rating">
-                  <Icon v-for="i in 5" :key="i" name="lucide:star" class="w-4 h-4" :class="i <= review.rating ? 'text-amber-400 fill-current' : 'text-gray-300'" />
+                  <Icon
+                    v-for="i in 5"
+                    :key="i"
+                    name="lucide:star"
+                    class="w-4 h-4"
+                    :class="
+                      i <= review.rating ? 'text-amber-400 fill-current' : 'text-gray-300'
+                    " />
                 </div>
-                <span class="badge" :class="getStatusBadgeClass(review.status)">{{ getStatusLabel(review.status) }}</span>
+                <span class="badge" :class="getStatusBadgeClass(review.status)">{{
+                  getStatusLabel(review.status)
+                }}</span>
               </div>
             </div>
             <div class="review-lawyer">
@@ -124,11 +139,15 @@
             </div>
             <p class="review-text">{{ review.comment }}</p>
             <div class="review-actions" v-if="review.status === 'pending'">
-              <button @click="acceptHandle(review.id)" class="btn-success text-sm! py-1.5! px-3!">
+              <button
+                @click="acceptHandle(review.id)"
+                class="btn-success text-sm! py-1.5! px-3!">
                 <Icon name="lucide:check" class="w-4 h-4" />
                 تایید
               </button>
-              <button @click="rejectHandle(review.id)" class="btn-danger text-sm! py-1.5! px-3!">
+              <button
+                @click="rejectHandle(review.id)"
+                class="btn-danger text-sm! py-1.5! px-3!">
                 <Icon name="lucide:x" class="w-4 h-4" />
                 رد
               </button>
@@ -147,11 +166,25 @@
       </div>
 
       <!-- Pagination -->
-      <div v-if="total > 15" class="flex items-center justify-between p-4 border-t border-gray-100">
-        <span class="text-sm text-gray-500">صفحه {{ page }} از {{ Math.ceil(total / 15) }}</span>
-        <UPagination v-model:page="page" :items-per-page="15" :total="total" :sibling-count="1"
-          :ui="{ list: 'gap-1', item: 'min-w-8 h-8 text-sm', first: 'hidden', last: 'hidden', prev: 'scale-x-[-1]', next: 'scale-x-[-1]' }"
-        />
+      <div
+        v-if="total > 15"
+        class="flex items-center justify-between p-4 border-t border-gray-100">
+        <span class="text-sm text-gray-500"
+          >صفحه {{ page }} از {{ Math.ceil(total / 15) }}</span
+        >
+        <UPagination
+          v-model:page="page"
+          :items-per-page="15"
+          :total="total"
+          :sibling-count="1"
+          :ui="{
+            list: 'gap-1',
+            item: 'min-w-8 h-8 text-sm',
+            first: 'hidden',
+            last: 'hidden',
+            prev: 'scale-x-[-1]',
+            next: 'scale-x-[-1]',
+          }" />
       </div>
     </div>
   </div>
@@ -165,14 +198,31 @@ useHead({ title: "مدیریت دیدگاه‌ها | وکیلینجا" });
 const page = ref(1);
 const data = ref([]);
 const total = ref(0);
-const searchQuery = ref('');
-const statusFilter = ref('');
-const ratingFilter = ref('');
+const searchQuery = ref("");
+const statusFilter = ref(null);
+const ratingFilter = ref(null);
 const selectedReviews = ref(new Set());
+
+// Filter items for UICSelect
+const statusFilterItems = [
+  { id: null, label: "همه وضعیت‌ها" },
+  { id: "pending", label: "در انتظار" },
+  { id: "approved", label: "تایید شده" },
+  { id: "rejected", label: "رد شده" },
+];
+
+const ratingFilterItems = [
+  { id: null, label: "همه امتیازها" },
+  { id: "5", label: "۵ ستاره" },
+  { id: "4", label: "۴ ستاره" },
+  { id: "3", label: "۳ ستاره" },
+  { id: "2", label: "۲ ستاره" },
+  { id: "1", label: "۱ ستاره" },
+];
 
 // Stats
 const statusCounts = ref({ pending: 0, approved: 0, rejected: 0 });
-const avgRating = ref('4.2');
+const avgRating = ref("4.2");
 
 // Debounced search
 let searchTimeout = null;
@@ -188,10 +238,10 @@ const debouncedSearch = () => {
 const filteredData = computed(() => {
   let result = data.value;
   if (statusFilter.value) {
-    result = result.filter(r => r.status === statusFilter.value);
+    result = result.filter((r) => r.status === statusFilter.value);
   }
   if (ratingFilter.value) {
-    result = result.filter(r => r.rating === parseInt(ratingFilter.value));
+    result = result.filter((r) => r.rating === parseInt(ratingFilter.value));
   }
   return result;
 });
@@ -205,7 +255,7 @@ async function fetchReviews(pageNum = 1, setTotal = false) {
   const res = await useGet({
     url: "admin/reviews",
     includeAuthHeader: true,
-    query: { 
+    query: {
       page: pageNum,
       status: statusFilter.value || undefined,
       rating: ratingFilter.value || undefined,
@@ -233,7 +283,7 @@ async function fetchReviews(pageNum = 1, setTotal = false) {
 const calculateStats = () => {
   statusCounts.value = { pending: 0, approved: 0, rejected: 0 };
   let totalRating = 0;
-  data.value.forEach(r => {
+  data.value.forEach((r) => {
     if (statusCounts.value[r.status] !== undefined) {
       statusCounts.value[r.status]++;
     }
@@ -244,7 +294,10 @@ const calculateStats = () => {
   }
 };
 
-watch(() => page.value, (p) => fetchReviews(p));
+watch(
+  () => page.value,
+  (p) => fetchReviews(p),
+);
 
 await fetchReviews(page.value, true);
 
@@ -290,18 +343,26 @@ const bulkReject = async () => {
 
 // Helpers
 const getInitials = (name) => {
-  if (!name) return '?';
-  return name.split(' ').map(p => p.charAt(0)).join('').substring(0, 2);
+  if (!name) return "?";
+  return name
+    .split(" ")
+    .map((p) => p.charAt(0))
+    .join("")
+    .substring(0, 2);
 };
 
 const getStatusLabel = (status) => {
-  const labels = { pending: 'در انتظار', approved: 'تایید شده', rejected: 'رد شده' };
+  const labels = { pending: "در انتظار", approved: "تایید شده", rejected: "رد شده" };
   return labels[status] || status;
 };
 
 const getStatusBadgeClass = (status) => {
-  const classes = { pending: 'badge-warning', approved: 'badge-success', rejected: 'badge-error' };
-  return classes[status] || 'badge-gray';
+  const classes = {
+    pending: "badge-warning",
+    approved: "badge-success",
+    rejected: "badge-error",
+  };
+  return classes[status] || "badge-gray";
 };
 </script>
 

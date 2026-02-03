@@ -5,8 +5,7 @@
         :schema="schema"
         :state="state"
         class="space-y-4 flex gap-3 justify-between items-start flex-col w-full"
-        @submit="onSubmit"
-      >
+        @submit="onSubmit">
         <div class="grid grid-cols-1 lg:grid-cols-3 w-full gap-6">
           <UICInput
             v-model="state.phone"
@@ -14,33 +13,28 @@
             :readonly="true"
             label="لطفا شماره موبایل را وارد کنید"
             @input="filterDigits"
-            maxlength="11"
-          />
-          <UICInput
-            v-model="state.name"
-            name="name"
-            label="لطفا نام را وارد کنید"
-          />
+            maxlength="11" />
+          <UICInput v-model="state.name" name="name" label="لطفا نام را وارد کنید" />
           <UICInput
             v-model="state.lastName"
             name="lastName"
-            label="لطفا نام خانوادگی را وارد کنید"
-          />
-          <div class="">
-            <label for="">پایه</label>
-            <UICSelect :items="bases" v-model="baseModel" />
-          </div>
-          <div class="">
-            <label for="">تحصیلات</label>
-            <UICSelect :items="education" v-model="educationModel" />
-          </div>
+            label="لطفا نام خانوادگی را وارد کنید" />
+          <UICInput name="base" label="پایه" required>
+            <template #input>
+              <UICSelect :items="bases" v-model="baseModel" />
+            </template>
+          </UICInput>
+          <UICInput name="education" label="تحصیلات" required>
+            <template #input>
+              <UICSelect :items="education" v-model="educationModel" />
+            </template>
+          </UICInput>
         </div>
 
         <UICSecondaryBtn
           class="w-fit rounded-[8px]! h-[46px]"
           type="submit"
-          :disabled="!isChanged || isLoading"
-        >
+          :disabled="!isChanged || isLoading">
           ویرایش وکیل
         </UICSecondaryBtn>
       </UForm>
@@ -78,7 +72,7 @@ const education = ref([
 const isLoading = ref(false);
 
 const lawyerEdu = education.value.find(
-  (edu) => edu.label === lawyer.value.lawyer_info.education
+  (edu) => edu.label === lawyer.value.lawyer_info.education,
 );
 const educationModel = ref(lawyerEdu?.id ?? null);
 
@@ -114,9 +108,7 @@ const schema = object({
     .required("لطفا شماره موبایل را وارد کنید")
     .matches(/^(\+98|0)?9\d{9}$/, "شماره موبایل معتبر نیست")
     .length(11, "شماره موبایل باید دقیقاً 11 رقم باشد"),
-  name: string()
-    .required("نام خود را وارد کنید")
-    .max(20, "حداکثر 20 کاراکتر مجاز است"),
+  name: string().required("نام خود را وارد کنید").max(20, "حداکثر 20 کاراکتر مجاز است"),
   lastName: string()
     .required("نام خانوادگی خود را وارد کنید")
     .max(25, "حداکثر 25 کاراکتر مجاز است"),
@@ -137,8 +129,7 @@ const onSubmit = async (event) => {
     name: event.data.name,
     family: event.data.lastName,
     base: baseModel.value + "",
-    education:
-      education.value.find((e) => e.id === educationModel.value)?.label || "",
+    education: education.value.find((e) => e.id === educationModel.value)?.label || "",
   };
 
   const res = await usePut({

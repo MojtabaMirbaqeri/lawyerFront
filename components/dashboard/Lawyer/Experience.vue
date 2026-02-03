@@ -24,8 +24,7 @@
         description="مدارک و سوابق تحصیلی شما در حوزه حقوق"
         icon="lucide:graduation-cap"
         :collapsible="true"
-        :default-collapsed="false"
-      >
+        :default-collapsed="false">
         <template #actions>
           <button @click="openEducationModal()" class="btn-sm-primary">
             <Icon name="lucide:plus" class="w-4 h-4" />
@@ -40,8 +39,7 @@
           title="سابقه تحصیلی ثبت نشده"
           description="با افزودن سوابق تحصیلی، اعتبار پروفایل شما افزایش می‌یابد"
           action-text="افزودن سابقه تحصیلی"
-          @action="openEducationModal()"
-        />
+          @action="openEducationModal()" />
 
         <!-- Desktop Table -->
         <div v-else class="hidden md:block">
@@ -56,11 +54,12 @@
               </tr>
             </thead>
             <tbody>
-              <tr 
-                v-for="item in educationHistory" 
+              <tr
+                v-for="item in educationHistory"
                 :key="item.id"
-                :class="{ 'highlighted-row': highlightedItem === `education-${item.id}` }"
-              >
+                :class="{
+                  'highlighted-row': highlightedItem === `education-${item.id}`,
+                }">
                 <td>{{ item.degree_text }}</td>
                 <td>{{ item.field_of_study }}</td>
                 <td>{{ item.university }}</td>
@@ -70,7 +69,9 @@
                     <button @click="openEducationModal(item)" class="btn-icon-sm">
                       <Icon name="lucide:pencil" class="w-4 h-4" />
                     </button>
-                    <button @click="confirmDelete('education', item)" class="btn-icon-sm text-red-500">
+                    <button
+                      @click="confirmDelete('education', item)"
+                      class="btn-icon-sm text-red-500">
                       <Icon name="lucide:trash-2" class="w-4 h-4" />
                     </button>
                   </div>
@@ -88,17 +89,24 @@
             :title="item.degree_text"
             :subtitle="item.field_of_study"
             icon="lucide:graduation-cap"
-            :highlighted="highlightedItem === `education-${item.id}`"
-          >
+            :highlighted="highlightedItem === `education-${item.id}`">
             <template #meta>
-              <span><Icon name="lucide:building" class="w-3 h-3" /> {{ item.university }}</span>
-              <span><Icon name="lucide:map-pin" class="w-3 h-3" /> {{ item.place_of_study }}</span>
+              <span
+                ><Icon name="lucide:building" class="w-3 h-3" />
+                {{ item.university }}</span
+              >
+              <span
+                ><Icon name="lucide:map-pin" class="w-3 h-3" />
+                {{ item.place_of_study }}</span
+              >
             </template>
             <template #actions>
               <button @click="openEducationModal(item)" class="btn-icon-sm">
                 <Icon name="lucide:pencil" class="w-4 h-4" />
               </button>
-              <button @click="confirmDelete('education', item)" class="btn-icon-sm text-red-500">
+              <button
+                @click="confirmDelete('education', item)"
+                class="btn-icon-sm text-red-500">
                 <Icon name="lucide:trash-2" class="w-4 h-4" />
               </button>
             </template>
@@ -112,8 +120,7 @@
         description="تجربیات کاری شما در حوزه حقوق و وکالت"
         icon="lucide:briefcase"
         :collapsible="true"
-        :default-collapsed="true"
-      >
+        :default-collapsed="true">
         <template #actions>
           <button @click="openWorkModal()" class="btn-sm-primary">
             <Icon name="lucide:plus" class="w-4 h-4" />
@@ -128,8 +135,7 @@
           title="سابقه کاری ثبت نشده"
           description="با افزودن سوابق کاری، موکلین اعتماد بیشتری به شما پیدا می‌کنند"
           action-text="افزودن سابقه کاری"
-          @action="openWorkModal()"
-        />
+          @action="openWorkModal()" />
 
         <!-- Desktop Table -->
         <div v-else class="hidden md:block">
@@ -144,11 +150,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr 
-                v-for="item in workHistory" 
+              <tr
+                v-for="item in workHistory"
                 :key="item.id"
-                :class="{ 'highlighted-row': highlightedItem === `work-${item.id}` }"
-              >
+                :class="{ 'highlighted-row': highlightedItem === `work-${item.id}` }">
                 <td>{{ item.position }}</td>
                 <td>{{ item.experience_years_text }}</td>
                 <td>{{ item.organization }}</td>
@@ -158,7 +163,9 @@
                     <button @click="openWorkModal(item)" class="btn-icon-sm">
                       <Icon name="lucide:pencil" class="w-4 h-4" />
                     </button>
-                    <button @click="confirmDelete('work', item)" class="btn-icon-sm text-red-500">
+                    <button
+                      @click="confirmDelete('work', item)"
+                      class="btn-icon-sm text-red-500">
                       <Icon name="lucide:trash-2" class="w-4 h-4" />
                     </button>
                   </div>
@@ -176,17 +183,24 @@
             :title="item.position"
             :subtitle="item.experience_years_text"
             icon="lucide:briefcase"
-            :highlighted="highlightedItem === `work-${item.id}`"
-          >
+            :highlighted="highlightedItem === `work-${item.id}`">
             <template #meta>
-              <span><Icon name="lucide:building" class="w-3 h-3" /> {{ item.organization }}</span>
-              <span><Icon name="lucide:map-pin" class="w-3 h-3" /> {{ item.work_place }}</span>
+              <span
+                ><Icon name="lucide:building" class="w-3 h-3" />
+                {{ item.organization }}</span
+              >
+              <span
+                ><Icon name="lucide:map-pin" class="w-3 h-3" />
+                {{ item.work_place }}</span
+              >
             </template>
             <template #actions>
               <button @click="openWorkModal(item)" class="btn-icon-sm">
                 <Icon name="lucide:pencil" class="w-4 h-4" />
               </button>
-              <button @click="confirmDelete('work', item)" class="btn-icon-sm text-red-500">
+              <button
+                @click="confirmDelete('work', item)"
+                class="btn-icon-sm text-red-500">
                 <Icon name="lucide:trash-2" class="w-4 h-4" />
               </button>
             </template>
@@ -200,8 +214,7 @@
         description="لوح‌ها، گواهی‌نامه‌ها و افتخارات حرفه‌ای شما"
         icon="lucide:award"
         :collapsible="true"
-        :default-collapsed="true"
-      >
+        :default-collapsed="true">
         <template #actions>
           <button @click="openAwardModal()" class="btn-sm-primary">
             <Icon name="lucide:plus" class="w-4 h-4" />
@@ -216,8 +229,7 @@
           title="افتخاری ثبت نشده"
           description="جوایز و گواهی‌نامه‌های خود را برای افزایش اعتبار اضافه کنید"
           action-text="افزودن افتخار"
-          @action="openAwardModal()"
-        />
+          @action="openAwardModal()" />
 
         <!-- Desktop Table -->
         <div v-else class="hidden md:block">
@@ -231,22 +243,26 @@
               </tr>
             </thead>
             <tbody>
-              <tr 
-                v-for="item in awardsHistory" 
+              <tr
+                v-for="item in awardsHistory"
                 :key="item.id"
-                :class="{ 'highlighted-row': highlightedItem === `award-${item.id}` }"
-              >
+                :class="{ 'highlighted-row': highlightedItem === `award-${item.id}` }">
                 <td>{{ item.award_name }}</td>
                 <td>{{ item.issuing_organization }}</td>
                 <td>
-                  <button v-if="item.image_url" @click="showImagePreview(item.image_url)" class="text-blue-600 hover:underline text-sm">
+                  <button
+                    v-if="item.image_url"
+                    @click="showImagePreview(item.image_url)"
+                    class="text-blue-600 hover:underline text-sm">
                     مشاهده تصویر
                   </button>
                   <span v-else class="text-gray-400 text-sm">ندارد</span>
                 </td>
                 <td>
                   <div class="flex items-center gap-1 justify-end">
-                    <button @click="confirmDelete('award', item)" class="btn-icon-sm text-red-500">
+                    <button
+                      @click="confirmDelete('award', item)"
+                      class="btn-icon-sm text-red-500">
                       <Icon name="lucide:trash-2" class="w-4 h-4" />
                     </button>
                   </div>
@@ -264,15 +280,19 @@
             :title="item.award_name"
             :subtitle="item.issuing_organization"
             icon="lucide:award"
-            :highlighted="highlightedItem === `award-${item.id}`"
-          >
+            :highlighted="highlightedItem === `award-${item.id}`">
             <template #meta>
-              <button v-if="item.image_url" @click="showImagePreview(item.image_url)" class="text-blue-600 hover:underline">
+              <button
+                v-if="item.image_url"
+                @click="showImagePreview(item.image_url)"
+                class="text-blue-600 hover:underline">
                 <Icon name="lucide:image" class="w-3 h-3" /> مشاهده تصویر
               </button>
             </template>
             <template #actions>
-              <button @click="confirmDelete('award', item)" class="btn-icon-sm text-red-500">
+              <button
+                @click="confirmDelete('award', item)"
+                class="btn-icon-sm text-red-500">
                 <Icon name="lucide:trash-2" class="w-4 h-4" />
               </button>
             </template>
@@ -286,35 +306,64 @@
       <template #content>
         <div class="modal-content">
           <div class="modal-header">
-            <h3 class="modal-title">{{ editingEducation ? 'ویرایش سابقه تحصیلی' : 'افزودن سابقه تحصیلی' }}</h3>
+            <h3 class="modal-title">
+              {{ editingEducation ? "ویرایش سابقه تحصیلی" : "افزودن سابقه تحصیلی" }}
+            </h3>
             <button @click="showEducationModal = false" class="btn-icon">
               <Icon name="lucide:x" class="w-5 h-5" />
             </button>
           </div>
-          <UForm :schema="educationSchema" :state="educationState" class="modal-body" @submit="onEducationSubmit">
+          <UForm
+            :schema="educationSchema"
+            :state="educationState"
+            class="modal-body"
+            @submit="onEducationSubmit">
             <div class="form-stack">
               <div class="form-field">
-                <label class="form-label">مدرک تحصیلی <span class="required-star">*</span></label>
-                <UICSelect v-model="educationState.degree" :items="degreeOptions" />
+                <UICInput name="degree" label="مدرک تحصیلی" required>
+                  <template #input>
+                    <UICSelect v-model="educationState.degree" :items="degreeOptions" />
+                  </template>
+                </UICInput>
               </div>
               <div class="form-field">
-                <label class="form-label">رشته تحصیلی <span class="required-star">*</span></label>
-                <UInput v-model="educationState.field_of_study" placeholder="مثال: حقوق خصوصی" />
+                <UICInput
+                  v-model="educationState.field_of_study"
+                  name="field_of_study"
+                  label="رشته تحصیلی"
+                  placeholder="مثال: حقوق خصوصی"
+                  required />
               </div>
               <div class="form-field">
-                <label class="form-label">دانشگاه <span class="required-star">*</span></label>
-                <UInput v-model="educationState.university" placeholder="نام دانشگاه" />
+                <UICInput
+                  v-model="educationState.university"
+                  name="university"
+                  label="دانشگاه"
+                  placeholder="نام دانشگاه"
+                  required />
               </div>
               <div class="form-field">
-                <label class="form-label">محل تحصیل <span class="required-star">*</span></label>
-                <UInput v-model="educationState.place_of_study" placeholder="شهر یا کشور" />
+                <UICInput
+                  v-model="educationState.place_of_study"
+                  name="place_of_study"
+                  label="محل تحصیل"
+                  placeholder="شهر یا کشور"
+                  required />
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" @click="showEducationModal = false" class="btn-secondary">انصراف</button>
+              <button
+                type="button"
+                @click="showEducationModal = false"
+                class="btn-secondary">
+                انصراف
+              </button>
               <button type="submit" class="btn-primary" :disabled="isEducationLoading">
-                <Icon v-if="isEducationLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
-                {{ isEducationLoading ? 'در حال ذخیره...' : 'ذخیره' }}
+                <Icon
+                  v-if="isEducationLoading"
+                  name="lucide:loader-2"
+                  class="w-4 h-4 animate-spin" />
+                {{ isEducationLoading ? "در حال ذخیره..." : "ذخیره" }}
               </button>
             </div>
           </UForm>
@@ -327,35 +376,63 @@
       <template #content>
         <div class="modal-content">
           <div class="modal-header">
-            <h3 class="modal-title">{{ editingWork ? 'ویرایش سابقه کاری' : 'افزودن سابقه کاری' }}</h3>
+            <h3 class="modal-title">
+              {{ editingWork ? "ویرایش سابقه کاری" : "افزودن سابقه کاری" }}
+            </h3>
             <button @click="showWorkModal = false" class="btn-icon">
               <Icon name="lucide:x" class="w-5 h-5" />
             </button>
           </div>
-          <UForm :schema="workSchema" :state="workState" class="modal-body" @submit="onWorkSubmit">
+          <UForm
+            :schema="workSchema"
+            :state="workState"
+            class="modal-body"
+            @submit="onWorkSubmit">
             <div class="form-stack">
               <div class="form-field">
-                <label class="form-label">سمت <span class="required-star">*</span></label>
-                <UInput v-model="workState.position" placeholder="مثال: وکیل پایه یک" />
+                <UICInput
+                  v-model="workState.position"
+                  name="position"
+                  label="سمت"
+                  placeholder="مثال: وکیل پایه یک"
+                  required />
               </div>
               <div class="form-field">
-                <label class="form-label">سابقه کاری <span class="required-star">*</span></label>
-                <UICSelect v-model="workState.experience_years" :items="experienceOptions" />
+                <UICInput name="experience_years" label="سابقه کاری" required>
+                  <template #input>
+                    <UICSelect
+                      v-model="workState.experience_years"
+                      :items="experienceOptions" />
+                  </template>
+                </UICInput>
               </div>
               <div class="form-field">
-                <label class="form-label">ارگان / شرکت <span class="required-star">*</span></label>
-                <UInput v-model="workState.organization" placeholder="نام سازمان یا شرکت" />
+                <UICInput
+                  v-model="workState.organization"
+                  name="organization"
+                  label="ارگان / شرکت"
+                  placeholder="نام سازمان یا شرکت"
+                  required />
               </div>
               <div class="form-field">
-                <label class="form-label">محل کار <span class="required-star">*</span></label>
-                <UInput v-model="workState.work_place" placeholder="شهر یا آدرس" />
+                <UICInput
+                  v-model="workState.work_place"
+                  name="work_place"
+                  label="محل کار"
+                  placeholder="شهر یا آدرس"
+                  required />
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" @click="showWorkModal = false" class="btn-secondary">انصراف</button>
+              <button type="button" @click="showWorkModal = false" class="btn-secondary">
+                انصراف
+              </button>
               <button type="submit" class="btn-primary" :disabled="isWorkLoading">
-                <Icon v-if="isWorkLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
-                {{ isWorkLoading ? 'در حال ذخیره...' : 'ذخیره' }}
+                <Icon
+                  v-if="isWorkLoading"
+                  name="lucide:loader-2"
+                  class="w-4 h-4 animate-spin" />
+                {{ isWorkLoading ? "در حال ذخیره..." : "ذخیره" }}
               </button>
             </div>
           </UForm>
@@ -373,29 +450,44 @@
               <Icon name="lucide:x" class="w-5 h-5" />
             </button>
           </div>
-          <UForm :schema="awardSchema" :state="awardState" class="modal-body" @submit="onAwardSubmit">
+          <UForm
+            :schema="awardSchema"
+            :state="awardState"
+            class="modal-body"
+            @submit="onAwardSubmit">
             <div class="form-stack">
               <div class="form-field">
-                <label class="form-label">عنوان افتخار <span class="required-star">*</span></label>
-                <UInput v-model="awardState.award_name" placeholder="مثال: وکیل برتر سال" />
+                <UICInput
+                  v-model="awardState.award_name"
+                  name="award_name"
+                  label="عنوان افتخار"
+                  placeholder="مثال: وکیل برتر سال"
+                  required />
               </div>
               <div class="form-field">
-                <label class="form-label">ارگان صادر کننده <span class="required-star">*</span></label>
-                <UInput v-model="awardState.issuing_organization" placeholder="نام سازمان صادر کننده" />
+                <UICInput
+                  v-model="awardState.issuing_organization"
+                  name="issuing_organization"
+                  label="ارگان صادر کننده"
+                  placeholder="نام سازمان صادر کننده"
+                  required />
               </div>
               <div class="form-field">
-                <label class="form-label">تصویر لوح <span class="required-star">*</span></label>
+                <label class="form-label"
+                  >تصویر لوح <span class="required-star">*</span></label
+                >
                 <div class="file-upload-area">
-                  <input 
-                    type="file" 
-                    accept="image/*" 
+                  <input
+                    type="file"
+                    accept="image/*"
                     @change="handleAwardImageChange"
-                    class="file-input"
-                  />
+                    class="file-input" />
                   <div v-if="awardState.image" class="file-preview">
                     <Icon name="lucide:image" class="w-5 h-5 text-green-500" />
                     <span class="text-sm text-gray-700">{{ awardState.image.name }}</span>
-                    <span class="text-xs text-gray-400">{{ formatFileSize(awardState.image.size) }}</span>
+                    <span class="text-xs text-gray-400">{{
+                      formatFileSize(awardState.image.size)
+                    }}</span>
                   </div>
                   <div v-else class="file-placeholder">
                     <Icon name="lucide:upload" class="w-6 h-6 text-gray-400" />
@@ -406,10 +498,15 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" @click="showAwardModal = false" class="btn-secondary">انصراف</button>
+              <button type="button" @click="showAwardModal = false" class="btn-secondary">
+                انصراف
+              </button>
               <button type="submit" class="btn-primary" :disabled="isAwardLoading">
-                <Icon v-if="isAwardLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
-                {{ isAwardLoading ? 'در حال ذخیره...' : 'ذخیره' }}
+                <Icon
+                  v-if="isAwardLoading"
+                  name="lucide:loader-2"
+                  class="w-4 h-4 animate-spin" />
+                {{ isAwardLoading ? "در حال ذخیره..." : "ذخیره" }}
               </button>
             </div>
           </UForm>
@@ -425,8 +522,7 @@
       confirm-text="حذف"
       variant="danger"
       :loading="isDeleting"
-      @confirm="executeDelete"
-    />
+      @confirm="executeDelete" />
 
     <!-- Image Preview Modal -->
     <UModal v-model:open="showImageModal">
@@ -472,7 +568,7 @@ const showImageModal = ref(false);
 const editingEducation = ref(null);
 const editingWork = ref(null);
 const deleteTarget = ref(null);
-const previewImageUrl = ref('');
+const previewImageUrl = ref("");
 
 // Form states
 const educationState = reactive({
@@ -532,13 +628,17 @@ const awardSchema = object({
   issuing_organization: string().required("نام ارگان صادر کننده الزامی است"),
   image: mixed()
     .required("تصویر لوح افتخار الزامی است")
-    .test("fileSize", "حجم فایل نباید بیشتر از ۵ مگابایت باشد", (file) => file && file.size <= MAX_FILE_SIZE),
+    .test(
+      "fileSize",
+      "حجم فایل نباید بیشتر از ۵ مگابایت باشد",
+      (file) => file && file.size <= MAX_FILE_SIZE,
+    ),
 });
 
 // Computed
 const deleteConfirmMessage = computed(() => {
-  if (!deleteTarget.value) return '';
-  const types = { education: 'سابقه تحصیلی', work: 'سابقه کاری', award: 'افتخار' };
+  if (!deleteTarget.value) return "";
+  const types = { education: "سابقه تحصیلی", work: "سابقه کاری", award: "افتخار" };
   return `آیا از حذف این ${types[deleteTarget.value.type]} اطمینان دارید؟ این عمل قابل بازگشت نیست.`;
 });
 
@@ -553,9 +653,11 @@ async function fetchInitialData() {
       useGet({ url: "lawyer/profile/awards", includeAuthHeader: true }),
     ]);
 
-    if (educationRes.status && educationRes.data) educationHistory.value = educationRes.data.data || [];
+    if (educationRes.status && educationRes.data)
+      educationHistory.value = educationRes.data.data || [];
     if (workRes.status && workRes.data) workHistory.value = workRes.data.data || [];
-    if (awardsRes.status && awardsRes.data) awardsHistory.value = awardsRes.data.data || [];
+    if (awardsRes.status && awardsRes.data)
+      awardsHistory.value = awardsRes.data.data || [];
   } catch (error) {
     console.error("Failed to fetch initial data:", error);
     loadError.value = "خطا در دریافت اطلاعات. لطفاً دوباره تلاش کنید.";
@@ -572,9 +674,9 @@ function highlightNewItem(type, id) {
 }
 
 function formatFileSize(bytes) {
-  if (bytes < 1024) return bytes + ' B';
-  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  if (bytes < 1024) return bytes + " B";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  return (bytes / (1024 * 1024)).toFixed(1) + " MB";
 }
 
 // Education
@@ -588,7 +690,12 @@ function openEducationModal(item = null) {
       place_of_study: item.place_of_study || "",
     });
   } else {
-    Object.assign(educationState, { degree: "bachelor", field_of_study: "", university: "", place_of_study: "" });
+    Object.assign(educationState, {
+      degree: "bachelor",
+      field_of_study: "",
+      university: "",
+      place_of_study: "",
+    });
   }
   showEducationModal.value = true;
 }
@@ -605,9 +712,14 @@ async function onEducationSubmit(event) {
     if (res.status && res.data && res.data.data) {
       toast.add({ description: "سابقه تحصیلی با موفقیت افزوده شد.", color: "success" });
       educationHistory.value.push(res.data.data);
-      highlightNewItem('education', res.data.data.id);
+      highlightNewItem("education", res.data.data.id);
       showEducationModal.value = false;
-      Object.assign(educationState, { degree: "bachelor", field_of_study: "", university: "", place_of_study: "" });
+      Object.assign(educationState, {
+        degree: "bachelor",
+        field_of_study: "",
+        university: "",
+        place_of_study: "",
+      });
     } else {
       toast.add({ description: "خطا در افزودن سابقه تحصیلی.", color: "error" });
     }
@@ -630,7 +742,12 @@ function openWorkModal(item = null) {
       work_place: item.work_place || "",
     });
   } else {
-    Object.assign(workState, { position: "", experience_years: "1-3", organization: "", work_place: "" });
+    Object.assign(workState, {
+      position: "",
+      experience_years: "1-3",
+      organization: "",
+      work_place: "",
+    });
   }
   showWorkModal.value = true;
 }
@@ -647,9 +764,14 @@ async function onWorkSubmit(event) {
     if (res.status && res.data && res.data.data) {
       toast.add({ description: "سابقه کاری با موفقیت افزوده شد.", color: "success" });
       workHistory.value.push(res.data.data);
-      highlightNewItem('work', res.data.data.id);
+      highlightNewItem("work", res.data.data.id);
       showWorkModal.value = false;
-      Object.assign(workState, { position: "", experience_years: "1-3", organization: "", work_place: "" });
+      Object.assign(workState, {
+        position: "",
+        experience_years: "1-3",
+        organization: "",
+        work_place: "",
+      });
     } else {
       toast.add({ description: "خطا در افزودن سابقه کاری.", color: "error" });
     }
@@ -691,9 +813,13 @@ async function onAwardSubmit(event) {
     if (res.status && res.data && res.data.data) {
       toast.add({ description: "افتخار با موفقیت افزوده شد.", color: "success" });
       awardsHistory.value.push(res.data.data);
-      highlightNewItem('award', res.data.data.id);
+      highlightNewItem("award", res.data.data.id);
       showAwardModal.value = false;
-      Object.assign(awardState, { award_name: "", issuing_organization: "", image: null });
+      Object.assign(awardState, {
+        award_name: "",
+        issuing_organization: "",
+        image: null,
+      });
     } else {
       toast.add({ description: "خطا در افزودن افتخار.", color: "error" });
     }
@@ -800,8 +926,12 @@ fetchInitialData();
 }
 
 @keyframes highlight-fade {
-  0% { background-color: rgba(34, 197, 94, 0.2); }
-  100% { background-color: rgba(240, 253, 244, 1); }
+  0% {
+    background-color: rgba(34, 197, 94, 0.2);
+  }
+  100% {
+    background-color: rgba(240, 253, 244, 1);
+  }
 }
 
 /* Buttons */

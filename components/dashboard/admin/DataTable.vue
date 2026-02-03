@@ -12,21 +12,21 @@ const table = useTemplateRef("table");
 const filterStore = useFiltersStore();
 
 // View mode
-const viewMode = ref<'list' | 'grid'>('list');
+const viewMode = ref<"list" | "grid">("list");
 
 // Filters
-const statusFilter = ref<string>('all');
-const baseFilter = ref<string>('all');
+const statusFilter = ref<string>("all");
+const baseFilter = ref<string>("all");
 const selectedRows = ref<Set<number>>(new Set());
 
 const statusOptions = [
-  { id: 'all', label: 'همه' },
-  { id: 'active', label: 'فعال' },
-  { id: 'inactive', label: 'غیرفعال' },
+  { id: "all", label: "همه" },
+  { id: "active", label: "فعال" },
+  { id: "inactive", label: "غیرفعال" },
 ];
 
 const baseOptions = computed(() => [
-  { id: 'all', label: 'همه پایه‌ها' },
+  { id: "all", label: "همه پایه‌ها" },
   ...filterStore.lawyerTypes.map((type) => ({ id: type.id, label: type.title })),
 ]);
 
@@ -38,7 +38,7 @@ const refetch = async (page = null, total = false) => {
         includeAuthHeader: false,
         query: page ? { page: page } : undefined,
       })
-    ).data
+    ).data,
   );
   data.value = lawyersRef.value.data.map((law) => {
     return {
@@ -117,16 +117,17 @@ const data = ref(
       is_active: law.is_active,
       profile_image: law.lawyer_info?.profile_image,
     };
-  })
+  }),
 );
 
 // Filtered data
 const filteredData = computed(() => {
   return data.value.filter((item) => {
-    const statusMatch = statusFilter.value === 'all' || 
-      (statusFilter.value === 'active' && item.is_active) || 
-      (statusFilter.value === 'inactive' && !item.is_active);
-    const baseMatch = baseFilter.value === 'all' || item.baseId === baseFilter.value;
+    const statusMatch =
+      statusFilter.value === "all" ||
+      (statusFilter.value === "active" && item.is_active) ||
+      (statusFilter.value === "inactive" && !item.is_active);
+    const baseMatch = baseFilter.value === "all" || item.baseId === baseFilter.value;
     return statusMatch && baseMatch;
   });
 });
@@ -144,8 +145,12 @@ const columns: TableColumn<Lawyer>[] = [
       const name = row.getValue("fullName") as string;
       const profile = row.original.profile_image;
       return h("div", { class: "flex items-center gap-3" }, [
-        profile 
-          ? h("img", { src: profile, class: "w-9 h-9 rounded-full object-cover", alt: name })
+        profile
+          ? h("img", {
+              src: profile,
+              class: "w-9 h-9 rounded-full object-cover",
+              alt: name,
+            })
           : h("div", { class: "avatar-placeholder avatar-sm" }, getInitials(name)),
         h("span", { class: "font-medium text-gray-900" }, name),
       ]);
@@ -158,7 +163,8 @@ const columns: TableColumn<Lawyer>[] = [
   {
     accessorKey: "phone",
     header: "شماره تماس",
-    cell: ({ row }) => h("span", { class: "font-mono text-gray-600" }, row.getValue("phone")),
+    cell: ({ row }) =>
+      h("span", { class: "font-mono text-gray-600" }, row.getValue("phone")),
   },
   {
     accessorKey: "base",
@@ -170,53 +176,57 @@ const columns: TableColumn<Lawyer>[] = [
     header: "وضعیت",
     cell: ({ row }) => {
       const value = row.original.is_active;
-      return h("span", { 
-        class: value ? "badge badge-success" : "badge badge-error" 
-      }, value ? "فعال" : "غیرفعال");
+      return h(
+        "span",
+        {
+          class: value ? "badge badge-success" : "badge badge-error",
+        },
+        value ? "فعال" : "غیرفعال",
+      );
     },
   },
   {
     id: "actions",
     header: "",
     cell: ({ row }) => {
-      return h(
-        "div",
-        { class: "flex items-center justify-end gap-1" },
-        [
-          h(UButton, {
-            icon: "i-lucide-eye",
-            color: "neutral",
-            variant: "ghost",
-            size: "sm",
-            onClick: () => navigateTo(`/dashboard/admin/lawyerlist/edit/${row.original.edit_id}`),
-            "aria-label": "مشاهده",
-          }),
-          h(
-            UDropdownMenu,
-            {
-              content: { align: "end" },
-              items: getRowItems(row),
+      return h("div", { class: "flex items-center justify-end gap-1" }, [
+        h(UButton, {
+          icon: "i-lucide-eye",
+          color: "neutral",
+          variant: "ghost",
+          size: "sm",
+          onClick: () =>
+            navigateTo(`/dashboard/admin/lawyerlist/edit/${row.original.edit_id}`),
+          "aria-label": "مشاهده",
+        }),
+        h(
+          UDropdownMenu,
+          {
+            content: { align: "end" },
+            items: getRowItems(row),
+            "aria-label": "Actions dropdown",
+          },
+          () =>
+            h(UButton, {
+              icon: "i-lucide-more-vertical",
+              color: "neutral",
+              variant: "ghost",
+              size: "sm",
               "aria-label": "Actions dropdown",
-            },
-            () =>
-              h(UButton, {
-                icon: "i-lucide-more-vertical",
-                color: "neutral",
-                variant: "ghost",
-                size: "sm",
-                "aria-label": "Actions dropdown",
-              })
-          ),
-        ]
-      );
+            }),
+        ),
+      ]);
     },
   },
 ];
 
 function getInitials(name: string) {
-  if (!name) return '?';
-  const parts = name.split(' ');
-  return parts.map(p => p.charAt(0)).join('').substring(0, 2);
+  if (!name) return "?";
+  const parts = name.split(" ");
+  return parts
+    .map((p) => p.charAt(0))
+    .join("")
+    .substring(0, 2);
 }
 
 function getRowItems(row: Row<Lawyer>) {
@@ -248,9 +258,9 @@ function getRowItems(row: Row<Lawyer>) {
           body: undefined,
         });
         if (res.statusCode === 200) {
-          useToast().add({ 
-            title: row.original.is_active ? "وکیل غیرفعال شد" : "وکیل فعال شد", 
-            color: "success" 
+          useToast().add({
+            title: row.original.is_active ? "وکیل غیرفعال شد" : "وکیل فعال شد",
+            color: "success",
           });
         }
         refetch(pagination.value.pageIndex);
@@ -276,7 +286,7 @@ watch(
     } else {
       refetch(page);
     }
-  }
+  },
 );
 
 const searchLawyer = async () => {
@@ -293,15 +303,15 @@ const toggleSelectAll = () => {
   if (selectedRows.value.size === filteredData.value.length) {
     selectedRows.value.clear();
   } else {
-    selectedRows.value = new Set(filteredData.value.map(d => d.edit_id));
+    selectedRows.value = new Set(filteredData.value.map((d) => d.edit_id));
   }
 };
 
 const bulkToggleActive = async (activate: boolean) => {
   // TODO: Implement bulk action API
-  useToast().add({ 
-    title: `${selectedRows.value.size} وکیل ${activate ? 'فعال' : 'غیرفعال'} شد`, 
-    color: "success" 
+  useToast().add({
+    title: `${selectedRows.value.size} وکیل ${activate ? "فعال" : "غیرفعال"} شد`,
+    color: "success",
   });
   selectedRows.value.clear();
   refetch(pagination.value.pageIndex);
@@ -347,40 +357,37 @@ const exportToExcel = () => {
                 @change="searchLawyer"
                 type="text"
                 placeholder="جستجوی نام، تلفن، کد ملی..."
-                class="w-72"
-              />
+                class="w-72" />
             </div>
 
             <!-- Status Filter -->
-            <select v-model="statusFilter" class="select-dashboard w-36!">
-              <option v-for="opt in statusOptions" :key="opt.id" :value="opt.id">
-                {{ opt.label }}
-              </option>
-            </select>
+            <UICSelect
+              v-model="statusFilter"
+              :items="statusOptions"
+              placeholder="وضعیت"
+              class="w-36!" />
 
             <!-- Base Filter -->
-            <select v-model="baseFilter" class="select-dashboard w-40!">
-              <option v-for="opt in baseOptions" :key="opt.id" :value="opt.id">
-                {{ opt.label }}
-              </option>
-            </select>
+            <UICSelect
+              v-model="baseFilter"
+              :items="baseOptions"
+              placeholder="پایه"
+              class="w-40!" />
           </div>
 
           <div class="action-bar-end">
             <!-- View Toggle -->
             <div class="view-toggle">
-              <button 
-                @click="viewMode = 'list'" 
-                class="view-btn" 
-                :class="{ active: viewMode === 'list' }"
-              >
+              <button
+                @click="viewMode = 'list'"
+                class="view-btn"
+                :class="{ active: viewMode === 'list' }">
                 <Icon name="lucide:list" class="w-4 h-4" />
               </button>
-              <button 
-                @click="viewMode = 'grid'" 
-                class="view-btn" 
-                :class="{ active: viewMode === 'grid' }"
-              >
+              <button
+                @click="viewMode = 'grid'"
+                class="view-btn"
+                :class="{ active: viewMode === 'grid' }">
                 <Icon name="lucide:grid-3x3" class="w-4 h-4" />
               </button>
             </div>
@@ -419,15 +426,14 @@ const exportToExcel = () => {
             td: 'py-3.5 px-4 text-sm',
             tbody: 'divide-y divide-gray-100',
             tr: 'hover:bg-gray-50 transition-colors',
-          }"
-        />
+          }" />
       </div>
 
       <!-- Pagination -->
       <div class="flex items-center justify-between p-4 border-t border-gray-100">
         <span class="text-sm text-gray-500">
-          نمایش {{ (pagination.pageIndex - 1) * pagination.pageSize + 1 }} تا 
-          {{ Math.min(pagination.pageIndex * pagination.pageSize, pagination.total) }} از 
+          نمایش {{ (pagination.pageIndex - 1) * pagination.pageSize + 1 }} تا
+          {{ Math.min(pagination.pageIndex * pagination.pageSize, pagination.total) }} از
           {{ pagination.total }} مورد
         </span>
         <UPagination
@@ -444,33 +450,38 @@ const exportToExcel = () => {
             list: 'gap-1',
             item: 'min-w-8 h-8 text-sm',
           }"
-          @update:page="(p) => (pagination.pageIndex = p)"
-        />
+          @update:page="(p) => (pagination.pageIndex = p)" />
       </div>
     </div>
 
     <!-- Grid View -->
     <div v-else class="lawyers-grid">
-      <div 
-        v-for="lawyer in filteredData" 
-        :key="lawyer.id" 
+      <div
+        v-for="lawyer in filteredData"
+        :key="lawyer.id"
         class="lawyer-card"
-        @click="navigateTo(`/dashboard/admin/lawyerlist/edit/${lawyer.edit_id}`)"
-      >
+        @click="navigateTo(`/dashboard/admin/lawyerlist/edit/${lawyer.edit_id}`)">
         <div class="lawyer-card-header">
           <div class="lawyer-avatar">
-            <img v-if="lawyer.profile_image" :src="lawyer.profile_image" :alt="lawyer.fullName" />
-            <div v-else class="avatar-placeholder avatar-lg">{{ getInitials(lawyer.fullName) }}</div>
+            <img
+              v-if="lawyer.profile_image"
+              :src="lawyer.profile_image"
+              :alt="lawyer.fullName" />
+            <div v-else class="avatar-placeholder avatar-lg">
+              {{ getInitials(lawyer.fullName) }}
+            </div>
           </div>
           <span class="badge" :class="lawyer.is_active ? 'badge-success' : 'badge-error'">
-            {{ lawyer.is_active ? 'فعال' : 'غیرفعال' }}
+            {{ lawyer.is_active ? "فعال" : "غیرفعال" }}
           </span>
         </div>
         <div class="lawyer-card-body">
           <h3 class="lawyer-name">{{ lawyer.fullName }}</h3>
           <span class="lawyer-base">{{ lawyer.base }}</span>
           <div class="lawyer-meta">
-            <span><Icon name="lucide:phone" class="w-3.5 h-3.5" /> {{ lawyer.phone }}</span>
+            <span
+              ><Icon name="lucide:phone" class="w-3.5 h-3.5" /> {{ lawyer.phone }}</span
+            >
           </div>
         </div>
       </div>

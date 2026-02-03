@@ -1,17 +1,23 @@
 <template>
-  <aside class="dashboard-sidebar" :class="{ 'collapsed': collapsed }">
+  <aside class="dashboard-sidebar" :class="{ collapsed: collapsed }">
     <!-- Sidebar Header -->
     <div class="sidebar-header">
       <NuxtLink to="/" class="logo-link">
-        <NuxtImg v-if="!collapsed" src="/images/main-logo.svg" alt="Logo" class="logo-full" />
+        <NuxtImg
+          v-if="!collapsed"
+          src="/images/main-logo.svg"
+          alt="Logo"
+          class="logo-full" />
         <div v-else class="logo-mini">
           <Icon name="custom:logo" class="size-6! text-white" />
         </div>
       </NuxtLink>
-      
+
       <!-- Collapse Button (Desktop) -->
       <button @click="$emit('toggle-collapse')" class="collapse-btn hidden lg:flex">
-        <Icon :name="collapsed ? 'lucide:chevron-left' : 'lucide:chevron-right'" class="w-4 h-4" />
+        <Icon
+          :name="collapsed ? 'lucide:chevron-left' : 'lucide:chevron-right'"
+          class="w-4 h-4" />
       </button>
     </div>
 
@@ -20,7 +26,10 @@
       <!-- Main Menu -->
       <div class="nav-section" v-if="chatItems.length <= 0">
         <template v-for="item in dashboardStore.sidebarRoutes" :key="item.url">
-          <NuxtLink :to="item.url" class="nav-item" :class="{ 'active': isActiveRoute(item.url) }">
+          <NuxtLink
+            :to="item.url"
+            class="nav-item"
+            :class="{ active: isActiveRoute(item.url) }">
             <div class="nav-icon">
               <Icon :name="item.icon" class="size-4.5!" />
             </div>
@@ -36,19 +45,32 @@
           <span>گفتگوها</span>
         </div>
         <template v-for="room in chatRooms" :key="room.id">
-          <button @click="chatStore.selectRoom(room)" class="chat-item" :class="{ 'active': chatStore.selectedRoom === room.id }">
+          <button
+            @click="chatStore.selectRoom(room)"
+            class="chat-item"
+            :class="{ active: chatStore.selectedRoom === room.id }">
             <div class="chat-avatar">
               <template v-if="getChatPartner(room)?.profile">
-                <img :src="getChatPartner(room).profile" alt="profile" class="avatar avatar-sm" />
+                <img
+                  :src="getChatPartner(room).profile"
+                  alt="profile"
+                  class="avatar avatar-sm" />
               </template>
               <template v-else>
-                <div class="avatar-placeholder avatar-sm" :style="{ backgroundColor: getColor(room.id) }">
-                  {{ getInitials(getChatPartner(room)?.name, getChatPartner(room)?.family) }}
+                <div
+                  class="avatar-placeholder avatar-sm"
+                  :style="{ backgroundColor: getColor(room.id) }">
+                  {{
+                    getInitials(getChatPartner(room)?.name, getChatPartner(room)?.family)
+                  }}
                 </div>
               </template>
             </div>
             <div v-if="!collapsed" class="chat-info">
-              <span class="chat-name">{{ getChatPartner(room)?.name }} {{ getChatPartner(room)?.family || '' }}</span>
+              <span class="chat-name"
+                >{{ getChatPartner(room)?.name }}
+                {{ getChatPartner(room)?.family || "" }}</span
+              >
             </div>
           </button>
         </template>
@@ -58,13 +80,18 @@
     <!-- Sidebar Footer -->
     <div class="sidebar-footer">
       <!-- Back to Dashboard (for Chat) -->
-      <button v-if="$route.path.startsWith('/chat')" @click="navigateTo('/dashboard')" class="footer-btn">
+      <button
+        v-if="$route.path.startsWith('/chat')"
+        @click="navigateTo('/dashboard')"
+        class="footer-btn">
         <Icon name="lucide:layout-dashboard" class="w-5 h-5" />
         <span v-if="!collapsed">برگشت به داشبورد</span>
       </button>
-      
+
       <!-- Logout -->
-      <DashboardLogoutBtn v-if="$route.path.startsWith('/dashboard')" :collapsed="collapsed" />
+      <DashboardLogoutBtn
+        v-if="$route.path.startsWith('/dashboard')"
+        :collapsed="collapsed" />
     </div>
   </aside>
 </template>
@@ -91,7 +118,7 @@ const props = defineProps({
 });
 
 // Emits
-defineEmits(['toggle-collapse']);
+defineEmits(["toggle-collapse"]);
 
 // Data
 const chatRooms = ref(props.chatItems ? props.chatItems[0] : []);
@@ -103,8 +130,16 @@ const isActiveRoute = (url) => {
 
 // Colors for chat avatars
 const colors = [
-  "#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6",
-  "#ec4899", "#06b6d4", "#84cc16", "#f97316", "#6366f1",
+  "#3b82f6",
+  "#10b981",
+  "#f59e0b",
+  "#ef4444",
+  "#8b5cf6",
+  "#ec4899",
+  "#06b6d4",
+  "#84cc16",
+  "#f97316",
+  "#6366f1",
 ];
 
 const getColor = (id) => {
@@ -126,7 +161,11 @@ const getChatPartner = (room) => {
   }
   if (room.members.length === 2) {
     const partner = room.members.find((member) => member.id !== authStore.user?.id);
-    return { name: partner?.name, family: partner?.family, profile: partner?.profile_image || null };
+    return {
+      name: partner?.name,
+      family: partner?.family,
+      profile: partner?.profile_image || null,
+    };
   }
   return null;
 };
@@ -140,7 +179,6 @@ const getChatPartner = (room) => {
   width: 280px;
   background: var(--sidebar-bg);
   border-left: 1px solid var(--sidebar-border);
-
 }
 
 .dashboard-sidebar.collapsed {
@@ -153,9 +191,8 @@ const getChatPartner = (room) => {
     @apply translate-x-full;
     transition: transform 0.2s ease;
   }
-  
-  .dashboard-sidebar.open {
 
+  .dashboard-sidebar.open {
   }
 }
 
@@ -227,7 +264,7 @@ const getChatPartner = (room) => {
 }
 
 .nav-item.active::before {
-  content: '';
+  content: "";
   @apply absolute right-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-l-full;
   background: var(--accent);
 }
