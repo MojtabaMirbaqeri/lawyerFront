@@ -1,5 +1,5 @@
 <template>
-  <div class="card-dashboard">
+  <div ref="tableWrapper" class="card-dashboard">
     <div class="overflow-x-auto">
       <table class="table-dashboard">
         <thead>
@@ -11,12 +11,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr 
-            v-for="(row, index) in data" 
+          <tr
+            v-for="(row, index) in data"
             :key="getRowKey(row, index)"
             :class="rowClass"
-            @click="onRowClick ? $emit('row-click', row) : null"
-          >
+            @click="onRowClick ? $emit('row-click', row) : null">
             <td v-for="column in columns" :key="column.key" :class="column.cellClass">
               <slot :name="`cell-${column.key}`" :row="row" :value="row[column.key]">
                 {{ formatCell(row[column.key], column) }}
@@ -25,13 +24,12 @@
             <td v-if="hasActions">
               <slot name="actions" :row="row">
                 <div class="flex items-center justify-end gap-1">
-                  <button 
-                    v-for="action in actions" 
+                  <button
+                    v-for="action in actions"
                     :key="action.name"
-                    class="btn-icon" 
+                    class="btn-icon"
                     :title="action.label"
-                    @click.stop="$emit(action.event, row)"
-                  >
+                    @click.stop="$emit(action.event, row)">
                     <Icon :name="action.icon" class="w-4 h-4" />
                   </button>
                 </div>
@@ -54,12 +52,14 @@
     </div>
 
     <!-- Pagination -->
-    <div v-if="data.length > 0 && showPagination" class="flex items-center justify-between p-4 border-t border-gray-100">
+    <div
+      v-if="data.length > 0 && showPagination"
+      class="flex items-center justify-between p-4 border-t border-gray-100">
       <span class="text-sm text-gray-500">
         صفحه {{ currentPage }} از {{ totalPages }}
       </span>
       <UPagination
-        :model-value="currentPage"
+        :page="currentPage"
         :items-per-page="itemsPerPage"
         :total="totalItems"
         :sibling-count="1"
@@ -71,14 +71,13 @@
           prev: 'scale-x-[-1]',
           next: 'scale-x-[-1]',
         }"
-        @update:model-value="$emit('update:page', $event)"
-      />
+        @update:page="handlePageChange" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, useSlots } from 'vue';
+import { computed, useSlots, ref, nextTick } from "vue";
 
 const props = defineProps({
   // Data
@@ -87,35 +86,35 @@ const props = defineProps({
     required: true,
     default: () => [],
   },
-  
+
   // Columns configuration
   columns: {
     type: Array,
     required: true,
     // Example: [{ key: 'name', label: 'نام', headerClass: '', cellClass: '', format: 'text' }]
   },
-  
+
   // Row configuration
   rowKey: {
     type: String,
-    default: 'id',
+    default: "id",
   },
   rowClass: {
     type: String,
-    default: '',
+    default: "",
   },
   onRowClick: {
     type: Boolean,
     default: false,
   },
-  
+
   // Actions
   actions: {
     type: Array,
     default: () => [],
     // Example: [{ name: 'view', label: 'مشاهده', icon: 'lucide:eye', event: 'view' }]
   },
-  
+
   // Pagination
   currentPage: {
     type: Number,
@@ -133,43 +132,56 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  
+
   // Empty state
   emptyTitle: {
     type: String,
-    default: 'داده‌ای یافت نشد',
+    default: "داده‌ای یافت نشد",
   },
   emptyMessage: {
     type: String,
-    default: 'با تغییر فیلترها یا جستجو، نتایج را مشاهده کنید',
+    default: "با تغییر فیلترها یا جستجو، نتایج را مشاهده کنید",
   },
   emptyIcon: {
     type: String,
-    default: 'lucide:inbox',
+    default: "lucide:inbox",
   },
 });
 
-const emit = defineEmits(['update:page', 'row-click']);
+const emit = defineEmits(["update:page", "row-click"]);
 const slots = useSlots();
+
+// Ref for scrolling to top
+const tableWrapper = ref(null);
 
 const hasActions = computed(() => props.actions.length > 0 || !!slots.actions);
 const totalPages = computed(() => Math.ceil(props.totalItems / props.itemsPerPage));
+
+// Handle page change and scroll to top
+const handlePageChange = (newPage) => {
+  emit("update:page", newPage);
+  nextTick(() => {
+    if (tableWrapper.value) {
+      tableWrapper.value.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+};
 
 const getRowKey = (row, index) => {
   return row[props.rowKey] || index;
 };
 
 const formatCell = (value, column) => {
-  if (value === null || value === undefined) return '-';
-  
+  if (value === null || value === undefined) return "-";
+
   switch (column.format) {
-    case 'currency':
-      return new Intl.NumberFormat('fa-IR').format(value) + ' تومان';
-    case 'number':
-      return new Intl.NumberFormat('fa-IR').format(value);
-    case 'date':
-      return new Date(value).toLocaleDateString('fa-IR');
-    case 'phone':
+    case "currency":
+      return new Intl.NumberFormat("fa-IR").format(value) + " تومان";
+    case "number":
+      return new Intl.NumberFormat("fa-IR").format(value);
+    case "date":
+      return new Date(value).toLocaleDateString("fa-IR");
+    case "phone":
       return value;
     default:
       return value;
