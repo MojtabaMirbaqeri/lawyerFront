@@ -43,7 +43,7 @@
               نام پدر
               <span class="required-star">*</span>
             </label>
-            <UInput
+            <UICInput
               v-model="state.father_name"
               placeholder="نام پدر را وارد کنید"
               :ui="{ base: 'input-dashboard' }"

@@ -121,62 +121,71 @@
     </div>
 
     <!-- List View -->
-    <div v-else class="card-dashboard">
-      <div class="overflow-x-auto">
-        <table class="table-dashboard">
-          <thead>
-            <tr>
-              <th>شماره تیکت</th>
-              <th>عنوان</th>
-              <th>کاربر</th>
-              <th>اولویت</th>
-              <th>دپارتمان</th>
-              <th>وضعیت</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="ticket in data" :key="ticket.ticketId" class="cursor-pointer" @click="openTicket(ticket)">
-              <td><span class="font-mono text-gray-600">#{{ ticket.id }}</span></td>
-              <td><span class="font-medium text-gray-900">{{ ticket.ticketTitle }}</span></td>
-              <td>
-                <div class="flex items-center gap-2">
-                  <div class="avatar-placeholder avatar-sm">{{ getInitials(ticket.fullname) }}</div>
-                  <span>{{ ticket.fullname }}</span>
-                </div>
-              </td>
-              <td><span class="badge" :class="getPriorityBadgeClass(ticket.priorityVal)">{{ ticket.priority }}</span></td>
-              <td><span class="text-gray-600">{{ ticket.type }}</span></td>
-              <td><span class="badge" :class="getStatusBadgeClass(ticket.statusVal)">{{ ticket.status }}</span></td>
-              <td>
-                <div class="flex items-center justify-end gap-1" @click.stop>
-                  <button @click="openTicket(ticket)" class="btn-icon" title="مشاهده">
-                    <Icon name="lucide:eye" class="w-4 h-4" />
-                  </button>
-                  <button v-if="ticket.statusVal !== 'closed'" @click="closeTicket(ticket)" class="btn-icon" title="بستن تیکت">
-                    <Icon name="lucide:archive" class="w-4 h-4" />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      
-      <!-- Pagination -->
-      <div class="flex items-center justify-between p-4 border-t border-gray-100">
-        <span class="text-sm text-gray-500">صفحه {{ page }} از {{ Math.ceil(total / 15) }}</span>
-        <UPagination v-model:page="page" :items-per-page="15" :total="total" :sibling-count="1"
-          :ui="{ list: 'gap-1', item: 'min-w-8 h-8 text-sm', first: 'hidden', last: 'hidden', prev: 'scale-x-[-1]', next: 'scale-x-[-1]' }"
-        />
-      </div>
-    </div>
+    <dashboard-admin-generic-table
+      v-else
+      :data="data"
+      :columns="tableColumns"
+      :current-page="page"
+      :total-items="total"
+      :items-per-page="15"
+      row-key="ticketId"
+      row-class="cursor-pointer"
+      :on-row-click="true"
+      empty-title="تیکتی یافت نشد"
+      empty-message="با تغییر فیلترها یا جستجو، تیکت‌ها را مشاهده کنید"
+      empty-icon="lucide:ticket"
+      @update:page="page = $event"
+      @row-click="openTicket"
+    >
+      <!-- Custom cell for ticket number -->
+      <template #cell-id="{ value }">
+        <span class="font-mono text-gray-600">#{{ value }}</span>
+      </template>
+
+      <!-- Custom cell for title -->
+      <template #cell-ticketTitle="{ value }">
+        <span class="font-medium text-gray-900">{{ value }}</span>
+      </template>
+
+      <!-- Custom cell for user -->
+      <template #cell-fullname="{ row }">
+        <div class="flex items-center gap-2">
+          <div class="avatar-placeholder avatar-sm">{{ getInitials(row.fullname) }}</div>
+          <span>{{ row.fullname }}</span>
+        </div>
+      </template>
+
+      <!-- Custom cell for priority -->
+      <template #cell-priority="{ row }">
+        <span class="badge" :class="getPriorityBadgeClass(row.priorityVal)">{{ row.priority }}</span>
+      </template>
+
+      <!-- Custom cell for type -->
+      <template #cell-type="{ value }">
+        <span class="text-gray-600">{{ value }}</span>
+      </template>
+
+      <!-- Custom cell for status -->
+      <template #cell-status="{ row }">
+        <span class="badge" :class="getStatusBadgeClass(row.statusVal)">{{ row.status }}</span>
+      </template>
+
+      <!-- Custom actions -->
+      <template #actions="{ row }">
+        <div class="flex items-center justify-end gap-1" @click.stop>
+          <button class="btn-icon" title="مشاهده" @click="openTicket(row)">
+            <Icon name="lucide:eye" class="w-4 h-4" />
+          </button>
+          <button v-if="row.statusVal !== 'closed'" class="btn-icon" title="بستن تیکت" @click="closeTicket(row)">
+            <Icon name="lucide:archive" class="w-4 h-4" />
+          </button>
+        </div>
+      </template>
+    </dashboard-admin-generic-table>
   </div>
 </template>
 
 <script setup>
-import { h, resolveComponent } from "vue";
-
 useHead({ title: "مدیریت تیکت‌ها | وکیلینجا" });
 
 const filterStore = useFiltersStore();
@@ -187,6 +196,16 @@ const priority = ref(0);
 const type = ref(0);
 const page = ref(1);
 const selectQuery = ref();
+
+// Table configuration
+const tableColumns = [
+  { key: 'id', label: 'شماره تیکت' },
+  { key: 'ticketTitle', label: 'عنوان' },
+  { key: 'fullname', label: 'کاربر' },
+  { key: 'priority', label: 'اولویت' },
+  { key: 'type', label: 'دپارتمان' },
+  { key: 'status', label: 'وضعیت' },
+];
 
 // Kanban columns
 const kanbanColumns = [
@@ -383,7 +402,7 @@ const closeTicket = async (ticket) => {
 }
 
 .view-btn {
-  @apply p-2 text-gray-500 transition-colors;
+  @apply p-2 text-gray-500 transition-colors flex;
 }
 
 .view-btn:hover {

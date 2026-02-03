@@ -1117,8 +1117,8 @@ button {
 }
 
 .modal-content {
-  @apply bg-white rounded-xl w-full max-w-lg mx-4;
-  box-shadow: var(--shadow-xl);
+  @apply w-full;
+  /* box-shadow: var(--shadow-xl); */
 }
 
 .modal-header {
@@ -1650,11 +1650,11 @@ button {
 
 /* Modal Styles - Enhanced */
 .modal-content {
-  @apply bg-white rounded-xl w-full max-w-md overflow-hidden;
+  @apply  w-full;
 }
 
 .modal-content-lg {
-  @apply bg-white rounded-xl w-full max-w-2xl overflow-hidden;
+  @apply  w-full;
 }
 
 .modal-header {

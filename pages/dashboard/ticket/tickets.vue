@@ -3,12 +3,12 @@
   <section>
     <div class="ds-table-con">
       <UICSecondaryBtn
-        class="w-[10%] rounded-[8px]! ms-auto"
+        class="w-fit rounded-[8px]! ms-auto"
         @click="navigateTo('/dashboard/new/ticket')">
         <span>ایجاد تیکت</span>
       </UICSecondaryBtn>
       <div class="flex flex-wrap lg:flex-nowrap gap-2 items-stretch">
-        <div class="max-w-[250px] w-full flex flex-col justify-between">
+        <div class="lg:max-w-[250px] w-full flex flex-col justify-between">
           <label>فیلتر</label>
           <UInput
             v-model="globalFilter"

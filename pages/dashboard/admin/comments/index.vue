@@ -113,7 +113,21 @@
               </div>
               <div class="review-meta">
                 <div class="review-rating">
-                  <Icon v-for="i in 5" :key="i" name="lucide:star" class="w-4 h-4" :class="i <= review.rating ? 'text-amber-400 fill-current' : 'text-gray-300'" />
+                  <NuxtRating
+                    :read-only="true"
+                    :rating-value="review.rating"
+                    :rating-size="16"
+                    dir="ltr"
+                    :rating-content="[
+                      9.153, 5.408, 12.0, 2.0, 14.847, 5.408, 15.175, 5.996, 15.995, 7.178,
+                      17.325, 7.628, 17.961, 7.772, 21.943, 9.548, 19.72, 13.43, 19.286,
+                      13.937, 18.464, 15.117, 18.465, 16.577, 18.531, 17.254, 18.145, 21.76,
+                      13.925, 20.751, 13.328, 20.477, 12.0, 20.025, 10.672, 20.477, 10.076,
+                      20.751, 5.856, 21.761, 5.469, 17.254, 5.535, 16.578, 5.535, 15.118,
+                      4.714, 13.938, 4.28, 13.43, 2.057, 9.548, 6.04, 7.772, 6.676, 7.628,
+                      8.005, 7.178, 8.825, 5.996,
+                    ]"
+                  />
                 </div>
                 <span class="badge" :class="getStatusBadgeClass(review.status)">{{ getStatusLabel(review.status) }}</span>
               </div>
@@ -158,8 +172,6 @@
 </template>
 
 <script setup>
-import { h, resolveComponent } from "vue";
-
 useHead({ title: "مدیریت دیدگاه‌ها | وکیلینجا" });
 
 const page = ref(1);
