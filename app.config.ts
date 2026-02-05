@@ -2,10 +2,12 @@
 export default defineAppConfig({
   ui: {
     modal: {
-      slots:{
-        content: "rounded-2xl shadow-2xl border border-gray-200 bg-white overflow-hidden max-w-sm w-[calc(100vw-2rem)]",
+      slots: {
+        overlay: "fixed inset-0 w-full h-full min-w-full",
+        content:
+          "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl shadow-2xl border border-gray-200 bg-white overflow-hidden max-w-sm w-[calc(100vw-2rem)] max-h-[calc(100dvh-2rem)]",
         transition: "transition-all duration-200 ease-out",
-      }
+      },
     },
     toast: {
       slots: {
