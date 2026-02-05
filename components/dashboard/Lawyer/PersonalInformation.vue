@@ -380,17 +380,19 @@ const onSubmit = async () => {
 
 @media (max-width: 640px) {
   .form-actions {
-    @apply flex-col items-stretch;
+    @apply flex-col items-stretch gap-3;
   }
 
   .form-buttons {
-    @apply justify-end;
+    @apply flex-col-reverse gap-2;
+  }
+
+  .form-buttons button {
+    @apply w-full justify-center;
   }
 }
 </style>
 
 <style>
 @reference "tailwindcss";
-
-
 </style>

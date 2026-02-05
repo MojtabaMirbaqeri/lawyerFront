@@ -19,8 +19,7 @@
       <UICFormSection
         title="مدارک تایید شده"
         description="مدارک شما توسط تیم پشتیبانی بررسی و تایید شده است"
-        icon="lucide:shield-check"
-      >
+        icon="lucide:shield-check">
         <div class="approved-docs">
           <div class="doc-item">
             <div class="doc-icon">
@@ -38,7 +37,9 @@
             </div>
             <div class="doc-info">
               <span class="doc-label">شماره پروانه</span>
-              <span class="doc-value">{{ lawyerInformation?.lawyer_info?.license_number || '---' }}</span>
+              <span class="doc-value">{{
+                lawyerInformation?.lawyer_info?.license_number || "---"
+              }}</span>
             </div>
             <Icon name="lucide:check-circle" class="w-5 h-5 text-green-500" />
           </div>
@@ -69,8 +70,7 @@
       <UICFormSection
         title="در انتظار بررسی"
         description="مدارک شما در صف بررسی قرار دارد. این فرآیند معمولاً ۲۴ تا ۴۸ ساعت طول می‌کشد."
-        icon="lucide:clock"
-      >
+        icon="lucide:clock">
         <div class="pending-info">
           <div class="pending-timeline">
             <div class="timeline-item completed">
@@ -109,14 +109,18 @@
       <UICFormSection
         title="نیاز به اصلاح"
         description="مدارک شما نیاز به بازبینی و اصلاح دارد"
-        icon="lucide:alert-circle"
-      >
+        icon="lucide:alert-circle">
         <div class="rejection-info">
           <div class="rejection-reason">
             <Icon name="lucide:alert-triangle" class="w-5 h-5" />
             <div>
               <h4 class="rejection-title">دلیل رد:</h4>
-              <p class="rejection-text">{{ rejectionReason || 'کیفیت تصاویر نامناسب است. لطفاً تصاویر واضح‌تری ارسال کنید.' }}</p>
+              <p class="rejection-text">
+                {{
+                  rejectionReason ||
+                  "کیفیت تصاویر نامناسب است. لطفاً تصاویر واضح‌تری ارسال کنید."
+                }}
+              </p>
             </div>
           </div>
         </div>
@@ -151,19 +155,26 @@
                   required />
               </div>
               <div class="form-field md:col-span-2">
-                <label class="form-label">تصویر کارت ملی <span class="required-star">*</span></label>
+                <label class="form-label"
+                  >تصویر کارت ملی <span class="required-star">*</span></label
+                >
                 <FileUploadArea v-model="state.IDCardPic" accept="image/*" />
               </div>
               <div class="form-field md:col-span-2">
-                <label class="form-label">تصویر پروانه وکالت <span class="required-star">*</span></label>
+                <label class="form-label"
+                  >تصویر پروانه وکالت <span class="required-star">*</span></label
+                >
                 <FileUploadArea v-model="state.licensePic" accept="image/*" />
               </div>
             </div>
             <div class="form-actions">
               <button type="submit" class="btn-primary" :disabled="isLoading">
-                <Icon v-if="isLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
+                <Icon
+                  v-if="isLoading"
+                  name="lucide:loader-2"
+                  class="w-4 h-4 animate-spin" />
                 <Icon v-else name="lucide:send" class="w-4 h-4" />
-                {{ isLoading ? 'در حال ارسال...' : 'ارسال مجدد مدارک' }}
+                {{ isLoading ? "در حال ارسال..." : "ارسال مجدد مدارک" }}
               </button>
             </div>
           </UForm>
@@ -176,8 +187,7 @@
       <UICFormSection
         title="احراز هویت"
         description="برای فعال‌سازی پروفایل و دریافت موکل، مدارک خود را ارسال کنید"
-        icon="lucide:shield"
-      >
+        icon="lucide:shield">
         <UForm :schema="schema" :state="state" @submit="onSubmit">
           <div class="form-grid-2">
             <!-- پایه وکیل -->
@@ -213,21 +223,30 @@
 
             <!-- تصویر کارت ملی -->
             <div class="form-field">
-              <label class="form-label">تصویر کارت ملی <span class="required-star">*</span></label>
+              <label class="form-label"
+                >تصویر کارت ملی <span class="required-star">*</span></label
+              >
               <div class="file-upload-area">
-                <input 
-                  type="file" 
-                  accept="image/*" 
+                <input
+                  type="file"
+                  accept="image/*"
                   @change="(e) => handleFileChange(e, 'IDCardPic')"
-                  class="file-input"
-                />
+                  class="file-input" />
                 <div v-if="state.IDCardPic" class="file-preview">
                   <img v-if="idCardPreview" :src="idCardPreview" class="preview-image" />
                   <div class="preview-info">
                     <span class="text-sm text-gray-700">{{ state.IDCardPic.name }}</span>
-                    <span class="text-xs text-gray-400">{{ formatFileSize(state.IDCardPic.size) }}</span>
+                    <span class="text-xs text-gray-400">{{
+                      formatFileSize(state.IDCardPic.size)
+                    }}</span>
                   </div>
-                  <button type="button" @click="state.IDCardPic = null; idCardPreview = null" class="btn-icon-sm text-red-500">
+                  <button
+                    type="button"
+                    @click="
+                      state.IDCardPic = null;
+                      idCardPreview = null;
+                    "
+                    class="btn-icon-sm text-red-500">
                     <Icon name="lucide:x" class="w-4 h-4" />
                   </button>
                 </div>
@@ -241,21 +260,33 @@
 
             <!-- تصویر پروانه -->
             <div class="form-field">
-              <label class="form-label">تصویر پروانه وکالت <span class="required-star">*</span></label>
+              <label class="form-label"
+                >تصویر پروانه وکالت <span class="required-star">*</span></label
+              >
               <div class="file-upload-area">
-                <input 
-                  type="file" 
-                  accept="image/*" 
+                <input
+                  type="file"
+                  accept="image/*"
                   @change="(e) => handleFileChange(e, 'licensePic')"
-                  class="file-input"
-                />
+                  class="file-input" />
                 <div v-if="state.licensePic" class="file-preview">
-                  <img v-if="licensePreview" :src="licensePreview" class="preview-image" />
+                  <img
+                    v-if="licensePreview"
+                    :src="licensePreview"
+                    class="preview-image" />
                   <div class="preview-info">
                     <span class="text-sm text-gray-700">{{ state.licensePic.name }}</span>
-                    <span class="text-xs text-gray-400">{{ formatFileSize(state.licensePic.size) }}</span>
+                    <span class="text-xs text-gray-400">{{
+                      formatFileSize(state.licensePic.size)
+                    }}</span>
                   </div>
-                  <button type="button" @click="state.licensePic = null; licensePreview = null" class="btn-icon-sm text-red-500">
+                  <button
+                    type="button"
+                    @click="
+                      state.licensePic = null;
+                      licensePreview = null;
+                    "
+                    class="btn-icon-sm text-red-500">
                     <Icon name="lucide:x" class="w-4 h-4" />
                   </button>
                 </div>
@@ -270,9 +301,12 @@
 
           <div class="form-actions">
             <button type="submit" class="btn-primary" :disabled="isLoading">
-              <Icon v-if="isLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
+              <Icon
+                v-if="isLoading"
+                name="lucide:loader-2"
+                class="w-4 h-4 animate-spin" />
               <Icon v-else name="lucide:send" class="w-4 h-4" />
-              {{ isLoading ? 'در حال ارسال...' : 'ارسال برای بررسی' }}
+              {{ isLoading ? "در حال ارسال..." : "ارسال برای بررسی" }}
             </button>
           </div>
         </UForm>
@@ -294,11 +328,10 @@
               <div class="doc-preview-card">
                 <h4 class="doc-preview-title">تصویر کارت ملی</h4>
                 <div class="doc-preview-image">
-                  <img 
-                    v-if="lawyerData?.lawyer_info?.national_card_image" 
-                    :src="lawyerData.lawyer_info.national_card_image" 
-                    alt="کارت ملی"
-                  />
+                  <img
+                    v-if="lawyerData?.lawyer_info?.national_card_image"
+                    :src="lawyerData.lawyer_info.national_card_image"
+                    alt="کارت ملی" />
                   <div v-else class="no-image">
                     <Icon name="lucide:image-off" class="w-8 h-8 text-gray-300" />
                   </div>
@@ -307,11 +340,10 @@
               <div class="doc-preview-card">
                 <h4 class="doc-preview-title">تصویر پروانه</h4>
                 <div class="doc-preview-image">
-                  <img 
-                    v-if="lawyerData?.lawyer_info?.license_image" 
-                    :src="lawyerData.lawyer_info.license_image" 
-                    alt="پروانه"
-                  />
+                  <img
+                    v-if="lawyerData?.lawyer_info?.license_image"
+                    :src="lawyerData.lawyer_info.license_image"
+                    alt="پروانه" />
                   <div v-else class="no-image">
                     <Icon name="lucide:image-off" class="w-8 h-8 text-gray-300" />
                   </div>
@@ -352,39 +384,39 @@ const licensePreview = ref(null);
 const kycStatus = computed(() => {
   const lawyer = lawyerData.value?.lawyer_info;
   const user = authStore.user;
-  
-  if (user?.lawyer_kyc || lawyer?.kyc_approved) return 'approved';
-  if (lawyer?.kyc_submitted || lawyer?.kyc_pending) return 'pending';
-  if (lawyer?.kyc_rejected) return 'rejected';
-  return 'not_submitted';
+
+  if (user?.lawyer_kyc || lawyer?.kyc_approved) return "approved";
+  if (lawyer?.kyc_submitted || lawyer?.kyc_pending) return "pending";
+  if (lawyer?.kyc_rejected) return "rejected";
+  return "not_submitted";
 });
 
 const statusIcon = computed(() => {
   const icons = {
-    approved: 'lucide:shield-check',
-    pending: 'lucide:clock',
-    rejected: 'lucide:alert-circle',
-    not_submitted: 'lucide:shield',
+    approved: "lucide:shield-check",
+    pending: "lucide:clock",
+    rejected: "lucide:alert-circle",
+    not_submitted: "lucide:shield",
   };
   return icons[kycStatus.value];
 });
 
 const statusTitle = computed(() => {
   const titles = {
-    approved: 'احراز هویت تایید شده',
-    pending: 'در انتظار بررسی',
-    rejected: 'نیاز به اصلاح مدارک',
-    not_submitted: 'احراز هویت نشده',
+    approved: "احراز هویت تایید شده",
+    pending: "در انتظار بررسی",
+    rejected: "نیاز به اصلاح مدارک",
+    not_submitted: "احراز هویت نشده",
   };
   return titles[kycStatus.value];
 });
 
 const statusDescription = computed(() => {
   const descriptions = {
-    approved: 'مدارک شما تایید شده و پروفایل شما فعال است',
-    pending: 'مدارک شما در صف بررسی قرار دارد',
-    rejected: 'لطفاً مدارک خود را اصلاح و مجدداً ارسال کنید',
-    not_submitted: 'برای فعال‌سازی پروفایل، مدارک خود را ارسال کنید',
+    approved: "مدارک شما تایید شده و پروفایل شما فعال است",
+    pending: "مدارک شما در صف بررسی قرار دارد",
+    rejected: "لطفاً مدارک خود را اصلاح و مجدداً ارسال کنید",
+    not_submitted: "برای فعال‌سازی پروفایل، مدارک خود را ارسال کنید",
   };
   return descriptions[kycStatus.value];
 });
@@ -394,15 +426,15 @@ const rejectionReason = computed(() => {
 });
 
 const maskedNationalCode = computed(() => {
-  const code = lawyerData.value?.lawyer_info?.national_code || '';
-  if (code.length < 4) return '***';
-  return code.slice(0, 3) + '****' + code.slice(-3);
+  const code = lawyerData.value?.lawyer_info?.national_code || "";
+  if (code.length < 4) return "***";
+  return code.slice(0, 3) + "****" + code.slice(-3);
 });
 
 const lawyerBaseName = computed(() => {
   const baseId = lawyerData.value?.lawyer_info?.base;
-  const type = filtersStore.lawyerTypes.find(t => t.id == baseId);
-  return type?.title || 'نامشخص';
+  const type = filtersStore.lawyerTypes.find((t) => t.id == baseId);
+  return type?.title || "نامشخص";
 });
 
 // Form
@@ -431,29 +463,37 @@ const schema = object({
     .matches(/^\d{10}$/, "کد ملی باید ۱۰ رقم باشد"),
   IDCardPic: mixed()
     .required("تصویر کارت ملی الزامی است")
-    .test("fileSize", "حجم فایل نباید بیشتر از ۵ مگابایت باشد", (file) => file && file.size <= MAX_FILE_SIZE),
+    .test(
+      "fileSize",
+      "حجم فایل نباید بیشتر از ۵ مگابایت باشد",
+      (file) => file && file.size <= MAX_FILE_SIZE,
+    ),
   licensePic: mixed()
     .required("تصویر پروانه الزامی است")
-    .test("fileSize", "حجم فایل نباید بیشتر از ۵ مگابایت باشد", (file) => file && file.size <= MAX_FILE_SIZE),
+    .test(
+      "fileSize",
+      "حجم فایل نباید بیشتر از ۵ مگابایت باشد",
+      (file) => file && file.size <= MAX_FILE_SIZE,
+    ),
 });
 
 // Methods
 function formatFileSize(bytes) {
-  if (bytes < 1024) return bytes + ' B';
-  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  if (bytes < 1024) return bytes + " B";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  return (bytes / (1024 * 1024)).toFixed(1) + " MB";
 }
 
 function handleFileChange(e, field) {
   const file = e.target.files[0];
   if (!file) return;
-  
+
   state[field] = file;
-  
+
   // Create preview
   const reader = new FileReader();
   reader.onload = (e) => {
-    if (field === 'IDCardPic') {
+    if (field === "IDCardPic") {
       idCardPreview.value = e.target.result;
     } else {
       licensePreview.value = e.target.result;
@@ -482,7 +522,8 @@ const onSubmit = async (e) => {
 
     if (res.status || res.statusCode === 200 || res.statusCode === 201) {
       toast.add({
-        description: "اطلاعات احراز هویت با موفقیت ارسال شد. نتیجه بررسی از طریق پیامک اطلاع‌رسانی می‌شود.",
+        description:
+          "اطلاعات احراز هویت با موفقیت ارسال شد. نتیجه بررسی از طریق پیامک اطلاع‌رسانی می‌شود.",
         color: "success",
       });
       authStore.user.lawyer_kyc = true;
@@ -613,8 +654,13 @@ const onSubmit = async (e) => {
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .timeline-content {
@@ -747,5 +793,80 @@ const onSubmit = async (e) => {
 
 .btn-icon-sm {
   @apply p-1.5 rounded-lg hover:bg-gray-100 transition-colors;
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+  .kyc-status-banner {
+    @apply flex-col text-center gap-3 p-3;
+  }
+
+  .status-icon {
+    @apply w-10 h-10;
+  }
+
+  .status-title {
+    @apply text-sm;
+  }
+
+  .status-description {
+    @apply text-xs;
+  }
+
+  .form-grid-2 {
+    @apply grid-cols-1 gap-3;
+  }
+
+  .form-actions {
+    @apply mt-4 pt-4;
+  }
+
+  .form-actions button {
+    @apply w-full justify-center;
+  }
+
+  .file-upload-area {
+    @apply p-3;
+  }
+
+  .file-placeholder {
+    @apply py-3;
+  }
+
+  .file-placeholder span {
+    @apply text-xs;
+  }
+
+  .doc-item {
+    @apply p-2 gap-3;
+  }
+
+  .doc-icon {
+    @apply w-8 h-8;
+  }
+
+  .pending-timeline {
+    @apply space-y-3;
+  }
+
+  .timeline-title {
+    @apply text-xs;
+  }
+
+  .timeline-desc {
+    @apply text-[10px];
+  }
+
+  .modal-body {
+    @apply p-4;
+  }
+
+  .modal-header {
+    @apply px-4 py-3;
+  }
+
+  .modal-title {
+    @apply text-base;
+  }
 }
 </style>

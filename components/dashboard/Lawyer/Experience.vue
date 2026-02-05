@@ -81,36 +81,37 @@
           </table>
         </div>
 
-        <!-- Mobile Cards -->
-        <div class="md:hidden space-y-3">
-          <UICItemCard
+        <!-- Mobile Cards (Binance Style) -->
+        <div class="md:hidden mobile-cards">
+          <div
             v-for="item in educationHistory"
             :key="item.id"
-            :title="item.degree_text"
-            :subtitle="item.field_of_study"
-            icon="lucide:graduation-cap"
-            :highlighted="highlightedItem === `education-${item.id}`">
-            <template #meta>
-              <span
-                ><Icon name="lucide:building" class="w-3 h-3" />
-                {{ item.university }}</span
-              >
-              <span
-                ><Icon name="lucide:map-pin" class="w-3 h-3" />
-                {{ item.place_of_study }}</span
-              >
-            </template>
-            <template #actions>
-              <button @click="openEducationModal(item)" class="btn-icon-sm">
-                <Icon name="lucide:pencil" class="w-4 h-4" />
-              </button>
+            class="mobile-card"
+            :class="{ highlighted: highlightedItem === `education-${item.id}` }">
+            <div class="mobile-card-row">
+              <span class="mobile-card-label">مدرک</span>
+              <span class="mobile-card-value">{{ item.degree_text }}</span>
+            </div>
+            <div class="mobile-card-row">
+              <span class="mobile-card-label">رشته</span>
+              <span class="mobile-card-value">{{ item.field_of_study }}</span>
+            </div>
+            <div class="mobile-card-row">
+              <span class="mobile-card-label">دانشگاه</span>
+              <span class="mobile-card-value">{{ item.university }}</span>
+            </div>
+            <div class="mobile-card-row">
+              <span class="mobile-card-label">محل تحصیل</span>
+              <span class="mobile-card-value">{{ item.place_of_study }}</span>
+            </div>
+            <div class="mobile-card-actions">
               <button
                 @click="confirmDelete('education', item)"
                 class="btn-icon-sm text-red-500">
-                <Icon name="lucide:trash-2" class="w-4 h-4" />
+                <UIcon name="lucide:trash-2" class="w-4 h-4" />
               </button>
-            </template>
-          </UICItemCard>
+            </div>
+          </div>
         </div>
       </UICFormSection>
 
@@ -175,26 +176,30 @@
           </table>
         </div>
 
-        <!-- Mobile Cards -->
-        <div class="md:hidden space-y-3">
-          <UICItemCard
+        <!-- Mobile Cards (Binance Style) -->
+        <div class="md:hidden mobile-cards">
+          <div
             v-for="item in workHistory"
             :key="item.id"
-            :title="item.position"
-            :subtitle="item.experience_years_text"
-            icon="lucide:briefcase"
-            :highlighted="highlightedItem === `work-${item.id}`">
-            <template #meta>
-              <span
-                ><Icon name="lucide:building" class="w-3 h-3" />
-                {{ item.organization }}</span
-              >
-              <span
-                ><Icon name="lucide:map-pin" class="w-3 h-3" />
-                {{ item.work_place }}</span
-              >
-            </template>
-            <template #actions>
+            class="mobile-card"
+            :class="{ highlighted: highlightedItem === `work-${item.id}` }">
+            <div class="mobile-card-row">
+              <span class="mobile-card-label">سمت</span>
+              <span class="mobile-card-value">{{ item.position }}</span>
+            </div>
+            <div class="mobile-card-row">
+              <span class="mobile-card-label">سابقه</span>
+              <span class="mobile-card-value">{{ item.experience_years_text }}</span>
+            </div>
+            <div class="mobile-card-row">
+              <span class="mobile-card-label">ارگان / شرکت</span>
+              <span class="mobile-card-value">{{ item.organization }}</span>
+            </div>
+            <div class="mobile-card-row">
+              <span class="mobile-card-label">محل کار</span>
+              <span class="mobile-card-value">{{ item.work_place }}</span>
+            </div>
+            <div class="mobile-card-actions">
               <button @click="openWorkModal(item)" class="btn-icon-sm">
                 <Icon name="lucide:pencil" class="w-4 h-4" />
               </button>
@@ -203,8 +208,8 @@
                 class="btn-icon-sm text-red-500">
                 <Icon name="lucide:trash-2" class="w-4 h-4" />
               </button>
-            </template>
-          </UICItemCard>
+            </div>
+          </div>
         </div>
       </UICFormSection>
 
@@ -272,31 +277,37 @@
           </table>
         </div>
 
-        <!-- Mobile Cards -->
-        <div class="md:hidden space-y-3">
-          <UICItemCard
+        <!-- Mobile Cards (Binance Style) -->
+        <div class="md:hidden mobile-cards">
+          <div
             v-for="item in awardsHistory"
             :key="item.id"
-            :title="item.award_name"
-            :subtitle="item.issuing_organization"
-            icon="lucide:award"
-            :highlighted="highlightedItem === `award-${item.id}`">
-            <template #meta>
+            class="mobile-card"
+            :class="{ highlighted: highlightedItem === `award-${item.id}` }">
+            <div class="mobile-card-row">
+              <span class="mobile-card-label">عنوان جایزه</span>
+              <span class="mobile-card-value">{{ item.award_name }}</span>
+            </div>
+            <div class="mobile-card-row">
+              <span class="mobile-card-label">سازمان اعطا کننده</span>
+              <span class="mobile-card-value">{{ item.issuing_organization }}</span>
+            </div>
+            <div v-if="item.image_url" class="mobile-card-row">
+              <span class="mobile-card-label">تصویر</span>
               <button
-                v-if="item.image_url"
                 @click="showImagePreview(item.image_url)"
-                class="text-blue-600 hover:underline">
-                <Icon name="lucide:image" class="w-3 h-3" /> مشاهده تصویر
+                class="text-blue-600 hover:underline text-sm">
+                <Icon name="lucide:image" class="w-3 h-3" /> مشاهده
               </button>
-            </template>
-            <template #actions>
+            </div>
+            <div class="mobile-card-actions">
               <button
                 @click="confirmDelete('award', item)"
                 class="btn-icon-sm text-red-500">
                 <Icon name="lucide:trash-2" class="w-4 h-4" />
               </button>
-            </template>
-          </UICItemCard>
+            </div>
+          </div>
         </div>
       </UICFormSection>
     </div>
@@ -1008,5 +1019,39 @@ fetchInitialData();
 
 .preview-image {
   @apply max-w-full max-h-[80vh] object-contain;
+}
+
+/* Mobile Cards (Binance Style) */
+.mobile-cards {
+  @apply divide-y divide-gray-100 bg-white rounded-xl border border-gray-100 overflow-hidden;
+}
+
+.mobile-card {
+  @apply p-4 space-y-2;
+}
+
+.mobile-card:nth-child(odd) {
+  @apply bg-gray-50/30;
+}
+
+.mobile-card.highlighted {
+  @apply bg-green-50;
+  animation: highlight-fade 2s ease-out;
+}
+
+.mobile-card-row {
+  @apply flex items-center justify-between gap-4;
+}
+
+.mobile-card-label {
+  @apply text-xs text-gray-900 font-medium shrink-0;
+}
+
+.mobile-card-value {
+  @apply text-sm text-gray-500 text-left;
+}
+
+.mobile-card-actions {
+  @apply flex items-center gap-2 justify-start pt-3 border-t border-gray-100 mt-2;
 }
 </style>
