@@ -55,8 +55,16 @@
         <div class="stat-content">
           <span class="stat-card-value">{{ stats.todayAppointments }}</span>
           <span class="stat-card-label">نوبت‌های امروز</span>
-          <span class="stat-card-change" :class="stats.appointmentsChange >= 0 ? 'positive' : 'negative'">
-            <Icon :name="stats.appointmentsChange >= 0 ? 'lucide:trending-up' : 'lucide:trending-down'" class="w-3 h-3" />
+          <span
+            class="stat-card-change"
+            :class="stats.appointmentsChange >= 0 ? 'positive' : 'negative'">
+            <Icon
+              :name="
+                stats.appointmentsChange >= 0
+                  ? 'lucide:trending-up'
+                  : 'lucide:trending-down'
+              "
+              class="w-3 h-3" />
             {{ Math.abs(stats.appointmentsChange) }}%
           </span>
         </div>
@@ -90,8 +98,13 @@
         <div class="card-dashboard-body">
           <div class="chart-placeholder">
             <div class="chart-bars">
-              <div v-for="(day, index) in weeklyData" :key="index" class="chart-bar-wrapper">
-                <div class="chart-bar" :style="{ height: `${(day.value / maxWeeklyValue) * 100}%` }"></div>
+              <div
+                v-for="(day, index) in weeklyData"
+                :key="index"
+                class="chart-bar-wrapper">
+                <div
+                  class="chart-bar"
+                  :style="{ height: `${(day.value / maxWeeklyValue) * 100}%` }"></div>
                 <span class="chart-bar-label">{{ day.label }}</span>
               </div>
             </div>
@@ -130,13 +143,40 @@
           </div>
           <div class="donut-chart">
             <svg viewBox="0 0 36 36" class="donut-svg">
-              <circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#e5e7eb" stroke-width="3"></circle>
-              <circle cx="18" cy="18" r="15.91549430918954" fill="transparent" 
-                stroke="#3b82f6" stroke-width="3" stroke-dasharray="40 60" stroke-dashoffset="25"></circle>
-              <circle cx="18" cy="18" r="15.91549430918954" fill="transparent" 
-                stroke="#22c55e" stroke-width="3" stroke-dasharray="35 65" stroke-dashoffset="-15"></circle>
-              <circle cx="18" cy="18" r="15.91549430918954" fill="transparent" 
-                stroke="#f59e0b" stroke-width="3" stroke-dasharray="25 75" stroke-dashoffset="-50"></circle>
+              <circle
+                cx="18"
+                cy="18"
+                r="15.91549430918954"
+                fill="transparent"
+                stroke="#e5e7eb"
+                stroke-width="3"></circle>
+              <circle
+                cx="18"
+                cy="18"
+                r="15.91549430918954"
+                fill="transparent"
+                stroke="#3b82f6"
+                stroke-width="3"
+                stroke-dasharray="40 60"
+                stroke-dashoffset="25"></circle>
+              <circle
+                cx="18"
+                cy="18"
+                r="15.91549430918954"
+                fill="transparent"
+                stroke="#22c55e"
+                stroke-width="3"
+                stroke-dasharray="35 65"
+                stroke-dashoffset="-15"></circle>
+              <circle
+                cx="18"
+                cy="18"
+                r="15.91549430918954"
+                fill="transparent"
+                stroke="#f59e0b"
+                stroke-width="3"
+                stroke-dasharray="25 75"
+                stroke-dashoffset="-50"></circle>
             </svg>
           </div>
         </div>
@@ -149,7 +189,9 @@
       <div class="card-dashboard">
         <div class="card-dashboard-header">
           <h3 class="card-dashboard-title">نوبت‌های امروز</h3>
-          <NuxtLink to="/dashboard/appointments" class="text-sm text-blue-600 hover:text-blue-700 font-medium">
+          <NuxtLink
+            to="/dashboard/appointments"
+            class="text-sm text-blue-600 hover:text-blue-700 font-medium">
             مشاهده همه
             <Icon name="lucide:arrow-left" class="w-4 h-4 inline mr-1" />
           </NuxtLink>
@@ -160,7 +202,9 @@
               <Icon name="lucide:calendar-x" class="w-8 h-8" />
             </div>
             <h4 class="empty-state-title">نوبتی برای امروز ثبت نشده</h4>
-            <p class="empty-state-description">نوبت‌های جدید در اینجا نمایش داده می‌شوند</p>
+            <p class="empty-state-description">
+              نوبت‌های جدید در اینجا نمایش داده می‌شوند
+            </p>
           </div>
           <table v-else class="table-dashboard">
             <thead>
@@ -176,7 +220,9 @@
               <tr v-for="appointment in todayAppointments" :key="appointment.id">
                 <td>
                   <div class="flex items-center gap-2">
-                    <div class="avatar-placeholder avatar-sm">{{ getInitials(appointment.user) }}</div>
+                    <div class="avatar-placeholder avatar-sm">
+                      {{ getInitials(appointment.user) }}
+                    </div>
                     <span>{{ appointment.user }}</span>
                   </div>
                 </td>
@@ -280,16 +326,16 @@ const pendingCounts = ref({
 });
 
 const weeklyData = ref([
-  { label: 'شنبه', value: 12 },
-  { label: 'یکشنبه', value: 19 },
-  { label: 'دوشنبه', value: 15 },
-  { label: 'سه‌شنبه', value: 22 },
-  { label: 'چهارشنبه', value: 18 },
-  { label: 'پنجشنبه', value: 25 },
-  { label: 'جمعه', value: 8 },
+  { label: "شنبه", value: 12 },
+  { label: "یکشنبه", value: 19 },
+  { label: "دوشنبه", value: 15 },
+  { label: "سه‌شنبه", value: 22 },
+  { label: "چهارشنبه", value: 18 },
+  { label: "پنجشنبه", value: 25 },
+  { label: "جمعه", value: 8 },
 ]);
 
-const maxWeeklyValue = computed(() => Math.max(...weeklyData.value.map(d => d.value)));
+const maxWeeklyValue = computed(() => Math.max(...weeklyData.value.map((d) => d.value)));
 
 const appointmentTypes = ref({
   chat: 40,
@@ -298,41 +344,86 @@ const appointmentTypes = ref({
 });
 
 const todayAppointments = ref([
-  { id: 1, user: 'علی محمدی', lawyer: 'دکتر احمدی', type: 'chat', time: '10:00', status: 'reserved' },
-  { id: 2, user: 'مریم رضایی', lawyer: 'خانم کریمی', type: 'phone', time: '11:30', status: 'reserved' },
-  { id: 3, user: 'حسین نوری', lawyer: 'آقای موسوی', type: 'inperson', time: '14:00', status: 'done' },
-  { id: 4, user: 'فاطمه زارعی', lawyer: 'دکتر احمدی', type: 'chat', time: '16:00', status: 'pending_payment' },
+  {
+    id: 1,
+    user: "علی محمدی",
+    lawyer: "دکتر احمدی",
+    type: "chat",
+    time: "10:00",
+    status: "reserved",
+  },
+  {
+    id: 2,
+    user: "مریم رضایی",
+    lawyer: "خانم کریمی",
+    type: "phone",
+    time: "11:30",
+    status: "reserved",
+  },
+  {
+    id: 3,
+    user: "حسین نوری",
+    lawyer: "آقای موسوی",
+    type: "inperson",
+    time: "14:00",
+    status: "done",
+  },
+  {
+    id: 4,
+    user: "فاطمه زارعی",
+    lawyer: "دکتر احمدی",
+    type: "chat",
+    time: "16:00",
+    status: "pending_payment",
+  },
 ]);
 
 // Utility functions
 const formatCurrency = (value) => {
-  return new Intl.NumberFormat('fa-IR').format(value / 10) + ' تومان';
+  return new Intl.NumberFormat("fa-IR").format(value / 10) + " تومان";
 };
 
 const getInitials = (name) => {
-  if (!name) return '?';
-  const parts = name.split(' ');
-  return parts.map(p => p.charAt(0)).join('').substring(0, 2);
+  if (!name) return "?";
+  const parts = name.split(" ");
+  return parts
+    .map((p) => p.charAt(0))
+    .join("")
+    .substring(0, 2);
 };
 
 const getTypeLabel = (type) => {
-  const labels = { chat: 'چت', phone: 'تلفنی', inperson: 'حضوری' };
+  const labels = { chat: "چت", phone: "تلفنی", inperson: "حضوری" };
   return labels[type] || type;
 };
 
 const getTypeBadgeClass = (type) => {
-  const classes = { chat: 'badge-info', phone: 'badge-success', inperson: 'badge-warning' };
-  return classes[type] || 'badge-gray';
+  const classes = {
+    chat: "badge-info",
+    phone: "badge-success",
+    inperson: "badge-warning",
+  };
+  return classes[type] || "badge-gray";
 };
 
 const getStatusLabel = (status) => {
-  const labels = { reserved: 'رزرو شده', done: 'انجام شده', pending_payment: 'در انتظار پرداخت', cancelled: 'لغو شده' };
+  const labels = {
+    reserved: "رزرو شده",
+    done: "انجام شده",
+    pending_payment: "در انتظار پرداخت",
+    cancelled: "لغو شده",
+  };
   return labels[status] || status;
 };
 
 const getStatusBadgeClass = (status) => {
-  const classes = { reserved: 'badge-success', done: 'badge-gray', pending_payment: 'badge-warning', cancelled: 'badge-error' };
-  return classes[status] || 'badge-gray';
+  const classes = {
+    reserved: "badge-success",
+    done: "badge-gray",
+    pending_payment: "badge-warning",
+    cancelled: "badge-error",
+  };
+  return classes[status] || "badge-gray";
 };
 
 // TODO: Fetch real data from API
@@ -460,5 +551,69 @@ const getStatusBadgeClass = (status) => {
 
 .pending-count {
   @apply block text-xs text-gray-500;
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+  .dashboard-overview {
+    @apply gap-4;
+  }
+
+  .quick-actions {
+    @apply flex-wrap gap-2;
+  }
+
+  .quick-actions .btn-primary,
+  .quick-actions .btn-secondary {
+    @apply text-xs px-3 py-2;
+  }
+
+  .stat-card {
+    @apply p-3;
+  }
+
+  .stat-icon {
+    @apply w-10 h-10;
+  }
+
+  .stat-value {
+    @apply text-xl;
+  }
+
+  .stat-label {
+    @apply text-xs;
+  }
+
+  .chart-card {
+    @apply p-3;
+  }
+
+  .card-header {
+    @apply flex-col items-start gap-2 mb-3;
+  }
+
+  .card-title {
+    @apply text-sm;
+  }
+
+  .pending-item {
+    @apply p-2 gap-3;
+  }
+
+  .pending-icon {
+    @apply w-8 h-8;
+  }
+
+  .pending-title {
+    @apply text-xs;
+  }
+
+  .donut-chart {
+    @apply w-24 h-24;
+  }
+
+  .legend-items {
+    @apply grid grid-cols-2 gap-2;
+  }
 }
 </style>

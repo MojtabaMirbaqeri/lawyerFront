@@ -3,8 +3,7 @@
     <UICFormSection
       title="قیمت‌گذاری مشاوره"
       description="تعیین قیمت برای انواع مشاوره. قیمت‌ها برای هر جلسه ۳۰ دقیقه‌ای است."
-      icon="lucide:banknote"
-    >
+      icon="lucide:banknote">
       <template #actions>
         <div v-if="saveSuccess" class="save-status success">
           <Icon name="lucide:check-circle" class="w-4 h-4" />
@@ -17,12 +16,14 @@
         <div class="setting-item">
           <label class="setting-label">مدت هر جلسه</label>
           <div class="setting-options">
-            <button 
-              v-for="duration in durationOptions" 
+            <button
+              v-for="duration in durationOptions"
               :key="duration.value"
               @click="sessionDuration = duration.value"
-              :class="['duration-option', { active: sessionDuration === duration.value }]"
-            >
+              :class="[
+                'duration-option',
+                { active: sessionDuration === duration.value },
+              ]">
               {{ duration.label }}
             </button>
           </div>
@@ -33,169 +34,207 @@
         </div>
       </div>
 
-      <!-- Pricing Cards -->
-      <div class="pricing-cards">
-        <!-- Phone Counseling -->
-        <div class="pricing-card">
-          <div class="pricing-card-header">
-            <div class="pricing-icon phone">
-              <Icon name="lucide:phone" class="w-5 h-5" />
+      <!-- Pricing Form with Validation -->
+      <UForm
+        :schema="schema"
+        :state="formState"
+        @submit="onSubmit"
+        class="pricing-form">
+        <!-- Pricing Cards -->
+        <div class="pricing-cards">
+          <!-- Phone Counseling -->
+          <div class="pricing-card">
+            <div class="pricing-card-header">
+              <div class="pricing-icon phone">
+                <Icon name="lucide:phone" class="w-5 h-5" />
+              </div>
+              <div>
+                <h4 class="pricing-title">مشاوره تلفنی</h4>
+                <p class="pricing-subtitle">{{ sessionDuration }} دقیقه مکالمه</p>
+              </div>
             </div>
-            <div>
-              <h4 class="pricing-title">مشاوره تلفنی</h4>
-              <p class="pricing-subtitle">{{ sessionDuration }} دقیقه مکالمه</p>
+            <div class="pricing-card-body">
+              <div class="price-input-wrap">
+                <UFormField name="phone" class="flex-1">
+                  <UICInput
+                    v-model="formState.phone"
+                    @update:model-value="(val) => handlePriceInput('phone', val)"
+                    placeholder="قیمت را وارد کنید"
+                    class="price-input"
+                    dir="ltr" />
+                </UFormField>
+                <span class="price-suffix">تومان</span>
+              </div>
+              <p v-if="displayPrices.phone" class="price-words">
+                {{ numberToWords(displayPrices.phone) }}
+              </p>
+
+              <!-- Net Income -->
+              <div v-if="prices.phone" class="net-income">
+                <Icon name="lucide:wallet" class="w-4 h-4" />
+                <span
+                  >درآمد خالص شما:
+                  <strong>{{ formatNumber(calculateNetIncome(prices.phone)) }}</strong>
+                  تومان</span
+                >
+              </div>
+
+              <!-- Price Warning -->
+              <div v-if="prices.phone && prices.phone < minPrice" class="price-warning">
+                <Icon name="lucide:alert-triangle" class="w-4 h-4" />
+                قیمت کمتر از حداقل پیشنهادی است ({{ formatNumber(minPrice) }} تومان)
+              </div>
             </div>
           </div>
-          <div class="pricing-card-body">
-            <div class="price-input-wrap">
-              <UICInput
-                :model-value="displayPrices.phone"
-                @update:model-value="(val) => handlePriceInput('phone', val)"
-                placeholder="قیمت را وارد کنید"
-                class="price-input"
-                dir="ltr"
-              />
-              <span class="price-suffix">تومان</span>
-            </div>
-            <p v-if="displayPrices.phone" class="price-words">{{ numberToWords(displayPrices.phone) }}</p>
-            
-            <!-- Net Income -->
-            <div v-if="prices.phone" class="net-income">
-              <Icon name="lucide:wallet" class="w-4 h-4" />
-              <span>درآمد خالص شما: <strong>{{ formatNumber(calculateNetIncome(prices.phone)) }}</strong> تومان</span>
-            </div>
 
-            <!-- Price Warning -->
-            <div v-if="prices.phone && prices.phone < minPrice" class="price-warning">
-              <Icon name="lucide:alert-triangle" class="w-4 h-4" />
-              قیمت کمتر از حداقل پیشنهادی است ({{ formatNumber(minPrice) }} تومان)
+          <!-- Chat Counseling -->
+          <div class="pricing-card">
+            <div class="pricing-card-header">
+              <div class="pricing-icon chat">
+                <Icon name="lucide:message-circle" class="w-5 h-5" />
+              </div>
+              <div>
+                <h4 class="pricing-title">مشاوره چت</h4>
+                <p class="pricing-subtitle">{{ sessionDuration }} دقیقه چت آنلاین</p>
+              </div>
+            </div>
+            <div class="pricing-card-body">
+              <div class="price-input-wrap">
+                <UFormField name="chat" class="flex-1">
+                  <UICInput
+                    v-model="formState.chat"
+                    @update:model-value="(val) => handlePriceInput('chat', val)"
+                    placeholder="قیمت را وارد کنید"
+                    class="price-input"
+                    dir="ltr" />
+                </UFormField>
+                <span class="price-suffix">تومان</span>
+              </div>
+              <p v-if="displayPrices.chat" class="price-words">
+                {{ numberToWords(displayPrices.chat) }}
+              </p>
+
+              <div v-if="prices.chat" class="net-income">
+                <Icon name="lucide:wallet" class="w-4 h-4" />
+                <span
+                  >درآمد خالص شما:
+                  <strong>{{ formatNumber(calculateNetIncome(prices.chat)) }}</strong>
+                  تومان</span
+                >
+              </div>
+
+              <div v-if="prices.chat && prices.chat < minPrice" class="price-warning">
+                <Icon name="lucide:alert-triangle" class="w-4 h-4" />
+                قیمت کمتر از حداقل پیشنهادی است
+              </div>
+            </div>
+          </div>
+
+          <!-- In-Person Counseling -->
+          <div class="pricing-card">
+            <div class="pricing-card-header">
+              <div class="pricing-icon inperson">
+                <Icon name="lucide:user" class="w-5 h-5" />
+              </div>
+              <div>
+                <h4 class="pricing-title">مشاوره حضوری</h4>
+                <p class="pricing-subtitle">{{ sessionDuration }} دقیقه ملاقات</p>
+              </div>
+            </div>
+            <div class="pricing-card-body">
+              <div class="price-input-wrap">
+                <UFormField name="inperson" class="flex-1">
+                  <UICInput
+                    v-model="formState.inperson"
+                    @update:model-value="(val) => handlePriceInput('inperson', val)"
+                    placeholder="قیمت را وارد کنید"
+                    class="price-input"
+                    dir="ltr" />
+                </UFormField>
+                <span class="price-suffix">تومان</span>
+              </div>
+              <p v-if="displayPrices.inperson" class="price-words">
+                {{ numberToWords(displayPrices.inperson) }}
+              </p>
+
+              <div v-if="prices.inperson" class="net-income">
+                <Icon name="lucide:wallet" class="w-4 h-4" />
+                <span
+                  >درآمد خالص شما:
+                  <strong>{{ formatNumber(calculateNetIncome(prices.inperson)) }}</strong>
+                  تومان</span
+                >
+              </div>
+
+              <div
+                v-if="prices.inperson && prices.inperson < minPrice"
+                class="price-warning">
+                <Icon name="lucide:alert-triangle" class="w-4 h-4" />
+                قیمت کمتر از حداقل پیشنهادی است
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Chat Counseling -->
-        <div class="pricing-card">
-          <div class="pricing-card-header">
-            <div class="pricing-icon chat">
-              <Icon name="lucide:message-circle" class="w-5 h-5" />
-            </div>
-            <div>
-              <h4 class="pricing-title">مشاوره چت</h4>
-              <p class="pricing-subtitle">{{ sessionDuration }} دقیقه چت آنلاین</p>
+        <!-- Save Actions -->
+        <div class="pricing-actions">
+          <div class="pricing-status">
+            <div v-if="hasChanges" class="unsaved-indicator">
+              <Icon name="lucide:alert-circle" class="w-4 h-4" />
+              تغییرات ذخیره نشده
             </div>
           </div>
-          <div class="pricing-card-body">
-            <div class="price-input-wrap">
-              <UICInput
-                :model-value="displayPrices.chat"
-                @update:model-value="(val) => handlePriceInput('chat', val)"
-                placeholder="قیمت را وارد کنید"
-                class="price-input"
-                dir="ltr"
-              />
-              <span class="price-suffix">تومان</span>
-            </div>
-            <p v-if="displayPrices.chat" class="price-words">{{ numberToWords(displayPrices.chat) }}</p>
-            
-            <div v-if="prices.chat" class="net-income">
-              <Icon name="lucide:wallet" class="w-4 h-4" />
-              <span>درآمد خالص شما: <strong>{{ formatNumber(calculateNetIncome(prices.chat)) }}</strong> تومان</span>
-            </div>
-
-            <div v-if="prices.chat && prices.chat < minPrice" class="price-warning">
-              <Icon name="lucide:alert-triangle" class="w-4 h-4" />
-              قیمت کمتر از حداقل پیشنهادی است
-            </div>
+          <div class="pricing-buttons">
+            <button
+              v-if="hasChanges"
+              @click="resetPrices"
+              type="button"
+              class="btn-secondary"
+              :disabled="isLoading">
+              <Icon name="lucide:rotate-ccw" class="w-4 h-4" />
+              بازنشانی
+            </button>
+            <button
+              type="submit"
+              class="btn-primary"
+              :disabled="isLoading || !hasChanges">
+              <Icon v-if="isLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
+              <Icon v-else name="lucide:check" class="w-4 h-4" />
+              {{ isLoading ? "در حال ذخیره..." : "ذخیره قیمت‌ها" }}
+            </button>
           </div>
         </div>
-
-        <!-- In-Person Counseling -->
-        <div class="pricing-card">
-          <div class="pricing-card-header">
-            <div class="pricing-icon inperson">
-              <Icon name="lucide:user" class="w-5 h-5" />
-            </div>
-            <div>
-              <h4 class="pricing-title">مشاوره حضوری</h4>
-              <p class="pricing-subtitle">{{ sessionDuration }} دقیقه ملاقات</p>
-            </div>
-          </div>
-          <div class="pricing-card-body">
-            <div class="price-input-wrap">
-              <UICInput
-                :model-value="displayPrices.inperson"
-                @update:model-value="(val) => handlePriceInput('inperson', val)"
-                placeholder="قیمت را وارد کنید"
-                class="price-input"
-                dir="ltr"
-              />
-              <span class="price-suffix">تومان</span>
-            </div>
-            <p v-if="displayPrices.inperson" class="price-words">{{ numberToWords(displayPrices.inperson) }}</p>
-            
-            <div v-if="prices.inperson" class="net-income">
-              <Icon name="lucide:wallet" class="w-4 h-4" />
-              <span>درآمد خالص شما: <strong>{{ formatNumber(calculateNetIncome(prices.inperson)) }}</strong> تومان</span>
-            </div>
-
-            <div v-if="prices.inperson && prices.inperson < minPrice" class="price-warning">
-              <Icon name="lucide:alert-triangle" class="w-4 h-4" />
-              قیمت کمتر از حداقل پیشنهادی است
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Save Actions -->
-      <div class="pricing-actions">
-        <div class="pricing-status">
-          <div v-if="hasChanges" class="unsaved-indicator">
-            <Icon name="lucide:alert-circle" class="w-4 h-4" />
-            تغییرات ذخیره نشده
-          </div>
-        </div>
-        <div class="pricing-buttons">
-          <button 
-            v-if="hasChanges" 
-            @click="resetPrices" 
-            class="btn-secondary"
-            :disabled="isLoading"
-          >
-            <Icon name="lucide:rotate-ccw" class="w-4 h-4" />
-            بازنشانی
-          </button>
-          <button 
-            @click="savePrices" 
-            class="btn-primary"
-            :disabled="isLoading || !hasChanges"
-          >
-            <Icon v-if="isLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
-            <Icon v-else name="lucide:check" class="w-4 h-4" />
-            {{ isLoading ? 'در حال ذخیره...' : 'ذخیره قیمت‌ها' }}
-          </button>
-        </div>
-      </div>
+      </UForm>
     </UICFormSection>
   </div>
 </template>
 
 <script setup>
+import * as yup from "yup";
+
 const props = defineProps({
   lawyerInformation: { type: Object, required: true },
 });
 
-const emit = defineEmits(['update:changes', 'saved']);
+const emit = defineEmits(["update:changes", "saved"]);
 const toast = useToast();
 const reFetchLawyer = inject("reFetchLawyerInformation");
 const { formatNumber, parseNumber, numberToWords } = useNumberFormat();
+
+// Yup validation schema
+const schema = yup.object({
+  phone: yup.string().required("قیمت مشاوره تلفنی الزامی است"),
+  chat: yup.string().required("قیمت مشاوره چت الزامی است"),
+  inperson: yup.string().required("قیمت مشاوره حضوری الزامی است"),
+});
 
 // Constants
 const platformFeePercent = 15;
 const minPrice = 50000;
 const durationOptions = [
-  { value: 15, label: '۱۵ دقیقه' },
-  { value: 30, label: '۳۰ دقیقه' },
-  { value: 60, label: '۶۰ دقیقه' },
+  { value: 15, label: "۱۵ دقیقه" },
+  { value: 30, label: "۳۰ دقیقه" },
+  { value: 60, label: "۶۰ دقیقه" },
 ];
 
 // Handle both nested {data: {...}} and flat {...} structures
@@ -228,6 +267,13 @@ const displayPrices = reactive({
   inperson: formatNumber(prices.inperson),
 });
 
+// Form state for validation (synced with displayPrices)
+const formState = reactive({
+  phone: displayPrices.phone,
+  chat: displayPrices.chat,
+  inperson: displayPrices.inperson,
+});
+
 // Computed
 const hasChanges = computed(() => {
   return (
@@ -239,13 +285,14 @@ const hasChanges = computed(() => {
 
 // Watch for changes
 watch(hasChanges, (val) => {
-  emit('update:changes', 'pricing', val);
+  emit("update:changes", "pricing", val);
 });
 
 // Methods
 function handlePriceInput(field, value) {
   const formatted = formatNumber(value);
   displayPrices[field] = formatted;
+  formState[field] = formatted;
   prices[field] = parseNumber(formatted);
 }
 
@@ -259,9 +306,12 @@ function resetPrices() {
   displayPrices.phone = formatNumber(initialPrices.phone);
   displayPrices.chat = formatNumber(initialPrices.chat);
   displayPrices.inperson = formatNumber(initialPrices.inperson);
+  formState.phone = displayPrices.phone;
+  formState.chat = displayPrices.chat;
+  formState.inperson = displayPrices.inperson;
 }
 
-async function savePrices() {
+async function onSubmit() {
   isLoading.value = true;
 
   const formData = new FormData();
@@ -278,13 +328,15 @@ async function savePrices() {
 
     if (res.statusCode === 200) {
       Object.assign(initialPrices, { ...prices });
-      
+
       saveSuccess.value = true;
-      setTimeout(() => { saveSuccess.value = false; }, 3000);
-      
+      setTimeout(() => {
+        saveSuccess.value = false;
+      }, 3000);
+
       toast.add({ description: "قیمت‌ها با موفقیت ذخیره شد.", color: "success" });
       await reFetchLawyer();
-      emit('saved');
+      emit("saved");
     } else {
       toast.add({ description: "خطا در ذخیره قیمت‌ها.", color: "error" });
     }
@@ -435,13 +487,58 @@ async function savePrices() {
   .pricing-cards {
     @apply grid-cols-1;
   }
-  
-  .pricing-actions {
-    @apply flex-col items-stretch;
+
+  .session-settings {
+    @apply flex-col gap-4 p-3;
   }
-  
+
+  .setting-item {
+    @apply flex-col items-stretch gap-2 w-full;
+  }
+
+  .setting-options {
+    @apply grid grid-cols-3 gap-2;
+  }
+
+  .duration-option {
+    @apply py-2.5 text-sm justify-center text-center;
+  }
+
+  .pricing-card {
+    @apply rounded-lg;
+  }
+
+  .pricing-card-header {
+    @apply p-3;
+  }
+
+  .pricing-card-body {
+    @apply p-3 space-y-2;
+  }
+
+  .pricing-icon {
+    @apply w-8 h-8;
+  }
+
+  .pricing-actions {
+    @apply flex-col items-stretch gap-3;
+  }
+
+  .pricing-status {
+    @apply text-center;
+  }
+
   .pricing-buttons {
-    @apply justify-end;
+    @apply flex-col w-full;
+  }
+
+  .pricing-buttons button {
+    @apply w-full justify-center;
+  }
+
+  .net-income,
+  .price-warning {
+    @apply text-xs p-1.5;
   }
 }
 </style>

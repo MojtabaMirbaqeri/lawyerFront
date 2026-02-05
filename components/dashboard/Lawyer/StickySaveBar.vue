@@ -31,27 +31,37 @@
       width: 'max-w-sm',
       content: 'rounded-2xl shadow-2xl border border-gray-200 bg-white overflow-hidden',
       transition: 'transition-all duration-200 ease-out',
-    }"
-  >
+    }">
     <template #content>
       <div class="confirm-modal">
         <div class="confirm-modal-header">
           <h3 class="confirm-modal-title">تغییرات ذخیره نشده</h3>
-          <button type="button" @click="showConfirmModal = false" class="confirm-modal-close" aria-label="بستن">
+          <button
+            type="button"
+            @click="showConfirmModal = false"
+            class="confirm-modal-close"
+            aria-label="بستن">
             <Icon name="lucide:x" class="w-5 h-5" />
           </button>
         </div>
         <div class="confirm-modal-body">
           <p class="confirm-modal-message">
-            شما تغییراتی دارید که ذخیره نشده‌اند. آیا می‌خواهید قبل از ترک صفحه ذخیره کنید؟
+            شما تغییراتی دارید که ذخیره نشده‌اند. آیا می‌خواهید قبل از ترک صفحه ذخیره
+            کنید؟
           </p>
         </div>
         <div class="confirm-modal-footer">
-          <button type="button" @click="handleDiscardChanges" class="confirm-btn secondary">
+          <button
+            type="button"
+            @click="handleDiscardChanges"
+            class="confirm-btn secondary">
             <Icon name="lucide:x" class="w-4 h-4" />
             نادیده بگیر
           </button>
-          <button type="button" @click="handleSaveAndContinue" class="confirm-btn primary">
+          <button
+            type="button"
+            @click="handleSaveAndContinue"
+            class="confirm-btn primary">
             <Icon name="lucide:check" class="w-4 h-4" />
             ذخیره و ادامه
           </button>
@@ -67,7 +77,7 @@ const props = defineProps({
   isLoading: { type: Boolean, default: false },
 });
 
-const emit = defineEmits(['save', 'reset', 'discard', 'save-and-continue']);
+const emit = defineEmits(["save", "reset", "discard", "save-and-continue"]);
 
 const showConfirmModal = ref(false);
 const pendingNavigation = ref(null);
@@ -84,7 +94,7 @@ const confirmBeforeLeave = (callback) => {
 
 const handleDiscardChanges = () => {
   showConfirmModal.value = false;
-  emit('discard');
+  emit("discard");
   if (pendingNavigation.value) {
     pendingNavigation.value();
     pendingNavigation.value = null;
@@ -93,13 +103,15 @@ const handleDiscardChanges = () => {
 
 const handleSaveAndContinue = () => {
   showConfirmModal.value = false;
-  emit('save-and-continue');
+  emit("save-and-continue");
 };
 
 // Expose method for parent component
 defineExpose({
   confirmBeforeLeave,
-  showConfirmModal: () => { showConfirmModal.value = true; },
+  showConfirmModal: () => {
+    showConfirmModal.value = true;
+  },
 });
 </script>
 
@@ -132,6 +144,20 @@ defineExpose({
 
 .save-bar-actions {
   @apply flex items-center gap-3;
+}
+
+@media (max-width: 639px) {
+  .save-bar-content {
+    @apply flex-col gap-3 px-4 py-3;
+  }
+
+  .save-bar-actions {
+    @apply w-full flex-col gap-2;
+  }
+
+  .save-bar-actions button {
+    @apply w-full justify-center;
+  }
 }
 
 .btn-ghost,
@@ -180,6 +206,16 @@ defineExpose({
 .confirm-modal-footer {
   @apply flex items-center justify-end gap-3 px-5 py-4;
   border-top: 1px solid rgb(243 244 246);
+}
+
+@media (max-width: 639px) {
+  .confirm-modal-footer {
+    @apply flex-col-reverse gap-2;
+  }
+
+  .confirm-modal-footer .confirm-btn {
+    @apply w-full justify-center;
+  }
 }
 
 .confirm-btn {
