@@ -183,7 +183,7 @@ const otpHandle = async () => {
 }
 
 .otp-wrapper :deep(input) {
-  @apply rounded-xl border-2 border-slate-200 text-center text-lg font-semibold transition focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20;
+  @apply rounded-lg border-2 border-slate-200 text-center text-lg font-semibold transition focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f]/20;
   direction: ltr !important;
   text-align: center !important;
 }
