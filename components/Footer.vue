@@ -1,7 +1,11 @@
 <template>
   <footer id="footer">
     <!-- Main Footer -->
+    <div class="w-vw overflow-x-clip">
+      <div id="pos-article-text-card-115773"></div>
+    </div>
     <div class="footer-main">
+
       <div class="container">
         <div class="footer-grid">
           <!-- Brand Section -->
@@ -60,10 +64,14 @@
               <p class="download-label">دانلود اپلیکیشن</p>
               <div class="download-badges">
                 <NuxtLink to="#">
-                  <NuxtImg src="/images/footer/GooglePlayDownloadApp.svg" class="download-badge" />
+                  <NuxtImg
+                    src="/images/footer/GooglePlayDownloadApp.svg"
+                    class="download-badge" />
                 </NuxtLink>
                 <NuxtLink to="#">
-                  <NuxtImg src="/images/footer/CafeBazzarDownloadApp.svg" class="download-badge" />
+                  <NuxtImg
+                    src="/images/footer/CafeBazzarDownloadApp.svg"
+                    class="download-badge" />
                 </NuxtLink>
               </div>
             </div>
@@ -88,7 +96,10 @@
     <!-- Copyright -->
     <div class="copyright">
       <div class="container">
-        <p>© 1404 تمامی حقوق مادی و معنوی این وب‌سایت متعلق به <strong>وکیل‌وکیل</strong> می‌باشد.</p>
+        <p>
+          © 1404 تمامی حقوق مادی و معنوی این وب‌سایت متعلق به
+          <strong>وکیل‌وکیل</strong> می‌باشد.
+        </p>
       </div>
     </div>
   </footer>
@@ -96,16 +107,24 @@
 
 <script setup>
 const socials = [
-  { name: 'instagram', icon: 'mdi:instagram', src: 'https://www.instagram.com/vakilvakil_com' },
-  { name: 'telegram', icon: 'mdi:telegram', src: 'https://t.me/vakilvakil_com' },
-  { name: 'aparat', icon: 'simple-icons:aparat', src: 'https://www.aparat.com/vakilvakil_com' },
+  {
+    name: "instagram",
+    icon: "mdi:instagram",
+    src: "https://www.instagram.com/vakilvakil_com",
+  },
+  { name: "telegram", icon: "mdi:telegram", src: "https://t.me/vakilvakil_com" },
+  {
+    name: "aparat",
+    icon: "simple-icons:aparat",
+    src: "https://www.aparat.com/vakilvakil_com",
+  },
 ];
 
 const licenses = [
-  { name: 'enamad', image: '/images/footer/enamad-logo.webp', src: '/enamad' },
-  { name: 'anjoman senfi', image: '/images/footer/anjoman-senfi.webp', src: '#' },
-  { name: 'rasane digital', image: '/images/footer/rasane-digital.webp', src: '#' },
-  { name: 'kasb online', image: '/images/footer/kasb-online.webp', src: '#' },
+  { name: "enamad", image: "/images/footer/enamad-logo.webp", src: "/enamad" },
+  { name: "anjoman senfi", image: "/images/footer/anjoman-senfi.webp", src: "#" },
+  { name: "rasane digital", image: "/images/footer/rasane-digital.webp", src: "#" },
+  { name: "kasb online", image: "/images/footer/kasb-online.webp", src: "#" },
 ];
 </script>
 
