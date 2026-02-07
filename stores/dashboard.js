@@ -60,6 +60,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/admin/support",
       icon: "lucide:flag",
     },
+    {
+      title: "آمار بازدید وکلا",
+      url: "/dashboard/admin/profile-views",
+      icon: "lucide:eye",
+    },
     { 
       title: "چت", 
       url: "/chat", 
