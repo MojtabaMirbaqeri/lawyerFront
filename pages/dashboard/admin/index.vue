@@ -1,5 +1,9 @@
 <template>
   <div class="admin-dashboard">
+    <div v-if="loading" class="flex items-center justify-center py-24">
+      <p class="text-gray-500">در حال بارگذاری...</p>
+    </div>
+    <template v-else>
     <!-- Page Header -->
     <div class="page-header">
       <div>
@@ -298,6 +302,7 @@
         </div>
       </div>
     </div>
+    </template>
   </div>
 </template>
 
@@ -306,77 +311,75 @@ useHead({
   title: "داشبورد ادمین | وکیلینجا",
 });
 
-// Mock data - TODO: Replace with API calls
+const loading = ref(true);
+
 const stats = ref({
-  totalUsers: 1248,
-  usersGrowth: 12,
-  totalLawyers: 86,
-  lawyersGrowth: 8,
-  todayAppointments: 24,
-  appointmentsChange: 5,
-  totalRevenue: 45600000,
-  revenueGrowth: 15,
+  totalUsers: 0,
+  usersGrowth: 0,
+  totalLawyers: 0,
+  lawyersGrowth: 0,
+  todayAppointments: 0,
+  appointmentsChange: 0,
+  totalRevenue: 0,
+  revenueGrowth: 0,
 });
 
 const pendingCounts = ref({
-  lawyers: 5,
-  tickets: 12,
-  comments: 8,
-  withdrawals: 3,
+  lawyers: 0,
+  tickets: 0,
+  comments: 0,
+  withdrawals: 0,
 });
 
-const weeklyData = ref([
-  { label: "شنبه", value: 12 },
-  { label: "یکشنبه", value: 19 },
-  { label: "دوشنبه", value: 15 },
-  { label: "سه‌شنبه", value: 22 },
-  { label: "چهارشنبه", value: 18 },
-  { label: "پنجشنبه", value: 25 },
-  { label: "جمعه", value: 8 },
-]);
+const weeklyData = ref([]);
 
-const maxWeeklyValue = computed(() => Math.max(...weeklyData.value.map((d) => d.value)));
+const maxWeeklyValue = computed(() => {
+  const vals = weeklyData.value.map((d) => d.value);
+  return vals.length ? Math.max(...vals) : 1;
+});
 
 const appointmentTypes = ref({
-  chat: 40,
-  phone: 35,
-  inperson: 25,
+  chat: 0,
+  phone: 0,
+  inperson: 0,
 });
 
-const todayAppointments = ref([
-  {
-    id: 1,
-    user: "علی محمدی",
-    lawyer: "دکتر احمدی",
-    type: "chat",
-    time: "10:00",
-    status: "reserved",
-  },
-  {
-    id: 2,
-    user: "مریم رضایی",
-    lawyer: "خانم کریمی",
-    type: "phone",
-    time: "11:30",
-    status: "reserved",
-  },
-  {
-    id: 3,
-    user: "حسین نوری",
-    lawyer: "آقای موسوی",
-    type: "inperson",
-    time: "14:00",
-    status: "done",
-  },
-  {
-    id: 4,
-    user: "فاطمه زارعی",
-    lawyer: "دکتر احمدی",
-    type: "chat",
-    time: "16:00",
-    status: "pending_payment",
-  },
-]);
+const todayAppointments = ref([]);
+
+// Fetch dashboard data from API
+const loadDashboard = async () => {
+  loading.value = true;
+  const res = await useGet({
+    url: "admin/dashboard",
+    includeAuthHeader: true,
+  }, false);
+  loading.value = false;
+
+  const payload = res?.data?.data;
+  if (!res?.status || !payload) {
+    if (res?.message) {
+      useToast().add({ description: res.message, color: "error" });
+    }
+    return;
+  }
+
+  if (payload.stats) stats.value = payload.stats;
+  if (payload.pendingCounts) pendingCounts.value = payload.pendingCounts;
+  if (Array.isArray(payload.weeklyData)) weeklyData.value = payload.weeklyData;
+  if (payload.appointmentTypes) appointmentTypes.value = payload.appointmentTypes;
+  if (Array.isArray(payload.todayAppointments)) {
+    todayAppointments.value = payload.todayAppointments.map((item) => ({
+      id: item.id,
+      user: typeof item.user === "string" ? item.user : [item.user?.name, item.user?.family].filter(Boolean).join(" ") || "—",
+      lawyer: typeof item.lawyer === "string" ? item.lawyer : [item.lawyer?.name, item.lawyer?.family].filter(Boolean).join(" ") || "—",
+      type: item.type,
+      time: item.time,
+      status: item.status,
+    }));
+  }
+};
+
+await loadDashboard();
 
 // Utility functions
 const formatCurrency = (value) => {
@@ -425,9 +428,6 @@ const getStatusBadgeClass = (status) => {
   };
   return classes[status] || "badge-gray";
 };
-
-// TODO: Fetch real data from API
-// const { data: dashboardData } = await useGet('admin/dashboard');
 </script>
 
 <style scoped>
