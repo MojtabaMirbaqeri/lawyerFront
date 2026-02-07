@@ -188,6 +188,7 @@
             :active="lawyer?.is_active"
             :items="items"
             :phone-number="lawyer?.phone"
+            :lawyer-id="lawyer?.id"
             class="block lg:hidden" />
 
           <!-- Section: About / Location / Schedule -->
@@ -305,6 +306,7 @@
               :active="lawyer?.is_active"
               :items="items"
               :phone-number="lawyer?.phone"
+              :lawyer-id="lawyer?.id"
               class="hidden lg:block" />
 
             <!-- قیمت‌گذاری سریع -->
