@@ -3,8 +3,8 @@
     <!-- Page Header -->
     <div class="page-header">
       <div>
-        <h1 class="page-title">مدیریت کاربران</h1>
-        <p class="page-description">{{ total }} کاربر در سیستم ثبت شده است</p>
+        <h1 class="page-title">مدیریت کاربران عادی</h1>
+        <p class="page-description">{{ total }} کاربر عادی در سیستم ثبت شده است</p>
       </div>
       <div class="flex items-center gap-3">
         <button @click="exportUsers" class="btn-secondary">
@@ -187,7 +187,7 @@
 import { ref, watch } from "vue";
 
 useHead({
-  title: "مدیریت کاربران | وکیلینجا",
+  title: "مدیریت کاربران عادی | وکیلینجا",
 });
 
 // State
@@ -248,10 +248,11 @@ const debouncedSearch = () => {
 const fetchData = async (pageNumber, setTotal = false) => {
   try {
     const res = await useGet({
-      url: "users",
+      url: "users/regular",
       includeAuthHeader: true,
       query: {
         page: pageNumber,
+        per_page: 15,
         search: searchQuery.value || undefined,
         wallet: walletFilter.value !== "all" ? walletFilter.value : undefined,
         activity: activityFilter.value !== "all" ? activityFilter.value : undefined,
