@@ -23,6 +23,7 @@
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
+              <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">نوع</th>
               <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">کاربر</th>
               <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">IP</th>
               <th class="px-4 py-2 text-right text-xs font-medium text-gray-500">زمان بازدید</th>
@@ -31,6 +32,10 @@
           </thead>
           <tbody class="divide-y divide-gray-200 bg-white">
             <tr v-for="row in views" :key="row.id" class="text-sm">
+              <td class="px-4 py-2">
+                <span v-if="row.event_type === 'phone_reveal'" class="text-amber-600 font-medium">مشاهده شماره</span>
+                <span v-else class="text-gray-500">بازدید پروفایل</span>
+              </td>
               <td class="px-4 py-2">
                 <template v-if="row.user">
                   {{ [row.user.name, row.user.family].filter(Boolean).join(" ") || "—" }}

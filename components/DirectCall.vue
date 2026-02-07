@@ -15,7 +15,7 @@
   </div>
 </template>
 <script setup>
-const props = defineProps(["phone"]);
+const props = defineProps(["phone", "lawyerId"]);
 const authStore = useAuthStore();
 const route = useRoute();
 
@@ -26,11 +26,22 @@ const handleClick = (e) => {
     // شماره قبلاً نمایش داده شده، لینک tel: کار میکنه
     return;
   }
-  
+
   e.preventDefault();
-  
+
   if (authStore.isAuthenticated) {
     isPhoneVisible.value = true;
+    // ثبت لاگ «مشاهده شماره تلفن» برای ادمین
+    if (props.lawyerId && import.meta.client) {
+      usePost(
+        {
+          url: `lawyers/${props.lawyerId}/log-phone-reveal`,
+          includeAuthHeader: true,
+          body: {},
+        },
+        false
+      ).catch(() => {});
+    }
   } else {
     // ذخیره URL فعلی برای برگشت بعد از لاگین
     if (import.meta.client) {

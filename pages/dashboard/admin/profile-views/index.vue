@@ -38,6 +38,7 @@
               <th>وکیل</th>
               <th class="text-center">کل بازدید</th>
               <th class="text-center">بازدیدکننده یکتا</th>
+              <th class="text-center">تعداد بازدید شماره</th>
               <th></th>
             </tr>
           </thead>
@@ -51,6 +52,9 @@
               </td>
               <td class="text-center">
                 <span class="font-medium">{{ row.profile_views_unique_users }}</span>
+              </td>
+              <td class="text-center">
+                <span class="font-medium">{{ row.profile_views_phone_reveal_count }}</span>
               </td>
               <td class="text-end">
                 <NuxtLink
@@ -131,6 +135,7 @@ const fetchData = async (pageNum = 1) => {
       name: [l.name, l.family].filter(Boolean).join(" ") || "—",
       profile_views_total: l.profile_views_total ?? 0,
       profile_views_unique_users: l.profile_views_unique_users ?? 0,
+      profile_views_phone_reveal_count: l.profile_views_phone_reveal_count ?? 0,
     }));
     meta.value = res.data?.meta ?? {};
   } catch (e) {

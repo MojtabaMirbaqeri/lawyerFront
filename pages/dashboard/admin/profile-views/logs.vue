@@ -3,7 +3,7 @@
     <div class="page-header">
       <div class="mb-4">
         <h1 class="page-title">لاگ بازدید پروفایل وکلا</h1>
-        <p class="page-description">جزئیات تمام بازدیدها با فیلتر وکیل، کاربر و بازه تاریخ</p>
+        <p class="page-description">جزئیات تمام بازدیدها با فیلتر وکیل، کاربر، نوع رویداد و بازه تاریخ</p>
       </div>
       <NuxtLink to="/dashboard/admin/profile-views" class="btn-secondary">
         <Icon name="lucide:bar-chart-2" class="w-4 h-4" />
@@ -32,6 +32,14 @@
               class="w-full"
             />
           </div>
+          <select
+            v-model="filters.event_type"
+            class="rounded-lg border border-gray-200 px-3 py-2 text-sm w-44"
+          >
+            <option value="">همه رویدادها</option>
+            <option value="profile_view">بازدید پروفایل</option>
+            <option value="phone_reveal">مشاهده شماره تلفن</option>
+          </select>
           <input
             v-model="filters.date_from"
             type="date"
@@ -58,9 +66,10 @@
           <thead>
             <tr>
               <th>وکیل</th>
+              <th>نوع رویداد</th>
               <th>کاربر</th>
               <th>IP</th>
-              <th>زمان بازدید</th>
+              <th>زمان</th>
               <th class="max-w-[200px]">User-Agent</th>
             </tr>
           </thead>
@@ -69,6 +78,10 @@
               <td>
                 <span class="font-medium text-gray-900">{{ row.lawyer_name }}</span>
                 <span class="text-gray-400 text-sm mr-1">#{{ row.lawyer_id }}</span>
+              </td>
+              <td>
+                <span v-if="row.event_type === 'phone_reveal'" class="badge badge-info">مشاهده شماره</span>
+                <span v-else class="text-gray-600 text-sm">بازدید پروفایل</span>
               </td>
               <td>
                 <template v-if="row.user">
@@ -139,6 +152,7 @@ const perPage = 15;
 const filters = ref({
   lawyer_id: route.query.lawyer_id ?? "",
   user_id: "",
+  event_type: "",
   date_from: "",
   date_to: "",
 });
@@ -156,6 +170,7 @@ const fetchData = async (page = 1) => {
       per_page: perPage,
       ...(filters.value.lawyer_id ? { lawyer_id: filters.value.lawyer_id } : {}),
       ...(filters.value.user_id ? { user_id: filters.value.user_id } : {}),
+      ...(filters.value.event_type ? { event_type: filters.value.event_type } : {}),
       ...(filters.value.date_from ? { date_from: filters.value.date_from } : {}),
       ...(filters.value.date_to ? { date_to: filters.value.date_to } : {}),
     };
