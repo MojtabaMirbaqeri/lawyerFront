@@ -38,6 +38,7 @@ const confirm = () => {
 <template>
   <UModal v-model:open="isOpen">
     <template #content>
+      <div class="confirm-modal-wrapper">
       <div class="confirm-modal">
         <div class="confirm-modal-header">
           <div :class="['confirm-icon', variant]">
@@ -64,6 +65,7 @@ const confirm = () => {
           </button>
         </div>
       </div>
+      </div>
     </template>
   </UModal>
 </template>
@@ -71,8 +73,12 @@ const confirm = () => {
 <style scoped>
 @reference "tailwindcss";
 
+.confirm-modal-wrapper {
+  @apply w-full flex justify-center items-start p-4;
+}
+
 .confirm-modal {
-  @apply bg-white rounded-xl w-full max-w-md overflow-hidden;
+  @apply bg-transparent rounded-xl w-full min-w-[min(100%,22rem)] max-w-lg overflow-hidden;
 }
 
 .confirm-modal-header {
@@ -100,7 +106,7 @@ const confirm = () => {
 }
 
 .close-btn {
-  @apply p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 transition-colors bg-transparent border-none cursor-pointer;
+  @apply p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors bg-transparent border-none cursor-pointer;
 }
 
 .confirm-modal-body {
@@ -112,7 +118,7 @@ const confirm = () => {
 }
 
 .confirm-modal-footer {
-  @apply flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 bg-gray-50;
+  @apply flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 bg-transparent;
 }
 
 .btn-confirm {
