@@ -343,4 +343,35 @@ watch(
 .fade-leave-to {
   opacity: 0;
 }
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+  .dashboard-content {
+    @apply p-3;
+  }
+
+  .dashboard-header {
+    @apply px-3 py-2;
+  }
+
+  .header-title {
+    @apply text-sm;
+  }
+
+  .user-menu {
+    @apply gap-2 pr-2;
+  }
+
+  .user-name {
+    @apply text-xs;
+  }
+
+  .user-role {
+    @apply text-[10px];
+  }
+
+  .notification-badge {
+    @apply w-3.5 h-3.5 text-[8px];
+  }
+}
 </style>

@@ -9,8 +9,7 @@
       :has-workplace="hasWorkplace"
       :has-schedule="hasSchedule"
       :has-pricing="hasPricing"
-      @navigate="navigateToSection"
-    />
+      @navigate="navigateToSection" />
 
     <!-- Loading State -->
     <div v-if="isLoading" class="profile-loading">
@@ -45,13 +44,18 @@
                 v-for="tab in generalTabs"
                 :key="tab.value"
                 @click="handleTabChange(tab.value)"
-                :class="['tab-item', { active: activeTab === tab.value }]"
-              >
+                :class="['tab-item', { active: activeTab === tab.value }]">
                 <Icon :name="tab.icon" class="w-4 h-4" />
                 <span>{{ tab.label }}</span>
                 <span v-if="tab.badge" :class="['tab-badge', tab.badge]">
-                  <Icon v-if="tab.badge === 'complete'" name="lucide:check" class="w-3 h-3" />
-                  <Icon v-else-if="tab.badge === 'pending'" name="lucide:clock" class="w-3 h-3" />
+                  <Icon
+                    v-if="tab.badge === 'complete'"
+                    name="lucide:check"
+                    class="w-3 h-3" />
+                  <Icon
+                    v-else-if="tab.badge === 'pending'"
+                    name="lucide:clock"
+                    class="w-3 h-3" />
                   <Icon v-else name="lucide:alert-circle" class="w-3 h-3" />
                 </span>
                 <span v-if="hasUnsavedChanges(tab.value)" class="unsaved-dot"></span>
@@ -67,13 +71,18 @@
                 v-for="tab in bookingTabs"
                 :key="tab.value"
                 @click="handleTabChange(tab.value)"
-                :class="['tab-item', { active: activeTab === tab.value }]"
-              >
+                :class="['tab-item', { active: activeTab === tab.value }]">
                 <Icon :name="tab.icon" class="w-4 h-4" />
                 <span>{{ tab.label }}</span>
                 <span v-if="tab.badge" :class="['tab-badge', tab.badge]">
-                  <Icon v-if="tab.badge === 'complete'" name="lucide:check" class="w-3 h-3" />
-                  <Icon v-else-if="tab.badge === 'pending'" name="lucide:clock" class="w-3 h-3" />
+                  <Icon
+                    v-if="tab.badge === 'complete'"
+                    name="lucide:check"
+                    class="w-3 h-3" />
+                  <Icon
+                    v-else-if="tab.badge === 'pending'"
+                    name="lucide:clock"
+                    class="w-3 h-3" />
                   <Icon v-else name="lucide:alert-circle" class="w-3 h-3" />
                 </span>
                 <span v-if="hasUnsavedChanges(tab.value)" class="unsaved-dot"></span>
@@ -89,13 +98,18 @@
                 v-for="tab in trustTabs"
                 :key="tab.value"
                 @click="handleTabChange(tab.value)"
-                :class="['tab-item', { active: activeTab === tab.value }]"
-              >
+                :class="['tab-item', { active: activeTab === tab.value }]">
                 <Icon :name="tab.icon" class="w-4 h-4" />
                 <span>{{ tab.label }}</span>
                 <span v-if="tab.badge" :class="['tab-badge', tab.badge]">
-                  <Icon v-if="tab.badge === 'complete'" name="lucide:check" class="w-3 h-3" />
-                  <Icon v-else-if="tab.badge === 'pending'" name="lucide:clock" class="w-3 h-3" />
+                  <Icon
+                    v-if="tab.badge === 'complete'"
+                    name="lucide:check"
+                    class="w-3 h-3" />
+                  <Icon
+                    v-else-if="tab.badge === 'pending'"
+                    name="lucide:clock"
+                    class="w-3 h-3" />
                   <Icon v-else name="lucide:alert-circle" class="w-3 h-3" />
                 </span>
                 <span v-if="hasUnsavedChanges(tab.value)" class="unsaved-dot"></span>
@@ -106,7 +120,10 @@
 
         <!-- Mobile Accordion Navigation -->
         <div class="tabs-mobile">
-          <select v-model="activeTab" @change="handleTabChange(activeTab)" class="mobile-tab-select">
+          <select
+            v-model="activeTab"
+            @change="handleTabChange(activeTab)"
+            class="mobile-tab-select">
             <optgroup label="اطلاعات عمومی">
               <option v-for="tab in generalTabs" :key="tab.value" :value="tab.value">
                 {{ tab.label }}
@@ -130,13 +147,12 @@
       <div ref="profileTabContentRef" class="profile-tab-content">
         <Transition name="fade" mode="out-in">
           <KeepAlive>
-            <component 
-              :is="activeComponent" 
+            <component
+              :is="activeComponent"
               :lawyer-information="lawyerInfo"
               :key="activeTab"
               @update:changes="handleChanges"
-              @saved="handleSaved"
-            />
+              @saved="handleSaved" />
           </KeepAlive>
         </Transition>
       </div>
@@ -150,13 +166,12 @@
       @save="saveAllChanges"
       @reset="resetAllChanges"
       @discard="discardChanges"
-      @save-and-continue="saveAndContinue"
-    />
+      @save-and-continue="saveAndContinue" />
   </section>
 </template>
 
 <script setup>
-import { useToast } from '#imports';
+import { useToast } from "#imports";
 
 const authStore = useAuthStore();
 const toast = useToast();
@@ -167,7 +182,7 @@ const profileTabContentRef = ref(null);
 const lawyerInfo = ref(null);
 const isLoading = ref(true);
 const loadError = ref(null);
-const activeTab = ref('profile');
+const activeTab = ref("profile");
 const isSaving = ref(false);
 const pendingChanges = ref({});
 const pendingTab = ref(null);
@@ -184,8 +199,8 @@ const fetchLawyerInfo = async () => {
     // res.data contains the actual lawyer data
     lawyerInfo.value = res.data || res;
   } catch (error) {
-    loadError.value = 'مشکلی در بارگذاری اطلاعات پیش آمد. لطفاً دوباره تلاش کنید.';
-    console.error('Failed to fetch lawyer info:', error);
+    loadError.value = "مشکلی در بارگذاری اطلاعات پیش آمد. لطفاً دوباره تلاش کنید.";
+    console.error("Failed to fetch lawyer info:", error);
   } finally {
     isLoading.value = false;
   }
@@ -208,7 +223,7 @@ const reFetchLawyerInformation = async () => {
     });
     lawyerInfo.value = res.data || res;
   } catch (error) {
-    console.error('Failed to refresh lawyer info:', error);
+    console.error("Failed to refresh lawyer info:", error);
   }
 };
 
@@ -225,11 +240,11 @@ const lawyerData = computed(() => {
 // Computed completion statuses
 const kycStatus = computed(() => {
   const lawyer = lawyerData.value?.lawyer_info;
-  if (!lawyer) return 'not_submitted';
-  if (lawyer.kyc_approved) return 'approved';
-  if (lawyer.kyc_submitted) return 'pending';
-  if (lawyer.kyc_rejected) return 'rejected';
-  return 'not_submitted';
+  if (!lawyer) return "not_submitted";
+  if (lawyer.kyc_approved) return "approved";
+  if (lawyer.kyc_submitted) return "pending";
+  if (lawyer.kyc_rejected) return "rejected";
+  return "not_submitted";
 });
 
 const hasEducation = computed(() => {
@@ -252,70 +267,81 @@ const hasPricing = computed(() => {
 // Tab definitions with status badges
 const generalTabs = computed(() => [
   {
-    label: 'پروفایل',
-    value: 'profile',
-    icon: 'lucide:user',
-    badge: lawyerData.value?.lawyer_info?.about ? 'complete' : 'incomplete',
+    label: "پروفایل",
+    value: "profile",
+    icon: "lucide:user",
+    badge: lawyerData.value?.lawyer_info?.about ? "complete" : "incomplete",
   },
   {
-    label: 'اطلاعات شخصی',
-    value: 'personal_information',
-    icon: 'lucide:id-card',
-    badge: hasPersonalInfoComplete.value ? 'complete' : 'incomplete',
+    label: "اطلاعات شخصی",
+    value: "personal_information",
+    icon: "lucide:id-card",
+    badge: hasPersonalInfoComplete.value ? "complete" : "incomplete",
   },
   {
-    label: 'سوابق و تخصص',
-    value: 'experience',
-    icon: 'lucide:briefcase',
-    badge: hasEducation.value ? 'complete' : 'incomplete',
+    label: "سوابق و تخصص",
+    value: "experience",
+    icon: "lucide:briefcase",
+    badge: hasEducation.value ? "complete" : "incomplete",
   },
 ]);
 
 const bookingTabs = computed(() => [
   {
-    label: 'محل کار',
-    value: 'workplaces',
-    icon: 'lucide:building-2',
-    badge: hasWorkplace.value ? 'complete' : 'incomplete',
+    label: "محل کار",
+    value: "workplaces",
+    icon: "lucide:building-2",
+    badge: hasWorkplace.value ? "complete" : "incomplete",
   },
   {
-    label: 'قیمت‌گذاری',
-    value: 'pricing',
-    icon: 'lucide:banknote',
-    badge: hasPricing.value ? 'complete' : 'incomplete',
+    label: "قیمت‌گذاری",
+    value: "pricing",
+    icon: "lucide:banknote",
+    badge: hasPricing.value ? "complete" : "incomplete",
   },
   {
-    label: 'ساعات کاری',
-    value: 'schedule',
-    icon: 'lucide:calendar-clock',
-    badge: hasSchedule.value ? 'complete' : 'incomplete',
+    label: "ساعات کاری",
+    value: "schedule",
+    icon: "lucide:calendar-clock",
+    badge: hasSchedule.value ? "complete" : "incomplete",
   },
 ]);
 
 const trustTabs = computed(() => [
   {
-    label: 'احراز هویت',
-    value: 'authentication',
-    icon: 'lucide:shield-check',
-    badge: kycStatus.value === 'approved' ? 'complete' : (kycStatus.value === 'pending' ? 'pending' : 'incomplete'),
+    label: "احراز هویت",
+    value: "authentication",
+    icon: "lucide:shield-check",
+    badge:
+      kycStatus.value === "approved"
+        ? "complete"
+        : kycStatus.value === "pending"
+          ? "pending"
+          : "incomplete",
   },
 ]);
 
 const hasPersonalInfoComplete = computed(() => {
   const info = lawyerData.value?.lawyer_info;
-  return !!(info?.gender && info?.father_name && info?.birth_date && info?.province_id && info?.city_id);
+  return !!(
+    info?.gender &&
+    info?.father_name &&
+    info?.birth_date &&
+    info?.province_id &&
+    info?.city_id
+  );
 });
 
 // Active component mapping
 const activeComponent = computed(() => {
   const componentMap = {
-    profile: resolveComponent('DashboardLawyerProfile'),
-    personal_information: resolveComponent('DashboardLawyerPersonalInformation'),
-    experience: resolveComponent('DashboardLawyerExperience'),
-    workplaces: resolveComponent('DashboardLawyerWorkplacesSection'),
-    pricing: resolveComponent('DashboardLawyerPricingSection'),
-    schedule: resolveComponent('DashboardLawyerWeeklyScheduleSection'),
-    authentication: resolveComponent('DashboardLawyerAuthentication'),
+    profile: resolveComponent("DashboardLawyerProfile"),
+    personal_information: resolveComponent("DashboardLawyerPersonalInformation"),
+    experience: resolveComponent("DashboardLawyerExperience"),
+    workplaces: resolveComponent("DashboardLawyerWorkplacesSection"),
+    pricing: resolveComponent("DashboardLawyerPricingSection"),
+    schedule: resolveComponent("DashboardLawyerWeeklyScheduleSection"),
+    authentication: resolveComponent("DashboardLawyerAuthentication"),
   };
   return componentMap[activeTab.value] || componentMap.profile;
 });
@@ -345,7 +371,7 @@ const handleTabChange = (newTab) => {
 
 const scrollToTabContent = () => {
   nextTick(() => {
-    profileTabContentRef.value?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+    profileTabContentRef.value?.scrollIntoView?.({ behavior: "smooth", block: "start" });
   });
 };
 
@@ -365,10 +391,10 @@ const saveAllChanges = async () => {
   try {
     // Emit save event to all child components
     // This is handled by the individual components
-    toast.add({ title: 'تغییرات ذخیره شد', color: 'success' });
+    toast.add({ title: "تغییرات ذخیره شد", color: "success" });
     pendingChanges.value = {};
   } catch (error) {
-    toast.add({ title: 'خطا در ذخیره تغییرات', color: 'error' });
+    toast.add({ title: "خطا در ذخیره تغییرات", color: "error" });
   } finally {
     isSaving.value = false;
   }
@@ -403,7 +429,7 @@ const handleSaved = () => {
 };
 
 useHead({
-  title: 'پروفایل | وکیل وکیل',
+  title: "پروفایل | وکیل وکیل",
 });
 </script>
 
@@ -504,5 +530,41 @@ useHead({
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+  .profile-page {
+    @apply gap-4;
+  }
+
+  .tabs-mobile {
+    @apply block;
+  }
+
+  .tabs-desktop {
+    @apply hidden;
+  }
+
+  .mobile-tab-select {
+    @apply w-full p-3 border border-gray-200 rounded-lg text-sm font-medium;
+    @apply bg-white focus:outline-none focus:ring-2 focus:ring-blue-500;
+  }
+
+  .profile-tab-content {
+    @apply p-3 rounded-lg;
+  }
+
+  .tab-group-label {
+    @apply text-[10px];
+  }
+
+  .tab-item {
+    @apply px-3 py-2 text-xs gap-1.5;
+  }
+
+  .tab-badge {
+    @apply w-4 h-4;
+  }
 }
 </style>

@@ -68,8 +68,8 @@ export async function usePut(
     return {
       status: false,
       pending: false,
-      statusCode: error?.response?.status || 500,
-      data: null,
+      statusCode: error?.response?.status || error?.status || 500,
+      data: error?.data ?? error?.response?._data ?? null,
       error: error.message || "An unknown error occurred",
       message: errorMessage,
     };

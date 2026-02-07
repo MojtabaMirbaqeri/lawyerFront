@@ -35,7 +35,11 @@
               @update:model-value="handleImageUpload" />
           </template>
         </UModal>
-        <UICSelect  v-model="formData.base" disabled class="w-full sm:max-w-60" :items="mappedTypes" />
+        <UICSelect
+          v-model="formData.base"
+          disabled
+          class="w-full sm:max-w-60"
+          :items="mappedTypes" />
       </div>
     </div>
     <div class="space-y-8 lg:space-y-10">
@@ -73,7 +77,7 @@
         <div class="text-end">1500 / {{ formData.about.length }}</div>
         <UICSecondaryBtn
           :disabled="!hasChanges || isLoading"
-          class="rounded-lg"
+          class="rounded-lg w-full sm:w-auto"
           @click="updateProfile">
           {{ isLoading ? "در حال ارسال..." : "اعمال تغییرات" }}
         </UICSecondaryBtn>
@@ -125,7 +129,7 @@ const initialData = reactive({
 const profileImagePreview = ref(
   lawyerInfo.value?.profile_image
     ? config.public.imageBase + lawyerInfo.value.profile_image
-    : null
+    : null,
 );
 
 const mappedTypes = [...filtersStore.lawyerTypes]

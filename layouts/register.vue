@@ -56,7 +56,7 @@
 
     <!-- Right: Form -->
     <div
-      class="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden"
+      class="flex-1 flex flex-col items-center justify-start lg:justify-center p-4 sm:p-6 lg:p-8 relative min-h-0 overflow-y-auto lg:overflow-hidden"
       style="background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);"
     >
       <!-- Subtle decorative orbs -->
@@ -78,34 +78,34 @@
         aria-hidden="true"
       />
 
-      <!-- Mobile: compact branding + vector -->
-      <div class="lg:hidden mb-5 text-center relative z-10 flex flex-col items-center">
-        <NuxtLink to="/" class="text-xl font-bold text-[#1e3a5f] hover:opacity-90 transition">
-          وکیل وکیل
-        </NuxtLink>
-        <p class="text-slate-500 text-sm mt-0.5 flex items-center gap-2">
-          <!-- وکتور قفل از SVG Repo -->
-          <img
-            src="https://www.svgrepo.com/show/469159/lock.svg"
-            alt=""
-            class="w-4 h-4 shrink-0 opacity-70"
-            aria-hidden="true"
-          />
-          ورود و ثبت‌نام
-        </p>
-      </div>
+      <!-- موبایل: هدر + کارت با هم وسط عمودی؛ دسکتاپ: کارت جدا وسط -->
+      <div class="flex-1 flex flex-col justify-center w-full lg:flex-initial">
+        <div class="lg:hidden text-center relative z-10 flex flex-col items-center mb-4">
+          <NuxtLink to="/" class="text-xl font-bold text-[#1e3a5f] hover:opacity-90 transition">
+            وکیل وکیل
+          </NuxtLink>
+          <p class="text-slate-500 text-sm mt-0.5 flex items-center gap-2">
+            <img
+              src="https://www.svgrepo.com/show/469159/lock.svg"
+              alt=""
+              class="w-4 h-4 shrink-0 opacity-70"
+              aria-hidden="true"
+            />
+            ورود و ثبت‌نام
+          </p>
+        </div>
 
-      <div class="w-full max-w-[420px] sm:max-w-[450px] relative z-10">
+        <div class="w-full max-w-[420px] sm:max-w-[450px] relative z-10 shrink-0 mx-auto">
+        <!-- موبایل: باکس به‌اندازه محتوا؛ دسکتاپ: حداکثر ارتفاع و اسکرول داخل باکس -->
         <div
-          class="relative overflow-hidden rounded-3xl bg-white/95 backdrop-blur-sm max-h-[85vh] overflow-auto"
+          class="relative overflow-hidden rounded-3xl bg-white/95 backdrop-blur-sm lg:max-h-[85vh] lg:overflow-auto"
           style="box-shadow: 0 0 0 1px rgba(0,0,0,0.03), 0 2px 4px -2px rgba(0,0,0,0.04), 0 12px 24px -6px rgba(30,58,95,0.08), 0 24px 48px -12px rgba(30,58,95,0.12);"
         >
-          <!-- Soft top accent (replaces harsh line) -->
           <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#1e3a5f]/25 to-transparent" />
-          <!-- Vector: minimal document (گوشه کارت) -->
-          <div class="p-5 sm:p-6 md:p-8">
+          <div class="p-5 sm:p-6 md:p-8 pb-[max(1.5rem,env(safe-area-inset-bottom)+1rem)]">
             <slot />
           </div>
+        </div>
         </div>
       </div>
     </div>
