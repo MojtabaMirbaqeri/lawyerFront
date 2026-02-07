@@ -4,7 +4,7 @@
       <div class="flex gap-3 items-center">
         <div class="relative">
           <NuxtImg
-            :src="profileImagePreview || '/images/nullavatar.png'"
+            :src="(localImagePreview ?? profileImagePreview) || '/images/nullavatar.png'"
             class="size-14 lg:size-16 rounded-full" />
         </div>
         <div>
@@ -85,7 +85,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, inject } from "vue";
+import { ref, reactive, computed, inject, watch } from "vue";
 
 const filtersStore = useFiltersStore();
 const authStore = useAuthStore();
@@ -102,14 +102,36 @@ const props = defineProps({
 const isLoading = ref(false);
 const isProfileImageModalOpen = ref(false);
 
-const lawyerInfo = computed(() => props.lawyerInformation?.lawyer_info ?? {});
+// API برمی‌گرداند { status, data: { id, lawyer_info, ... }, message }؛ payload واقعی داخل .data است
+const payload = computed(
+  () => props.lawyerInformation?.data ?? props.lawyerInformation ?? {},
+);
+const lawyerInfo = computed(() => payload.value?.lawyer_info ?? {});
+
+// پایه: API در lawyer_info فقط base (عدد) برمی‌گرداند، نه base_lawyer
+const baseId = computed(
+  () =>
+    Number(
+      lawyerInfo.value?.base_lawyer?.id ?? lawyerInfo.value?.base ?? 0,
+    ) || 0,
+);
+const specialtiesIds = computed(() =>
+  (lawyerInfo.value?.specialties || []).map((s) => Number(s)).filter(Boolean),
+);
+const servicesIds = computed(() =>
+  (lawyerInfo.value?.services || []).map((s) => Number(s)).filter(Boolean),
+);
+const aboutText = computed(
+  () => lawyerInfo.value?.about || payload.value?.about || "",
+);
+
 const formData = reactive({
   name: authStore.user?.name ?? "",
   family: authStore.user?.family ?? "",
-  base: Number(lawyerInfo.value?.base_lawyer?.id) || 0,
-  specialties: (lawyerInfo.value?.specialties || []).map(Number),
-  services: (lawyerInfo.value?.services || []).map(Number),
-  about: lawyerInfo.value?.about || props.lawyerInformation?.about || "",
+  base: 0,
+  specialties: [],
+  services: [],
+  about: "",
   profile_image: null,
 });
 
@@ -117,18 +139,48 @@ const formData = reactive({
 const initialData = reactive({
   name: authStore.user?.name ?? "",
   family: authStore.user?.family ?? "",
-  base: Number(lawyerInfo.value?.base_lawyer?.id) || 0,
-  specialties: (lawyerInfo.value?.specialties || []).map(Number),
-  services: (lawyerInfo.value?.services || []).map(Number),
-  about: lawyerInfo.value?.about || props.lawyerInformation?.about || "",
+  base: 0,
+  specialties: [],
+  services: [],
+  about: "",
 });
 
+// پر کردن فرم و initial از prop (و به‌روزرسانی وقتی prop عوض شد)
+function syncFromProp() {
+  const base = baseId.value;
+  const specs = [...specialtiesIds.value];
+  const srvs = [...servicesIds.value];
+  const about = aboutText.value;
+  formData.base = base;
+  formData.specialties = specs;
+  formData.services = srvs;
+  formData.about = about;
+  Object.assign(initialData, {
+    name: formData.name,
+    family: formData.family,
+    base,
+    specialties: specs,
+    services: srvs,
+    about,
+  });
+}
+
+syncFromProp();
+
+watch(
+  () => props.lawyerInformation,
+  () => syncFromProp(),
+  { deep: true },
+);
+
 // --- PREVIEW & MAPPED ---
-const profileImagePreview = ref(
+const profileImagePreview = computed(() =>
   lawyerInfo.value?.profile_image
     ? config.public.imageBase + lawyerInfo.value.profile_image
     : null,
 );
+/** پیش‌نمایش موقت بعد از انتخاب فایل (قبل از آپلود) */
+const localImagePreview = ref(null);
 
 const mappedTypes = [...filtersStore.lawyerTypes]
   .map((type) => ({
@@ -158,7 +210,7 @@ const handleImageUpload = (file) => {
   formData.profile_image = file;
   const reader = new FileReader();
   reader.onload = (e) => {
-    profileImagePreview.value = e.target.result;
+    localImagePreview.value = e.target.result;
   };
   reader.readAsDataURL(file);
   isProfileImageModalOpen.value = false;
@@ -199,6 +251,7 @@ const updateProfile = async () => {
       });
 
       formData.profile_image = null;
+      localImagePreview.value = null;
       await reFetchLawyer();
 
       useToast().add({

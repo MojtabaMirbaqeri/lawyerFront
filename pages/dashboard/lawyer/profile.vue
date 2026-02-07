@@ -358,13 +358,9 @@ const handleChanges = (tabValue, hasChanges) => {
 };
 
 const handleTabChange = (newTab) => {
-  if (globalHasChanges.value && saveBarRef.value) {
-    pendingTab.value = newTab;
-    saveBarRef.value.showConfirmModal();
-  } else {
-    activeTab.value = newTab;
-    scrollToTabContent();
-  }
+  // جابجایی بین تب‌ها بدون نمایش مودال؛ تغییرات ذخیره‌نشده با نقطه روی تب و نوار پایین نشان داده می‌شوند
+  activeTab.value = newTab;
+  scrollToTabContent();
 };
 
 const scrollToTabContent = () => {
@@ -374,13 +370,8 @@ const scrollToTabContent = () => {
 };
 
 const navigateToSection = (sectionId) => {
-  if (globalHasChanges.value && saveBarRef.value) {
-    pendingTab.value = sectionId;
-    saveBarRef.value.showConfirmModal();
-  } else {
-    activeTab.value = sectionId;
-    scrollToTabContent();
-  }
+  activeTab.value = sectionId;
+  scrollToTabContent();
 };
 
 // Save functions

@@ -50,6 +50,7 @@
           </template>
         </UPopover>
         <NuxtLink to="/faq" class="nav-link">سوالات متداول</NuxtLink>
+        <NuxtLink to="/articles" class="nav-link">مقالات</NuxtLink>
         <a href="tel:+982110014488" class="nav-link">تماس با ما</a>
       </nav>
 

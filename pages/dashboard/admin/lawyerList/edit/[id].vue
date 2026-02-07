@@ -17,6 +17,11 @@ const items = [
     icon: "ic:outline-pending-actions",
     slot: "actionReport" as const,
   },
+  {
+    label: "بازدید پروفایل",
+    icon: "i-lucide-eye",
+    slot: "profileViews" as const,
+  },
 ] satisfies TabsItem[];
 
 const res = await useGet({
@@ -29,7 +34,6 @@ const data = ref(res.data.data);
 const appointments = ref(res.data.data.appointments_list);
 const withdrawals = ref(res.data.data.withdrawals_list);
 const wallet = ref(res.data.data.wallet);
-console.log(appointments.value);
 </script>
 
 <template>
@@ -55,6 +59,14 @@ console.log(appointments.value);
         <DashboardAdminEditLawyerReportAppointment
           :appointments="appointments"
           :total="res.data.data.appointments_meta.total"
+        />
+      </template>
+
+      <template #profileViews="{ item }">
+        <DashboardAdminEditLawyerReportProfileViews
+          :lawyer-id="data?.id"
+          :profile-views-total="data?.profile_views_total ?? 0"
+          :profile-views-unique-users="data?.profile_views_unique_users ?? 0"
         />
       </template>
     </UTabs>

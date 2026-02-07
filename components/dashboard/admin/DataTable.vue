@@ -195,6 +195,27 @@ function getRowActions(row: any) {
         refetch(pagination.value.pageIndex);
       },
     },
+    {
+      type: "separator",
+    },
+    {
+      label: "حذف وکیل (قابل بازیابی)",
+      icon: "lucide:trash-2",
+      class: "text-red-600",
+      async onSelect() {
+        if (!confirm("آیا از حذف این وکیل اطمینان دارید؟ وکیل به صورت موقت حذف می‌شود و در لیست نمایش داده نخواهد شد؛ امکان بازیابی از دیتابیس وجود دارد.")) return;
+        const res = await useDelete({
+          url: `lawyers/${row.original.edit_id}`,
+          includeAuthHeader: true,
+        });
+        if (res.status) {
+          useToast().add({ title: "وکیل با موفقیت حذف شد (قابل بازیابی)", color: "success" });
+          refetch(pagination.value.pageIndex);
+        } else {
+          useToast().add({ title: res.message || "خطا در حذف وکیل", color: "error" });
+        }
+      },
+    },
   ];
 }
 

@@ -14,6 +14,15 @@ type RegisterLawyer = {
   licenseImage: string;
 };
 
+type ExistingLawyer = {
+  id: number;
+  user_id: number;
+  name: string;
+  family: string;
+  phone: string;
+  license_number: string;
+};
+
 const refetch = async (page = undefined) => {
   const lawyersRef = ref(
     (
@@ -191,17 +200,71 @@ const rejectHandle = async (com: string, id: number) => {
   }
 };
 
+// مودال ادغام هنگام تکراری بودن شماره پروانه
+const showMergeModal = ref(false);
+const mergeExistingLawyer = ref<ExistingLawyer | null>(null);
+const mergeRegisterLawyerId = ref<number | null>(null);
+const mergeLoading = ref(false);
+
 const acceptHandle = async (id: number) => {
-  const res = await usePut({
-    url: `register-lawyer/${id}/approve`,
-    includeAuthHeader: true,
-    body: undefined,
-  });
+  const res = await usePut(
+    {
+      url: `register-lawyer/${id}/approve`,
+      includeAuthHeader: true,
+      body: undefined,
+    },
+    false
+  );
   if (res.statusCode === 200) {
     refetch(pagination.value.pageIndex);
     useToast().add({ title: "احراز هویت وکیل تایید شد", color: "success" });
-  } else if (res.statusCode === 500) {
-    useToast().add({ title: "مشکلی رخ داده است", color: "error" });
+  } else if (res.statusCode === 409) {
+    const payload = res.data?.data ?? res.data;
+    if (payload?.code === "LICENSE_DUPLICATE") {
+      mergeExistingLawyer.value = payload.existing_lawyer ?? null;
+      mergeRegisterLawyerId.value = payload.register_lawyer_id ?? id;
+      showMergeModal.value = true;
+    } else {
+      const msg = res.message || "مشکلی رخ داده است";
+      useToast().add({ title: msg, color: "error" });
+    }
+  } else {
+    const msg = res.message || "مشکلی رخ داده است";
+    useToast().add({ title: msg, color: "error" });
+  }
+};
+
+const closeMergeModal = () => {
+  showMergeModal.value = false;
+  mergeExistingLawyer.value = null;
+  mergeRegisterLawyerId.value = null;
+};
+
+const mergeHandle = async () => {
+  const id = mergeRegisterLawyerId.value;
+  if (id == null) return;
+  mergeLoading.value = true;
+  const res = await usePut(
+    {
+      url: `register-lawyer/${id}/merge`,
+      includeAuthHeader: true,
+      body: undefined,
+    },
+    false
+  );
+  mergeLoading.value = false;
+  if (res.statusCode === 200) {
+    closeMergeModal();
+    refetch(pagination.value.pageIndex);
+    useToast().add({
+      title: "شماره موبایل وکیل قبلی به‌روزرسانی شد و درخواست ادغام با موفقیت انجام شد.",
+      color: "success",
+    });
+  } else {
+    useToast().add({
+      title: res.message || "خطا در ادغام درخواست.",
+      color: "error",
+    });
   }
 };
 </script>
@@ -275,6 +338,56 @@ const acceptHandle = async (id: number) => {
         </div>
       </template>
     </dashboard-admin-generic-table>
+
+    <!-- مودال ادغام هنگام تکراری بودن شماره پروانه -->
+    <UModal v-model:open="showMergeModal" :ui="{ width: 'max-w-md' }">
+      <template #content>
+        <div class="merge-modal">
+          <div class="merge-modal-header">
+            <div class="merge-icon">
+              <Icon name="lucide:user-cog" class="w-6 h-6" />
+            </div>
+            <h3 class="merge-title">شماره پروانه تکراری</h3>
+            <button type="button" class="close-btn" @click="closeMergeModal" aria-label="بستن">
+              <Icon name="lucide:x" class="w-5 h-5" />
+            </button>
+          </div>
+          <div class="merge-modal-body">
+            <p class="merge-message">
+              شماره پروانه این درخواست قبلاً برای وکیل زیر ثبت شده است. با زدن ادغام، شماره موبایل وکیل قبلی به شمارهٔ این درخواست به‌روزرسانی می‌شود.
+            </p>
+            <div v-if="mergeExistingLawyer" class="existing-lawyer-card">
+              <div class="existing-lawyer-row">
+                <span class="label">نام و نام خانوادگی:</span>
+                <span class="value">{{ mergeExistingLawyer.name }} {{ mergeExistingLawyer.family }}</span>
+              </div>
+              <div class="existing-lawyer-row">
+                <span class="label">شماره موبایل فعلی:</span>
+                <span class="value font-mono">{{ mergeExistingLawyer.phone }}</span>
+              </div>
+              <div class="existing-lawyer-row">
+                <span class="label">شماره پروانه:</span>
+                <span class="value">{{ mergeExistingLawyer.license_number }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="merge-modal-footer">
+            <button type="button" class="btn-cancel" @click="closeMergeModal">
+              انصراف
+            </button>
+            <button
+              type="button"
+              class="btn-merge"
+              :disabled="mergeLoading"
+              @click="mergeHandle"
+            >
+              <Icon v-if="mergeLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
+              ادغام
+            </button>
+          </div>
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>
 
@@ -282,5 +395,48 @@ const acceptHandle = async (id: number) => {
 @reference 'tailwindcss';
 .register-lawyer-table {
   @apply space-y-4;
+}
+
+.merge-modal {
+  @apply bg-white rounded-xl w-full overflow-hidden;
+}
+.merge-modal-header {
+  @apply flex items-center gap-4 px-6 py-4 border-b border-gray-100;
+}
+.merge-icon {
+  @apply w-10 h-10 rounded-full flex items-center justify-center bg-amber-100 text-amber-600;
+}
+.merge-title {
+  @apply flex-1 text-lg font-semibold text-gray-900;
+}
+.close-btn {
+  @apply p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 transition-colors bg-transparent border-none cursor-pointer;
+}
+.merge-modal-body {
+  @apply px-6 py-5;
+}
+.merge-message {
+  @apply text-sm text-gray-600 leading-relaxed mb-4;
+}
+.existing-lawyer-card {
+  @apply bg-gray-50 rounded-lg p-4 space-y-2 border border-gray-100;
+}
+.existing-lawyer-row {
+  @apply flex justify-between gap-2 text-sm;
+}
+.existing-lawyer-row .label {
+  @apply text-gray-500;
+}
+.existing-lawyer-row .value {
+  @apply text-gray-900 font-medium;
+}
+.merge-modal-footer {
+  @apply flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 bg-gray-50;
+}
+.btn-cancel {
+  @apply px-4 py-2 rounded-lg text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors;
+}
+.btn-merge {
+  @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white bg-[#1e3a5f] hover:bg-[#152a47] transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
 }
 </style>

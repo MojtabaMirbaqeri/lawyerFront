@@ -297,7 +297,9 @@ const refetch = async (pageNum = null, query = null, setTotal = false, search = 
     },
   });
 
-  data.value = res.data.data.data.tickets.map((ticket) => ({
+  const ticketsData = res?.data?.data?.data ?? {};
+  const ticketsList = Array.isArray(ticketsData.tickets) ? ticketsData.tickets : [];
+  data.value = ticketsList.map((ticket) => ({
     id: ticket?.ticket_number,
     ticketTitle: ticket?.title,
     priority: ticket?.priority?.label,
@@ -305,13 +307,13 @@ const refetch = async (pageNum = null, query = null, setTotal = false, search = 
     type: ticket?.type?.label,
     status: ticket?.status?.label,
     statusVal: ticket?.status?.value,
-    fullname: `${ticket?.user?.name} ${ticket?.user?.family}`,
+    fullname: ticket?.user ? `${ticket.user.name ?? ""} ${ticket.user.family ?? ""}`.trim() || "—" : "—",
     ticketId: ticket?.id,
     createdAt: ticket?.created_at,
   }));
 
   if (setTotal) {
-    total.value = res.data.data.data.pagination.total;
+    total.value = ticketsData.pagination?.total ?? 0;
   }
 };
 
@@ -334,8 +336,10 @@ watch(
 
 // Initial fetch
 const res = await useGet({ url: "tickets", includeAuthHeader: true });
-const tickets = ref(res.data.data.data.tickets);
-const total = ref(res.data.data.data.pagination.total);
+const ticketsData = res?.data?.data?.data ?? {};
+const ticketsList = Array.isArray(ticketsData.tickets) ? ticketsData.tickets : [];
+const tickets = ref(ticketsList);
+const total = ref(ticketsData.pagination?.total ?? 0);
 
 const data = ref(
   tickets.value.map((ticket) => ({
@@ -346,7 +350,7 @@ const data = ref(
     type: ticket?.type?.label,
     status: ticket?.status?.label,
     statusVal: ticket?.status?.value,
-    fullname: `${ticket?.user?.name} ${ticket?.user?.family}`,
+    fullname: ticket?.user ? `${ticket.user.name ?? ""} ${ticket.user.family ?? ""}`.trim() || "—" : "—",
     ticketId: ticket?.id,
     createdAt: ticket?.created_at,
   })),
