@@ -1500,7 +1500,7 @@ button {
 }
 
 .form-section-content {
-  @apply px-6 pb-6 pt-2 border-t border-gray-100;
+  @apply px-6 pb-6 pt-2 border-t border-gray-100 overflow-visible!;
 }
 
 /* Tab Badges */
@@ -1890,4 +1890,9 @@ button {
 
 #goftino_w {
   z-index: 99 !important;
+}
+
+.yn-borderbox {
+  max-width: 600px !important;
+  margin: 0 auto !important;
 }
