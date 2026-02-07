@@ -1,29 +1,24 @@
 <script setup>
 const props = defineProps({
   items: { type: Array, default: () => [] },
-  placeholder: { type: String, default: 'انتخاب کنید...' },
-  label: String,
+  placeholder: { type: String, default: "انتخاب کنید..." },
+  label: { type: String, default: '' },
   required: Boolean,
   disabled: Boolean,
   searchable: { type: Boolean, default: false },
   clearable: { type: Boolean, default: false },
 });
 
-const value = defineModel({ default: 1 });
-const searchQuery = ref('');
+const value = defineModel({ type: [String, Number, Object], default: null });
+const searchQuery = ref("");
 
 const filteredItems = computed(() => {
   if (!props.searchable || !searchQuery.value) {
     return props.items;
   }
-  return props.items.filter(item => 
-    item.label?.toLowerCase().includes(searchQuery.value.toLowerCase())
+  return props.items.filter((item) =>
+    item.label?.toLowerCase().includes(searchQuery.value.toLowerCase()),
   );
-});
-
-const selectedLabel = computed(() => {
-  const item = props.items.find(i => i.id === value.value);
-  return item?.label || props.placeholder;
 });
 
 const clearSelection = () => {
@@ -49,12 +44,11 @@ const clearSelection = () => {
           trailing: 'absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none pe-0',
           trailingIcon: 'w-4 h-4 text-gray-400',
         }"
-        class="uic-select"
-      />
-      <button 
-        v-if="clearable && value" 
-        @click.stop="clearSelection"
+        class="uic-select" />
+      <button
+        v-if="clearable && value"
         class="uic-select-clear"
+        @click.stop="clearSelection"
       >
         <Icon name="lucide:x" class="w-4 h-4" />
       </button>

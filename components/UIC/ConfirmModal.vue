@@ -72,7 +72,7 @@ const confirm = () => {
 @reference "tailwindcss";
 
 .confirm-modal {
-  @apply bg-white rounded-xl w-full max-w-md overflow-hidden;
+  @apply bg-white rounded-xl w-full overflow-hidden;
 }
 
 .confirm-modal-header {

@@ -13,9 +13,11 @@
         description="آدرس دفتر یا محل‌های کاری که موکلین می‌توانند به شما مراجعه کنند"
         icon="lucide:building-2">
         <template #actions>
-          <button @click="openAddModal" class="btn-sm-primary">
+          <button
+          v-if="workplacesList.length > 0"
+          @click="openAddModal" class="btn-sm-primary">
             <Icon name="lucide:plus" class="w-4 h-4" />
-            افزودن محل کار
+            <span class="hidden sm:block">افزودن محل کار</span>
           </button>
         </template>
 
@@ -52,9 +54,7 @@
               </div>
             </div>
             <div class="workplace-actions">
-              <button @click="openEditModal(workplace)" class="btn-icon-sm">
-                <Icon name="lucide:pencil" class="w-4 h-4" />
-              </button>
+              
               <button @click="confirmDelete(workplace)" class="btn-icon-sm text-red-500">
                 <Icon name="lucide:trash-2" class="w-4 h-4" />
               </button>
@@ -80,7 +80,7 @@
           <UForm
             :schema="workplaceSchema"
             :state="formState"
-            class="modal-body"
+            class="modal-body overflow-y-auto"
             @submit="onSubmit">
             <div class="form-grid-2">
               <!-- نام محل کار -->
@@ -345,13 +345,34 @@ function openEditModal(workplace) {
   showModal.value = true;
 }
 
-async function onSubmit(event) {
+async function onSubmit() {
+  // Manual validation
+  if (!formState.name || !formState.name.trim()) {
+    toast.add({ description: "نام محل کار الزامی است", color: "error" });
+    return;
+  }
+  if (!formState.province_id) {
+    toast.add({ description: "استان الزامی است", color: "error" });
+    return;
+  }
+  if (!formState.city_id) {
+    toast.add({ description: "شهر الزامی است", color: "error" });
+    return;
+  }
+  if (!formState.address || !formState.address.trim()) {
+    toast.add({ description: "آدرس الزامی است", color: "error" });
+    return;
+  }
+
   isLoading.value = true;
 
   const body = {
-    ...event.data,
-    province_id: parseInt(event.data.province_id),
-    city_id: parseInt(event.data.city_id),
+    name: formState.name,
+    address: formState.address,
+    phone: formState.phone || null,
+    emergency_phone: formState.emergency_phone || null,
+    province_id: parseInt(formState.province_id),
+    city_id: parseInt(formState.city_id),
     work_times: [],
     lat: formState.location?.[0] || null,
     lng: formState.location?.[1] || null,
@@ -515,7 +536,7 @@ fetchInitialData();
 
 /* Modal */
 .modal-content-lg {
-  @apply bg-white rounded-xl w-full max-w-2xl overflow-hidden;
+  @apply bg-white rounded-xl w-full max-w-2xl overflow-y-auto;
 }
 
 .modal-header {

@@ -118,28 +118,13 @@
           </div>
         </div>
 
-        <!-- Mobile Accordion Navigation -->
+        <!-- Mobile Navigation -->
         <div class="tabs-mobile">
-          <select
+          <UICSelect
             v-model="activeTab"
-            @change="handleTabChange(activeTab)"
-            class="mobile-tab-select">
-            <optgroup label="اطلاعات عمومی">
-              <option v-for="tab in generalTabs" :key="tab.value" :value="tab.value">
-                {{ tab.label }}
-              </option>
-            </optgroup>
-            <optgroup label="رزروپذیری">
-              <option v-for="tab in bookingTabs" :key="tab.value" :value="tab.value">
-                {{ tab.label }}
-              </option>
-            </optgroup>
-            <optgroup label="اعتماد و تایید">
-              <option v-for="tab in trustTabs" :key="tab.value" :value="tab.value">
-                {{ tab.label }}
-              </option>
-            </optgroup>
-          </select>
+            :items="mobileTabItems"
+            placeholder="انتخاب بخش..."
+            @update:model-value="handleTabChange" />
         </div>
       </div>
 
@@ -320,6 +305,19 @@ const trustTabs = computed(() => [
           : "incomplete",
   },
 ]);
+
+// Mobile tabs items for UICSelect (flattened from all groups)
+const mobileTabItems = computed(() => {
+  const allTabs = [
+    ...generalTabs.value,
+    ...bookingTabs.value,
+    ...trustTabs.value,
+  ];
+  return allTabs.map((tab) => ({
+    id: tab.value,
+    label: tab.label,
+  }));
+});
 
 const hasPersonalInfoComplete = computed(() => {
   const info = lawyerData.value?.lawyer_info;

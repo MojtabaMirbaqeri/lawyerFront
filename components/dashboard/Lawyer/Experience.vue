@@ -26,12 +26,14 @@
         :collapsible="true"
         :default-collapsed="false">
         <template #actions>
-          <button @click="openEducationModal()" class="btn-sm-primary">
+          <button
+            v-if="educationHistory.length > 0"
+            class="btn-action-add"
+            @click.stop="openEducationModal()">
             <Icon name="lucide:plus" class="w-4 h-4" />
-            افزودن
+            <span class="hidden sm:inline">افزودن</span>
           </button>
         </template>
-
         <!-- Empty State -->
         <UICEmptyState
           v-if="educationHistory.length === 0"
@@ -43,6 +45,7 @@
 
         <!-- Desktop Table -->
         <div v-else class="hidden md:block">
+          
           <table class="data-table">
             <thead>
               <tr>
@@ -66,9 +69,7 @@
                 <td>{{ item.place_of_study }}</td>
                 <td>
                   <div class="flex items-center gap-1 justify-end">
-                    <button @click="openEducationModal(item)" class="btn-icon-sm">
-                      <Icon name="lucide:pencil" class="w-4 h-4" />
-                    </button>
+                    
                     <button
                       @click="confirmDelete('education', item)"
                       class="btn-icon-sm text-red-500">
@@ -123,12 +124,14 @@
         :collapsible="true"
         :default-collapsed="true">
         <template #actions>
-          <button @click="openWorkModal()" class="btn-sm-primary">
+          <button
+            v-if="workHistory.length > 0"
+            class="btn-action-add"
+            @click.stop="openWorkModal()">
             <Icon name="lucide:plus" class="w-4 h-4" />
-            افزودن
+            <span class="hidden sm:inline">افزودن</span>
           </button>
         </template>
-
         <!-- Empty State -->
         <UICEmptyState
           v-if="workHistory.length === 0"
@@ -161,9 +164,7 @@
                 <td>{{ item.work_place }}</td>
                 <td>
                   <div class="flex items-center gap-1 justify-end">
-                    <button @click="openWorkModal(item)" class="btn-icon-sm">
-                      <Icon name="lucide:pencil" class="w-4 h-4" />
-                    </button>
+                  
                     <button
                       @click="confirmDelete('work', item)"
                       class="btn-icon-sm text-red-500">
@@ -200,9 +201,7 @@
               <span class="mobile-card-value">{{ item.work_place }}</span>
             </div>
             <div class="mobile-card-actions">
-              <button @click="openWorkModal(item)" class="btn-icon-sm">
-                <Icon name="lucide:pencil" class="w-4 h-4" />
-              </button>
+              
               <button
                 @click="confirmDelete('work', item)"
                 class="btn-icon-sm text-red-500">
@@ -221,12 +220,14 @@
         :collapsible="true"
         :default-collapsed="true">
         <template #actions>
-          <button @click="openAwardModal()" class="btn-sm-primary">
+          <button
+            v-if="awardsHistory.length > 0"
+            class="btn-action-add"
+            @click.stop="openAwardModal()">
             <Icon name="lucide:plus" class="w-4 h-4" />
-            افزودن
+            <span class="hidden sm:inline">افزودن</span>
           </button>
         </template>
-
         <!-- Empty State -->
         <UICEmptyState
           v-if="awardsHistory.length === 0"
@@ -257,7 +258,7 @@
                 <td>
                   <button
                     v-if="item.image_url"
-                    @click="showImagePreview(item.image_url)"
+                    @click="showImagePreview(item.image_path)"
                     class="text-blue-600 hover:underline text-sm">
                     مشاهده تصویر
                   </button>
@@ -295,7 +296,7 @@
             <div v-if="item.image_url" class="mobile-card-row">
               <span class="mobile-card-label">تصویر</span>
               <button
-                @click="showImagePreview(item.image_url)"
+                @click="showImagePreview(item.image_path)"
                 class="text-blue-600 hover:underline text-sm">
                 <Icon name="lucide:image" class="w-3 h-3" /> مشاهده
               </button>
@@ -891,7 +892,7 @@ async function executeDelete() {
 
 // Image preview
 function showImagePreview(url) {
-  previewImageUrl.value = url;
+  previewImageUrl.value = useRuntimeConfig().public.imageBase +'storage/' + url;
   showImageModal.value = true;
 }
 

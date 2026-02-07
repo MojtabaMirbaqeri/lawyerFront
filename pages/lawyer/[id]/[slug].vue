@@ -16,8 +16,10 @@
 
     <!-- Hero -->
     <section class="relative overflow-hidden border-b border-slate-200/60">
-      <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,hsl(var(--primary)/.12),transparent)]" />
-      <div class="absolute inset-0 bg-[linear-gradient(165deg,transparent_50%,hsl(var(--primary)/.03)_100%)]" />
+      <div
+        class="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,hsl(var(--primary)/.12),transparent)]" />
+      <div
+        class="absolute inset-0 bg-[linear-gradient(165deg,transparent_50%,hsl(var(--primary)/.03)_100%)]" />
       <div class="container relative py-8 md:py-10 lg:py-12">
         <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
@@ -42,16 +44,23 @@
               </div>
             </div>
             <div class="flex flex-col gap-1 min-w-0">
-              <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-primary tracking-tight">
+              <h1
+                class="text-xl sm:text-2xl md:text-3xl font-bold text-primary tracking-tight">
                 {{ fullname }}
               </h1>
               <p class="text-primary font-semibold">
-                {{ lawyer?.lawyer_info?.base_lawyer?.title || lawyer?.base || 'وکیل پایه یک دادگستری' }}
+                {{
+                  lawyer?.lawyer_info?.base_lawyer?.title ||
+                  lawyer?.base ||
+                  "وکیل پایه یک دادگستری"
+                }}
               </p>
               <div class="flex flex-wrap items-center gap-2 mt-1 text-slate-500">
-                <span v-if="lawyer?.province || lawyer?.city" class="flex items-center gap-1">
+                <span
+                  v-if="lawyer?.province || lawyer?.city"
+                  class="flex items-center gap-1">
                   <UIcon name="material-symbols:location-on-rounded" class="size-4" />
-                  {{ [lawyer?.city, lawyer?.province].filter(Boolean).join('، ') || '—' }}
+                  {{ [lawyer?.city, lawyer?.province].filter(Boolean).join("، ") || "—" }}
                 </span>
               </div>
             </div>
@@ -77,9 +86,11 @@
 
         <!-- Stats -->
         <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-          <div class="rounded-xl border border-slate-200/80 bg-white/80 p-4 shadow-sm backdrop-blur-sm">
+          <div
+            class="rounded-xl border border-slate-200/80 bg-white/80 p-4 shadow-sm backdrop-blur-sm">
             <div class="flex items-center gap-3">
-              <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
+              <div
+                class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
                 <UIcon name="ic:round-star" class="size-5" />
               </div>
               <div>
@@ -88,20 +99,26 @@
               </div>
             </div>
           </div>
-          <div class="rounded-xl border border-slate-200/80 bg-white/80 p-4 shadow-sm backdrop-blur-sm">
+          <div
+            class="rounded-xl border border-slate-200/80 bg-white/80 p-4 shadow-sm backdrop-blur-sm">
             <div class="flex items-center gap-3">
-              <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#e8edf5] text-primary">
+              <div
+                class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#e8edf5] text-primary">
                 <UIcon name="hugeicons:calendar-03" class="size-5" />
               </div>
               <div>
-                <p class="text-lg font-bold text-slate-800">{{ lawyer?.years_of_experience ?? 0 }} سال</p>
+                <p class="text-lg font-bold text-slate-800">
+                  {{ lawyer?.years_of_experience ?? 0 }} سال
+                </p>
                 <p class="text-xs text-slate-500">سابقه فعالیت</p>
               </div>
             </div>
           </div>
-          <div class="rounded-xl border border-slate-200/80 bg-white/80 p-4 shadow-sm backdrop-blur-sm">
+          <div
+            class="rounded-xl border border-slate-200/80 bg-white/80 p-4 shadow-sm backdrop-blur-sm">
             <div class="flex items-center gap-3">
-              <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
+              <div
+                class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
                 <UIcon name="hugeicons:message-01" class="size-5" />
               </div>
               <div>
@@ -110,13 +127,17 @@
               </div>
             </div>
           </div>
-          <div class="rounded-xl border border-slate-200/80 bg-white/80 p-4 shadow-sm backdrop-blur-sm col-span-2 sm:col-span-1">
+          <div
+            class="rounded-xl border border-slate-200/80 bg-white/80 p-4 shadow-sm backdrop-blur-sm col-span-2 sm:col-span-1">
             <div class="flex items-center gap-3">
-              <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+              <div
+                class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
                 <UIcon name="material-symbols:location-on-rounded" class="size-5" />
               </div>
               <div class="min-w-0">
-                <p class="text-base font-bold text-slate-800 truncate">{{ lawyer?.city || lawyer?.province || '—' }}</p>
+                <p class="text-base font-bold text-slate-800 truncate">
+                  {{ lawyer?.city || lawyer?.province || "—" }}
+                </p>
                 <p class="text-xs text-slate-500">محل فعالیت</p>
               </div>
             </div>
@@ -144,13 +165,16 @@
         <!-- Left: Main -->
         <div class="flex-1 min-w-0 space-y-6">
           <!-- Visit types: mobile-only CTA preview -->
+
           <InfoLawyerChooseVisit
             :active="lawyer?.is_active"
             :items="items"
+            :phone-number="lawyer?.phone"
             class="block lg:hidden" />
 
           <!-- Section: About / Location / Schedule -->
-          <section class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+          <section
+            class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
             <div class="border-b border-slate-200/80 bg-slate-50/50 px-4 py-3">
               <h2 class="flex items-center gap-2 text-lg font-bold text-slate-800">
                 <span class="h-1 w-1 rounded-full bg-primary" />
@@ -164,7 +188,8 @@
           </section>
 
           <!-- راهنمای رزرو -->
-          <section class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+          <section
+            class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
             <div class="border-b border-slate-200/80 bg-slate-50/50 px-4 py-3">
               <h2 class="flex items-center gap-2 text-lg font-bold text-slate-800">
                 <span class="h-1 w-1 rounded-full bg-primary" />
@@ -173,25 +198,43 @@
             </div>
             <div class="p-4 sm:p-5">
               <div class="grid gap-4 sm:grid-cols-3">
-                <div class="flex gap-4 rounded-xl border border-slate-100 bg-slate-50/50 p-4">
-                  <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">۱</span>
+                <div
+                  class="flex gap-4 rounded-xl border border-slate-100 bg-slate-50/50 p-4">
+                  <span
+                    class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white"
+                    >۱</span
+                  >
                   <div>
                     <p class="font-semibold text-slate-800">انتخاب نوع مشاوره</p>
-                    <p class="mt-0.5 text-sm text-slate-500">تلفنی، حضوری یا چت را از باکس سمت چپ انتخاب کنید.</p>
+                    <p class="mt-0.5 text-sm text-slate-500">
+                      تلفنی، حضوری یا چت را از باکس سمت چپ انتخاب کنید.
+                    </p>
                   </div>
                 </div>
-                <div class="flex gap-4 rounded-xl border border-slate-100 bg-slate-50/50 p-4">
-                  <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">۲</span>
+                <div
+                  class="flex gap-4 rounded-xl border border-slate-100 bg-slate-50/50 p-4">
+                  <span
+                    class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white"
+                    >۲</span
+                  >
                   <div>
                     <p class="font-semibold text-slate-800">انتخاب زمان</p>
-                    <p class="mt-0.5 text-sm text-slate-500">روز و ساعت دلخواه را در تب «زمان مشاوره» مشخص کنید.</p>
+                    <p class="mt-0.5 text-sm text-slate-500">
+                      روز و ساعت دلخواه را در تب «زمان مشاوره» مشخص کنید.
+                    </p>
                   </div>
                 </div>
-                <div class="flex gap-4 rounded-xl border border-slate-100 bg-slate-50/50 p-4">
-                  <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">۳</span>
+                <div
+                  class="flex gap-4 rounded-xl border border-slate-100 bg-slate-50/50 p-4">
+                  <span
+                    class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white"
+                    >۳</span
+                  >
                   <div>
                     <p class="font-semibold text-slate-800">پرداخت و تأیید</p>
-                    <p class="mt-0.5 text-sm text-slate-500">پس از پرداخت آنلاین، نوبت شما ثبت می‌شود.</p>
+                    <p class="mt-0.5 text-sm text-slate-500">
+                      پس از پرداخت آنلاین، نوبت شما ثبت می‌شود.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -199,7 +242,8 @@
           </section>
 
           <!-- سوالات متداول -->
-          <section class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+          <section
+            class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
             <div class="border-b border-slate-200/80 bg-slate-50/50 px-4 py-3">
               <h2 class="flex items-center gap-2 text-lg font-bold text-slate-800">
                 <span class="h-1 w-1 rounded-full bg-primary" />
@@ -208,12 +252,22 @@
             </div>
             <div class="divide-y divide-slate-100 p-4 sm:p-5">
               <div>
-                <p class="font-semibold text-slate-800">چگونه می‌توانم با وکیل مشاوره بگیرم؟</p>
-                <p class="mt-1 text-sm text-slate-600">با انتخاب نوع مشاوره (تلفنی، حضوری یا چت) و سپس زمان مناسب، رزرو را تکمیل و هزینه را آنلاین پرداخت کنید.</p>
+                <p class="font-semibold text-slate-800">
+                  چگونه می‌توانم با وکیل مشاوره بگیرم؟
+                </p>
+                <p class="mt-1 text-sm text-slate-600">
+                  با انتخاب نوع مشاوره (تلفنی، حضوری یا چت) و سپس زمان مناسب، رزرو را
+                  تکمیل و هزینه را آنلاین پرداخت کنید.
+                </p>
               </div>
               <div class="pt-4">
-                <p class="font-semibold text-slate-800">آیا می‌توانم نظر خود را درباره وکیل ثبت کنم؟</p>
-                <p class="mt-1 text-sm text-slate-600">بله. پس از استفاده از خدمات، در بخش «امتیاز و دیدگاه کاربران» می‌توانید نظر و امتیاز خود را ثبت کنید.</p>
+                <p class="font-semibold text-slate-800">
+                  آیا می‌توانم نظر خود را درباره وکیل ثبت کنم؟
+                </p>
+                <p class="mt-1 text-sm text-slate-600">
+                  بله. پس از استفاده از خدمات، در بخش «امتیاز و دیدگاه کاربران» می‌توانید
+                  نظر و امتیاز خود را ثبت کنید.
+                </p>
               </div>
             </div>
           </section>
@@ -221,9 +275,7 @@
           <!-- Comments -->
           <ClientOnly>
             <section id="comment" class="scroll-mt-24">
-              <info-lawyer-comment
-                :id="lawyer?.id"
-                :lawyer-full-name="fullname" />
+              <info-lawyer-comment :id="lawyer?.id" :lawyer-full-name="fullname" />
             </section>
           </ClientOnly>
         </div>
@@ -234,10 +286,12 @@
             <InfoLawyerChooseVisit
               :active="lawyer?.is_active"
               :items="items"
+              :phone-number="lawyer?.phone"
               class="hidden lg:block" />
 
             <!-- قیمت‌گذاری سریع -->
-            <section class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+            <section
+              class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
               <div class="border-b border-slate-200/80 bg-slate-50/50 px-4 py-3">
                 <h2 class="flex items-center gap-2 text-base font-bold text-slate-800">
                   <span class="h-1 w-1 rounded-full bg-primary" />
@@ -252,22 +306,33 @@
                   :class="{ 'opacity-50': !it.active }">
                   <div class="flex items-center gap-3">
                     <UIcon :name="it.icon" class="size-5 text-slate-500" />
-                    <span class="text-sm font-medium" :class="it.active ? 'text-slate-800' : 'text-slate-400'">{{ it.title }}</span>
+                    <span
+                      class="text-sm font-medium"
+                      :class="it.active ? 'text-slate-800' : 'text-slate-400'"
+                      >{{ it.title }}</span
+                    >
                   </div>
-                  <span class="text-sm font-bold text-slate-700">{{ it.price }} <span class="text-slate-400 font-normal">تومان</span></span>
+                  <span class="text-sm font-bold text-slate-700"
+                    >{{ it.price }}
+                    <span class="text-slate-400 font-normal">تومان</span></span
+                  >
                 </div>
               </div>
             </section>
 
             <!-- اعتماد و اطمینان -->
-            <div class="rounded-2xl border border-slate-200/80 bg-gradient-to-br from-slate-50 to-white p-4 shadow-sm">
+            <div
+              class="rounded-2xl border border-slate-200/80 bg-gradient-to-br from-slate-50 to-white p-4 shadow-sm">
               <div class="flex items-start gap-3">
-                <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
+                <div
+                  class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
                   <UIcon name="hugeicons:shield-check" class="size-5" />
                 </div>
                 <div>
                   <p class="font-semibold text-slate-800">رزرو امن در سامانه وکیل وکیل</p>
-                  <p class="mt-1 text-xs text-slate-500">پرداخت آنلاین و امن؛ پشتیبانی در تمام مراحل رزرو.</p>
+                  <p class="mt-1 text-xs text-slate-500">
+                    پرداخت آنلاین و امن؛ پشتیبانی در تمام مراحل رزرو.
+                  </p>
                 </div>
               </div>
             </div>
@@ -279,27 +344,28 @@
 </template>
 
 <script setup>
-import provincesData from '~/public/provinces.json';
+import provincesData from "~/public/provinces.json";
 
 const route = useRoute();
 const config = useRuntimeConfig();
 const filterStore = useFiltersStore();
 
-const res = await useGet({ url: `lawyers/${route.params.id}` }, '');
+const res = await useGet({ url: `lawyers/${route.params.id}` }, "");
 const data = await res.data;
 const lawyer = ref(data?.data ?? {});
 
 const fullname = computed(
   () =>
-    `${lawyer.value?.lawyer_info?.name ?? ''} ${lawyer.value?.lawyer_info?.family ?? ''}`.trim() || 'وکیل'
+    `${lawyer.value?.lawyer_info?.name ?? ""} ${lawyer.value?.lawyer_info?.family ?? ""}`.trim() ||
+    "وکیل",
 );
 
-const commentHash = computed(() => route.path + '#comment');
+const commentHash = computed(() => route.path + "#comment");
 
 const breadcrumbItems = computed(() => {
-  const base = [{ label: 'وکیل وکیل', to: '/' }];
+  const base = [{ label: "وکیل وکیل", to: "/" }];
   const info = lawyer.value;
-  if (!info || typeof info !== 'object') return base;
+  if (!info || typeof info !== "object") return base;
   const provinceName = info.province;
   const provinceEnName = provinceName
     ? (provincesData.find((p) => p.name === provinceName)?.en_name ?? null)
@@ -310,7 +376,7 @@ const breadcrumbItems = computed(() => {
   if (info.city) {
     base.push({
       label: info.city,
-      to: provinceEnName ? `/provinces/${provinceEnName}` : '/lawyers',
+      to: provinceEnName ? `/provinces/${provinceEnName}` : "/lawyers",
     });
   }
   base.push({ label: fullname.value });
@@ -324,105 +390,134 @@ const result = await useGet({
 const sch = await result.data;
 useFiltersStore().price = sch.prices;
 const items = ref([
-  { id: '1', title: 'مشاوره تلفنی', price: filterStore.price.phone, value: 'phone', icon: 'hugeicons:telephone', active: sch.phone?.length > 0 },
-  { id: '2', title: 'مشاوره حضوری', price: filterStore.price.inperson, value: 'inperson', icon: 'hugeicons:building-06', active: sch.inperson?.length > 0 },
-  { id: '3', title: 'چت', price: filterStore.price.chat, value: 'chat', icon: 'hugeicons:message-multiple-02', active: sch.chat?.length > 0 },
+  {
+    id: "1",
+    title: "مشاوره تلفنی",
+    price: filterStore.price.phone,
+    value: "phone",
+    icon: "hugeicons:telephone",
+    active: sch.phone?.length > 0,
+  },
+  {
+    id: "2",
+    title: "مشاوره حضوری",
+    price: filterStore.price.inperson,
+    value: "inperson",
+    icon: "hugeicons:building-06",
+    active: sch.inperson?.length > 0,
+  },
+  {
+    id: "3",
+    title: "چت",
+    price: filterStore.price.chat,
+    value: "chat",
+    icon: "hugeicons:message-multiple-02",
+    active: sch.chat?.length > 0,
+  },
 ]);
 
 const rateDisplay = computed(() => {
   const v = lawyer.value?.average_rating;
-  if (v == null) return '—';
+  if (v == null) return "—";
   return String(v).slice(0, 3);
 });
 
-const reviewCount = computed(() => lawyer.value?.review_count ?? lawyer.value?.comment_count ?? 0);
+const reviewCount = computed(
+  () => lawyer.value?.review_count ?? lawyer.value?.comment_count ?? 0,
+);
 
 const specialtyTitles = computed(() => {
   const sp = lawyer.value?.lawyer_info?.specialties;
   if (!Array.isArray(sp)) return [];
-  return sp
-    .map((id) => filterStore?.lawyerSpecialties?.[id]?.title)
-    .filter(Boolean);
+  return sp.map((id) => filterStore?.lawyerSpecialties?.[id]?.title).filter(Boolean);
 });
 
 const shareContent = async () => {
   const shareData = {
     title: `${fullname.value} | وکیل دادگستری`,
     text: `رزرو مشاوره با ${fullname.value}`,
-    url: typeof window !== 'undefined' ? window.location.href : '',
+    url: typeof window !== "undefined" ? window.location.href : "",
   };
   try {
-    if (typeof navigator !== 'undefined' && navigator.share) {
+    if (typeof navigator !== "undefined" && navigator.share) {
       await navigator.share(shareData);
     } else {
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         await navigator.clipboard?.writeText(shareData.url);
-        useToast().add({ title: 'لینک کپی شد.', icon: 'hugeicons:link-02', color: 'success' });
+        useToast().add({
+          title: "لینک کپی شد.",
+          icon: "hugeicons:link-02",
+          color: "success",
+        });
       } else {
         // fallback for SSR
       }
     }
   } catch (e) {
-    if (e?.name !== 'AbortError') console.error(e);
+    if (e?.name !== "AbortError") console.error(e);
   }
 };
 
 useSeoMeta({
-  title: () => (fullname.value || 'جزئیات وکیل'),
+  title: () => fullname.value || "جزئیات وکیل",
   description: () => {
-    const city = lawyer.value?.city || lawyer.value?.province || 'ایران';
-    const base = lawyer.value?.lawyer_info?.base_lawyer?.title || lawyer.value?.base || 'وکیل پایه یک';
+    const city = lawyer.value?.city || lawyer.value?.province || "ایران";
+    const base =
+      lawyer.value?.lawyer_info?.base_lawyer?.title ||
+      lawyer.value?.base ||
+      "وکیل پایه یک";
     return `رزرو وقت مشاوره با ${fullname.value}، ${base} در ${city}. مشاهده سوابق، نظرات و آدرس.`;
   },
   keywords: () => {
-    const city = lawyer.value?.city || lawyer.value?.province || '';
-    const base = lawyer.value?.lawyer_info?.base_lawyer?.title || lawyer.value?.base || '';
+    const city = lawyer.value?.city || lawyer.value?.province || "";
+    const base =
+      lawyer.value?.lawyer_info?.base_lawyer?.title || lawyer.value?.base || "";
     return `${fullname.value}, وکیل ${city}, ${base}, رزرو وکیل, مشاوره حقوقی`;
   },
   ogTitle: () => `${fullname.value} | وکیل دادگستری`,
   ogDescription: () => `درخواست مشاوره حقوقی با ${fullname.value}.`,
-  ogImage: () => lawyer.value?.lawyer_info?.profile_image || '/images/default-lawyer.png',
-  twitterCard: 'summary_large_image',
+  ogImage: () => lawyer.value?.lawyer_info?.profile_image || "/images/default-lawyer.png",
+  twitterCard: "summary_large_image",
   twitterTitle: () => fullname.value,
   twitterDescription: () => `رزرو وقت مشاوره با ${fullname.value}`,
-  twitterImage: () => lawyer.value?.lawyer_info?.profile_image || '/images/default-lawyer.png',
+  twitterImage: () =>
+    lawyer.value?.lawyer_info?.profile_image || "/images/default-lawyer.png",
 });
 
 useHead({
   link: [
     {
-      rel: 'canonical',
+      rel: "canonical",
       href: () => {
-        const slug = fullname.value.trim().replace(/\s+/g, '-') || 'profile';
+        const slug = fullname.value.trim().replace(/\s+/g, "-") || "profile";
         return `https://vakilvakil.ir/lawyer/${route.params.id}/${slug}`;
       },
     },
   ],
   script: [
     {
-      type: 'application/ld+json',
+      type: "application/ld+json",
       innerHTML: computed(() =>
         JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'Attorney',
-          name: fullname.value || 'وکیل',
+          "@context": "https://schema.org",
+          "@type": "Attorney",
+          name: fullname.value || "وکیل",
           image: lawyer.value?.lawyer_info?.profile_image,
           address: {
-            '@type': 'PostalAddress',
+            "@type": "PostalAddress",
             addressLocality: lawyer.value?.city,
             addressRegion: lawyer.value?.province,
-            addressCountry: 'IR',
+            addressCountry: "IR",
           },
-          priceRange: '$$',
+          priceRange: "$$",
           aggregateRating: {
-            '@type': 'AggregateRating',
+            "@type": "AggregateRating",
             ratingValue: lawyer.value?.average_rating || 5,
             reviewCount: lawyer.value?.review_count || lawyer.value?.comment_count || 1,
           },
-        })
+        }),
       ),
     },
   ],
 });
 </script>
-

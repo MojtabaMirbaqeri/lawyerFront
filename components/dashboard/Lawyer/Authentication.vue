@@ -764,7 +764,7 @@ const onSubmit = async (e) => {
 }
 
 .modal-body {
-  @apply p-6;
+  @apply p-6 overflow-y-auto!;
 }
 
 .docs-grid {

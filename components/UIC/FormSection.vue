@@ -31,7 +31,7 @@ const toggleCollapse = () => {
       </div>
       <!-- Desktop: Actions inline, Mobile: Only chevron here -->
       <div class="form-section-header-actions">
-        <div class="hidden sm:flex items-center gap-2">
+        <div class=" items-center gap-2">
           <slot name="actions" />
         </div>
         <button
@@ -46,9 +46,7 @@ const toggleCollapse = () => {
       </div>
     </div>
     <!-- Mobile: Actions below header -->
-    <div v-if="$slots.actions" class="form-section-mobile-actions sm:hidden">
-      <slot name="actions" />
-    </div>
+   
     <Transition name="collapse">
       <div v-show="!isCollapsed" class="form-section-content">
         <slot />
