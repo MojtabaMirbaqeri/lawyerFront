@@ -40,6 +40,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/admin/comments",
       icon: "lucide:message-circle",
     },
+    {
+      title: "مقالات",
+      url: "/dashboard/admin/articles",
+      icon: "lucide:file-text",
+    },
     { 
       title: "کد تخفیف", 
       url: "/dashboard/admin/coupons", 
@@ -94,6 +99,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
           title: "امور مالی",
           url: "/dashboard/lawyer/financial",
           icon: "lucide:wallet",
+        },
+        {
+          title: "مقالات",
+          url: "/dashboard/lawyer/articles",
+          icon: "lucide:file-text",
         },
         {
           title: "تیکت‌ها",

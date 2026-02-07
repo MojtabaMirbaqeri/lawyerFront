@@ -33,6 +33,7 @@
     "nuxt-countdown": "^1.2.1",
     "nuxt-rating": "^0.1.6",
     "pinia": "^3.0.3",
+    "quill": "^2.0.3",
     "radix-vue": "^1.9.17",
     "socket.io-client": "^2.5.0",
     "tailwind-merge": "^3.3.1",

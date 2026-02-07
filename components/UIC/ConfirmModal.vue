@@ -33,52 +33,95 @@ const close = () => {
 const confirm = () => {
   emit('confirm');
 };
+
+function onOverlayKeydown(e) {
+  if (e.key === 'Escape') close();
+}
+
+if (import.meta.client) {
+  watch(
+    isOpen,
+    (open) => {
+      if (open) document.addEventListener('keydown', onOverlayKeydown);
+      else document.removeEventListener('keydown', onOverlayKeydown);
+    },
+    { immediate: true }
+  );
+  onUnmounted(() => document.removeEventListener('keydown', onOverlayKeydown));
+}
 </script>
 
 <template>
-  <UModal v-model:open="isOpen">
-    <template #content>
-      <div class="confirm-modal-wrapper">
-      <div class="confirm-modal">
-        <div class="confirm-modal-header">
-          <div :class="['confirm-icon', variant]">
-            <Icon :name="iconName" class="w-6 h-6" />
+  <Teleport to="body">
+    <Transition name="confirm-fade">
+      <div
+        v-if="isOpen"
+        class="confirm-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirm-modal-title"
+        @click.self="close"
+      >
+        <div class="confirm-modal">
+          <div class="confirm-modal-header">
+            <div :class="['confirm-icon', variant]">
+              <Icon :name="iconName" class="w-6 h-6" />
+            </div>
+            <h3 id="confirm-modal-title" class="confirm-title">{{ title }}</h3>
+            <button @click="close" class="close-btn" type="button" aria-label="بستن">
+              <Icon name="lucide:x" class="w-5 h-5" />
+            </button>
           </div>
-          <h3 class="confirm-title">{{ title }}</h3>
-          <button @click="close" class="close-btn">
-            <Icon name="lucide:x" class="w-5 h-5" />
-          </button>
-        </div>
-        
-        <div class="confirm-modal-body">
-          <p class="confirm-message">{{ message }}</p>
-          <slot></slot>
-        </div>
-        
-        <div class="confirm-modal-footer">
-          <button @click="close" class="btn-secondary">
-            {{ cancelText }}
-          </button>
-          <button @click="confirm" :class="['btn-confirm', variant]" :disabled="loading">
-            <Icon v-if="loading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
-            {{ confirmText }}
-          </button>
+
+          <div class="confirm-modal-body">
+            <p class="confirm-message">{{ message }}</p>
+            <slot />
+          </div>
+
+          <div class="confirm-modal-footer">
+            <button @click="close" class="btn-secondary" type="button">
+              {{ cancelText }}
+            </button>
+            <button
+              type="button"
+              @click="confirm"
+              :class="['btn-confirm', variant]"
+              :disabled="loading"
+            >
+              <Icon v-if="loading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
+              {{ confirmText }}
+            </button>
+          </div>
         </div>
       </div>
-      </div>
-    </template>
-  </UModal>
+    </Transition>
+  </Teleport>
 </template>
 
 <style scoped>
 @reference "tailwindcss";
 
-.confirm-modal-wrapper {
-  @apply w-full flex justify-center items-start p-4;
+.confirm-overlay {
+  @apply fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50;
+  width: 100vw;
+  min-width: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.confirm-fade-enter-active,
+.confirm-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.confirm-fade-enter-from,
+.confirm-fade-leave-to {
+  opacity: 0;
 }
 
 .confirm-modal {
-  @apply bg-transparent rounded-xl w-full min-w-[min(100%,22rem)] max-w-lg overflow-hidden;
+  @apply bg-white rounded-xl w-full max-w-md overflow-hidden shadow-2xl;
 }
 
 .confirm-modal-header {
@@ -119,6 +162,10 @@ const confirm = () => {
 
 .confirm-modal-footer {
   @apply flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 bg-transparent;
+}
+
+.btn-secondary {
+  @apply px-4 py-2 rounded-lg text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors border-none cursor-pointer;
 }
 
 .btn-confirm {
