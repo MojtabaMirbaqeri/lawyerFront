@@ -66,8 +66,17 @@
           </ThingSidebarGroup>
           <ThingSidebarGroup>
             <ThingSidebarGroupContent>
-              <DashboardLogoutBtn  v-if="$route.path.startsWith('/dashboard')"/>
-              <button @click="navigateTo('/dashboard')" v-if="$route.path.startsWith('/chat')" class="bg-[#e8edf5] flex gap-2 items-center lg:hidden justify-start rounded-[7px] py-5 px-4 h-9 text-[#1e3a5f] w-full text-right">
+              <button
+                v-if="authStore.isImpersonatingLawyer"
+                type="button"
+                class="bg-amber-100 flex gap-2 items-center justify-start rounded-[7px] py-5 px-4 h-9 text-amber-800 w-full text-right hover:bg-amber-200 mb-3"
+                @click="authStore.exitImpersonation()"
+              >
+                <Icon name="solar:logout-2-outline" class="size-4.5!" />
+                <span>خروج از پنل وکیل</span>
+              </button>
+              <DashboardLogoutBtn v-if="$route.path.startsWith('/dashboard')" />
+              <button @click="navigateTo('/dashboard')" v-if="$route.path.startsWith('/chat')" class="bg-blue-100 flex gap-2 items-center lg:hidden justify-start rounded-[7px] py-5 px-4 h-9 text-primary w-full text-right">
                 <Icon name="hugeicons:dashboard-square-01" class="size-4.5!" />
                 <span>برگشت به داشبورد</span>
               </button>

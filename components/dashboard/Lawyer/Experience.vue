@@ -339,7 +339,7 @@ async function onWorkSubmit(event) {
 }
 
 // ======== بخش جوایز ========
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
 
 const awardState = reactive({
   award_name: "",
@@ -354,7 +354,7 @@ const awardSchema = object({
     .required("تصویر لوح افتخار الزامی است")
     .test(
       "fileSize",
-      "حجم فایل نباید بیشتر از ۵ مگابایت باشد",
+      "حجم فایل نباید بیشتر از ۲۰ مگابایت باشد",
       (file) => file && file.size <= MAX_FILE_SIZE
     ),
 });

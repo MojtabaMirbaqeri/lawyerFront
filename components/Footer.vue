@@ -1,16 +1,45 @@
 <template>
-  <footer id="footer">
-    <!-- Main Footer -->
-    <div class="footer-main">
-      <div class="container">
-        <div class="footer-grid">
-          <!-- Brand Section -->
-          <div class="footer-brand">
-            <NuxtImg src="/images/main-logo.svg" class="h-10 mb-4" />
-            <p class="brand-tagline">
-              پلتفرم هوشمند رزرو نوبت وکیل و دریافت مشاوره حقوقی آنلاین
-            </p>
-            <div class="social-links">
+  <footer id="footer" class="bg-primary/90">
+    <div class="footer-con">
+    <div class="w-vw overflow-x-clip">
+      <div id="pos-article-text-card-115773"></div>
+    </div>
+      <div class="lg:py-4">
+        <div
+          class="divide-y divide-gray-200 lg:divide-y-0 lg:flex flex-row items-center gap-12 lg:container">
+          <!-- <div class="partners lg:grow">
+            <div class="container lg:p-0!">
+              <div>
+                <div class="text-base">همراهان وکیل وکیل:</div>
+              </div>
+              <div class="grow">
+                <div class="container partners-logos">
+                  <NuxtImg
+                    v-for="partner in partners"
+                    :key="partner"
+                    :src="`/images/footer/${partner}`"
+                    class="h-6 lg:h-8"
+                  />
+                </div>
+              </div>
+            </div>
+          </div> -->
+          <div>
+            <div class="container help">
+              <h3 class="text-primary">نیاز به راهنمایی دارید؟</h3>
+              <NuxtLink to="tel:+982110014488" external>
+                <UICSecondaryBtn> 021-10014488 </UICSecondaryBtn>
+              </NuxtLink>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          class="container flex flex-col lg:flex-row lg:items-start gap-2.5 py-6! lg:gap-8 lg:justify-between lg:py-6!">
+          <div class="flex justify-between items-center lg:flex-col lg:items-start gap-4">
+            <NuxtImg src="/images/main-logo.svg" class="h-8" />
+            <div class="social-networks">
               <NuxtLink
                 v-for="social in socials"
                 :key="social.name"

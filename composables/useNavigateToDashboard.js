@@ -1,5 +1,12 @@
 export const useNavigateToDashboard = (otpRedirect = false) => {
   const auth = useAuthStore();
+    if (import.meta.client) {
+    const redirectUrl = localStorage.getItem("redirectAfterLogin");
+    if (redirectUrl) {
+      localStorage.removeItem("redirectAfterLogin");
+      return navigateTo(redirectUrl);
+    }
+  }
   if (auth?.user?.user_type == "lawyer") {
     return navigateTo("/dashboard/lawyer");
   } else if (auth?.user?.user_type == "admin") {

@@ -94,7 +94,7 @@ const mappedTypes = [...filtersStore.lawyerTypes]
   .filter((t) => t.id != 0);
 
 // MAX file size
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
 
 // reactive state (مقادیر اولیه خالی)
 const state = reactive({
@@ -119,12 +119,12 @@ const schema = object({
     .matches(/^\d{10}$/, "کد ملی باید ۱۰ رقم باشد"),
   IDCardPic: mixed()
     .required("تصویر کارت ملی الزامی است")
-    .test("fileSize", "حجم فایل نباید بیشتر از ۵ مگابایت باشد", (file) => {
+    .test("fileSize", "حجم فایل نباید بیشتر از ۲۰ مگابایت باشد", (file) => {
       return file && file.size <= MAX_FILE_SIZE;
     }),
   licensePic: mixed()
     .required("تصویر پروانه الزامی است")
-    .test("fileSize", "حجم فایل نباید بیشتر از ۵ مگابایت باشد", (file) => {
+    .test("fileSize", "حجم فایل نباید بیشتر از ۲۰ مگابایت باشد", (file) => {
       return file && file.size <= MAX_FILE_SIZE;
     }),
 });

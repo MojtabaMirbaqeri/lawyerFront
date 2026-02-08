@@ -8,12 +8,16 @@ export const useAuthStore = defineStore("auth", {
     initialized: false,
     loading: false,
     height: null,
-    csrfToken: null
+    csrfToken: null,
+    /** وقتی ادمین به پنل وکیل وارد شده، توکن ادمین اینجا ذخیره می‌شود تا با «خروج از پنل وکیل» برگردد */
+    adminToken: null,
   }),
 
   getters: {
     isAuthenticated: (state) => !!state.token,
     isInitialized: (state) => state.initialized,
+    /** آیا الان ادمین به‌صورت impersonate داخل پنل وکیل است؟ */
+    isImpersonatingLawyer: (state) => !!state.adminToken && state.user?.user_type === "lawyer",
   },
 
   actions: {
@@ -27,11 +31,19 @@ export const useAuthStore = defineStore("auth", {
         deserialize: (value) => (value === "null" ? null : value),
       });
 
+      const adminTokenCookie = useCookie("adminToken", {
+        default: () => null,
+        maxAge: 60 * 60 * 2, // 2 ساعت
+        serialize: String,
+        deserialize: (value) => (value === "null" ? null : value),
+      });
+
       if (jwtToken.value) {
         this.token = jwtToken.value;
+      }
 
-        // در SSR فقط token را تنظیم کن، user را بعداً fetch کن
-        // fetchUser را در هر صورت انجام نده چون ممکن است API در SSR دسترس نباشد
+      if (adminTokenCookie.value) {
+        this.adminToken = adminTokenCookie.value;
       }
 
       this.initialized = true;
@@ -214,9 +226,99 @@ export const useAuthStore = defineStore("auth", {
       setTimeout(() => {
         const jwtToken = useCookie("jwtToken");
         jwtToken.value = null;
+        const adminTokenCookie = useCookie("adminToken");
+        adminTokenCookie.value = null;
         this.$reset();
       } , 500)
       
+    },
+
+    /**
+     * ورود ادمین به پنل وکیل (impersonate).
+     * توکن فعلی ادمین در کوکی ذخیره می‌شود و با توکن وکیل جایگزین می‌شود.
+     */
+    async impersonateLawyer(lawyerId) {
+      if (!this.token || this.user?.user_type !== "admin") return { ok: false };
+      this.loading = true;
+      try {
+        const adminTokenCookie = useCookie("adminToken", {
+          maxAge: 60 * 60 * 2,
+          path: "/",
+          sameSite: "lax",
+          secure: true,
+        });
+        adminTokenCookie.value = this.token;
+        this.adminToken = this.token;
+
+        const res = await usePost({
+          url: `admin/impersonate-lawyer/${lawyerId}`,
+          includeAuthHeader: true,
+        });
+
+        if (res.statusCode === 200 && res.data?.data) {
+          const { token, user } = res.data.data;
+          this.token = token;
+          this.user = user;
+          const jwtToken = useCookie("jwtToken", {
+            maxAge: 60 * 60 * 24 * 7,
+            path: "/",
+            sameSite: "lax",
+            secure: true,
+          });
+          jwtToken.value = token;
+          useToast().add({
+            title: "ورود به پنل وکیل با موفقیت انجام شد.",
+            icon: "mage:security-shield",
+            color: "success",
+          });
+          return { ok: true };
+        }
+        return { ok: false };
+      } catch (error) {
+        console.error("Impersonate lawyer error:", error);
+        const adminTokenCookie = useCookie("adminToken");
+        adminTokenCookie.value = null;
+        this.adminToken = null;
+        return { ok: false };
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    /**
+     * خروج از پنل وکیل و بازگشت به حساب ادمین.
+     */
+    async exitImpersonation() {
+      const adminTokenCookie = useCookie("adminToken");
+      const savedAdminToken = adminTokenCookie.value || this.adminToken;
+      if (!savedAdminToken) return;
+      this.loading = true;
+      try {
+        adminTokenCookie.value = null;
+        this.adminToken = null;
+        this.token = savedAdminToken;
+        this.user = null;
+        const jwtToken = useCookie("jwtToken", {
+          maxAge: 60 * 60 * 24 * 7,
+          path: "/",
+          sameSite: "lax",
+          secure: true,
+        });
+        jwtToken.value = savedAdminToken;
+        await this.fetchUser();
+        useToast().add({
+          title: "بازگشت به پنل ادمین.",
+          icon: "mage:security-shield",
+          color: "success",
+        });
+      } catch (error) {
+        console.error("Exit impersonation error:", error);
+      } finally {
+        this.loading = false;
+        if (import.meta.client) {
+          window.location.replace("/dashboard/admin/impersonate-lawyer");
+        }
+      }
     },
   },
 });

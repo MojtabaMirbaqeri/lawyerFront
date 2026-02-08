@@ -155,10 +155,21 @@ const columns: TableColumn<Payment>[] = [
 ];
 
 function getRowItems(row: Row<Payment>) {
+  const authStore = useAuthStore();
   return [
     {
       type: "label",
       label: "فعالیت ها",
+    },
+    {
+      label: "ورود به پنل وکیل",
+      icon: "solar:login-2-outline",
+      async onSelect() {
+        const { ok } = await authStore.impersonateLawyer(row.original.edit_id);
+        if (ok && import.meta.client) {
+          await navigateTo("/dashboard/lawyer");
+        }
+      },
     },
     {
       label: "ویرایش وکیل",

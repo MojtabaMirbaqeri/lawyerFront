@@ -13,26 +13,28 @@
           <span class="text-sm font-medium text-slate-800">{{ items[activeBtn - 1]?.title }}</span>
           <span class="text-sm font-bold text-slate-700">{{ items[activeBtn - 1]?.price }} <span class="font-normal text-slate-400">تومان</span></span>
         </div>
-        <UICSecondaryBtn
-          :disabled="!props.active"
-          @click="
-            navigateTo(
-              `/reserve/${$route.params.id}?visit_type=${
-                items.find((item) => item.id === activeBtn)?.value
-              }`
-            )
-          "
-          class="flex items-center justify-center rounded-[8px]!"
-        >
-          <span class="text-center text-base">ادامه فرآیند</span>
-        </UICSecondaryBtn>
+        <div class="flex flex-col gap-2.5 justify-stretch">
+          <UICSecondaryBtn
+            :disabled="!props.active"
+            @click="
+              navigateTo(
+                `/reserve/${$route.params.id}?visit_type=${
+                  items.find((item) => item.id === activeBtn)?.value
+                }`,
+              )
+            "
+            class="flex items-center justify-center rounded-[8px]!">
+            <span class="text-center text-base">ادامه فرآیند</span>
+          </UICSecondaryBtn>
+          <DirectCall :phone="phoneNumber" />
+        </div>
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-const props = defineProps(['items','active'])
+const props = defineProps(['items','active','phoneNumber'])
 
 const activeBtn = ref("0");
 </script>

@@ -35,7 +35,7 @@
               @update:model-value="handleImageUpload" />
           </template>
         </UModal>
-        <UICSelect v-model="formData.base" disabled class="w-auto" :items="mappedTypes" />
+        <UICSelect v-model="formData.base" class="w-auto" :items="mappedTypes" />
       </div>
     </div>
     <div class="space-y-8 lg:space-y-10">
@@ -83,7 +83,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, inject } from "vue";
+import { ref, reactive, computed, inject, watch } from "vue";
 
 const filtersStore = useFiltersStore();
 const authStore = useAuthStore();
@@ -93,38 +93,57 @@ const reFetchLawyer = inject("reFetchLawyerInformation");
 const props = defineProps({
   lawyerInformation: {
     type: Object,
-    required: true,
+    default: null,
   },
 });
+
+const lawyerInfo = computed(() => props.lawyerInformation?.lawyer_info ?? {});
+const baseLawyerId = computed(() => Number(props.lawyerInformation?.lawyer_info?.base_lawyer?.id) || 0);
 
 const isLoading = ref(false);
 const isProfileImageModalOpen = ref(false);
 
 const formData = reactive({
-  name: authStore.user.name,
-  family: authStore.user.family,
-  base: Number(props.lawyerInformation.lawyer_info.base_lawyer.id),
-  specialties: (props.lawyerInformation.lawyer_info.specialties || []).map(Number),
-  services: (props.lawyerInformation.lawyer_info.services || []).map(Number),
-  about: props.lawyerInformation.about || "",
+  name: authStore.user?.name ?? "",
+  family: authStore.user?.family ?? "",
+  base: 0,
+  specialties: [],
+  services: [],
+  about: "",
   profile_image: null,
 });
 
 // --- INITIAL STATE (با ref) ---
 const initialData = reactive({
-  name: authStore.user.name,
-  family: authStore.user.family,
-  base: Number(props.lawyerInformation.lawyer_info.base_lawyer.id),
-  specialties: (props.lawyerInformation.lawyer_info.specialties || []).map(Number),
-  services: (props.lawyerInformation.lawyer_info.services || []).map(Number),
-  about: props.lawyerInformation.about || "",
+  name: authStore.user?.name ?? "",
+  family: authStore.user?.family ?? "",
+  base: 0,
+  specialties: [],
+  services: [],
+  about: "",
 });
 
-// --- PREVIEW & MAPPED ---
-const profileImagePreview = ref(
-  props.lawyerInformation.lawyer_info?.profile_image
-    ? config.public.imageBase + props.lawyerInformation.lawyer_info.profile_image
-    : null
+// --- PREVIEW باید قبل از watch تعریف بشه ---
+const profileImagePreview = ref(null);
+
+// مقداردهی از props بعد از mount (جلوگیری از null در setup)
+watch(
+  () => [props.lawyerInformation, baseLawyerId.value, lawyerInfo.value],
+  () => {
+    if (!props.lawyerInformation) return;
+    formData.base = baseLawyerId.value;
+    formData.specialties = (lawyerInfo.value?.specialties || []).map(Number);
+    formData.services = (lawyerInfo.value?.services || []).map(Number);
+    formData.about = props.lawyerInformation?.about || "";
+    initialData.base = baseLawyerId.value;
+    initialData.specialties = (lawyerInfo.value?.specialties || []).map(Number);
+    initialData.services = (lawyerInfo.value?.services || []).map(Number);
+    initialData.about = props.lawyerInformation?.about || "";
+    profileImagePreview.value = lawyerInfo.value?.profile_image
+      ? config.public.imageBase + lawyerInfo.value.profile_image
+      : null;
+  },
+  { immediate: true }
 );
 
 const mappedTypes = [...filtersStore.lawyerTypes]

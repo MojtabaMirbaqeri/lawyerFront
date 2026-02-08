@@ -15,9 +15,9 @@
           <span>{{ item.label }}</span>
         </div>
         <div class="dis text-justify whitespace-break-spaces">
-          <div class="text-box" v-html="item.dis.slice(0, 300)" v-if="showMore === false">
+          <div class="text-box" v-html="removePhoneNumbers(item.dis.slice(0, 300))" v-if="showMore === false">
           </div>
-          <div v-html="item.dis" class="text-box" v-else>
+          <div v-html="removePhoneNumbers(item.dis)" class="text-box" v-else>
           </div>
           <div
             class="read-more text-[#1e3a5f] cursor-pointer"
@@ -59,6 +59,13 @@ defineProps({
 const selectedTab = defineModel({
   type: String,
 });
+
+// تابع برای حذف شماره موبایل از متن
+const removePhoneNumbers = (text) => {
+  if (!text) return text;
+  // حذف شماره موبایل با فرمت 09xxx (09 به دنبال 8 یا 9 رقم)
+  return text.replace(/09\d{8,9}/g, '');
+};
 </script>
 <style scoped>
 @reference "tailwindcss";

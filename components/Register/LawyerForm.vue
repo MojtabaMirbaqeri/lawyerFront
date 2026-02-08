@@ -66,19 +66,19 @@ import * as yup from "yup";
 
 const registerStore = useRegisterStore();
 const lawyerInformation = registerStore.lawyerInformation;
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
 
 const schema = yup.object({
   IDCardPic: yup
     .mixed()
     .required("تصویر کارت ملی الزامی است")
-    .test("fileSize", "حجم فایل نباید بیشتر از ۵ مگابایت باشد", (file) => {
+    .test("fileSize", "حجم فایل نباید بیشتر از ۲۰ مگابایت باشد", (file) => {
       return file && file.size <= MAX_FILE_SIZE;
     }),
   licensePic: yup
     .mixed()
     .required("تصویر پروانه وکالت الزامی است")
-    .test("fileSize", "حجم فایل نباید بیشتر از ۵ مگابایت باشد", (file) => {
+    .test("fileSize", "حجم فایل نباید بیشتر از ۲۰ مگابایت باشد", (file) => {
       return file && file.size <= MAX_FILE_SIZE;
     }),
 });
