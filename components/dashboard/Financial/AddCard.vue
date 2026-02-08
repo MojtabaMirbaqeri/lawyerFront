@@ -112,8 +112,9 @@ const schema = object({
     .transform((value) => value.replace(/\s/g, ""))
     .matches(/^\d{16}$/, "شماره کارت باید ۱۶ رقم باشد"),
   sheba_number: string()
-    .required("شماره شبا الزامی است")
-    .matches(/^\d{24}$/, "شماره شبا باید ۲۴ رقم باشد"),
+    .optional()
+    .default("")
+    .matches(/^(\d{24})?$/, "شماره شبا در صورت وارد شدن باید ۲۴ رقم باشد"),
 });
 
 // -- منطق Fetch و Submit --
@@ -133,11 +134,12 @@ async function fetchBankCards() {
 
 async function onSubmit(event) {
   isLoading.value = true;
+  const sheba = (event.data.sheba_number || "").trim();
   const payload = {
     bank_name: null,
     card_holder_name: event.data.card_holder_name,
     card_number: event.data.card_number.replace(/\s/g, ""),
-    sheba_number: `IR${event.data.sheba_number}`,
+    sheba_number: sheba ? `IR${sheba}` : null,
   };
   payload.bank_name = getBankByCardNumber(payload.card_number)?.bank_title;
   try {
