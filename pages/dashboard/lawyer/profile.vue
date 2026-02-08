@@ -33,7 +33,7 @@
     <!-- Main Content -->
     <div v-else-if="lawyerInfo" class="profile-content">
       <!-- Tab Navigation -->
-      <div class="profile-tabs">
+      <div class="profile-tabs mb-4">
         <!-- Desktop Tabs -->
         <div class="tabs-desktop">
           <!-- Tab Group: General Info -->

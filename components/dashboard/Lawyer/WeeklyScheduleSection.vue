@@ -15,7 +15,7 @@
       >
 
         <!-- Global Settings -->
-        <div class="schedule-settings">
+        <!-- <div class="schedule-settings">
           <div class="setting-group">
             <label class="setting-label">
               <Icon name="lucide:clock" class="w-4 h-4" />
@@ -48,7 +48,7 @@
               </button>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!-- Days Accordion -->
         <div class="days-list">

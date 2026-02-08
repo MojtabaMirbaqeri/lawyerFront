@@ -12,7 +12,7 @@
       </template>
 
       <!-- Session Duration Setting -->
-      <div class="session-settings">
+      <!-- <div class="session-settings">
         <div class="setting-item">
           <label class="setting-label">مدت هر جلسه</label>
           <div class="setting-options">
@@ -32,7 +32,7 @@
           <label class="setting-label">کارمزد پلتفرم</label>
           <span class="setting-value">{{ platformFeePercent }}%</span>
         </div>
-      </div>
+      </div> -->
 
       <!-- Pricing Form with Validation -->
       <UForm
