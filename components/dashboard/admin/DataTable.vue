@@ -52,7 +52,7 @@ const refetch = async (page = null, total = false) => {
       phone: law.phone,
       fullName: `${name} ${family}`,
       slug: slug,
-      base: law.lawyer_info?.base_lawyer?.title,
+      base: law.lawyer_info?.base_lawyer?.title || 'وکیل دادگستری',
       baseId: law.lawyer_info?.base,
       edit_id: law.id,
       is_active: law.is_active,
@@ -86,7 +86,7 @@ const searchRefetch = async (query, start, page) => {
       phone: law.phone,
       fullName: `${name} ${family}`,
       slug: slug,
-      base: base?.title,
+      base: base?.title || 'وکیل دادگستری',
       baseId: law.base,
       edit_id: law.id,
       is_active: law.is_active,
@@ -128,7 +128,7 @@ const data = ref(
       phone: law.phone,
       fullName: `${name} ${family}`,
       slug: slug,
-      base: law.lawyer_info?.base_lawyer?.title,
+      base: law.lawyer_info?.base_lawyer?.title || 'وکیل دادگستری',
       baseId: law.lawyer_info?.base,
       edit_id: law.id,
       is_active: law.is_active,
@@ -397,7 +397,7 @@ const exportToExcel = () => {
 
       <!-- Custom cell for base -->
       <template #cell-base="{ value }">
-        <span class="badge badge-info">{{ value }}</span>
+        <span class="badge badge-info">{{ value || 'وکیل دادگستری' }}</span>
       </template>
 
       <!-- Custom cell for status -->
@@ -448,7 +448,7 @@ const exportToExcel = () => {
         </div>
         <div class="lawyer-card-body">
           <h3 class="lawyer-name">{{ lawyer.fullName }}</h3>
-          <span class="lawyer-base">{{ lawyer.base }}</span>
+          <span class="lawyer-base">{{ lawyer.base || 'وکیل دادگستری' }}</span>
           <div class="lawyer-meta">
             <span
               ><Icon name="lucide:phone" class="w-3.5 h-3.5" /> {{ lawyer.phone }}</span
