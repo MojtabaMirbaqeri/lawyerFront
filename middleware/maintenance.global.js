@@ -6,5 +6,5 @@ export default defineNuxtRouteMiddleware((to) => {
   if (!config.public.maintenanceMode) return;
 
   // ریدایرکت به صفحه HTML استاتیک در public
-  return navigateTo('/maintance.html', { external: true });
+  return navigateTo("/maintenance.html", { external: true });
 });
