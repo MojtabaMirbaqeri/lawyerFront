@@ -20,6 +20,7 @@ export default defineNuxtConfig({
       apiEndpoint: process.env.API_EP,
       imageBase: process.env.IMAGE_BASE,
       websocketHost: process.env.WEBSOCKET_HOST,
+      maintenanceMode: process.env.MAINTENANCE_MODE === "true",
     },
   },
   app: {
