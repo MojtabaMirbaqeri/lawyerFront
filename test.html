@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html
+  dir="rtl"
+  lang="fa"
+>
+
+<head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, initial-scale=1.0"
+      name="viewport"
+    />
+    <title>وکیل‌وکیل | سامانه جامع وکلای کشور</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#1B4B79", // Deep Navy Blue
+                        secondary: "#FFC107", // Gold
+                        "background-light": "#FFFFFF",
+                        "background-dark": "#0F172A",
+                        "surface-light": "#F9FAFB",
+                        "surface-dark": "#1E293B",
+                        "text-light": "#1F2937",
+                        "text-dark": "#F3F4F6",
+                        "border-light": "#E5E7EB",
+                        "border-dark": "#374151"
+                    },
+                    fontFamily: {
+                        display: ["Vazirmatn", "sans-serif"],
+                        body: ["Vazirmatn", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                        'xl': '1rem',
+                        '2xl': '1.5rem',
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+
+<body
+  class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark transition-colors duration-300"
+>
+    <header class="bg-primary shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-8">
+                <a
+                  class="flex items-center gap-2"
+                  href="#"
+                >
+                    <img
+                      alt="VakilVakil Logo"
+                      class="h-10 brightness-0 invert"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfg2hpGEROgDcyqZzBq25_h4XSr0UWaMhRxrHqpz5vnXyHQR7ai62ojglmYiiVX0NVw4cPNTmW9Wgn7H7LvatItrur6_TUkFSdDYQ5A8HHiXE4ufLB60ffk4rZ6ZEG1Cq6d_UhNEothcimNHO2QpsdCRGwkZkxe_e56gwnmi96znOWJkeIkFmei7yVGIEM4A00FO27FBCy4DeHPWikEhX6yk594_9j6Dz7WOgXrxE8gw2kY887Igo5slcCtoyly--dZZCg5zo_7xPO"
+                    />
+                </a>
+                <nav class="hidden md:flex items-center gap-6 text-white/90 text-sm font-medium">
+                    <a
+                      class="hover:text-secondary transition-colors"
+                      href="#"
+                    >خانه</a>
+                    <a
+                      class="hover:text-secondary transition-colors"
+                      href="#"
+                    >لیست وکلا</a>
+                    <a
+                      class="hover:text-secondary transition-colors"
+                      href="#"
+                    >سوالات متداول</a>
+                    <a
+                      class="hover:text-secondary transition-colors"
+                      href="#"
+                    >مقالات</a>
+                    <a
+                      class="hover:text-secondary transition-colors"
+                      href="#"
+                    >تماس با ما</a>
+                </nav>
+            </div>
+            <div class="flex items-center gap-4">
+                <a
+                  class="text-white/90 text-sm font-medium hover:text-white flex items-center gap-2"
+                  href="#"
+                >
+                    <span class="material-icons text-base">person</span>
+                    مجتـبی میرباقری
+                </a>
+                <a
+                  class="bg-white text-primary px-5 py-2 rounded-lg text-sm font-bold hover:bg-gray-100 transition-colors"
+                  href="#"
+                >
+                    دریافت مشاوره
+                </a>
+                <button
+                  class="text-white/70 hover:text-white"
+                  onclick="document.documentElement.classList.toggle('dark')"
+                >
+                    <span class="material-icons">brightness_4</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    <section class="bg-primary relative">
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute -top-24 -right-24 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-[#1B4B79] to-transparent"></div>
+        </div>
+        <div
+          class="container mx-auto px-4 lg:px-8 pt-12 pb-32 relative z-10 flex flex-col lg:flex-row items-center gap-12"
+        >
+            <div class="lg:w-1/2 text-center lg:text-right space-y-6">
+                <div
+                  class="inline-flex items-center gap-2 bg-white/10 text-white px-3 py-1 rounded-full text-xs backdrop-blur-sm border border-white/20"
+                >
+                    <span class="material-icons text-sm text-secondary">verified</span>
+                    پلتفرم هوشمند حقوقی
+                </div>
+                <h1 class="text-4xl lg:text-5xl font-extrabold text-white leading-tight">
+                    دسترسی آسان به <br />
+                    <span class="text-secondary">بهترین وکلای</span> کشور
+                </h1>
+                <p class="text-blue-100 text-lg leading-relaxed max-w-xl mx-auto lg:mx-0">
+                    با وکیل‌وکیل در کمترین زمان به مشاوره حقوقی تخصصی دسترسی پیدا کنید. بیش از ۱۲۷ هزار وکیل متخصص آماده
+                    پاسخگویی هستند.
+                </p>
+                <div class="flex items-center justify-center lg:justify-start gap-4 pt-4">
+                    <button
+                      class="flex items-center gap-2 text-white/80 hover:text-white transition text-sm border border-white/20 px-4 py-2 rounded-lg"
+                    >
+                        <span class="material-icons text-secondary">history</span>
+                        مشاهده همه وکلا
+                    </button>
+                    <button
+                      class="flex items-center gap-2 text-white/80 hover:text-white transition text-sm border border-white/20 px-4 py-2 rounded-lg"
+                    >
+                        <span class="material-icons text-secondary">phone</span>
+                        تماس با پشتیبانی
+                    </button>
+                </div>
+            </div>
+            <div class="lg:w-1/2 relative hidden lg:block">
+                <div class="relative z-10 animate-float">
+                    <img
+                      alt="Scales of Justice and Legal Documents"
+                      class="w-full h-auto max-h-[400px] object-cover rounded-3xl shadow-2xl border-4 border-white/10 mask-image-gradient"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRe6wQtotUwnyvl3PuP3H0u905FKTqxksdJ9Ud4Ghay_gA_FicignZNMIKtsvGsXzUaGZ4wRG0QReaS7eZVmYGMN9sNSe3OKbNlv5PTGOnrXzUT6du71cBqzAirRS_oT37JkcjSIvDiRzZFRqQuMtjL3wqCyGCrM19Yxw0OXeacomq6KLucsh_OCBaFja2k19HsVhbWFZcs_DZ5buxTD2ZO_em5y2f1sZ1ZTq1eAIoivxnuBrQHWuW1FmuRgoThlEZsRt90bsKhoO8"
+                    />
+                </div>
+                <div
+                  class="absolute -bottom-6 -right-6 bg-white dark:bg-surface-dark p-4 rounded-xl shadow-lg z-20 flex items-center gap-3 animate-bounce-slow"
+                >
+                    <div class="bg-green-100 text-green-600 p-2 rounded-full">
+                        <span class="material-icons">verified_user</span>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">رضایت کاربران</p>
+                        <p class="font-bold text-gray-800 dark:text-white">۴.۹ از ۵ ستاره</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-[90%] lg:w-[70%] z-30">
+            <div
+              class="bg-white dark:bg-surface-dark p-4 lg:p-6 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row items-center gap-4"
+            >
+                <div class="relative w-full md:w-1/3">
+                    <label class="block text-xs font-bold text-gray-500 mb-1 pr-1 dark:text-gray-400">نام وکیل</label>
+                    <div class="relative">
+                        <span class="material-icons absolute right-3 top-3 text-gray-400">search</span>
+                        <input
+                          class="w-full pr-10 pl-4 py-3 rounded-xl bg-gray-50 dark:bg-surface-dark border border-gray-200 dark:border-gray-600 focus:border-secondary focus:ring-1 focus:ring-secondary text-sm dark:text-white transition-all"
+                          placeholder="جستجوی نام وکیل..."
+                          type="text"
+                        />
+                    </div>
+                </div>
+                <div class="hidden md:block w-px h-12 bg-gray-200 dark:bg-gray-700 mx-2"></div>
+                <div class="relative w-full md:w-1/3">
+                    <label class="block text-xs font-bold text-gray-500 mb-1 pr-1 dark:text-gray-400">استان /
+                        شهر</label>
+                    <div class="relative">
+                        <span class="material-icons absolute right-3 top-3 text-gray-400">location_on</span>
+                        <select
+                          class="w-full pr-10 pl-4 py-3 rounded-xl bg-gray-50 dark:bg-surface-dark border border-gray-200 dark:border-gray-600 focus:border-secondary focus:ring-1 focus:ring-secondary text-sm dark:text-white appearance-none cursor-pointer transition-all"
+                        >
+                            <option>انتخاب شهر</option>
+                            <option>تهران</option>
+                            <option>مشهد</option>
+                            <option>اصفهان</option>
+                            <option>شیراز</option>
+                        </select>
+                        <span
+                          class="material-icons absolute left-3 top-3 text-gray-400 pointer-events-none text-sm">expand_more</span>
+                    </div>
+                </div>
+                <div class="hidden md:block w-px h-12 bg-gray-200 dark:bg-gray-700 mx-2"></div>
+                <div class="relative w-full md:w-1/3">
+                    <label class="block text-xs font-bold text-gray-500 mb-1 pr-1 dark:text-gray-400">تخصص</label>
+                    <div class="relative">
+                        <span class="material-icons absolute right-3 top-3 text-gray-400">gavel</span>
+                        <select
+                          class="w-full pr-10 pl-4 py-3 rounded-xl bg-gray-50 dark:bg-surface-dark border border-gray-200 dark:border-gray-600 focus:border-secondary focus:ring-1 focus:ring-secondary text-sm dark:text-white appearance-none cursor-pointer transition-all"
+                        >
+                            <option>همه تخصص‌ها</option>
+                            <option>خانواده</option>
+                            <option>کیفری</option>
+                            <option>ملکی</option>
+                            <option>ثبتی</option>
+                        </select>
+                        <span
+                          class="material-icons absolute left-3 top-3 text-gray-400 pointer-events-none text-sm">expand_more</span>
+                    </div>
+                </div>
+                <div class="w-full md:w-auto mt-2 md:mt-0">
+                    <button
+                      class="w-full md:w-auto h-12 bg-secondary hover:bg-yellow-500 text-primary font-bold px-8 rounded-xl transition-colors shadow-lg shadow-yellow-500/30 flex items-center justify-center gap-2 whitespace-nowrap"
+                    >
+                        <span class="material-icons">search</span>
+                        <span>جستجو</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section
+      class="pt-24 pb-10 bg-surface-light dark:bg-surface-dark border-b border-border-light dark:border-border-dark relative z-0"
+    >
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="flex items-center justify-center gap-4">
+                    <div
+                      class="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-500"
+                    >
+                        <span class="material-icons">groups</span>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl font-bold text-primary dark:text-white">+۱۲۷,۰۸۵</h4>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">وکیل متخصص</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center gap-4">
+                    <div
+                      class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-500"
+                    >
+                        <span class="material-icons">forum</span>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl font-bold text-primary dark:text-white">+۵۰,۰۰۰</h4>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">مشاوره موفق</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center gap-4">
+                    <div
+                      class="w-12 h-12 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-500"
+                    >
+                        <span class="material-icons">star</span>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl font-bold text-primary dark:text-white">۴.۹</h4>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">امتیاز کاربران</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center gap-4">
+                    <div
+                      class="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-500"
+                    >
+                        <span class="material-icons">map</span>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl font-bold text-primary dark:text-white">۳۱</h4>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">استان کشور</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-16 bg-background-light dark:bg-background-dark">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-primary dark:text-white mb-4">لیست وکلای متخصص</h2>
+                <p class="text-gray-500 dark:text-gray-400">بهترین وکلا را با توجه به تخصص و رتبه‌بندی انتخاب کنید</p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-3 mb-10">
+                <button
+                  class="px-6 py-2 rounded-full bg-secondary text-primary font-bold shadow-md hover:bg-yellow-400 transition"
+                >همه</button>
+                <button
+                  class="px-6 py-2 rounded-full bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                >وکیل پایه یک دادگستری</button>
+                <button
+                  class="px-6 py-2 rounded-full bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                >وکیل پایه دو دادگستری</button>
+                <button
+                  class="px-6 py-2 rounded-full bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                >کارآموز وکالت</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                <div class="md:col-span-3 space-y-6">
+                    <div
+                      class="bg-white dark:bg-surface-dark p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 sticky top-24"
+                    >
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-bold text-lg dark:text-white">فیلترها</h3>
+                            <span class="material-icons text-gray-400">tune</span>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">شیوه
+                                مشاوره</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                      class="rounded text-primary focus:ring-secondary dark:bg-gray-700 dark:border-gray-600"
+                                      type="checkbox"
+                                    />
+                                    <span class="text-sm text-gray-600 dark:text-gray-400">حضوری</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                      class="rounded text-primary focus:ring-secondary dark:bg-gray-700 dark:border-gray-600"
+                                      type="checkbox"
+                                    />
+                                    <span class="text-sm text-gray-600 dark:text-gray-400">تلفنی</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                      class="rounded text-primary focus:ring-secondary dark:bg-gray-700 dark:border-gray-600"
+                                      type="checkbox"
+                                    />
+                                    <span class="text-sm text-gray-600 dark:text-gray-400">چت</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">جنسیت
+                                وکیل</label>
+                            <div class="flex gap-2">
+                                <button
+                                  class="flex-1 py-2 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                >آقا</button>
+                                <button
+                                  class="flex-1 py-2 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                >خانم</button>
+                            </div>
+                        </div>
+                        <button
+                          class="w-full bg-primary/90 hover:bg-primary text-white py-3 rounded-xl transition text-sm font-medium"
+                        >
+                            اعمال فیلترها
+                        </button>
+                    </div>
+                </div>
+                <div class="md:col-span-9">
+                    <div class="flex justify-between items-center mb-4 text-sm text-gray-500 dark:text-gray-400">
+                        <div class="flex gap-4">
+                            <span>مرتب‌سازی:</span>
+                            <a
+                              class="text-primary font-bold dark:text-secondary"
+                              href="#"
+                            >پیش فرض</a>
+                            <a
+                              class="hover:text-primary dark:hover:text-white"
+                              href="#"
+                            >بیشترین مراجعه</a>
+                            <a
+                              class="hover:text-primary dark:hover:text-white"
+                              href="#"
+                            >بیشترین امتیاز</a>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div
+                          class="bg-white dark:bg-surface-dark rounded-2xl p-5 shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700 group"
+                        >
+                            <div class="flex justify-between items-start mb-4">
+                                <span
+                                  class="bg-secondary/10 text-secondary-dark px-2 py-1 rounded text-xs font-bold flex items-center gap-1 text-yellow-600 dark:text-yellow-400"
+                                >
+                                    <span class="material-icons text-xs">star</span> ۵.۰
+                                </span>
+                                <div
+                                  class="w-20 h-20 rounded-full overflow-hidden border-2 border-white dark:border-gray-600 shadow-sm mx-auto -mt-2"
+                                >
+                                    <img
+                                      alt="Lawyer"
+                                      class="w-full h-full object-cover"
+                                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2p-GhsRVV6VeUZtSobmRsEb-3zngTRC85mrbKVvzzgYf_iwM3GWxYsDTld5OCW4QilEVs1QSSSWVrd7yTRQ5rvuWAECsCu3PLthwwpPBuKEcs8C3kdiCBx-TY_kdZJz-92vTIzfkABIgTmrvkeI8TEHkbX-ngGb7uCj8TgeQoI-J133MqbvwV604Ah7nzMsglifNHgRnGMvDjjlWxgHMke-cwsQynShOTiId361FbrTPGvcZs83de2pzNyMquLjSihenpIJhFN3--"
+                                    />
+                                </div>
+                                <span class="text-xs text-gray-400">آنلاین</span>
+                            </div>
+                            <div class="text-center mb-4">
+                                <h3 class="font-bold text-gray-800 dark:text-white text-lg mb-1">مهشید جهان کهن</h3>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">وکیل پایه یک دادگستری</p>
+                                <div class="flex justify-center items-center gap-1 text-xs text-gray-400">
+                                    <span class="material-icons text-sm">location_on</span>
+                                    یاسوج
+                                </div>
+                            </div>
+                            <div class="flex justify-center gap-3 mb-6 text-xs text-gray-500 dark:text-gray-400">
+                                <span
+                                  class="flex items-center gap-1 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded"><span
+                                      class="material-icons text-green-500 text-xs"
+                                    >chat</span> چت</span>
+                                <span
+                                  class="flex items-center gap-1 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded"><span
+                                      class="material-icons text-blue-500 text-xs"
+                                    >phone</span> تلفنی</span>
+                            </div>
+                            <button
+                              class="w-full bg-primary text-white py-2.5 rounded-xl text-sm font-medium group-hover:bg-primary/90 transition flex items-center justify-center gap-2"
+                            >
+                                رزرو مشاوره
+                                <span class="material-icons text-sm rotate-180">arrow_right_alt</span>
+                            </button>
+                        </div>
+                        <div
+                          class="bg-white dark:bg-surface-dark rounded-2xl p-5 shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700 group"
+                        >
+                            <div class="flex justify-between items-start mb-4">
+                                <span
+                                  class="bg-secondary/10 text-secondary-dark px-2 py-1 rounded text-xs font-bold flex items-center gap-1 text-yellow-600 dark:text-yellow-400"
+                                >
+                                    <span class="material-icons text-xs">star</span> ۴.۹
+                                </span>
+                                <div
+                                  class="w-20 h-20 rounded-full overflow-hidden border-2 border-white dark:border-gray-600 shadow-sm mx-auto -mt-2"
+                                >
+                                    <img
+                                      alt="Lawyer"
+                                      class="w-full h-full object-cover"
+                                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeT9ezqhzghxZUM0ZCpT1cDz_250Ko7NuhcGYODL3dZ0Jv7gxZ0ZPiRDBaeirZy56eFlIyajsi0Q4-vFl2mWPkfiWH29o5F6NzLFKvg5qNwGsBeKGSROkXhbad-4vKq32ehwuTKr8sQ8P5UBAfQZOWOUTxbz8iUKewLKXksvufbMfNVszndBh39cm9F3kxln9kz66B079UflfseRpDlvT0mpZEMKx7-X9uMEW3aSKTDTQSm5APn1A3P-FBryowFiE9o2w6dEPbqDLg"
+                                    />
+                                </div>
+                                <span class="text-xs text-gray-400">آنلاین</span>
+                            </div>
+                            <div class="text-center mb-4">
+                                <h3 class="font-bold text-gray-800 dark:text-white text-lg mb-1">فاطمه هادی</h3>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">وکیل پایه یک دادگستری</p>
+                                <div class="flex justify-center items-center gap-1 text-xs text-gray-400">
+                                    <span class="material-icons text-sm">location_on</span>
+                                    تهران
+                                </div>
+                            </div>
+                            <div class="flex justify-center gap-3 mb-6 text-xs text-gray-500 dark:text-gray-400">
+                                <span
+                                  class="flex items-center gap-1 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded"><span
+                                      class="material-icons text-green-500 text-xs"
+                                    >chat</span> چت</span>
+                                <span
+                                  class="flex items-center gap-1 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded"><span
+                                      class="material-icons text-blue-500 text-xs"
+                                    >phone</span> تلفنی</span>
+                                <span
+                                  class="flex items-center gap-1 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded"><span
+                                      class="material-icons text-purple-500 text-xs"
+                                    >people</span> حضوری</span>
+                            </div>
+                            <button
+                              class="w-full bg-primary text-white py-2.5 rounded-xl text-sm font-medium group-hover:bg-primary/90 transition flex items-center justify-center gap-2"
+                            >
+                                رزرو مشاوره
+                                <span class="material-icons text-sm rotate-180">arrow_right_alt</span>
+                            </button>
+                        </div>
+                        <div
+                          class="bg-white dark:bg-surface-dark rounded-2xl p-5 shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700 group"
+                        >
+                            <div class="flex justify-between items-start mb-4">
+                                <span
+                                  class="bg-secondary/10 text-secondary-dark px-2 py-1 rounded text-xs font-bold flex items-center gap-1 text-yellow-600 dark:text-yellow-400"
+                                >
+                                    <span class="material-icons text-xs">star</span> ۵.۰
+                                </span>
+                                <div
+                                  class="w-20 h-20 rounded-full overflow-hidden border-2 border-white dark:border-gray-600 shadow-sm mx-auto -mt-2"
+                                >
+                                    <img
+                                      alt="Lawyer"
+                                      class="w-full h-full object-cover"
+                                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2BgqwLgvli2TF58fLBfZqvs2tKGO7uiZxpufQ3Ilzqxf4Irex2i5O1dRUsx5egPMnvwwfByQzHFQIerCyR6T_trGMZmwamGL_ca04tDTEE60simPzZBPzUqz1tWo3BZrGYrvT57t2G-grcV9_AOgjFvCaNRT2bO_FeiVMDrr62S0fo82Ng7LGPei9-zJ-VD4zH2pY-0dg9bkOKJYVHe0IrpvpNp35xhKDpKeIKe1ibEkIF8v9ETltGSanW1aoSUA--8i2F8wVivEo"
+                                    />
+                                </div>
+                                <span class="text-xs text-gray-400">آفلاین</span>
+                            </div>
+                            <div class="text-center mb-4">
+                                <h3 class="font-bold text-gray-800 dark:text-white text-lg mb-1">احسان کرم نیای</h3>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">کارآموز وکالت</p>
+                                <div class="flex justify-center items-center gap-1 text-xs text-gray-400">
+                                    <span class="material-icons text-sm">location_on</span>
+                                    تهران
+                                </div>
+                            </div>
+                            <div class="flex justify-center gap-3 mb-6 text-xs text-gray-500 dark:text-gray-400">
+                                <span
+                                  class="flex items-center gap-1 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded"><span
+                                      class="material-icons text-blue-500 text-xs"
+                                    >phone</span> تلفنی</span>
+                                <span
+                                  class="flex items-center gap-1 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded"><span
+                                      class="material-icons text-purple-500 text-xs"
+                                    >people</span> حضوری</span>
+                            </div>
+                            <button
+                              class="w-full bg-primary text-white py-2.5 rounded-xl text-sm font-medium group-hover:bg-primary/90 transition flex items-center justify-center gap-2"
+                            >
+                                رزرو مشاوره
+                                <span class="material-icons text-sm rotate-180">arrow_right_alt</span>
+                            </button>
+                        </div>
+                        <div
+                          class="bg-white dark:bg-surface-dark rounded-2xl p-5 shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700 group"
+                        >
+                            <div class="flex justify-between items-start mb-4">
+                                <span
+                                  class="bg-secondary/10 text-secondary-dark px-2 py-1 rounded text-xs font-bold flex items-center gap-1 text-yellow-600 dark:text-yellow-400"
+                                >
+                                    <span class="material-icons text-xs">star</span> ۴.۸
+                                </span>
+                                <div
+                                  class="w-20 h-20 rounded-full overflow-hidden border-2 border-white dark:border-gray-600 shadow-sm mx-auto -mt-2"
+                                >
+                                    <img
+                                      alt="Lawyer"
+                                      class="w-full h-full object-cover"
+                                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCC_-SEqda1X0GAWndJv1ekE7WUa8Y3ijJ1JC9vxpR7ZEV45TZNPDHQVbLCmhnQO8R5MD0QH-trdD2iUkbafAecodT16g0-SrNSDG81nb7aa_-rw-osWDiyzFggYeT8JIwgQYqUCz3Itn0oZ04pJ0QDr4VIgbYslqP3TR6diuRh0K4nhnfpBLQEXfDS7us0AxP3lKLAj0O-rQ6XHmrbUxV543pZh9HyA5NA7PuztguTHd1FBcBphAWsnENYQcxW2r36r44h2ma4DMuF"
+                                    />
+                                </div>
+                                <span class="text-xs text-gray-400">آنلاین</span>
+                            </div>
+                            <div class="text-center mb-4">
+                                <h3 class="font-bold text-gray-800 dark:text-white text-lg mb-1">حسین شهابی نژاد</h3>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">وکیل پایه یک دادگستری</p>
+                                <div class="flex justify-center items-center gap-1 text-xs text-gray-400">
+                                    <span class="material-icons text-sm">location_on</span>
+                                    تبریز
+                                </div>
+                            </div>
+                            <div class="flex justify-center gap-3 mb-6 text-xs text-gray-500 dark:text-gray-400">
+                                <span
+                                  class="flex items-center gap-1 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded"><span
+                                      class="material-icons text-green-500 text-xs"
+                                    >chat</span> چت</span>
+                                <span
+                                  class="flex items-center gap-1 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded"><span
+                                      class="material-icons text-blue-500 text-xs"
+                                    >phone</span> تلفنی</span>
+                            </div>
+                            <button
+                              class="w-full bg-primary text-white py-2.5 rounded-xl text-sm font-medium group-hover:bg-primary/90 transition flex items-center justify-center gap-2"
+                            >
+                                رزرو مشاوره
+                                <span class="material-icons text-sm rotate-180">arrow_right_alt</span>
+                            </button>
+                        </div>
+                        <div
+                          class="bg-white dark:bg-surface-dark rounded-2xl p-5 shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700 group"
+                        >
+                            <div class="flex justify-between items-start mb-4">
+                                <span
+                                  class="bg-secondary/10 text-secondary-dark px-2 py-1 rounded text-xs font-bold flex items-center gap-1 text-yellow-600 dark:text-yellow-400"
+                                >
+                                    <span class="material-icons text-xs">star</span> ۵.۰
+                                </span>
+                                <div
+                                  class="w-20 h-20 rounded-full overflow-hidden border-2 border-white dark:border-gray-600 shadow-sm mx-auto -mt-2"
+                                >
+                                    <img
+                                      alt="Lawyer"
+                                      class="w-full h-full object-cover"
+                                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLrSJk-RvZzIru37Lt0w2KnUs2zjsPPZWu-suEUU43KyGSN7vGTzhelXx1EQ53ICZjW6tACG0n0u9v17eoQwjwR1dJ0xw8_HRKefViAyqqgj0qJCR1iEpGjMfd3F_gzLC2_YJhxHShebxq2K_wPUHrZ7iW2jms0Kx3XIeTJmu89kdZ51abOlo_tpy-1Y3rXb9guzj2JKNSIDNhrs4JxPQE6U1IwWUpufvybIH_sOtPNpWv-zKGnrwxNVp-J6pahvjPplrOGwYhNRNK"
+                                    />
+                                </div>
+                                <span class="text-xs text-gray-400">آنلاین</span>
+                            </div>
+                            <div class="text-center mb-4">
+                                <h3 class="font-bold text-gray-800 dark:text-white text-lg mb-1">حسین رضایی</h3>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">وکیل پایه یک دادگستری</p>
+                                <div class="flex justify-center items-center gap-1 text-xs text-gray-400">
+                                    <span class="material-icons text-sm">location_on</span>
+                                    مشهد
+                                </div>
+                            </div>
+                            <div class="flex justify-center gap-3 mb-6 text-xs text-gray-500 dark:text-gray-400">
+                                <span
+                                  class="flex items-center gap-1 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded"><span
+                                      class="material-icons text-blue-500 text-xs"
+                                    >phone</span> تلفنی</span>
+                                <span
+                                  class="flex items-center gap-1 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded"><span
+                                      class="material-icons text-purple-500 text-xs"
+                                    >people</span> حضوری</span>
+                            </div>
+                            <button
+                              class="w-full bg-primary text-white py-2.5 rounded-xl text-sm font-medium group-hover:bg-primary/90 transition flex items-center justify-center gap-2"
+                            >
+                                رزرو مشاوره
+                                <span class="material-icons text-sm rotate-180">arrow_right_alt</span>
+                            </button>
+                        </div>
+                        <div
+                          class="bg-white dark:bg-surface-dark rounded-2xl p-5 shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700 group"
+                        >
+                            <div class="flex justify-between items-start mb-4">
+                                <span
+                                  class="bg-secondary/10 text-secondary-dark px-2 py-1 rounded text-xs font-bold flex items-center gap-1 text-yellow-600 dark:text-yellow-400"
+                                >
+                                    <span class="material-icons text-xs">star</span> ۴.۸
+                                </span>
+                                <div
+                                  class="w-20 h-20 rounded-full overflow-hidden border-2 border-white dark:border-gray-600 shadow-sm mx-auto -mt-2"
+                                >
+                                    <img
+                                      alt="Lawyer"
+                                      class="w-full h-full object-cover"
+                                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZCA-6J9LY-2muVAURCWCxY4uYykjNxmi-q2ZTO-RO3PB3XgMKQn1kXfp19MDg-hxubHGbbFanJB-EBO8UO9n8oB7pR1rUW4-WEL-wikpW-x-HKZRfURhuUY-u_xeikJ98sIIUD6emRSyHRiWOMEl1Usc6mG7Tn-GhiYyeTO0eql8Go4QqB5fvTN89jz83EMG89s99tJ3hm_y1B0fByPpV5kheImnV4zCudzETbwBlc05jSi_S9fyoF-u7TUj9HGM7hN92K75VrZkl"
+                                    />
+                                </div>
+                                <span class="text-xs text-gray-400">آنلاین</span>
+                            </div>
+                            <div class="text-center mb-4">
+                                <h3 class="font-bold text-gray-800 dark:text-white text-lg mb-1">سارا سادات طباطبایی
+                                </h3>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">کارآموز وکالت</p>
+                                <div class="flex justify-center items-center gap-1 text-xs text-gray-400">
+                                    <span class="material-icons text-sm">location_on</span>
+                                    کرمان
+                                </div>
+                            </div>
+                            <div class="flex justify-center gap-3 mb-6 text-xs text-gray-500 dark:text-gray-400">
+                                <span
+                                  class="flex items-center gap-1 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded"><span
+                                      class="material-icons text-green-500 text-xs"
+                                    >chat</span> چت</span>
+                                <span
+                                  class="flex items-center gap-1 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded"><span
+                                      class="material-icons text-blue-500 text-xs"
+                                    >phone</span> تلفنی</span>
+                            </div>
+                            <button
+                              class="w-full bg-primary text-white py-2.5 rounded-xl text-sm font-medium group-hover:bg-primary/90 transition flex items-center justify-center gap-2"
+                            >
+                                رزرو مشاوره
+                                <span class="material-icons text-sm rotate-180">arrow_right_alt</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex justify-center mt-12 gap-2">
+                        <button
+                          class="w-10 h-10 rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white"
+                        ><span class="material-icons text-sm">chevron_right</span></button>
+                        <button
+                          class="w-10 h-10 rounded-lg flex items-center justify-center bg-primary text-white shadow-md"
+                        >۱</button>
+                        <button
+                          class="w-10 h-10 rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white"
+                        >۲</button>
+                        <button
+                          class="w-10 h-10 rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white"
+                        >۳</button>
+                        <span class="flex items-end px-2 text-gray-400">...</span>
+                        <button
+                          class="w-10 h-10 rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white"
+                        ><span class="material-icons text-sm">chevron_left</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-16 bg-surface-light dark:bg-surface-dark">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="bg-blue-100 text-primary px-3 py-1 rounded-full text-xs font-bold mb-4 inline-block">خدمات
+                    ما</span>
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">خدمات مشاوره حقوقی</h2>
+                <p class="text-gray-500 dark:text-gray-400">روش مشاوره مورد نظر خود را انتخاب کنید</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div
+                  class="bg-white dark:bg-background-dark p-6 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 text-center relative overflow-hidden group"
+                >
+                    <div
+                      class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition duration-300"
+                    >
+                        <span class="material-icons text-green-500 text-3xl">chat_bubble</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-gray-800 dark:text-white">مشاوره چت</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">گفتگوی متنی با وکیل در هر
+                        ساعت از شبانه‌روز</p>
+                    <div class="text-primary font-bold mb-6">شروع از ۵۰,۰۰۰ تومان</div>
+                    <ul
+                      class="text-right text-xs space-y-2 mb-6 text-gray-500 dark:text-gray-400 pr-4 border-r-2 border-green-100 dark:border-green-900"
+                    >
+                        <li class="flex items-center gap-2"><span
+                              class="material-icons text-green-500 text-[10px]">check_circle</span> پاسخ تا ۱۰ ساعت</li>
+                        <li class="flex items-center gap-2"><span
+                              class="material-icons text-green-500 text-[10px]">check_circle</span> ارسال مدارک</li>
+                        <li class="flex items-center gap-2"><span
+                              class="material-icons text-green-500 text-[10px]">check_circle</span> ذخیره مکالمات</li>
+                    </ul>
+                    <button
+                      class="w-full border border-primary text-primary dark:text-white dark:border-white hover:bg-primary hover:text-white py-2 rounded-lg text-sm transition-colors"
+                    >انتخاب</button>
+                </div>
+                <div
+                  class="bg-white dark:bg-background-dark p-6 rounded-2xl shadow-lg border-t-4 border-secondary transform scale-105 z-10 text-center relative"
+                >
+                    <span
+                      class="absolute top-0 left-1/2 -translate-x-1/2 bg-secondary text-primary text-[10px] font-bold px-3 py-1 rounded-b-lg"
+                    >پرطرفدار</span>
+                    <div
+                      class="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center mx-auto mb-6 mt-2"
+                    >
+                        <span class="material-icons text-primary text-3xl">phone_in_talk</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-gray-800 dark:text-white">مشاوره تلفنی</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">تماس صوتی مستقیم با وکیل
+                        متخصص</p>
+                    <div class="text-primary font-bold mb-6">شروع از ۸۰,۰۰۰ تومان</div>
+                    <ul
+                      class="text-right text-xs space-y-2 mb-6 text-gray-500 dark:text-gray-400 pr-4 border-r-2 border-blue-100 dark:border-blue-900"
+                    >
+                        <li class="flex items-center gap-2"><span
+                              class="material-icons text-primary text-[10px]">check_circle</span> پاسخ فوری</li>
+                        <li class="flex items-center gap-2"><span
+                              class="material-icons text-primary text-[10px]">check_circle</span> مکالمه ۲۰ دقیقه‌ای
+                        </li>
+                        <li class="flex items-center gap-2"><span
+                              class="material-icons text-primary text-[10px]">check_circle</span> ضبط مکالمه</li>
+                    </ul>
+                    <button
+                      class="w-full bg-primary text-white py-2 rounded-lg text-sm hover:bg-primary/90 shadow-lg shadow-blue-900/20 transition-all"
+                    >انتخاب</button>
+                </div>
+                <div
+                  class="bg-white dark:bg-background-dark p-6 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 text-center relative overflow-hidden group"
+                >
+                    <div
+                      class="w-16 h-16 bg-orange-50 dark:bg-orange-900/20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition duration-300"
+                    >
+                        <span class="material-icons text-orange-500 text-3xl">videocam</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-gray-800 dark:text-white">مشاوره ویدیویی</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">جلسه ویدیویی آنلاین با وکیل
+                    </p>
+                    <div class="text-primary font-bold mb-6">شروع از ۱۲۰,۰۰۰ تومان</div>
+                    <ul
+                      class="text-right text-xs space-y-2 mb-6 text-gray-500 dark:text-gray-400 pr-4 border-r-2 border-orange-100 dark:border-orange-900"
+                    >
+                        <li class="flex items-center gap-2"><span
+                              class="material-icons text-orange-500 text-[10px]">check_circle</span> جلسه ۴۵ دقیقه‌ای
+                        </li>
+                        <li class="flex items-center gap-2"><span
+                              class="material-icons text-orange-500 text-[10px]">check_circle</span> اشتراک صفحه</li>
+                        <li class="flex items-center gap-2"><span
+                              class="material-icons text-orange-500 text-[10px]">check_circle</span> ضبط جلسه</li>
+                    </ul>
+                    <button
+                      class="w-full border border-primary text-primary dark:text-white dark:border-white hover:bg-primary hover:text-white py-2 rounded-lg text-sm transition-colors"
+                    >به زودی</button>
+                </div>
+                <div
+                  class="bg-white dark:bg-background-dark p-6 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 text-center relative overflow-hidden group"
+                >
+                    <div
+                      class="w-16 h-16 bg-purple-50 dark:bg-purple-900/20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition duration-300"
+                    >
+                        <span class="material-icons text-purple-500 text-3xl">storefront</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-gray-800 dark:text-white">مشاوره حضوری</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">ملاقات حضوری در دفتر وکیل
+                    </p>
+                    <div class="text-primary font-bold mb-6">شروع از ۲۰۰,۰۰۰ تومان</div>
+                    <ul
+                      class="text-right text-xs space-y-2 mb-6 text-gray-500 dark:text-gray-400 pr-4 border-r-2 border-purple-100 dark:border-purple-900"
+                    >
+                        <li class="flex items-center gap-2"><span
+                              class="material-icons text-purple-500 text-[10px]">check_circle</span> جلسه ۶۰ دقیقه‌ای
+                        </li>
+                        <li class="flex items-center gap-2"><span
+                              class="material-icons text-purple-500 text-[10px]">check_circle</span> بررسی اسناد</li>
+                        <li class="flex items-center gap-2"><span
+                              class="material-icons text-purple-500 text-[10px]">check_circle</span> مشاوره تخصصی</li>
+                    </ul>
+                    <button
+                      class="w-full border border-primary text-primary dark:text-white dark:border-white hover:bg-primary hover:text-white py-2 rounded-lg text-sm transition-colors"
+                    >انتخاب</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-16 bg-primary text-white">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4">مراحل رزرو مشاوره</h2>
+                <p class="text-blue-200">در ۴ قدم ساده به وکیل متخصص دسترسی پیدا کنید</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+                <div class="hidden md:block absolute top-12 right-1/2 translate-x-1/2 w-3/4 h-0.5 bg-blue-400/30"></div>
+                <div class="text-center relative z-10 group">
+                    <div
+                      class="w-24 h-24 mx-auto bg-primary border-4 border-blue-400/30 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition duration-300 group-hover:border-secondary"
+                    >
+                        <div
+                          class="w-20 h-20 bg-primary rounded-full flex items-center justify-center border border-blue-300"
+                        >
+                            <span class="material-icons text-3xl">search</span>
+                        </div>
+                        <div
+                          class="absolute -top-2 bg-secondary text-primary w-8 h-8 rounded-full flex items-center justify-center font-bold"
+                        >۱</div>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">انتخاب وکیل</h3>
+                    <p class="text-sm text-blue-100 px-4">وکیل مورد نظر خود را بر اساس تخصص و امتیاز انتخاب کنید</p>
+                </div>
+                <div class="text-center relative z-10 group">
+                    <div
+                      class="w-24 h-24 mx-auto bg-primary border-4 border-blue-400/30 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition duration-300 group-hover:border-secondary"
+                    >
+                        <div
+                          class="w-20 h-20 bg-primary rounded-full flex items-center justify-center border border-blue-300"
+                        >
+                            <span class="material-icons text-3xl">schedule</span>
+                        </div>
+                        <div
+                          class="absolute -top-2 bg-secondary text-primary w-8 h-8 rounded-full flex items-center justify-center font-bold"
+                        >۲</div>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">انتخاب زمان</h3>
+                    <p class="text-sm text-blue-100 px-4">تاریخ و ساعت مناسب را برای مشاوره انتخاب کنید</p>
+                </div>
+                <div class="text-center relative z-10 group">
+                    <div
+                      class="w-24 h-24 mx-auto bg-primary border-4 border-blue-400/30 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition duration-300 group-hover:border-secondary"
+                    >
+                        <div
+                          class="w-20 h-20 bg-primary rounded-full flex items-center justify-center border border-blue-300"
+                        >
+                            <span class="material-icons text-3xl">credit_card</span>
+                        </div>
+                        <div
+                          class="absolute -top-2 bg-secondary text-primary w-8 h-8 rounded-full flex items-center justify-center font-bold"
+                        >۳</div>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">پرداخت امن</h3>
+                    <p class="text-sm text-blue-100 px-4">هزینه مشاوره را از درگاه امن پرداخت کنید</p>
+                </div>
+                <div class="text-center relative z-10 group">
+                    <div
+                      class="w-24 h-24 mx-auto bg-primary border-4 border-blue-400/30 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition duration-300 group-hover:border-secondary"
+                    >
+                        <div
+                          class="w-20 h-20 bg-primary rounded-full flex items-center justify-center border border-blue-300"
+                        >
+                            <span class="material-icons text-3xl">headset_mic</span>
+                        </div>
+                        <div
+                          class="absolute -top-2 bg-secondary text-primary w-8 h-8 rounded-full flex items-center justify-center font-bold"
+                        >۴</div>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">دریافت مشاوره</h3>
+                    <p class="text-sm text-blue-100 px-4">در زمان تعیین شده مشاوره خود را دریافت کنید</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-16 bg-background-light dark:bg-background-dark">
+        <div class="container mx-auto px-4 lg:px-8 max-w-4xl">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-primary dark:text-white mb-2">سوالات متداول</h2>
+                <p class="text-gray-500 dark:text-gray-400">پاسخ به پرسش‌های رایج درباره خدمات مشاوره حقوقی</p>
+            </div>
+            <div class="space-y-4">
+                <div
+                  class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden"
+                >
+                    <button
+                      class="w-full text-right px-6 py-4 flex items-center justify-between font-bold text-gray-800 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                    >
+                        <span>۱. مدت زمان هر مشاوره چقدر است؟</span>
+                        <span class="material-icons text-gray-400">expand_more</span>
+                    </button>
+                </div>
+                <div
+                  class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden"
+                >
+                    <button
+                      class="w-full text-right px-6 py-4 flex items-center justify-between font-bold text-gray-800 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                    >
+                        <span>۲. چه مدارکی باید ارسال کنیم؟</span>
+                        <span class="material-icons text-gray-400">expand_more</span>
+                    </button>
+                </div>
+                <div
+                  class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden"
+                >
+                    <button
+                      class="w-full text-right px-6 py-4 flex items-center justify-between font-bold text-gray-800 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                    >
+                        <span>۳. آیا امکان تغییر زمان مشاوره وجود دارد؟</span>
+                        <span class="material-icons text-gray-400">expand_more</span>
+                    </button>
+                </div>
+                <div
+                  class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden"
+                >
+                    <button
+                      class="w-full text-right px-6 py-4 flex items-center justify-between font-bold text-gray-800 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                    >
+                        <span>۴. در صورت نارضایتی از مشاوره چه باید کرد؟</span>
+                        <span class="material-icons text-gray-400">expand_more</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-20 bg-surface-dark relative overflow-hidden">
+        <div class="absolute inset-0 bg-primary/90"></div>
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10">
+        </div>
+        <div class="container mx-auto px-4 relative z-10 text-center text-white">
+            <h2 class="text-3xl lg:text-4xl font-extrabold mb-6">آماده دریافت مشاوره حقوقی هستید؟</h2>
+            <p class="text-lg text-blue-100 mb-10 max-w-2xl mx-auto">همین الان با بهترین وکلای کشور مشاوره کنید و راه حل
+                قانونی مشکل خود را پیدا کنید.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button
+                  class="bg-secondary text-primary font-bold px-8 py-3 rounded-xl hover:bg-yellow-500 transition shadow-lg shadow-yellow-500/20 flex items-center justify-center gap-2"
+                >
+                    <span class="material-icons">calendar_today</span>
+                    رزرو وقت مشاوره
+                </button>
+                <button
+                  class="bg-transparent border border-white/30 text-white font-bold px-8 py-3 rounded-xl hover:bg-white/10 transition flex items-center justify-center gap-2"
+                >
+                    <span class="material-icons">call</span>
+                    تماس با پشتیبانی
+                </button>
+            </div>
+            <p class="mt-6 text-xs text-white/50 flex items-center justify-center gap-1">
+                <span class="material-icons text-xs text-green-400">shield</span>
+                ضمانت بازگشت وجه در صورت عدم رضایت
+            </p>
+        </div>
+    </section>
+    <footer class="bg-surface-light dark:bg-surface-dark pt-16 pb-8 border-t border-gray-200 dark:border-gray-800">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center gap-2 mb-6">
+                        <img
+                          alt="VakilVakil Logo"
+                          class="h-8 brightness-0 invert dark:invert-0 filter dark:brightness-100 brightness-0 opacity-80 dark:opacity-100"
+                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAX2ELaii4qM8p05RisBi_Ii3zB4qkDs9tHqL8Il7eEhi_pJ1nx_U4e_pnvZH9-6Lu_WaqejDL3ImhJRxUZoTclaxOjmsLOZXwHlNyc1Z5rIgNxl_8zlNmZ4xMXzFhNTtN_TDYdO7_lXU44enEVCp4bUiD-F3pR8NQXAJDsz2Hq7hHQ3Q-OX52CPbKUEMvnxE74echSt1TyT16m3mebfExLmPo0h0moZ-3RngCpwMAu9dZVJ8EmTHch4l6_qQOxnfI8QmhTEFZ84zQ9"
+                        />
+                        <span class="font-bold text-xl text-primary dark:text-white">وکیل‌وکیل</span>
+                    </div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
+                        پلتفرم هوشمند رزرو نوبت وکیل و دریافت مشاوره حقوقی آنلاین. ما تلاش می‌کنیم تا عدالت برای همه در
+                        دسترس باشد.
+                    </p>
+                    <div class="flex gap-4">
+                        <a
+                          class="text-gray-400 hover:text-primary dark:hover:text-white transition"
+                          href="#"
+                        ><i class="fab fa-instagram text-xl"></i></a>
+                        <a
+                          class="text-gray-400 hover:text-primary dark:hover:text-white transition"
+                          href="#"
+                        ><i class="fab fa-telegram text-xl"></i></a>
+                        <a
+                          class="text-gray-400 hover:text-primary dark:hover:text-white transition"
+                          href="#"
+                        ><i class="fab fa-linkedin text-xl"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-6">دسترسی سریع</h3>
+                    <ul class="space-y-3 text-sm text-gray-500 dark:text-gray-400">
+                        <li><a
+                              class="hover:text-primary dark:hover:text-secondary transition"
+                              href="#"
+                            >خانه</a></li>
+                        <li><a
+                              class="hover:text-primary dark:hover:text-secondary transition"
+                              href="#"
+                            >لیست وکلا</a></li>
+                        <li><a
+                              class="hover:text-primary dark:hover:text-secondary transition"
+                              href="#"
+                            >سوالات متداول</a></li>
+                        <li><a
+                              class="hover:text-primary dark:hover:text-secondary transition"
+                              href="#"
+                            >ورود / ثبت‌نام</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-6">خدمات</h3>
+                    <ul class="space-y-3 text-sm text-gray-500 dark:text-gray-400">
+                        <li><a
+                              class="hover:text-primary dark:hover:text-secondary transition"
+                              href="#"
+                            >مشاوره تلفنی</a></li>
+                        <li><a
+                              class="hover:text-primary dark:hover:text-secondary transition"
+                              href="#"
+                            >مشاوره چت</a></li>
+                        <li><a
+                              class="hover:text-primary dark:hover:text-secondary transition"
+                              href="#"
+                            >مشاوره ویدیویی</a></li>
+                        <li><a
+                              class="hover:text-primary dark:hover:text-secondary transition"
+                              href="#"
+                            >مشاوره حضوری</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-6">پشتیبانی</h3>
+                    <div
+                      class="bg-white dark:bg-background-dark p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm"
+                    >
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">تماس با ما</p>
+                        <div
+                          class="flex items-center justify-between text-primary dark:text-white font-bold text-lg mb-4"
+                          dir="ltr"
+                        >
+                            <span>021-12345678</span>
+                            <span class="material-icons text-secondary">phone_enabled</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <a
+                              class="flex-1 bg-black text-white text-xs py-2 rounded flex items-center justify-center gap-1 hover:opacity-80 transition"
+                              href="#"
+                            >
+                                <span class="material-icons text-sm">android</span> کافه بازار
+                            </a>
+                            <a
+                              class="flex-1 bg-blue-600 text-white text-xs py-2 rounded flex items-center justify-center gap-1 hover:opacity-80 transition"
+                              href="#"
+                            >
+                                <span class="material-icons text-sm">apple</span> سیب‌اپ
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div
+              class="border-t border-gray-200 dark:border-gray-700 pt-8 flex flex-col md:flex-row items-center justify-between gap-4"
+            >
+                <div class="flex gap-4 opacity-50 grayscale hover:grayscale-0 transition-all duration-300">
+                    <img
+                      alt="Enamad"
+                      class="h-12 w-auto"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXzt-DDzcKwEVLdD2abupG7pZDGt7WgXANUoNJsU4FPW4Zw8QGm7xHQ6WZ_qhaiaz-n-svnq8cRfdOgdRIf6y9MG_tNQGJ8kpoPavs5TZiGSjzPmSVS06XmGwbkd50M2wVWBGX4S04EVfHw6Qmuoa15MDSQxwWceei7zaOvS5U4Y4WP8aWQG0hhKcbR3p0D_qb9m9w5rw1T9dzMOgeFvlr4kS-1vc4_OAzSewCbqdN-FNTVMg3JhfAWMxUNrYjr6dOLamGKjlfBt1T"
+                    />
+                    <img
+                      alt="Samandehi"
+                      class="h-12 w-auto"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCsrc9q0zwgz_ZC9_E_K6uEB5qJSJ4PpdDFdnE6H46oAX2COYzc79co7QENOsAXyptlvZ1svW9DyWc2S62rldVup1ub3S5GGv5-75er5oaD4syBFwQTMrCK6ImTWoK6_Fra8AEmgP1cTkEtudOUsLoipiHu6v-kHRvSlKRLDTQ8aRZ8-O6bj9qorvYorXGz17iVRUDJLNaGl6chb6SExUcDjsoTW2x7X4F8pWX-8yqmw3HlIMD6pzsbE8kMGKeYgpuPd6amAXtEuSP"
+                    />
+                    <img
+                      alt="Certificate"
+                      class="h-12 w-auto"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCh0WkzSY1O03uZAH9Q80O23h2apfM0X9sRVMg51bAIfL0l3TReGKb385nsU3Va0JoBpESdE3DWixfilmxlLJwM9Rf7clB_vfaYoIOm8-Q3Zjq7Z0G7NwBwgct4haDmVHbVqjxArrqMZbdPSEJ3_apZ0GIIEJtfd6Y5a7-UZhpsIReU7efCsRM8th6JGFZJuw02uKBtxZqbdpoLfJXX222LbMvaB4gT-cQe99s8pEtCbLEK7mUdHGH1Z3S1zaufAAmGFN_yv2JD9jwU"
+                    />
+                </div>
+                <p class="text-xs text-gray-400 text-center md:text-left">
+                    © ۱۴۰۳ تمامی حقوق مادی و معنوی این وب‌سایت متعلق به <strong
+                      class="text-gray-600 dark:text-gray-300">وکیل‌وکیل</strong> می‌باشد.
+                </p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Simple script to handle 'dark' mode class on html tag if user prefers dark mode OS setting
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // Uncomment to auto-enable based on OS
+            // document.documentElement.classList.add('dark');
+        }
+    </script>
+
+</body>
+
+</html>
