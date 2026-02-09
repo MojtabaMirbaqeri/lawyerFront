@@ -10,7 +10,7 @@
     <div class="space-y-4 p-4 pb-20 lg:pb-4">
       <InfoLawyerVisitBoxes v-model="activeBtn" :items="items" />
       <div class="sidebar-btn mb-[88px] flex-col gap-4 p-5 lg:static lg:p-0 lg:gap-3">
-        <div class="choosed-visit flex justify-between items-center">
+        <!-- <div class="choosed-visit flex justify-between items-center">
           <span class="text-sm font-medium text-slate-800">{{
             items[activeBtn - 1]?.title
           }}</span>
@@ -18,7 +18,7 @@
             >{{ items[activeBtn - 1]?.price }}
             <span class="font-normal text-slate-400">تومان</span></span
           >
-        </div>
+        </div> -->
         <div class="flex flex-col gap-2.5">
           <!-- <UICSecondaryBtn
             :disabled="!props.active"
