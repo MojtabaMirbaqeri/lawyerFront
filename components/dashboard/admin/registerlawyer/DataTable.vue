@@ -23,6 +23,14 @@ type ExistingLawyer = {
   license_number: string;
 };
 
+type PossibleLawyer = {
+  id: number;
+  name: string;
+  family: string;
+  phone: string | null;
+  license_number: string | null;
+};
+
 const refetch = async (page = undefined) => {
   const lawyersRef = ref(
     (
@@ -206,6 +214,13 @@ const mergeExistingLawyer = ref<ExistingLawyer | null>(null);
 const mergeRegisterLawyerId = ref<number | null>(null);
 const mergeLoading = ref(false);
 
+// مودال لیست وکلای احتمالی (هم‌نام) هنگام نبود شماره پروانه در سیستم
+const showPossibleDuplicateModal = ref(false);
+const possibleLawyers = ref<PossibleLawyer[]>([]);
+const possibleDuplicateRegisterId = ref<number | null>(null);
+const possibleDuplicateLoading = ref(false);
+const approveAsNewLoading = ref(false);
+
 const acceptHandle = async (id: number) => {
   const res = await usePut(
     {
@@ -224,6 +239,10 @@ const acceptHandle = async (id: number) => {
       mergeExistingLawyer.value = payload.existing_lawyer ?? null;
       mergeRegisterLawyerId.value = payload.register_lawyer_id ?? id;
       showMergeModal.value = true;
+    } else if (payload?.code === "POSSIBLE_DUPLICATE_BY_NAME") {
+      possibleLawyers.value = payload.possible_lawyers ?? [];
+      possibleDuplicateRegisterId.value = payload.register_lawyer_id ?? id;
+      showPossibleDuplicateModal.value = true;
     } else {
       const msg = res.message || "مشکلی رخ داده است";
       useToast().add({ title: msg, color: "error" });
@@ -263,6 +282,65 @@ const mergeHandle = async () => {
   } else {
     useToast().add({
       title: res.message || "خطا در ادغام درخواست.",
+      color: "error",
+    });
+  }
+};
+
+const closePossibleDuplicateModal = () => {
+  showPossibleDuplicateModal.value = false;
+  possibleLawyers.value = [];
+  possibleDuplicateRegisterId.value = null;
+};
+
+const mergeWithExistingHandle = async (existingLawyerId: number) => {
+  const id = possibleDuplicateRegisterId.value;
+  if (id == null) return;
+  possibleDuplicateLoading.value = true;
+  const res = await usePut(
+    {
+      url: `register-lawyer/${id}/merge-with-existing`,
+      includeAuthHeader: true,
+      body: { existing_lawyer_id: existingLawyerId },
+    },
+    false
+  );
+  possibleDuplicateLoading.value = false;
+  if (res.statusCode === 200) {
+    closePossibleDuplicateModal();
+    refetch(pagination.value.pageIndex);
+    useToast().add({
+      title: "اطلاعات وکیل به‌روزرسانی شد و درخواست ادغام با موفقیت انجام شد.",
+      color: "success",
+    });
+  } else {
+    useToast().add({
+      title: res.message || "خطا در ادغام درخواست.",
+      color: "error",
+    });
+  }
+};
+
+const approveAsNewHandle = async () => {
+  const id = possibleDuplicateRegisterId.value;
+  if (id == null) return;
+  approveAsNewLoading.value = true;
+  const res = await usePut(
+    {
+      url: `register-lawyer/${id}/approve?force_new=1`,
+      includeAuthHeader: true,
+      body: undefined,
+    },
+    false
+  );
+  approveAsNewLoading.value = false;
+  if (res.statusCode === 200) {
+    closePossibleDuplicateModal();
+    refetch(pagination.value.pageIndex);
+    useToast().add({ title: "احراز هویت وکیل تایید شد", color: "success" });
+  } else {
+    useToast().add({
+      title: res.message || "خطا در ثبت وکیل جدید.",
       color: "error",
     });
   }
@@ -383,6 +461,73 @@ const mergeHandle = async () => {
             >
               <Icon v-if="mergeLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
               ادغام
+            </button>
+          </div>
+        </div>
+      </template>
+    </UModal>
+
+    <!-- مودال لیست وکلای احتمالی (هم‌نام) -->
+    <UModal v-model:open="showPossibleDuplicateModal" :ui="{ width: 'max-w-lg' }">
+      <template #content>
+        <div class="merge-modal">
+          <div class="merge-modal-header">
+            <div class="merge-icon">
+              <Icon name="lucide:users" class="w-6 h-6" />
+            </div>
+            <h3 class="merge-title">احتمال تکراری بودن وکیل</h3>
+            <button type="button" class="close-btn" @click="closePossibleDuplicateModal" aria-label="بستن">
+              <Icon name="lucide:x" class="w-5 h-5" />
+            </button>
+          </div>
+          <div class="merge-modal-body">
+            <p class="merge-message">
+              وکلایی با همین نام و نام خانوادگی در سیستم وجود دارند. اگر این درخواست مربوط به یکی از وکلای زیر است، با زدن «ادغام» کنار همان وکیل، اطلاعات او با دادهٔ این ثبت‌نام به‌روز و پیامک تایید ارسال می‌شود؛ در غیر این صورت «ثبت وکیل جدید» را بزنید.
+            </p>
+            <div class="possible-lawyers-list space-y-2 max-h-60 overflow-y-auto">
+              <div
+                v-for="lawyer in possibleLawyers"
+                :key="lawyer.id"
+                class="existing-lawyer-card flex items-center justify-between gap-3"
+              >
+                <div class="flex-1 min-w-0">
+                  <div class="existing-lawyer-row">
+                    <span class="label">نام و نام خانوادگی:</span>
+                    <span class="value">{{ lawyer.name }} {{ lawyer.family }}</span>
+                  </div>
+                  <div class="existing-lawyer-row">
+                    <span class="label">تلفن:</span>
+                    <span class="value font-mono">{{ lawyer.phone ?? '—' }}</span>
+                  </div>
+                  <div class="existing-lawyer-row">
+                    <span class="label">شماره پروانه:</span>
+                    <span class="value">{{ lawyer.license_number ?? '—' }}</span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="btn-merge shrink-0"
+                  :disabled="possibleDuplicateLoading"
+                  @click="mergeWithExistingHandle(lawyer.id)"
+                >
+                  <Icon v-if="possibleDuplicateLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
+                  ادغام
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="merge-modal-footer">
+            <button type="button" class="btn-cancel" @click="closePossibleDuplicateModal">
+              انصراف
+            </button>
+            <button
+              type="button"
+              class="btn-merge"
+              :disabled="approveAsNewLoading"
+              @click="approveAsNewHandle"
+            >
+              <Icon v-if="approveAsNewLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
+              ثبت وکیل جدید
             </button>
           </div>
         </div>
