@@ -81,7 +81,7 @@
         </div>
 
         <!-- Trust Badges - یک باکس واحد -->
-        <div class="trust-badges">
+        <div class="trust-badges" v-if="false">
           <div class="badges-row">
             <NuxtLink
               v-for="license in licenses"
