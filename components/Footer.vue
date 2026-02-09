@@ -10,7 +10,7 @@
         <div class="footer-grid">
           <!-- Brand Section -->
           <div class="footer-brand">
-            <NuxtImg src="/images/main-logo.svg" class="h-10 mb-4" />
+            <NuxtImg src="/images/VakilVakilLogo.png" class="h-10 mb-4" />
             <p class="brand-tagline">
               پلتفرم هوشمند رزرو نوبت وکیل و دریافت مشاوره حقوقی آنلاین
             </p>
