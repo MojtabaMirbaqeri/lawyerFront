@@ -20,7 +20,7 @@
           >
         </div>
         <div class="flex flex-col gap-2.5">
-          <UICSecondaryBtn
+          <!-- <UICSecondaryBtn
             :disabled="!props.active"
             @click="
               navigateTo(
@@ -31,7 +31,7 @@
             "
             class="flex items-center justify-center rounded-[8px]!">
             <span class="text-center text-base">ادامه فرآیند</span>
-          </UICSecondaryBtn>
+          </UICSecondaryBtn> -->
           <DirectCall :phone="phoneNumber" :lawyer-id="lawyerId" />
         </div>
       </div>
