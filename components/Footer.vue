@@ -10,7 +10,7 @@
         <div class="footer-grid">
           <!-- Brand Section -->
           <div class="footer-brand">
-            <NuxtImg src="/images/main-logo.svg" class="h-10 mb-4" />
+            <NuxtImg src="/images/VakilVakilLogo.png" class="h-10 mb-4" />
             <p class="brand-tagline">
               پلتفرم هوشمند رزرو نوبت وکیل و دریافت مشاوره حقوقی آنلاین
             </p>
@@ -64,13 +64,15 @@
               <p class="download-label">دانلود اپلیکیشن</p>
               <div class="download-badges">
                 <NuxtLink to="#">
-                  <NuxtImg
+                  <img
                     src="/images/footer/GooglePlayDownloadApp.svg"
+                    alt="دانلود از گوگل پلی"
                     class="download-badge" />
                 </NuxtLink>
                 <NuxtLink to="#">
-                  <NuxtImg
+                  <img
                     src="/images/footer/CafeBazzarDownloadApp.svg"
+                    alt="دانلود از کافه‌بازار"
                     class="download-badge" />
                 </NuxtLink>
               </div>
@@ -86,7 +88,7 @@
               :key="license.name"
               :to="license.src"
               class="badge-item">
-              <NuxtImg :src="license.image" :alt="license.name" />
+              <img :src="license.image" :alt="license.name" />
             </NuxtLink>
           </div>
         </div>
