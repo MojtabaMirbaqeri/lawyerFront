@@ -2,6 +2,9 @@
 const filterStore = useFiltersStore();
 const config = useRuntimeConfig();
 
+// تصویر پیش‌فرض وقتی وکیل عکس پروفایل ثبت نکرده
+const defaultAvatarUrl = "/images/nullavatar.png";
+
 // View mode
 const viewMode = ref<"list" | "grid">("list");
 
@@ -56,7 +59,9 @@ const refetch = async (page = null, total = false) => {
       baseId: law.lawyer_info?.base,
       edit_id: law.id,
       is_active: law.is_active,
-      profile_image: config.public.imageBase + law.lawyer_info?.profile_image
+      profile_image: law.lawyer_info?.profile_image
+        ? config.public.imageBase + law.lawyer_info.profile_image
+        : defaultAvatarUrl,
     };
   });
 
@@ -90,7 +95,9 @@ const searchRefetch = async (query, start, page) => {
       baseId: law.base,
       edit_id: law.id,
       is_active: law.is_active,
-      profile_image: config.public.imageBase + law?.profile_image,
+      profile_image: law?.profile_image
+        ? config.public.imageBase + law.profile_image
+        : defaultAvatarUrl,
     };
   });
 
@@ -132,7 +139,9 @@ const data = ref(
       baseId: law.lawyer_info?.base,
       edit_id: law.id,
       is_active: law.is_active,
-      profile_image: config.public.imageBase + law.lawyer_info?.profile_image
+      profile_image: law.lawyer_info?.profile_image
+        ? config.public.imageBase + law.lawyer_info.profile_image
+        : defaultAvatarUrl,
     };
   }),
 );
