@@ -20,11 +20,11 @@
           </div>
           <h3 class="service-title">{{ service.title }}</h3>
           <p class="service-description">{{ service.description }}</p>
-          <div class="service-price">
+          <!-- <div class="service-price">
             <span class="price-from">شروع از</span>
             <span class="price-value">{{ service.price }}</span>
             <span class="price-unit">تومان</span>
-          </div>
+          </div> -->
           <div class="service-features">
             <div v-for="feature in service.features" :key="feature" class="feature-item">
               <UIcon name="heroicons:check-circle-solid" class="size-4! text-green-500" />
