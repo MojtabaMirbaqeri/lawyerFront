@@ -3,10 +3,14 @@
     <div class="nav-container">
       <!-- Right (RTL): Logo + horizontal nav (Home, Lawyers, FAQ, Contact) -->
       <NuxtLink to="/" class="logo-block">
-        <span class="logo-icon" aria-hidden="true">
-          <UIcon name="lucide:scale" class="size-5!" />
-        </span>
-        <span class="logo-text">وکیل‌وکیل</span>
+        <img
+          src="/images/VakilVakilLogo.png"
+          alt="وکیل‌وکیل"
+          class="logo-img"
+          width="140"
+          height="36"
+          loading="eager"
+        />
       </NuxtLink>
 
       <nav class="desktop-nav">
@@ -282,21 +286,13 @@ onUnmounted(() => {
   color: var(--nav-text);
 }
 
-.logo-icon {
-  @apply flex items-center justify-center size-8 rounded-lg shrink-0;
-  background: rgba(30, 58, 95, 0.08);
-  color: var(--nav-accent);
+.logo-img {
+  @apply h-8 w-auto object-contain shrink-0;
+  max-height: 40px;
 }
 
-.logo-text {
-  @apply text-lg lg:text-xl font-bold tracking-tight;
-  font-family: inherit;
-  color: var(--nav-text);
-  letter-spacing: -0.02em;
-}
-
-.logo-block:hover .logo-text {
-  color: var(--nav-accent);
+.logo-block:hover .logo-img {
+  opacity: 0.9;
 }
 
 /* Horizontal nav next to logo */

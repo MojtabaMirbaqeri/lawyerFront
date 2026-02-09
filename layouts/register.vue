@@ -80,20 +80,20 @@
 
       <!-- موبایل: هدر + کارت با هم وسط عمودی؛ دسکتاپ: کارت جدا وسط -->
       <div class="flex-1 flex flex-col justify-center w-full lg:flex-initial">
-        <div class="lg:hidden text-center relative z-10 flex flex-col items-center mb-4">
-          <NuxtLink to="/" class="text-xl font-bold text-[#1e3a5f] hover:opacity-90 transition">
-            وکیل وکیل
-          </NuxtLink>
-          <p class="text-slate-500 text-sm mt-0.5 flex items-center gap-2">
-            <img
-              src="https://www.svgrepo.com/show/469159/lock.svg"
-              alt=""
-              class="w-4 h-4 shrink-0 opacity-70"
-              aria-hidden="true"
-            />
-            ورود و ثبت‌نام
-          </p>
-        </div>
+        <NuxtLink
+          to="/"
+          class="lg:hidden block text-center relative z-10 mb-4 hover:opacity-90 transition"
+          aria-label="بازگشت به صفحه اصلی"
+        >
+          <img
+            src="/images/VakilVakilLogo.png"
+            alt="وکیل‌وکیل"
+            class="h-9 w-auto object-contain mx-auto"
+            width="140"
+            height="36"
+            loading="eager"
+          />
+        </NuxtLink>
 
         <div class="w-full max-w-[420px] sm:max-w-[450px] relative z-10 shrink-0 mx-auto">
         <!-- موبایل: باکس به‌اندازه محتوا؛ دسکتاپ: حداکثر ارتفاع و اسکرول داخل باکس -->
