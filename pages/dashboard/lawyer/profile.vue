@@ -32,6 +32,29 @@
 
     <!-- Main Content -->
     <div v-else-if="lawyerInfo" class="profile-content">
+      <!-- وضعیت نمایش پروفایل (فعال/غیرفعال) -->
+      <div class="profile-visibility-card">
+        <div class="visibility-content">
+          <div class="visibility-icon" :class="{ inactive: !isActiveDisplay }">
+            <Icon :name="isActiveDisplay ? 'lucide:eye' : 'lucide:eye-off'" class="w-5 h-5" />
+          </div>
+          <div class="visibility-text">
+            <h3 class="visibility-title">وضعیت نمایش در سایت</h3>
+            <p class="visibility-desc">
+              {{ isActiveDisplay ? 'پروفایل شما در جستجو و لیست وکلا نمایش داده می‌شود و کاربران می‌توانند نوبت رزرو کنند.' : 'پروفایل شما در سایت نمایش داده نمی‌شود و امکان رزرو وجود ندارد.' }}
+            </p>
+          </div>
+          <div class="visibility-switch">
+            <USwitch
+              :model-value="isActiveDisplay"
+              :loading="toggleActiveLoading"
+              @update:model-value="onToggleActive"
+            />
+            <span class="visibility-label">{{ isActiveDisplay ? 'فعال' : 'غیرفعال' }}</span>
+          </div>
+        </div>
+      </div>
+
       <!-- Tab Navigation -->
       <div class="profile-tabs mb-4">
         <!-- Desktop Tabs -->
@@ -171,6 +194,8 @@ const activeTab = ref("profile");
 const isSaving = ref(false);
 const pendingChanges = ref({});
 const pendingTab = ref(null);
+const isActiveDisplay = ref(true);
+const toggleActiveLoading = ref(false);
 
 // Fetch lawyer info
 const fetchLawyerInfo = async () => {
@@ -221,6 +246,48 @@ const lawyerData = computed(() => {
   // Handle both {data: {...}} and direct {...} structures
   return info.data || info;
 });
+
+// Sync نمایش فعال/غیرفعال از سرور
+watch(
+  () => lawyerData.value?.is_active,
+  (val) => {
+    if (val !== undefined && val !== null) isActiveDisplay.value = !!val;
+  },
+  { immediate: true }
+);
+
+// تغییر وضعیت فعال/غیرفعال توسط وکیل
+const onToggleActive = async (newVal) => {
+  const lawyerId = authStore.user?.lawyer_id;
+  if (!lawyerId) return;
+  const prev = isActiveDisplay.value;
+  isActiveDisplay.value = newVal ?? !prev; // به‌روزرسانی فوری برای UX
+  toggleActiveLoading.value = true;
+  try {
+    const res = await usePatch({
+      url: `lawyers/${lawyerId}/toggle-active`,
+      includeAuthHeader: true,
+    });
+    if (res.statusCode === 200) {
+      const fromServer = res.data?.is_active ?? isActiveDisplay.value;
+      isActiveDisplay.value = fromServer;
+      reFetchLawyerInformation();
+      await authStore.fetchUser();
+      useToast().add({
+        title: fromServer ? "پروفایل شما فعال است" : "پروفایل شما غیرفعال شد",
+        color: "success",
+      });
+    } else {
+      isActiveDisplay.value = prev;
+      useToast().add({ title: "خطا در تغییر وضعیت", color: "error" });
+    }
+  } catch (e) {
+    isActiveDisplay.value = prev;
+    useToast().add({ title: "خطا در تغییر وضعیت", color: "error" });
+  } finally {
+    toggleActiveLoading.value = false;
+  }
+};
 
 // Computed completion statuses
 const kycStatus = computed(() => {
@@ -502,6 +569,44 @@ useHead({
 
 .unsaved-dot {
   @apply absolute top-1 right-1 w-2 h-2 rounded-full bg-amber-500;
+}
+
+/* Profile visibility card */
+.profile-visibility-card {
+  @apply bg-white rounded-xl border border-gray-100 p-4 mb-4;
+  box-shadow: var(--shadow-sm);
+}
+
+.visibility-content {
+  @apply flex flex-wrap items-center gap-4;
+}
+
+.visibility-icon {
+  @apply w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0;
+}
+
+.visibility-icon.inactive {
+  @apply bg-gray-100 text-gray-500;
+}
+
+.visibility-text {
+  @apply flex-1 min-w-0;
+}
+
+.visibility-title {
+  @apply text-sm font-semibold text-gray-900 mb-0.5;
+}
+
+.visibility-desc {
+  @apply text-xs text-gray-500 leading-relaxed;
+}
+
+.visibility-switch {
+  @apply flex items-center gap-2 shrink-0;
+}
+
+.visibility-label {
+  @apply text-sm font-medium text-gray-600 min-w-12;
 }
 
 /* Tab Content */
