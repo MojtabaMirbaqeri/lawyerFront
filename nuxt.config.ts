@@ -76,7 +76,7 @@ export default defineNuxtConfig({
       process.env.GENERATE_SITEMAP === "true" || process.env.NODE_ENV === "development",
   },
   site: {
-    url: process.env.SITE_URL || "https://vakilvakil.ir",
+    url: process.env.SITE_URL || "https://vakilvakil.com",
     name: "وکیل وکیل",
     defaultLocale: "fa",
   },

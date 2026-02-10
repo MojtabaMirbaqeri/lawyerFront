@@ -43,8 +43,8 @@ useSeoMeta({
   ogTitle: () => `وکیل استان ${province.name} | رزرو نوبت آنلاین`,
   ogDescription: () =>
     `دسترسی آسان به بهترین وکلای استان ${province.name}. رزرو آنلاین، مشاوره تخصصی، قیمت مناسب.`,
-  ogImage: `https://vakilvakil.ir/og-images/province-${province.en_name}.jpg`,
-  ogUrl: () => `https://vakilvakil.ir/provinces/${province.en_name}`,
+  ogImage: `https://vakilvakil.com/og-images/province-${province.en_name}.jpg`,
+  ogUrl: () => `https://vakilvakil.com/provinces/${province.en_name}`,
   ogType: "website",
   ogLocale: "fa_IR",
 
@@ -52,14 +52,14 @@ useSeoMeta({
   twitterCard: "summary_large_image",
   twitterTitle: () => `وکیل استان ${province.name}`,
   twitterDescription: () => `رزرو آنلاین بهترین وکلای ${province.name}`,
-  twitterImage: `https://vakilvakil.ir/og-images/province-${province.en_name}.jpg`,
+  twitterImage: `https://vakilvakil.com/og-images/province-${province.en_name}.jpg`,
 });
 
 useHead({
   link: [
     {
       rel: "canonical",
-      href: `https://vakilvakil.ir/provinces/${province.en_name}`,
+      href: `https://vakilvakil.com/provinces/${province.en_name}`,
     },
   ],
   script: [
@@ -77,9 +77,9 @@ useHead({
         provider: {
           "@type": "Organization",
           name: "وکیل وکیل",
-          url: "https://vakilvakil.ir",
+          url: "https://vakilvakil.com",
         },
-        url: `https://vakilvakil.ir/provinces/${province.en_name}`,
+        url: `https://vakilvakil.com/provinces/${province.en_name}`,
       }),
     },
   ],
