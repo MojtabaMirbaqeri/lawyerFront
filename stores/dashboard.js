@@ -21,6 +21,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       icon: "lucide:scale" 
     },
     {
+      title: "ادغام وکلا",
+      url: "/dashboard/admin/lawyerlist/merge",
+      icon: "lucide:merge",
+    },
+    {
       title: "تایید وکلا",
       url: "/dashboard/admin/registerlawyer",
       icon: "lucide:user-check",
@@ -70,11 +75,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/chat", 
       icon: "lucide:message-square" 
     },
-    {
-      title: "تنظیمات",
-      url: "/dashboard/admin/settings",
-      icon: "lucide:settings",
-    },
+    // {
+    //   title: "تنظیمات",
+    //   url: "/dashboard/admin/settings",
+    //   icon: "lucide:settings",
+    // },
   ];
 
   const lawyerRoutes = computed(() => {
