@@ -139,6 +139,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       icon: "lucide:credit-card" 
     },
     {
+      title: "ثبت‌نام به‌عنوان وکیل",
+      url: "/dashboard/user/become-lawyer",
+      icon: "lucide:scale",
+    },
+    {
       title: "تیکت‌ها",
       url: "/dashboard/ticket/tickets",
       icon: "lucide:ticket",

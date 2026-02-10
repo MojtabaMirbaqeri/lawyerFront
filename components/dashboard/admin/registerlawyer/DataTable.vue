@@ -62,7 +62,7 @@ const lawyersRef = ref(
   (
     await useGet({
       url: "register-lawyer-list",
-      includeAuthHeader: false,
+      includeAuthHeader: true,
       query: undefined,
     })
   ).data
@@ -115,7 +115,7 @@ watch(
       const res = await useGet({
         url: `register-lawyers/search`,
         query: { q: globalFilter.value, page: pagination.value.pageIndex },
-        includeAuthHeader: false,
+        includeAuthHeader: true,
       });
       data.value = res.data.data.map((law: any) => {
         const base = filterStore.lawyerTypes.find((type: any) => law.base == type.id);
@@ -170,7 +170,7 @@ const searchLawyer = async () => {
     const res = await useGet({
       url: `register-lawyers/search`,
       query: { q: globalFilter.value },
-      includeAuthHeader: false,
+      includeAuthHeader: true,
     });
     data.value = res.data.data.map((law: any) => {
       const base = filterStore.lawyerTypes.find((type: any) => law.base == type.id);
