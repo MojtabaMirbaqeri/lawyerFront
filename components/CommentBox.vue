@@ -39,10 +39,11 @@
     </div>
 
     <div class="comment-footer">
-      <NuxtLink :to="`lawyer/${commentDetail?.lawyer?.id}`">
+      <NuxtLink :to="`/lawyer/${commentDetail?.lawyer?.id}`">
         <div class="lawyer-tag">
-          <NuxtImg
-            :src="commentDetail?.lawyer?.profile_image || '/images/nullavatar.png'"
+          <img
+            :src="lawyerAvatarSrc"
+            alt=""
             class="lawyer-avatar" />
           {{ commentDetail?.lawyer?.full_name }}
         </div>
@@ -52,11 +53,21 @@
 </template>
 
 <script setup>
-defineProps({
+const config = useRuntimeConfig();
+const props = defineProps({
   commentDetail: {
     type: Object,
     required: true,
   },
+});
+
+const lawyerAvatarSrc = computed(() => {
+  const img = props.commentDetail?.lawyer?.profile_image;
+  if (img) {
+    const base = (config.public?.imageBase || "").replace(/\/$/, "");
+    return base ? `${base}${img}` : img;
+  }
+  return "/images/nullavatar.png";
 });
 </script>
 
