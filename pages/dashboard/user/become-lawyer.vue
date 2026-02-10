@@ -12,14 +12,14 @@
       class="mb-6"
     />
 
-    <!-- Pending request -->
+    <!-- Pending request: فقط در این بخش نمایش داده می‌شود؛ کاربر همچنان یوزر عادی است -->
     <UAlert
       v-else-if="myRequest && myRequest.status === 'pending'"
-      title="در انتظار تأیید"
-      description="درخواست شما ثبت شده و در حال بررسی توسط ادمین است. پس از تأیید به تمام امکانات وکیل دسترسی خواهید داشت."
-      color="warning"
+      title="درخواست شما ثبت شده"
+      description="درخواست شما با موفقیت ثبت شده و در حال بررسی توسط ادمین است. تا زمان تأیید، دسترسی شما به پنل کاربر عادی بدون تغییر است. پس از تأیید به امکانات وکیل دسترسی خواهید داشت."
+      color="success"
       variant="subtle"
-      icon="lucide:shield-alert"
+      icon="lucide:check-circle"
       class="mb-6"
     />
 
@@ -216,13 +216,12 @@ async function onSubmit(e) {
     if (res.statusCode === 201 && res.data?.data != null) {
       useToast().add({
         title: "درخواست ثبت شد",
-        description: "درخواست شما با موفقیت ثبت شد و در انتظار تأیید است.",
+        description: "درخواست شما با موفقیت ثبت شد. تا زمان تأیید، دسترسی شما به پنل کاربر عادی بدون تغییر است.",
         icon: "mage:security-shield",
         color: "success",
       });
-      await authStore.fetchUser();
       myRequest.value = { status: "pending" };
-      await navigateTo("/dashboard");
+      // کاربر همان یوزر عادی می‌ماند؛ فقط در این صفحه وضعیت «در انتظار تأیید» نمایش داده می‌شود
     }
   } catch (err) {
     console.error(err);
