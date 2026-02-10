@@ -1,8 +1,6 @@
 <template>
   <main>
-    <FilteredHero
-      :title="pageTitle"
-      :subtitle="pageSubtitle" />
+    <FilteredHero :title="pageTitle" :subtitle="pageSubtitle" />
 
     <div class="container pt-0 space-y-14 lg:space-y-20">
       <LandingLawyersSection
@@ -25,8 +23,9 @@ useSeoMeta({
     "لیست وکلا, وکیل, رزرو وکیل, مشاوره حقوقی, وکیل آنلاین, وکیل خوب, فیلتر وکیل, مرتب‌سازی وکلا, وکیل پایه یک, وکیل متخصص",
 
   ogTitle: "لیست وکلا | رزرو آنلاین نوبت وکیل",
-  ogDescription: "دسترسی به لیست وکلای متخصص با فیلتر و مرتب‌سازی. رزرو آنلاین، مشاوره تخصصی.",
-  ogUrl: "https://vakilvakil.ir/lawyers",
+  ogDescription:
+    "دسترسی به لیست وکلای متخصص با فیلتر و مرتب‌سازی. رزرو آنلاین، مشاوره تخصصی.",
+  ogUrl: "https://vakilvakil.com/lawyers",
   ogType: "website",
   ogLocale: "fa_IR",
 
@@ -39,7 +38,7 @@ useHead({
   link: [
     {
       rel: "canonical",
-      href: "https://vakilvakil.ir/lawyers",
+      href: "https://vakilvakil.com/lawyers",
     },
   ],
 });
