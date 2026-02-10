@@ -34,13 +34,24 @@ const tableColumns = [
   { key: 'is_active', label: 'وضعیت' },
 ];
 
-const refetch = async (page = null, total = false) => {
+function buildFilterQuery() {
+  const query = { per_page: pagination.value.pageSize } as Record<string, number | string>;
+  if (statusFilter.value === "active") query.is_active = 1;
+  else if (statusFilter.value === "inactive") query.is_active = 0;
+  if (baseFilter.value !== "all") query.base_id = baseFilter.value;
+  return query;
+}
+
+const refetch = async (page: number | null = null, total = false) => {
+  const query = { ...buildFilterQuery() } as Record<string, number | string>;
+  if (page) query.page = page;
+
   const lawyersRef = ref(
     (
       await useGet({
         url: "lawyers",
-        includeAuthHeader: false,
-        query: page ? { page: page } : undefined,
+        includeAuthHeader: true,
+        query,
       })
     ).data,
   );
@@ -65,10 +76,16 @@ const refetch = async (page = null, total = false) => {
     };
   });
 
-  if (total) {
+  if (lawyersRef.value.meta) {
     pagination.value.total = lawyersRef.value.meta.total;
+  }
+  if (total) {
     pagination.value.pageIndex = 1;
   }
+};
+
+const applyFilters = () => {
+  refetch(1, true);
 };
 
 const searchRefetch = async (query, start, page) => {
@@ -146,17 +163,8 @@ const data = ref(
   }),
 );
 
-// Filtered data
-const filteredData = computed(() => {
-  return data.value.filter((item) => {
-    const statusMatch =
-      statusFilter.value === "all" ||
-      (statusFilter.value === "active" && item.is_active) ||
-      (statusFilter.value === "inactive" && !item.is_active);
-    const baseMatch = baseFilter.value === "all" || item.baseId === baseFilter.value;
-    return statusMatch && baseMatch;
-  });
-});
+// Data displayed in table/grid (server-filtered; no client-side filter)
+const filteredData = computed(() => data.value);
 
 function getInitials(name: string) {
   if (!name) return "?";
@@ -332,6 +340,15 @@ const exportToExcel = () => {
               :items="baseOptions"
               placeholder="پایه"
               class="w-40!" />
+
+            <!-- Filter button: apply filters on all lawyers (server-side) -->
+            <button
+              type="button"
+              class="btn-secondary"
+              @click="applyFilters">
+              <Icon name="lucide:filter" class="w-4 h-4" />
+              <span>فیلتر</span>
+            </button>
           </div>
 
           <div class="action-bar-end">

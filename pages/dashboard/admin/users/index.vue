@@ -24,11 +24,19 @@
               <Icon name="lucide:search" class="icon" />
               <input
                 v-model="searchQuery"
-                @input="debouncedSearch"
                 type="text"
                 placeholder="جستجوی نام یا شماره تلفن..."
-                class="w-72" />
+                class="w-72"
+              />
             </div>
+
+            <!-- Sort -->
+            <UICSelect
+              v-model="sortBy"
+              :items="sortOptions"
+              placeholder="مرتب‌سازی"
+              class="w-44!"
+            />
 
             <!-- Wallet Filter -->
             <UICSelect
@@ -36,7 +44,7 @@
               :items="walletFilterItems"
               placeholder="همه کاربران"
               class="w-44!"
-              @update:model-value="applyFilters" />
+            />
 
             <!-- Activity Filter -->
             <UICSelect
@@ -44,7 +52,17 @@
               :items="activityFilterItems"
               placeholder="همه"
               class="w-40!"
-              @update:model-value="applyFilters" />
+            />
+
+            <!-- Filter button: apply search and filters -->
+            <button
+              type="button"
+              class="btn-secondary"
+              @click="applyFilters"
+            >
+              <Icon name="lucide:filter" class="w-4 h-4" />
+              <span>فیلتر</span>
+            </button>
           </div>
 
           <div class="action-bar-end">
@@ -195,9 +213,29 @@ const page = ref(1);
 const total = ref(0);
 const data = ref([]);
 const searchQuery = ref("");
+const sortBy = ref("newest");
 const walletFilter = ref("all");
 const activityFilter = ref("all");
 const showUserModal = ref(false);
+
+const sortOptions = [
+  { id: "newest", label: "جدیدترین ثبت‌نام" },
+  { id: "oldest", label: "قدیمی‌ترین ثبت‌نام" },
+  { id: "name_asc", label: "نام (الفبا)" },
+  { id: "appointments_desc", label: "بیشترین نوبت" },
+  { id: "reviews_desc", label: "بیشترین نظر" },
+];
+
+const walletFilterItems = [
+  { id: "all", label: "همه کاربران" },
+  { id: "has_balance", label: "دارای موجودی" },
+  { id: "no_balance", label: "بدون موجودی" },
+];
+const activityFilterItems = [
+  { id: "all", label: "همه" },
+  { id: "active", label: "فعال" },
+  { id: "inactive", label: "غیرفعال" },
+];
 const selectedUser = ref(null);
 
 // Table configuration
@@ -234,29 +272,23 @@ const getUserActions = (user) => [
   },
 ];
 
-// Debounced search
-let searchTimeout = null;
-const debouncedSearch = () => {
-  clearTimeout(searchTimeout);
-  searchTimeout = setTimeout(() => {
-    page.value = 1;
-    fetchData(1, true);
-  }, 500);
-};
-
 // Fetch data
 const fetchData = async (pageNumber, setTotal = false) => {
   try {
+    const query = {
+      page: pageNumber,
+      per_page: 15,
+      sort: sortBy.value,
+      wallet: walletFilter.value !== "all" ? walletFilter.value : undefined,
+      activity: activityFilter.value !== "all" ? activityFilter.value : undefined,
+    };
+    const search = searchQuery.value?.trim();
+    if (search) query.search = search;
+
     const res = await useGet({
       url: "users/regular",
       includeAuthHeader: true,
-      query: {
-        page: pageNumber,
-        per_page: 15,
-        search: searchQuery.value || undefined,
-        wallet: walletFilter.value !== "all" ? walletFilter.value : undefined,
-        activity: activityFilter.value !== "all" ? activityFilter.value : undefined,
-      },
+      query,
     });
 
     data.value = res.data.data.map((user) => ({
@@ -269,7 +301,7 @@ const fetchData = async (pageNumber, setTotal = false) => {
       comments: user?.review_count || 0,
     }));
 
-    if (setTotal && res.data.meta) {
+    if (res.data.meta) {
       total.value = res.data.meta.total;
     }
   } catch (error) {
