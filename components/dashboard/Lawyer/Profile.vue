@@ -21,6 +21,20 @@
             <UIcon name="solar:gallery-edit-linear" class="size-4.5!" />
           </UICSecondaryBtn>
           <template #body>
+            <UAlert
+              title="نکات مهم در مورد تصویر پروفایل"
+              description="لطفاً تصویر پروفایل را به‌صورت واضح، با نور مناسب و نمای نزدیک از صورت بارگذاری کنید. تصویر باید تمام صورت را به‌طور کامل نشان دهد و از استفاده از عکس‌های تار، دور یا دارای فیلتر خودداری شود."
+              color="info"
+              variant="subtle"
+              icon="lucide:shield-alert"
+              class="mb-6"
+              :ui="{
+                icon: 'size-6!',
+                title: 'font-semibold text-sm',
+                description: 'text-sm',
+                root: 'items-center rounded-xl',
+              }" />
+
             <UFileUpload
               v-model="formData.profile_image"
               icon="i-lucide-image"
@@ -35,9 +49,7 @@
               @update:model-value="handleImageUpload" />
           </template>
         </UModal>
-        <div>
-
-        </div>
+        <div></div>
       </div>
     </div>
     <div class="space-y-8 lg:space-y-10">
@@ -110,10 +122,7 @@ const lawyerInfo = computed(() => payload.value?.lawyer_info ?? {});
 
 // پایه: API در lawyer_info فقط base (عدد) برمی‌گرداند، نه base_lawyer
 const baseId = computed(
-  () =>
-    Number(
-      lawyerInfo.value?.base_lawyer?.id ?? lawyerInfo.value?.base ?? 0,
-    ) || 0,
+  () => Number(lawyerInfo.value?.base_lawyer?.id ?? lawyerInfo.value?.base ?? 0) || 0,
 );
 const specialtiesIds = computed(() =>
   (lawyerInfo.value?.specialties || []).map((s) => Number(s)).filter(Boolean),
@@ -121,9 +130,7 @@ const specialtiesIds = computed(() =>
 const servicesIds = computed(() =>
   (lawyerInfo.value?.services || []).map((s) => Number(s)).filter(Boolean),
 );
-const aboutText = computed(
-  () => lawyerInfo.value?.about || payload.value?.about || "",
-);
+const aboutText = computed(() => lawyerInfo.value?.about || payload.value?.about || "");
 
 const formData = reactive({
   name: authStore.user?.name ?? "",
