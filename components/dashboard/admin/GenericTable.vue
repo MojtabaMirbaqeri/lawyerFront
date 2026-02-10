@@ -1,5 +1,15 @@
 <template>
-  <div ref="tableWrapper" class="card-dashboard">
+  <div ref="tableWrapper" class="card-dashboard relative">
+    <!-- Loading overlay -->
+    <div
+      v-if="loading"
+      class="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-white/80 dark:bg-gray-900/80"
+    >
+      <div class="flex flex-col items-center gap-3">
+        <Icon name="lucide:loader-2" class="w-8 h-8 animate-spin text-gray-500" />
+        <p class="text-sm text-gray-500">در حال بارگذاری...</p>
+      </div>
+    </div>
     <div class="overflow-x-auto">
       <table class="table-dashboard">
         <thead>
@@ -40,8 +50,8 @@
       </table>
     </div>
 
-    <!-- Empty State -->
-    <div v-if="data.length === 0" class="empty-state py-16">
+    <!-- Empty State (only when not loading) -->
+    <div v-if="!loading && data.length === 0" class="empty-state py-16">
       <slot name="empty">
         <div class="empty-state-icon">
           <Icon :name="emptyIcon" class="w-8 h-8" />
@@ -53,7 +63,7 @@
 
     <!-- Pagination -->
     <div
-      v-if="data.length > 0 && showPagination"
+      v-if="!loading && data.length > 0 && showPagination"
       class="flex items-center justify-between p-4 border-t border-gray-100">
       <span class="text-sm text-gray-500">
         صفحه {{ currentPage }} از {{ totalPages }}
@@ -145,6 +155,12 @@ const props = defineProps({
   emptyIcon: {
     type: String,
     default: "lucide:inbox",
+  },
+
+  // Loading state
+  loading: {
+    type: Boolean,
+    default: false,
   },
 });
 
