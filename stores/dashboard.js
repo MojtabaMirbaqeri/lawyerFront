@@ -75,11 +75,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/chat", 
       icon: "lucide:message-square" 
     },
-    {
-      title: "تنظیمات",
-      url: "/dashboard/admin/settings",
-      icon: "lucide:settings",
-    },
+    // {
+    //   title: "تنظیمات",
+    //   url: "/dashboard/admin/settings",
+    //   icon: "lucide:settings",
+    // },
   ];
 
   const lawyerRoutes = computed(() => {
