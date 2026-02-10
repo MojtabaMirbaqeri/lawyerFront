@@ -20,4 +20,4 @@ Allow: /specialties/*
 # Crawl-delay: 1
 
 # Sitemap location
-Sitemap: https://vakilvakil.com/sitemap.xml
+Sitemap: https://vakilvakil.com/sitemap_index.xml

@@ -2,38 +2,37 @@
   <main>
     <!-- Hero Section -->
     <LandingHeader />
-    
+
     <!-- Trust Bar -->
     <LandingTrustBar />
-    
-        <!-- Lawyers Section -->
-        <div class="container">
+
+    <!-- Lawyers Section -->
+    <div class="container">
       <LandingLawyersSection
         ref="lawyersSectionRef"
         link="lawyer/"
         :titlebtn="'رزرو مشاوره'" />
     </div>
-    
+
     <!-- Services Section -->
     <LandingServicesSection />
-    
-    
+
     <!-- Why Choose Us -->
     <LandingWhyChooseUs />
-    
+
     <!-- How It Works -->
     <LandingHowItWorks />
-    
+
     <!-- Comments Section -->
     <div class="container">
       <LandingCommentsSection />
     </div>
-    
+
     <!-- FAQ Section -->
     <div class="container">
       <LandingFaqSection />
     </div>
-    
+
     <!-- CTA Section (آخرین فراخوان قبل از فوتر) -->
     <LandingCtaSection />
   </main>
@@ -52,8 +51,8 @@ useSeoMeta({
   ogTitle: "وکیل وکیل | رزرو آنلاین نوبت وکیل",
   ogDescription:
     "دسترسی آسان به بهترین وکلای کشور. رزرو آنلاین، مشاوره تخصصی، قیمت مناسب.",
-  ogImage: "https://vakilvakil.ir/og-image-home.jpg",
-  ogUrl: "https://vakilvakil.ir",
+  ogImage: "https://vakilvakil.com/og-image-home.jpg",
+  ogUrl: "https://vakilvakil.com",
   ogType: "website",
   ogLocale: "fa_IR",
 
@@ -61,14 +60,14 @@ useSeoMeta({
   twitterCard: "summary_large_image",
   twitterTitle: "وکیل وکیل | رزرو آنلاین وکیل",
   twitterDescription: "دسترسی آسان به بهترین وکلای کشور",
-  twitterImage: "https://vakilvakil.ir/og-image-home.jpg",
+  twitterImage: "https://vakilvakil.com/og-image-home.jpg",
 });
 
 useHead({
   link: [
     {
       rel: "canonical",
-      href: "https://vakilvakil.ir",
+      href: "https://vakilvakil.com",
     },
   ],
   script: [
@@ -79,8 +78,8 @@ useHead({
         "@type": "Organization",
         name: "وکیل وکیل",
         description: "پلتفرم رزرو آنلاین وکیل و مشاوره حقوقی",
-        url: "https://vakilvakil.ir",
-        logo: "https://vakilvakil.ir/logo.png",
+        url: "https://vakilvakil.com",
+        logo: "https://vakilvakil.com/logo.png",
         sameAs: [
           "https://www.instagram.com/vakilvakil",
           "https://twitter.com/vakilvakil",

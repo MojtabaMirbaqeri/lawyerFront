@@ -1,5 +1,6 @@
 <template>
-  <main class="relative min-h-screen bg-gradient-to-b from-slate-50/80 via-white to-slate-50/50">
+  <main
+    class="relative min-h-screen bg-gradient-to-b from-slate-50/80 via-white to-slate-50/50">
     <!-- Overlay when lawyer is completely inactive -->
     <Transition name="fade">
       <div
@@ -7,13 +8,10 @@
         class="fixed inset-0 z-50 flex items-center justify-center bg-white/60 backdrop-blur-md"
         aria-hidden="false"
         aria-label="وکیل موقتا در دسترس نمی باشد">
-        <div class="rounded-2xl border border-slate-200/80 bg-white/80 px-8 py-6 text-center shadow-xl backdrop-blur-sm">
-          <p class="text-xl font-bold text-slate-700">
-            وکیل موقتا در دسترس نمی باشد
-          </p>
-          <p class="mt-2 text-sm text-slate-500">
-            لطفا در زمان دیگری مراجعه کنید.
-          </p>
+        <div
+          class="rounded-2xl border border-slate-200/80 bg-white/80 px-8 py-6 text-center shadow-xl backdrop-blur-sm">
+          <p class="text-xl font-bold text-slate-700">وکیل موقتا در دسترس نمی باشد</p>
+          <p class="mt-2 text-sm text-slate-500">لطفا در زمان دیگری مراجعه کنید.</p>
         </div>
       </div>
     </Transition>
@@ -370,10 +368,13 @@ const route = useRoute();
 const config = useRuntimeConfig();
 const filterStore = useFiltersStore();
 
-const res = await useGet({
-  url: `lawyers/${route.params.id}`,
-  includeAuthHeader: true,
-}, '');
+const res = await useGet(
+  {
+    url: `lawyers/${route.params.id}`,
+    includeAuthHeader: true,
+  },
+  "",
+);
 const data = await res.data;
 const lawyer = ref(data?.data ?? {});
 
@@ -513,7 +514,7 @@ useHead({
       rel: "canonical",
       href: () => {
         const slug = fullname.value.trim().replace(/\s+/g, "-") || "profile";
-        return `https://vakilvakil.ir/lawyer/${route.params.id}/${slug}`;
+        return `https://vakilvakil.com/lawyer/${route.params.id}/${slug}`;
       },
     },
   ],
