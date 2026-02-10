@@ -304,6 +304,10 @@ const exportToExcel = () => {
           <Icon name="lucide:download" class="w-4 h-4" />
           <span>خروجی اکسل</span>
         </button>
+        <NuxtLink to="/dashboard/admin/lawyerlist/merge" class="btn-secondary">
+          <Icon name="lucide:merge" class="w-4 h-4" />
+          <span>ادغام وکلا</span>
+        </NuxtLink>
         <NuxtLink to="/dashboard/admin/lawyerlist/add" class="btn-primary">
           <Icon name="lucide:user-plus" class="w-4 h-4" />
           <span>افزودن وکیل</span>
