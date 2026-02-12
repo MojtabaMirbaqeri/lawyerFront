@@ -248,6 +248,26 @@ const getChatPartner = (room) => {
 /* Navigation */
 .sidebar-nav {
   @apply flex-1 overflow-y-auto overflow-x-clip py-4;
+  scrollbar-width: thin;
+  scrollbar-color: var(--sidebar-border) transparent;
+}
+
+/* ظاهر اسکرول منو - WebKit (Chrome, Edge, Safari) */
+.sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: var(--sidebar-border);
+  border-radius: 3px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: var(--sidebar-text-muted);
 }
 
 .dashboard-sidebar.collapsed .sidebar-nav {

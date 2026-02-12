@@ -70,6 +70,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/admin/profile-views",
       icon: "lucide:eye",
     },
+    {
+      title: "ارسال پیامک",
+      url: "/dashboard/admin/sms",
+      icon: "lucide:send",
+    },
     { 
       title: "چت", 
       url: "/chat", 
