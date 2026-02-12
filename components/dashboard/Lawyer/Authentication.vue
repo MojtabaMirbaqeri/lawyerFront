@@ -330,7 +330,7 @@
                 <div class="doc-preview-image">
                   <img
                     v-if="lawyerData?.lawyer_info?.national_card_image"
-                    :src="lawyerData.lawyer_info.national_card_image"
+                    :src="useRuntimeConfig().public.imageBase + lawyerData.lawyer_info.national_card_image"
                     alt="کارت ملی" />
                   <div v-else class="no-image">
                     <Icon name="lucide:image-off" class="w-8 h-8 text-gray-300" />
@@ -342,7 +342,7 @@
                 <div class="doc-preview-image">
                   <img
                     v-if="lawyerData?.lawyer_info?.license_image"
-                    :src="lawyerData.lawyer_info.license_image"
+                    :src="useRuntimeConfig().public.imageBase + lawyerData.lawyer_info.license_image"
                     alt="پروانه" />
                   <div v-else class="no-image">
                     <Icon name="lucide:image-off" class="w-8 h-8 text-gray-300" />

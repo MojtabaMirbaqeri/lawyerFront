@@ -51,7 +51,7 @@
           <span class="checklist-label">{{ item.label }}</span>
           <span v-if="item.hint" class="checklist-hint">{{ item.hint }}</span>
         </div>
-        <div class="checklist-weight">{{ item.weight }}%</div>
+        <!-- <div class="checklist-weight">{{ item.weight }}%</div> -->
       </div>
     </div>
 

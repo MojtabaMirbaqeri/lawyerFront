@@ -30,7 +30,7 @@
         <a
           v-for="image in message.attachments"
           :key="image"
-          :href="image.file_url"
+          :href="useRuntimeConfig().public.imageBase + image.file_url"
           :download="image.original_name"
           target="_blank"
         >
