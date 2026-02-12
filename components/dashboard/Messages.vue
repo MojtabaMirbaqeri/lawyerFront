@@ -30,7 +30,7 @@
         <a
           v-for="image in message.attachments"
           :key="image"
-          :href="image.file_url"
+          :href="getAttachmentUrl(image.file_url)"
           :download="image.original_name"
           target="_blank"
         >
@@ -53,6 +53,19 @@
 defineProps(["items"]);
 
 const authStore = useAuthStore();
+const config = useRuntimeConfig();
+
+/** آدرس کامل فایل پیوست برای نمایش/دانلود؛ اگر مسیر نسبی باشد قبلش آدرس storage (imageBase) اضافه می‌شود */
+function getAttachmentUrl(fileUrl) {
+  if (!fileUrl || typeof fileUrl !== "string") return "";
+  const trimmed = fileUrl.trim();
+  if (!trimmed) return "";
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) return trimmed;
+  const base = (config.public?.imageBase || "").replace(/\/$/, "") || "";
+  const path = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
+  return base ? `${base}${path}` : trimmed;
+}
+
 console.log(authStore.user);
 </script>
 

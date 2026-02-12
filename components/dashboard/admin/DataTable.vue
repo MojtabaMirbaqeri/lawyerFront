@@ -42,20 +42,24 @@ function buildFilterQuery() {
   return query;
 }
 
-const refetch = async (page: number | null = null, total = false) => {
-  const query = { ...buildFilterQuery() } as Record<string, number | string>;
-  if (page) query.page = page;
+const tableLoading = ref(false);
 
-  const lawyersRef = ref(
-    (
-      await useGet({
-        url: "lawyers",
-        includeAuthHeader: true,
-        query,
-      })
-    ).data,
-  );
-  data.value = lawyersRef.value.data.map((law) => {
+const refetch = async (page: number | null = null, total = false) => {
+  tableLoading.value = true;
+  try {
+    const query = { ...buildFilterQuery() } as Record<string, number | string>;
+    if (page) query.page = page;
+
+    const lawyersRef = ref(
+      (
+        await useGet({
+          url: "lawyers",
+          includeAuthHeader: true,
+          query,
+        })
+      ).data,
+    );
+    data.value = lawyersRef.value.data.map((law) => {
     const name = law.lawyer_info?.name || '';
     const family = law.lawyer_info?.family || '';
     const slug = `${name}-${family}`.toLowerCase().replace(/\s+/g, '-');
@@ -82,6 +86,9 @@ const refetch = async (page: number | null = null, total = false) => {
   if (total) {
     pagination.value.pageIndex = 1;
   }
+  } finally {
+    tableLoading.value = false;
+  }
 };
 
 const applyFilters = () => {
@@ -89,14 +96,16 @@ const applyFilters = () => {
 };
 
 const searchRefetch = async (query, start, page) => {
-  const res = await useGet({
-    url: "lawyer-search/comprehensive-search",
-    includeAuthHeader: true,
-    query: { page: page ? page : undefined, query: query },
-  });
-  const lawyers = ref(res.data.data.data.lawyers);
+  tableLoading.value = true;
+  try {
+    const res = await useGet({
+      url: "lawyer-search/comprehensive-search",
+      includeAuthHeader: true,
+      query: { page: page ? page : undefined, query: query },
+    });
+    const lawyers = ref(res.data.data.data.lawyers);
 
-  data.value = lawyers.value.map((law) => {
+    data.value = lawyers.value.map((law) => {
     const base = filterStore.lawyerTypes.find((type) => law.base == type.id);
     const name = law?.name || '';
     const family = law?.family || '';
@@ -123,6 +132,9 @@ const searchRefetch = async (query, start, page) => {
   }
 
   pagination.value.total = res.data.data.data.pagination.total;
+  } finally {
+    tableLoading.value = false;
+  }
 };
 
 const lawyersRef = ref((await useGet({ url: "lawyers", includeAuthHeader: true })).data);
@@ -400,6 +412,7 @@ const exportToExcel = () => {
       :current-page="pagination.pageIndex"
       :total-items="pagination.total"
       :items-per-page="pagination.pageSize"
+      :loading="tableLoading"
       row-key="edit_id"
       empty-title="وکیلی یافت نشد"
       empty-message="با تغییر فیلترها یا جستجو، وکلا را مشاهده کنید"
@@ -456,7 +469,16 @@ const exportToExcel = () => {
     </dashboard-admin-generic-table>
 
     <!-- Grid View -->
-    <div v-else class="lawyers-grid">
+    <div v-else class="lawyers-grid relative">
+      <div
+        v-if="tableLoading"
+        class="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-white/80"
+      >
+        <div class="flex flex-col items-center gap-3">
+          <Icon name="lucide:loader-2" class="w-8 h-8 animate-spin text-gray-500" />
+          <p class="text-sm text-gray-500">در حال بارگذاری...</p>
+        </div>
+      </div>
       <div
         v-for="lawyer in filteredData"
         :key="lawyer.id"

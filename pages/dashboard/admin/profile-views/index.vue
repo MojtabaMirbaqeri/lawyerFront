@@ -46,8 +46,17 @@
       </div>
     </div>
 
-    <div class="card-dashboard">
-      <div class="overflow-x-auto">
+    <div class="card-dashboard relative">
+      <div
+        v-if="pending"
+        class="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-white/80 min-h-[200px]"
+      >
+        <div class="flex flex-col items-center gap-3">
+          <Icon name="lucide:loader-2" class="w-8 h-8 animate-spin text-gray-500" />
+          <p class="text-sm text-gray-500">در حال بارگذاری...</p>
+        </div>
+      </div>
+      <div v-show="!pending" class="overflow-x-auto">
         <table class="table-dashboard">
           <thead>
             <tr>
@@ -91,7 +100,7 @@
         </table>
       </div>
       <div
-        v-if="totalLawyers > 0"
+        v-if="!pending && totalLawyers > 0"
         class="flex items-center justify-between p-4 border-t border-gray-100"
       >
         <span class="text-sm text-gray-500">

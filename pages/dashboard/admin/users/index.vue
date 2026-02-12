@@ -81,6 +81,7 @@
       :current-page="page"
       :total-items="total"
       :items-per-page="15"
+      :loading="tableLoading"
       row-key="phone"
       empty-title="کاربری یافت نشد"
       empty-message="با تغییر فیلترها یا جستجو، کاربران را پیدا کنید"
@@ -273,7 +274,9 @@ const getUserActions = (user) => [
 ];
 
 // Fetch data
+const tableLoading = ref(false);
 const fetchData = async (pageNumber, setTotal = false) => {
+  tableLoading.value = true;
   try {
     const query = {
       page: pageNumber,
@@ -307,6 +310,8 @@ const fetchData = async (pageNumber, setTotal = false) => {
   } catch (error) {
     console.error("خطا در واکشی اطلاعات کاربران:", error);
     useToast().add({ title: "خطا در دریافت اطلاعات", color: "error" });
+  } finally {
+    tableLoading.value = false;
   }
 };
 
