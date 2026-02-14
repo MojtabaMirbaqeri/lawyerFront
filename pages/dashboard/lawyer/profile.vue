@@ -5,6 +5,8 @@
       v-if="lawyerInfo"
       :lawyer-info="lawyerInfo"
       :kyc-status="kycStatus"
+      :has-personal-info="hasPersonalInfoComplete"
+      :has-profile="hasProfileComplete"
       :has-education="hasEducation"
       :has-workplace="hasWorkplace"
       :has-schedule="hasSchedule"
@@ -142,13 +144,13 @@
         </div>
 
         <!-- Mobile Navigation -->
-        <div class="tabs-mobile">
+        <!-- <div class="tabs-mobile">
           <UICSelect
             v-model="activeTab"
             :items="mobileTabItems"
             placeholder="انتخاب بخش..."
             @update:model-value="handleTabChange" />
-        </div>
+        </div> -->
       </div>
 
       <!-- Tab Content (ref برای اسکرول بعد از کلیک چک‌لیست در موبایل) -->
@@ -322,7 +324,7 @@ const generalTabs = computed(() => [
     label: "پروفایل",
     value: "profile",
     icon: "lucide:user",
-    badge: lawyerData.value?.lawyer_info?.about ? "complete" : "incomplete",
+    badge: hasProfileComplete.value ? "complete" : "incomplete",
   },
   {
     label: "اطلاعات شخصی",
@@ -395,6 +397,11 @@ const hasPersonalInfoComplete = computed(() => {
     info?.province_id &&
     info?.city_id
   );
+});
+
+const hasProfileComplete = computed(() => {
+  const info = lawyerData.value?.lawyer_info;
+  return !!(info?.about && info?.about.length > 50);
 });
 
 // Active component mapping
