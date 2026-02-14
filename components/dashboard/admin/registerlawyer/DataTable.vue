@@ -31,38 +31,45 @@ type PossibleLawyer = {
   license_number: string | null;
 };
 
+const tableLoading = ref(false);
+
 const refetch = async (page = undefined) => {
-  const lawyersRef = ref(
-    (
-      await useGet({
-        url: "register-lawyer-list",
-        includeAuthHeader: true,
-        query: page ? { page: page } : undefined,
-      })
-    ).data
-  );
-  data.value = lawyersRef.value.data.map((law: any) => {
-    const base = filterStore.lawyerTypes.find((type: any) => law.base == type.id);
-    return {
-      id: law.user_id,
-      national_code: law.national_code,
-      phone: law.user?.phone,
-      fullName: `${law.user?.name} ${law.user?.family}`,
-      edit_id: law.id,
-      license: law.license_number,
-      status: law.status,
-      nationalCardImage: law.national_card_image,
-      licenseImage: law.license_image,
-      base: base?.title,
-    };
-  });
+  tableLoading.value = true;
+  try {
+    const lawyersRef = ref(
+      (
+        await useGet({
+          url: "register-lawyer-list",
+          includeAuthHeader: true,
+          query: page ? { page: page } : undefined,
+        })
+      ).data
+    );
+    data.value = lawyersRef.value.data.map((law: any) => {
+      const base = filterStore.lawyerTypes.find((type: any) => law.base == type.id);
+      return {
+        id: law.user_id,
+        national_code: law.national_code,
+        phone: law.user?.phone,
+        fullName: `${law.user?.name} ${law.user?.family}`,
+        edit_id: law.id,
+        license: law.license_number,
+        status: law.status,
+        nationalCardImage: law.national_card_image,
+        licenseImage: law.license_image,
+        base: base?.title,
+      };
+    });
+  } finally {
+    tableLoading.value = false;
+  }
 };
 
 const lawyersRef = ref(
   (
     await useGet({
       url: "register-lawyer-list",
-      includeAuthHeader: false,
+      includeAuthHeader: true,
       query: undefined,
     })
   ).data
@@ -112,12 +119,51 @@ watch(
   () => pagination.value.pageIndex,
   async (page) => {
     if (globalFilter.value) {
-      const res = await useGet({
-        url: `register-lawyers/search`,
-        query: { q: globalFilter.value, page: pagination.value.pageIndex },
-        includeAuthHeader: false,
-      });
-      data.value = res.data.data.map((law: any) => {
+      tableLoading.value = true;
+      try {
+        const res = await useGet({
+          url: `register-lawyers/search`,
+          query: { q: globalFilter.value, page: pagination.value.pageIndex },
+          includeAuthHeader: true,
+        });
+        data.value = res.data.data.map((law: any) => {
+          const base = filterStore.lawyerTypes.find((type: any) => law.base == type.id);
+          return {
+            id: law.user_id,
+            national_code: law.national_code,
+            phone: law.user?.phone,
+            fullName: `${law.user?.name} ${law.user?.family}`,
+            edit_id: law.id,
+            license: law.license_number,
+            status: law.status,
+            nationalCardImage: law.national_card_image,
+            licenseImage: law.license_image,
+            base: base?.title,
+          };
+        });
+      } finally {
+        tableLoading.value = false;
+      }
+    } else {
+      await refetch(page);
+    }
+  }
+);
+
+const searchLawyer = async () => {
+  tableLoading.value = true;
+  try {
+    if (globalFilter.value === "") {
+      const lawyersRef = ref(
+        (
+          await useGet({
+            url: "register-lawyer-list",
+            includeAuthHeader: true,
+            query: undefined,
+          })
+        ).data
+      );
+      data.value = lawyersRef.value.data.map((law: any) => {
         const base = filterStore.lawyerTypes.find((type: any) => law.base == type.id);
         return {
           id: law.user_id,
@@ -132,65 +178,36 @@ watch(
           base: base?.title,
         };
       });
+      pagination.value.total = lawyersRef.value.meta.total;
+      return;
     } else {
-      refetch(page);
+      const res = await useGet({
+        url: `register-lawyers/search`,
+        query: { q: globalFilter.value },
+        includeAuthHeader: true,
+      });
+      data.value = res.data.data.map((law: any) => {
+        const base = filterStore.lawyerTypes.find((type: any) => law.base == type.id);
+
+        return {
+          id: law.user_id,
+          national_code: law.national_code,
+          phone: law.user?.phone,
+          fullName: `${law.user?.name} ${law.user?.family}`,
+          edit_id: law.id,
+          license: law.license_number,
+          status: law.status,
+          nationalCardImage: law.national_card_image,
+          licenseImage: law.license_image,
+          base: base?.title,
+        };
+      });
+
+      pagination.value.total = res.data.meta.total;
+      pagination.value.pageIndex = 1;
     }
-  }
-);
-
-const searchLawyer = async () => {
-  if (globalFilter.value === "") {
-    const lawyersRef = ref(
-      (
-        await useGet({
-          url: "register-lawyer-list",
-          includeAuthHeader: true,
-          query: undefined,
-        })
-      ).data
-    );
-    data.value = lawyersRef.value.data.map((law: any) => {
-      const base = filterStore.lawyerTypes.find((type: any) => law.base == type.id);
-      return {
-        id: law.user_id,
-        national_code: law.national_code,
-        phone: law.user?.phone,
-        fullName: `${law.user?.name} ${law.user?.family}`,
-        edit_id: law.id,
-        license: law.license_number,
-        status: law.status,
-        nationalCardImage: law.national_card_image,
-        licenseImage: law.license_image,
-        base: base?.title,
-      };
-    });
-    pagination.value.total = lawyersRef.value.meta.total;
-    return;
-  } else {
-    const res = await useGet({
-      url: `register-lawyers/search`,
-      query: { q: globalFilter.value },
-      includeAuthHeader: false,
-    });
-    data.value = res.data.data.map((law: any) => {
-      const base = filterStore.lawyerTypes.find((type: any) => law.base == type.id);
-
-      return {
-        id: law.user_id,
-        national_code: law.national_code,
-        phone: law.user?.phone,
-        fullName: `${law.user?.name} ${law.user?.family}`,
-        edit_id: law.id,
-        license: law.license_number,
-        status: law.status,
-        nationalCardImage: law.national_card_image,
-        licenseImage: law.license_image,
-        base: base?.title,
-      };
-    });
-
-    pagination.value.total = res.data.meta.total;
-    pagination.value.pageIndex = 1;
+  } finally {
+    tableLoading.value = false;
   }
 };
 
@@ -367,6 +384,7 @@ const approveAsNewHandle = async () => {
       :current-page="pagination.pageIndex"
       :total-items="pagination.total"
       :items-per-page="pagination.pageSize"
+      :loading="tableLoading"
       row-key="edit_id"
       empty-title="درخواست ثبت وکیلی یافت نشد"
       empty-message="هیچ درخواست ثبت وکیل جدیدی وجود ندارد"

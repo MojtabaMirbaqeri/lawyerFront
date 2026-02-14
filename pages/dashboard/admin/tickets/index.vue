@@ -109,7 +109,16 @@
     </div>
 
     <!-- Kanban View -->
-    <div v-if="viewMode === 'kanban'" class="kanban-board">
+    <div v-if="viewMode === 'kanban'" class="kanban-board relative">
+      <div
+        v-if="loading"
+        class="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-white/80 min-h-[200px]"
+      >
+        <div class="flex flex-col items-center gap-3">
+          <Icon name="lucide:loader-2" class="w-8 h-8 animate-spin text-gray-500" />
+          <p class="text-sm text-gray-500">در حال بارگذاری...</p>
+        </div>
+      </div>
       <div v-for="column in kanbanColumns" :key="column.status" class="kanban-column">
         <div class="kanban-header">
           <div class="flex items-center gap-2">
@@ -156,6 +165,7 @@
       :current-page="page"
       :total-items="total"
       :items-per-page="15"
+      :loading="loading"
       row-key="ticketId"
       row-class="cursor-pointer"
       :on-row-click="true"
@@ -284,36 +294,43 @@ const setStatusFilter = (statusVal) => {
   }
 };
 
+const loading = ref(false);
+
 const refetch = async (pageNum = null, query = null, setTotal = false, search = null) => {
-  const res = await useGet({
-    url: "tickets",
-    includeAuthHeader: true,
-    query: {
-      page: pageNum ? pageNum : undefined,
-      status: query && query.status ? query.status : undefined,
-      priority: query && query.priority ? query.priority : undefined,
-      type: query && query.type ? query.type : undefined,
-      search: search ? search : undefined,
-    },
-  });
+  loading.value = true;
+  try {
+    const res = await useGet({
+      url: "tickets",
+      includeAuthHeader: true,
+      query: {
+        page: pageNum ? pageNum : undefined,
+        status: query && query.status ? query.status : undefined,
+        priority: query && query.priority ? query.priority : undefined,
+        type: query && query.type ? query.type : undefined,
+        search: search ? search : undefined,
+      },
+    });
 
-  const ticketsData = res?.data?.data?.data ?? {};
-  const ticketsList = Array.isArray(ticketsData.tickets) ? ticketsData.tickets : [];
-  data.value = ticketsList.map((ticket) => ({
-    id: ticket?.ticket_number,
-    ticketTitle: ticket?.title,
-    priority: ticket?.priority?.label,
-    priorityVal: ticket?.priority?.value,
-    type: ticket?.type?.label,
-    status: ticket?.status?.label,
-    statusVal: ticket?.status?.value,
-    fullname: ticket?.user ? `${ticket.user.name ?? ""} ${ticket.user.family ?? ""}`.trim() || "—" : "—",
-    ticketId: ticket?.id,
-    createdAt: ticket?.created_at,
-  }));
+    const ticketsData = res?.data?.data?.data ?? {};
+    const ticketsList = Array.isArray(ticketsData.tickets) ? ticketsData.tickets : [];
+    data.value = ticketsList.map((ticket) => ({
+      id: ticket?.ticket_number,
+      ticketTitle: ticket?.title,
+      priority: ticket?.priority?.label,
+      priorityVal: ticket?.priority?.value,
+      type: ticket?.type?.label,
+      status: ticket?.status?.label,
+      statusVal: ticket?.status?.value,
+      fullname: ticket?.user ? `${ticket.user.name ?? ""} ${ticket.user.family ?? ""}`.trim() || "—" : "—",
+      ticketId: ticket?.id,
+      createdAt: ticket?.created_at,
+    }));
 
-  if (setTotal) {
-    total.value = ticketsData.pagination?.total ?? 0;
+    if (setTotal) {
+      total.value = ticketsData.pagination?.total ?? 0;
+    }
+  } finally {
+    loading.value = false;
   }
 };
 

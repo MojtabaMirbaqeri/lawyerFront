@@ -10,20 +10,20 @@
         <UICBadge
           variant="yellow"
           icon-size="size-5!"
-          :value="4.8"
+          :value="displayRating"
           icon="ic:round-star" />
-        <UICBadge variant="gray" :value="commentDetail?.created_at_formatted" />
+        <UICBadge variant="gray" :value="displayDate" />
       </div>
     </div>
 
     <div class="comment-content">
       <p class="comment-text">
         {{
-          commentDetail.comment.length > 160
-            ? commentDetail?.comment.slice(0, 160) + "..."
-            : commentDetail?.comment
+          (commentDetail?.comment?.length ?? 0) > 160
+            ? commentDetail?.comment?.slice(0, 160) + "..."
+            : commentDetail?.comment ?? ""
         }}
-        <UICDrawer v-if="commentDetail?.comment?.length > 160" title="read more">
+        <UICDrawer v-if="(commentDetail?.comment?.length ?? 0) > 160" title="read more">
           <template #button>
             <UButton
               label="مشاهده ی بیشتر"
@@ -39,10 +39,11 @@
     </div>
 
     <div class="comment-footer">
-      <NuxtLink :to="`lawyer/${commentDetail?.lawyer?.id}`">
+      <NuxtLink :to="`/lawyer/${commentDetail?.lawyer?.id}`">
         <div class="lawyer-tag">
-          <NuxtImg
-            :src="commentDetail?.lawyer?.profile_image || '/images/nullavatar.png'"
+          <img
+            :src="lawyerAvatarSrc"
+            alt=""
             class="lawyer-avatar" />
           {{ commentDetail?.lawyer?.full_name }}
         </div>
@@ -52,11 +53,48 @@
 </template>
 
 <script setup>
-defineProps({
+const config = useRuntimeConfig();
+const props = defineProps({
   commentDetail: {
     type: Object,
     required: true,
   },
+});
+
+const lawyerAvatarSrc = computed(() => {
+  const img =
+    props.commentDetail?.lawyer_info?.profile_image ??
+    props.commentDetail?.lawyer?.profile_image;
+  if (img) {
+    const base = (config.public?.imageBase || "").replace(/\/$/, "");
+    return base ? `${base}${img}` : img;
+  }
+  return "/images/nullavatar.png";
+});
+
+const displayRating = computed(() => {
+  const r = props.commentDetail?.rating;
+  if (r != null && r !== "") return Number(r);
+  return "—";
+});
+
+const displayDate = computed(() => {
+  const formatted = props.commentDetail?.created_at_formatted;
+  if (formatted) return formatted;
+  const raw = props.commentDetail?.created_at;
+  if (raw) {
+    try {
+      const d = new Date(raw);
+      return new Intl.DateTimeFormat("fa-IR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }).format(d);
+    } catch {
+      return raw;
+    }
+  }
+  return "—";
 });
 </script>
 

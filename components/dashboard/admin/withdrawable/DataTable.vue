@@ -9,33 +9,41 @@ type WithdrawalRequest = {
   createdAt: string;
 };
 
+// --- لودر جدول (صفحه‌بندی و رفرش) ---
+const tableLoading = ref(false);
+
 // --- تابع برای واکشی مجدد داده‌ها (برای صفحه‌بندی و رفرش) ---
 const refetch = async (page: number = 1) => {
-  const response = await useGet({
-    url: "withdrawal-requests/pending",
-    includeAuthHeader: true,
-    query: { page, per_page: 10 },
-  });
+  tableLoading.value = true;
+  try {
+    const response = await useGet({
+      url: "withdrawal-requests/pending",
+      includeAuthHeader: true,
+      query: { page, per_page: 10 },
+    });
 
-  const responseData = response.data;
+    const responseData = response.data;
 
-  // مپ کردن داده‌های دریافتی از API به فرمت مورد نیاز جدول
-  data.value =
-    responseData?.data?.map((req: any) => ({
-      id: req.id,
-      fullName: `${req.lawyer?.user?.name || ""} ${
-        req.lawyer?.user?.family || ""
-      }`,
-      amount: req.formatted_amount,
-      status: req.status_text,
-      bankInfo: req.bank_card,
-      createdAt: req.created_at
-        ? new Date(req.created_at).toLocaleDateString("fa-IR")
-        : "-",
-    })) ?? [];
+    // مپ کردن داده‌های دریافتی از API به فرمت مورد نیاز جدول
+    data.value =
+      responseData?.data?.map((req: any) => ({
+        id: req.id,
+        fullName: `${req.lawyer?.user?.name || ""} ${
+          req.lawyer?.user?.family || ""
+        }`,
+        amount: req.formatted_amount,
+        status: req.status_text,
+        bankInfo: req.bank_card,
+        createdAt: req.created_at
+          ? new Date(req.created_at).toLocaleDateString("fa-IR")
+          : "-",
+      })) ?? [];
 
-  // به‌روزرسانی اطلاعات صفحه‌بندی
-  pagination.value.total = responseData?.meta?.total || 0;
+    // به‌روزرسانی اطلاعات صفحه‌بندی
+    pagination.value.total = responseData?.meta?.total || 0;
+  } finally {
+    tableLoading.value = false;
+  }
 };
 
 // --- دریافت داده‌های اولیه ---
@@ -135,6 +143,7 @@ const acceptHandle = async (id: number) => {
       :current-page="pagination.pageIndex"
       :total-items="pagination.total"
       :items-per-page="pagination.pageSize"
+      :loading="tableLoading"
       row-key="id"
       empty-title="درخواست برداشتی یافت نشد"
       empty-message="هیچ درخواست برداشت در انتظاری وجود ندارد"

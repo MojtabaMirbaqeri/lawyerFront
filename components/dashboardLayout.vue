@@ -3,11 +3,13 @@
     <!-- Sidebar Header -->
     <div class="sidebar-header">
       <NuxtLink to="/" class="logo-link">
-        <NuxtImg
+        <img
           v-if="!collapsed"
-          src="/images/main-logo.svg"
+          :src="logoUrl"
           alt="Logo"
-          class="logo-full" />
+          class="logo-full"
+          width="140"
+          height="32" />
         <div v-else class="logo-mini">
           <Icon name="custom:logo" class="size-6! text-white" />
         </div>
@@ -52,7 +54,7 @@
             <div class="chat-avatar">
               <template v-if="getChatPartner(room)?.profile">
                 <img
-                  :src="getChatPartner(room).profile"
+                  :src="chatAvatarUrl(getChatPartner(room).profile)"
                   alt="profile"
                   class="avatar avatar-sm" />
               </template>
@@ -104,6 +106,21 @@ const dashboardStore = useDashboardStore();
 const authStore = useAuthStore();
 const chatStore = useChatStore();
 const route = useRoute();
+const config = useRuntimeConfig();
+
+// لوگو: آدرس مطلق تا روی سرور درست لود شود (با baseURL در صورت دیپلوی در زیرمسیر)
+const logoUrl = computed(() => {
+  const base = (config.app?.baseURL || "/").replace(/\/?$/, "");
+  return `${base}/images/main-logo.svg`;
+});
+
+// آواتار چت: مسیرهای نسبی از API را با imageBase ترکیب می‌کنیم
+function chatAvatarUrl(profile) {
+  if (!profile) return "";
+  if (profile.startsWith("http://") || profile.startsWith("https://")) return profile;
+  const base = (config.public?.imageBase || "").replace(/\/$/, "");
+  return base ? `${base}${profile.startsWith("/") ? "" : "/"}${profile}` : profile;
+}
 
 // Props
 const props = defineProps({
@@ -231,6 +248,26 @@ const getChatPartner = (room) => {
 /* Navigation */
 .sidebar-nav {
   @apply flex-1 overflow-y-auto overflow-x-clip py-4;
+  scrollbar-width: thin;
+  scrollbar-color: var(--sidebar-border) transparent;
+}
+
+/* ظاهر اسکرول منو - WebKit (Chrome, Edge, Safari) */
+.sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: var(--sidebar-border);
+  border-radius: 3px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: var(--sidebar-text-muted);
 }
 
 .dashboard-sidebar.collapsed .sidebar-nav {

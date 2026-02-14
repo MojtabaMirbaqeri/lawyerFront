@@ -96,8 +96,17 @@
     </div>
 
     <!-- Reviews List -->
-    <div class="card-dashboard">
-      <div class="reviews-list">
+    <div class="card-dashboard relative">
+      <div
+        v-if="loading"
+        class="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-white/80 min-h-[200px]"
+      >
+        <div class="flex flex-col items-center gap-3">
+          <Icon name="lucide:loader-2" class="w-8 h-8 animate-spin text-gray-500" />
+          <p class="text-sm text-gray-500">در حال بارگذاری...</p>
+        </div>
+      </div>
+      <div v-show="!loading" class="reviews-list">
         <div v-for="review in filteredData" :key="review.id" class="review-item">
           <div class="review-checkbox">
             <input
@@ -163,7 +172,7 @@
         </div>
 
         <!-- Empty State -->
-        <div v-if="filteredData.length === 0" class="empty-state py-16">
+        <div v-if="filteredData.length === 0 && !loading" class="empty-state py-16">
           <div class="empty-state-icon">
             <Icon name="lucide:message-circle" class="w-8 h-8" />
           </div>
@@ -174,7 +183,7 @@
 
       <!-- Pagination -->
       <div
-        v-if="total > 15"
+        v-if="!loading && total > 15"
         class="flex items-center justify-between p-4 border-t border-gray-100">
         <span class="text-sm text-gray-500"
           >صفحه {{ page }} از {{ Math.ceil(total / 15) }}</span
@@ -256,32 +265,39 @@ const applyFilters = () => {
   fetchReviews(1, true);
 };
 
+const loading = ref(false);
+
 async function fetchReviews(pageNum = 1, setTotal = false) {
-  const res = await useGet({
-    url: "admin/reviews",
-    includeAuthHeader: true,
-    query: {
-      page: pageNum,
-      status: statusFilter.value || undefined,
-      rating: ratingFilter.value || undefined,
-      search: searchQuery.value || undefined,
-    },
-  });
+  loading.value = true;
+  try {
+    const res = await useGet({
+      url: "admin/reviews",
+      includeAuthHeader: true,
+      query: {
+        page: pageNum,
+        status: statusFilter.value || undefined,
+        rating: ratingFilter.value || undefined,
+        search: searchQuery.value || undefined,
+      },
+    });
 
-  const reviews = res.data.data;
-  data.value = reviews.map((rev) => ({
-    id: rev.id,
-    fullname: `${rev.user?.name} ${rev.user?.family}`,
-    lawyer: rev.lawyer?.full_name,
-    rating: rev.rating,
-    comment: rev.comment,
-    status: rev.status,
-    created_at: rev.created_at_formatted,
-  }));
+    const reviews = res.data.data;
+    data.value = reviews.map((rev) => ({
+      id: rev.id,
+      fullname: `${rev.user?.name} ${rev.user?.family}`,
+      lawyer: rev.lawyer?.full_name,
+      rating: rev.rating,
+      comment: rev.comment,
+      status: rev.status,
+      created_at: rev.created_at_formatted,
+    }));
 
-  if (setTotal) {
-    total.value = res.data.meta.total;
-    calculateStats();
+    if (setTotal) {
+      total.value = res.data.meta.total;
+      calculateStats();
+    }
+  } finally {
+    loading.value = false;
   }
 }
 

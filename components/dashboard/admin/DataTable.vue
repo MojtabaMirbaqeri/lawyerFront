@@ -2,6 +2,9 @@
 const filterStore = useFiltersStore();
 const config = useRuntimeConfig();
 
+// تصویر پیش‌فرض وقتی وکیل عکس پروفایل ثبت نکرده
+const defaultAvatarUrl = "/images/nullavatar.png";
+
 // View mode
 const viewMode = ref<"list" | "grid">("list");
 
@@ -31,17 +34,32 @@ const tableColumns = [
   { key: 'is_active', label: 'وضعیت' },
 ];
 
-const refetch = async (page = null, total = false) => {
-  const lawyersRef = ref(
-    (
-      await useGet({
-        url: "lawyers",
-        includeAuthHeader: false,
-        query: page ? { page: page } : undefined,
-      })
-    ).data,
-  );
-  data.value = lawyersRef.value.data.map((law) => {
+function buildFilterQuery() {
+  const query = { per_page: pagination.value.pageSize } as Record<string, number | string>;
+  if (statusFilter.value === "active") query.is_active = 1;
+  else if (statusFilter.value === "inactive") query.is_active = 0;
+  if (baseFilter.value !== "all") query.base_id = baseFilter.value;
+  return query;
+}
+
+const tableLoading = ref(false);
+
+const refetch = async (page: number | null = null, total = false) => {
+  tableLoading.value = true;
+  try {
+    const query = { ...buildFilterQuery() } as Record<string, number | string>;
+    if (page) query.page = page;
+
+    const lawyersRef = ref(
+      (
+        await useGet({
+          url: "lawyers",
+          includeAuthHeader: true,
+          query,
+        })
+      ).data,
+    );
+    data.value = lawyersRef.value.data.map((law) => {
     const name = law.lawyer_info?.name || '';
     const family = law.lawyer_info?.family || '';
     const slug = `${name}-${family}`.toLowerCase().replace(/\s+/g, '-');
@@ -56,25 +74,38 @@ const refetch = async (page = null, total = false) => {
       baseId: law.lawyer_info?.base,
       edit_id: law.id,
       is_active: law.is_active,
-      profile_image: config.public.imageBase + law.lawyer_info?.profile_image
+      profile_image: law.lawyer_info?.profile_image
+        ? config.public.imageBase + law.lawyer_info.profile_image
+        : defaultAvatarUrl,
     };
   });
 
-  if (total) {
+  if (lawyersRef.value.meta) {
     pagination.value.total = lawyersRef.value.meta.total;
+  }
+  if (total) {
     pagination.value.pageIndex = 1;
+  }
+  } finally {
+    tableLoading.value = false;
   }
 };
 
-const searchRefetch = async (query, start, page) => {
-  const res = await useGet({
-    url: "lawyer-search/comprehensive-search",
-    includeAuthHeader: true,
-    query: { page: page ? page : undefined, query: query },
-  });
-  const lawyers = ref(res.data.data.data.lawyers);
+const applyFilters = () => {
+  refetch(1, true);
+};
 
-  data.value = lawyers.value.map((law) => {
+const searchRefetch = async (query, start, page) => {
+  tableLoading.value = true;
+  try {
+    const res = await useGet({
+      url: "lawyer-search/comprehensive-search",
+      includeAuthHeader: true,
+      query: { page: page ? page : undefined, query: query },
+    });
+    const lawyers = ref(res.data.data.data.lawyers);
+
+    data.value = lawyers.value.map((law) => {
     const base = filterStore.lawyerTypes.find((type) => law.base == type.id);
     const name = law?.name || '';
     const family = law?.family || '';
@@ -90,7 +121,9 @@ const searchRefetch = async (query, start, page) => {
       baseId: law.base,
       edit_id: law.id,
       is_active: law.is_active,
-      profile_image: config.public.imageBase + law?.profile_image,
+      profile_image: law?.profile_image
+        ? config.public.imageBase + law.profile_image
+        : defaultAvatarUrl,
     };
   });
 
@@ -99,6 +132,9 @@ const searchRefetch = async (query, start, page) => {
   }
 
   pagination.value.total = res.data.data.data.pagination.total;
+  } finally {
+    tableLoading.value = false;
+  }
 };
 
 const lawyersRef = ref((await useGet({ url: "lawyers", includeAuthHeader: true })).data);
@@ -132,22 +168,15 @@ const data = ref(
       baseId: law.lawyer_info?.base,
       edit_id: law.id,
       is_active: law.is_active,
-      profile_image: config.public.imageBase + law.lawyer_info?.profile_image
+      profile_image: law.lawyer_info?.profile_image
+        ? config.public.imageBase + law.lawyer_info.profile_image
+        : defaultAvatarUrl,
     };
   }),
 );
 
-// Filtered data
-const filteredData = computed(() => {
-  return data.value.filter((item) => {
-    const statusMatch =
-      statusFilter.value === "all" ||
-      (statusFilter.value === "active" && item.is_active) ||
-      (statusFilter.value === "inactive" && !item.is_active);
-    const baseMatch = baseFilter.value === "all" || item.baseId === baseFilter.value;
-    return statusMatch && baseMatch;
-  });
-});
+// Data displayed in table/grid (server-filtered; no client-side filter)
+const filteredData = computed(() => data.value);
 
 function getInitials(name: string) {
   if (!name) return "?";
@@ -287,6 +316,10 @@ const exportToExcel = () => {
           <Icon name="lucide:download" class="w-4 h-4" />
           <span>خروجی اکسل</span>
         </button>
+        <NuxtLink to="/dashboard/admin/lawyerlist/merge" class="btn-secondary">
+          <Icon name="lucide:merge" class="w-4 h-4" />
+          <span>ادغام وکلا</span>
+        </NuxtLink>
         <NuxtLink to="/dashboard/admin/lawyerlist/add" class="btn-primary">
           <Icon name="lucide:user-plus" class="w-4 h-4" />
           <span>افزودن وکیل</span>
@@ -323,6 +356,15 @@ const exportToExcel = () => {
               :items="baseOptions"
               placeholder="پایه"
               class="w-40!" />
+
+            <!-- Filter button: apply filters on all lawyers (server-side) -->
+            <button
+              type="button"
+              class="btn-secondary"
+              @click="applyFilters">
+              <Icon name="lucide:filter" class="w-4 h-4" />
+              <span>فیلتر</span>
+            </button>
           </div>
 
           <div class="action-bar-end">
@@ -370,6 +412,7 @@ const exportToExcel = () => {
       :current-page="pagination.pageIndex"
       :total-items="pagination.total"
       :items-per-page="pagination.pageSize"
+      :loading="tableLoading"
       row-key="edit_id"
       empty-title="وکیلی یافت نشد"
       empty-message="با تغییر فیلترها یا جستجو، وکلا را مشاهده کنید"
@@ -426,7 +469,16 @@ const exportToExcel = () => {
     </dashboard-admin-generic-table>
 
     <!-- Grid View -->
-    <div v-else class="lawyers-grid">
+    <div v-else class="lawyers-grid relative">
+      <div
+        v-if="tableLoading"
+        class="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-white/80"
+      >
+        <div class="flex flex-col items-center gap-3">
+          <Icon name="lucide:loader-2" class="w-8 h-8 animate-spin text-gray-500" />
+          <p class="text-sm text-gray-500">در حال بارگذاری...</p>
+        </div>
+      </div>
       <div
         v-for="lawyer in filteredData"
         :key="lawyer.id"

@@ -19,6 +19,7 @@
       :data="couponsRes?.data || []"
       :columns="tableColumns"
       :show-pagination="false"
+      :loading="loading"
       row-key="id"
       empty-title="کپنی یافت نشد"
       empty-message="برای ایجاد کپن جدید روی دکمه ایجاد کپن کلیک کنید"
@@ -85,12 +86,22 @@ const tableColumns = [
   { key: 'expires_at', label: 'تاریخ انقضا' },
 ];
 
-const couponsRes = ref(
-  await useGet({
-    url: "coupons",
-    includeAuthHeader: true,
-  })
-);
+const loading = ref(true);
+const couponsRes = ref({ data: [] });
+
+const loadCoupons = async () => {
+  loading.value = true;
+  try {
+    couponsRes.value = await useGet({
+      url: "coupons",
+      includeAuthHeader: true,
+    });
+  } finally {
+    loading.value = false;
+  }
+};
+
+loadCoupons();
 
 const formatDate = (dateString) => {
   if (!dateString) return '-';
@@ -107,10 +118,7 @@ const deleteCoupon = async (coupon) => {
     includeAuthHeader: true,
   });
   if (res.statusCode == 200) {
-    couponsRes.value = await useGet({
-      url: "coupons",
-      includeAuthHeader: true,
-    });
+    await loadCoupons();
     useToast().add({
       title: "کد تخفیف با موفقیت حذف شد.",
       color: "success",

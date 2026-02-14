@@ -21,6 +21,20 @@
             <UIcon name="solar:gallery-edit-linear" class="size-4.5!" />
           </UICSecondaryBtn>
           <template #body>
+            <UAlert
+              title="نکات مهم در مورد تصویر پروفایل"
+              description="لطفاً تصویر پروفایل را به‌صورت واضح، با نور مناسب و نمای نزدیک از صورت بارگذاری کنید. تصویر باید تمام صورت را به‌طور کامل نشان دهد و از استفاده از عکس‌های تار، دور یا دارای فیلتر خودداری شود."
+              color="info"
+              variant="subtle"
+              icon="lucide:shield-alert"
+              class="mb-6"
+              :ui="{
+                icon: 'size-6!',
+                title: 'font-semibold text-sm',
+                description: 'text-sm',
+                root: 'items-center rounded-xl',
+              }" />
+
             <UFileUpload
               v-model="formData.profile_image"
               icon="i-lucide-image"
@@ -35,9 +49,7 @@
               @update:model-value="handleImageUpload" />
           </template>
         </UModal>
-        <div>
-
-        </div>
+        <div></div>
       </div>
     </div>
     <div class="space-y-8 lg:space-y-10">
@@ -63,6 +75,16 @@
           :ui="{
             fieldset: 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3',
           }" />
+      </div>
+      <div class="space-y-3">
+        <h1 class="font-semibold">نمایش در سایت</h1>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input
+            v-model="formData.show_phone_on_site"
+            type="checkbox"
+            class="rounded border-gray-300 text-primary focus:ring-primary" />
+          <span class="text-sm text-gray-700">نمایش شماره تلفن در سایت</span>
+        </label>
       </div>
       <div class="space-y-3">
         <h1 class="font-semibold">درباره شما</h1>
@@ -110,10 +132,7 @@ const lawyerInfo = computed(() => payload.value?.lawyer_info ?? {});
 
 // پایه: API در lawyer_info فقط base (عدد) برمی‌گرداند، نه base_lawyer
 const baseId = computed(
-  () =>
-    Number(
-      lawyerInfo.value?.base_lawyer?.id ?? lawyerInfo.value?.base ?? 0,
-    ) || 0,
+  () => Number(lawyerInfo.value?.base_lawyer?.id ?? lawyerInfo.value?.base ?? 0) || 0,
 );
 const specialtiesIds = computed(() =>
   (lawyerInfo.value?.specialties || []).map((s) => Number(s)).filter(Boolean),
@@ -121,8 +140,9 @@ const specialtiesIds = computed(() =>
 const servicesIds = computed(() =>
   (lawyerInfo.value?.services || []).map((s) => Number(s)).filter(Boolean),
 );
-const aboutText = computed(
-  () => lawyerInfo.value?.about || payload.value?.about || "",
+const aboutText = computed(() => lawyerInfo.value?.about || payload.value?.about || "");
+const showPhoneOnSiteDefault = computed(
+  () => lawyerInfo.value?.show_phone_on_site !== false,
 );
 
 const formData = reactive({
@@ -133,6 +153,7 @@ const formData = reactive({
   services: [],
   about: "",
   profile_image: null,
+  show_phone_on_site: true,
 });
 
 // --- INITIAL STATE (با ref) ---
@@ -143,6 +164,7 @@ const initialData = reactive({
   specialties: [],
   services: [],
   about: "",
+  show_phone_on_site: true,
 });
 
 // پر کردن فرم و initial از prop (و به‌روزرسانی وقتی prop عوض شد)
@@ -151,10 +173,12 @@ function syncFromProp() {
   const specs = [...specialtiesIds.value];
   const srvs = [...servicesIds.value];
   const about = aboutText.value;
+  const showPhone = showPhoneOnSiteDefault.value;
   formData.base = base;
   formData.specialties = specs;
   formData.services = srvs;
   formData.about = about;
+  formData.show_phone_on_site = showPhone;
   Object.assign(initialData, {
     name: formData.name,
     family: formData.family,
@@ -162,6 +186,7 @@ function syncFromProp() {
     specialties: specs,
     services: srvs,
     about,
+    show_phone_on_site: showPhone,
   });
 }
 
@@ -200,6 +225,7 @@ const hasChanges = computed(() => {
     JSON.stringify([...formData.services].sort()) !==
       JSON.stringify([...initialData.services].sort()) ||
     formData.about !== initialData.about ||
+    formData.show_phone_on_site !== initialData.show_phone_on_site ||
     formData.profile_image !== null
   );
 });
@@ -226,6 +252,10 @@ const updateProfile = async () => {
     formDataToSend.append("family", formData.family);
     formDataToSend.append("base", formData.base.toString());
     formDataToSend.append("about", formData.about);
+    formDataToSend.append(
+      "show_phone_on_site",
+      formData.show_phone_on_site ? "1" : "0",
+    );
 
     formData.specialties.forEach((s) => formDataToSend.append("specialties[]", s));
     formData.services.forEach((s) => formDataToSend.append("services[]", s));
@@ -248,6 +278,7 @@ const updateProfile = async () => {
         specialties: [...formData.specialties].map(Number),
         services: [...formData.services].map(Number),
         about: formData.about,
+        show_phone_on_site: formData.show_phone_on_site,
       });
 
       formData.profile_image = null;

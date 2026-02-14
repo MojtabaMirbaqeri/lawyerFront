@@ -17,7 +17,7 @@ const filtersStore = useFiltersStore();
 // Find specialty by title (decoded from URL)
 const decodedSlug = decodeURIComponent(slug);
 const specialty = filtersStore.lawyerSpecialties.find(
-  (s) => s.title.replace(/\s+/g, "-") === decodedSlug
+  (s) => s.title.replace(/\s+/g, "-") === decodedSlug,
 );
 
 if (!specialty) {
@@ -30,7 +30,7 @@ if (!specialty) {
 // Page metadata
 const pageTitle = computed(() => `${specialty.title}`);
 const pageSubtitle = computed(
-  () => `بهترین وکلای متخصص در ${specialty.title} را پیدا کنید`
+  () => `بهترین وکلای متخصص در ${specialty.title} را پیدا کنید`,
 );
 
 useSeoMeta({
@@ -44,10 +44,10 @@ useSeoMeta({
   ogTitle: () => `وکیل ${specialty.title} | رزرو نوبت آنلاین`,
   ogDescription: () =>
     `دسترسی به بهترین وکلای متخصص ${specialty.title}. رزرو آنلاین، مشاوره تخصصی، قیمت شفاف.`,
-  ogImage: `https://vakilvakil.ir/og-images/specialty-${specialty.id}.jpg`,
+  ogImage: `https://vakilvakil.com/og-images/specialty-${specialty.id}.jpg`,
   ogUrl: () =>
-    `https://vakilvakil.ir/specialties/${encodeURIComponent(
-      specialty.title.replace(/\s+/g, "-")
+    `https://vakilvakil.com/specialties/${encodeURIComponent(
+      specialty.title.replace(/\s+/g, "-"),
     )}`,
   ogType: "website",
   ogLocale: "fa_IR",
@@ -56,15 +56,15 @@ useSeoMeta({
   twitterCard: "summary_large_image",
   twitterTitle: () => `وکیل ${specialty.title}`,
   twitterDescription: () => `رزرو آنلاین بهترین وکلای ${specialty.title}`,
-  twitterImage: `https://vakilvakil.ir/og-images/specialty-${specialty.id}.jpg`,
+  twitterImage: `https://vakilvakil.com/og-images/specialty-${specialty.id}.jpg`,
 });
 
 useHead({
   link: [
     {
       rel: "canonical",
-      href: `https://vakilvakil.ir/specialties/${encodeURIComponent(
-        specialty.title.replace(/\s+/g, "-")
+      href: `https://vakilvakil.com/specialties/${encodeURIComponent(
+        specialty.title.replace(/\s+/g, "-"),
       )}`,
     },
   ],
@@ -79,12 +79,12 @@ useHead({
         provider: {
           "@type": "Organization",
           name: "وکیل وکیل",
-          url: "https://vakilvakil.ir",
+          url: "https://vakilvakil.com",
         },
         serviceType: specialty.title,
         areaServed: "IR",
-        url: `https://vakilvakil.ir/specialties/${encodeURIComponent(
-          specialty.title.replace(/\s+/g, "-")
+        url: `https://vakilvakil.com/specialties/${encodeURIComponent(
+          specialty.title.replace(/\s+/g, "-"),
         )}`,
       }),
     },

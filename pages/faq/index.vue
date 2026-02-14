@@ -16,7 +16,7 @@ useSeoMeta({
 
   ogTitle: "سوالات متداول | وکیل وکیل",
   ogDescription: "پاسخ به پرسش‌های رایج درباره خدمات مشاوره حقوقی و رزرو نوبت وکیل",
-  ogUrl: "https://vakilvakil.ir/faq",
+  ogUrl: "https://vakilvakil.com/faq",
   ogType: "website",
   ogLocale: "fa_IR",
 
@@ -29,7 +29,7 @@ useHead({
   link: [
     {
       rel: "canonical",
-      href: "https://vakilvakil.ir/faq",
+      href: "https://vakilvakil.com/faq",
     },
   ],
   script: [

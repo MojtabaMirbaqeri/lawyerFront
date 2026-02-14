@@ -14,24 +14,49 @@
     <div class="card-dashboard">
       <div class="card-dashboard-body py-4!">
         <div class="action-bar">
-          <div class="search-box w-72">
-            <Icon name="lucide:search" class="icon" />
-            <input
-              v-model="searchQuery"
-              type="text"
-              placeholder="جستجوی نام وکیل..."
-              class="w-full"
+          <div class="action-bar-start">
+            <div class="search-box w-72">
+              <Icon name="lucide:search" class="icon" />
+              <input
+                v-model="searchQuery"
+                type="text"
+                placeholder="جستجوی نام وکیل..."
+                class="w-full"
+              />
+            </div>
+            <UICSelect
+              v-model="sortBy"
+              :items="sortOptions"
+              placeholder="مرتب‌سازی"
+              class="w-44!"
             />
+            <button
+              type="button"
+              class="btn-secondary"
+              @click="applyFilters"
+            >
+              <Icon name="lucide:filter" class="w-4 h-4" />
+              <span>فیلتر</span>
+            </button>
           </div>
           <span class="text-sm text-gray-500">
-            نمایش {{ filteredLawyers.length }} وکیل
+            نمایش {{ lawyers.length }} از {{ totalLawyers }} وکیل
           </span>
         </div>
       </div>
     </div>
 
-    <div class="card-dashboard">
-      <div class="overflow-x-auto">
+    <div class="card-dashboard relative">
+      <div
+        v-if="pending"
+        class="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-white/80 min-h-[200px]"
+      >
+        <div class="flex flex-col items-center gap-3">
+          <Icon name="lucide:loader-2" class="w-8 h-8 animate-spin text-gray-500" />
+          <p class="text-sm text-gray-500">در حال بارگذاری...</p>
+        </div>
+      </div>
+      <div v-show="!pending" class="overflow-x-auto">
         <table class="table-dashboard">
           <thead>
             <tr>
@@ -43,7 +68,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="row in paginatedLawyers" :key="row.id">
+            <tr v-for="row in lawyers" :key="row.id">
               <td>
                 <span class="font-medium text-gray-900">{{ row.name }}</span>
               </td>
@@ -75,7 +100,7 @@
         </table>
       </div>
       <div
-        v-if="totalLawyers > 0"
+        v-if="!pending && totalLawyers > 0"
         class="flex items-center justify-between p-4 border-t border-gray-100"
       >
         <span class="text-sm text-gray-500">
@@ -118,9 +143,28 @@ useHead({
 const page = ref(1);
 const perPage = 15;
 const searchQuery = ref("");
+const sortBy = ref("total");
 const lawyers = ref([]);
 const pending = ref(true);
 const meta = ref({});
+
+const sortOptions = [
+  { id: "total", label: "بیشترین کل بازدید" },
+  { id: "day", label: "بیشترین بازدید روز" },
+  { id: "week", label: "بیشترین بازدید هفته" },
+  { id: "month", label: "بیشترین بازدید ماه" },
+];
+
+function buildQuery(pageNum) {
+  const q = {
+    page: pageNum,
+    per_page: perPage,
+    sort: sortBy.value,
+  };
+  const search = searchQuery.value?.trim();
+  if (search) q.search = search;
+  return q;
+}
 
 const fetchData = async (pageNum = 1) => {
   pending.value = true;
@@ -128,7 +172,7 @@ const fetchData = async (pageNum = 1) => {
     const res = await useGet({
       url: "admin/lawyers/metrics",
       includeAuthHeader: true,
-      query: { page: pageNum, per_page: perPage },
+      query: buildQuery(pageNum),
     });
     lawyers.value = (res.data?.data ?? []).map((l) => ({
       id: l.id,
@@ -145,21 +189,19 @@ const fetchData = async (pageNum = 1) => {
   }
 };
 
-await fetchData(1);
-
-const filteredLawyers = computed(() => {
-  const q = searchQuery.value?.trim()?.toLowerCase();
-  if (!q) return lawyers.value;
-  return lawyers.value.filter((l) => l.name?.toLowerCase().includes(q));
-});
+const applyFilters = () => {
+  page.value = 1;
+  fetchData(1);
+};
 
 const totalLawyers = computed(() => meta.value.total ?? 0);
 const totalPages = computed(() => meta.value.last_page ?? 1);
-const paginatedLawyers = computed(() => filteredLawyers.value);
 
 watch(page, (newPage) => {
   fetchData(newPage);
 });
+
+await fetchData(1);
 </script>
 
 <style scoped>

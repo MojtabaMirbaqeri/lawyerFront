@@ -21,6 +21,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       icon: "lucide:scale" 
     },
     {
+      title: "ادغام وکلا",
+      url: "/dashboard/admin/lawyerlist/merge",
+      icon: "lucide:merge",
+    },
+    {
       title: "تایید وکلا",
       url: "/dashboard/admin/registerlawyer",
       icon: "lucide:user-check",
@@ -65,16 +70,21 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/admin/profile-views",
       icon: "lucide:eye",
     },
+    {
+      title: "ارسال پیامک",
+      url: "/dashboard/admin/sms",
+      icon: "lucide:send",
+    },
     { 
       title: "چت", 
       url: "/chat", 
       icon: "lucide:message-square" 
     },
-    {
-      title: "تنظیمات",
-      url: "/dashboard/admin/settings",
-      icon: "lucide:settings",
-    },
+    // {
+    //   title: "تنظیمات",
+    //   url: "/dashboard/admin/settings",
+    //   icon: "lucide:settings",
+    // },
   ];
 
   const lawyerRoutes = computed(() => {
@@ -137,6 +147,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       title: "تراکنش‌ها", 
       url: "/dashboard/user/transactions", 
       icon: "lucide:credit-card" 
+    },
+    {
+      title: "ثبت‌نام به‌عنوان وکیل",
+      url: "/dashboard/user/become-lawyer",
+      icon: "lucide:scale",
     },
     {
       title: "تیکت‌ها",

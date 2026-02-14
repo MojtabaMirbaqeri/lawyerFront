@@ -10,7 +10,7 @@
         <div class="footer-grid">
           <!-- Brand Section -->
           <div class="footer-brand">
-            <NuxtImg src="/images/VakilVakilLogo.png" class="h-10 mb-4" />
+            <img src="/images/VakilVakilLogo.png" alt="وکیل وکیل" class="h-10 mb-4" />
             <p class="brand-tagline">
               پلتفرم هوشمند رزرو نوبت وکیل و دریافت مشاوره حقوقی آنلاین
             </p>
@@ -57,7 +57,7 @@
               </div>
               <div>
                 <p class="contact-label">تماس با ما</p>
-                <a href="tel:+982110014488" class="contact-number">021-10014488</a>
+                <a href="tel:+982191091350" class="contact-number">021-91091350</a>
               </div>
             </div>
             <div class="download-section">
@@ -81,7 +81,7 @@
         </div>
 
         <!-- Trust Badges - یک باکس واحد -->
-        <div class="trust-badges">
+        <div class="trust-badges" v-if="false">
           <div class="badges-row">
             <NuxtLink
               v-for="license in licenses"
