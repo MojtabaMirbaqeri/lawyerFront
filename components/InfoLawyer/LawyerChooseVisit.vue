@@ -32,7 +32,10 @@
             class="flex items-center justify-center rounded-[8px]!">
             <span class="text-center text-base">ادامه فرآیند</span>
           </UICSecondaryBtn> -->
-          <DirectCall :phone="phoneNumber" :lawyer-id="lawyerId" />
+          <DirectCall
+           
+            :phone="phoneNumber"
+            :lawyer-id="lawyerId" />
         </div>
       </div>
     </div>
@@ -40,7 +43,7 @@
 </template>
 
 <script setup>
-const props = defineProps(["items", "active", "phoneNumber", "lawyerId"]);
+const props = defineProps(["items", "phoneNumber", "lawyerId"]);
 
 const activeBtn = ref("0");
 </script>

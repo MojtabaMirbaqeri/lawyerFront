@@ -1,7 +1,10 @@
 <template>
   <div class="relative">
     <Transition name="fade">
-      <div v-if="showBanner && bannerVisible" class="warning-banner" role="alert">
+      <div
+        v-if="showBanner && bannerVisible && useGlobalStore().lawyerInfo?.is_active"
+        class="warning-banner"
+        role="alert">
         <button
           type="button"
           class="warning-banner__close"

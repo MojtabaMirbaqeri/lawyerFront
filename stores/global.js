@@ -5,6 +5,7 @@ export const useGlobalStore = defineStore("globl", {
   state: () => ({
     lawyersCount: 0,
     sidebarVisblity: false,
+    lawyerInfo: null,
   }),
   actions: {
     toggleSidebar() {

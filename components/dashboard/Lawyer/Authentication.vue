@@ -314,15 +314,10 @@
     </div>
 
     <!-- Documents Preview Modal -->
-    <UModal v-model:open="showDocumentsModal">
+    <UModal v-model:open="showDocumentsModal" :title="'مدارک آپلود شده'">
       <template #body>
         <div class="modal-content">
-          <div class="modal-header">
-            <h3 class="modal-title">مدارک آپلود شده</h3>
-            <button @click="showDocumentsModal = false" class="btn-icon">
-              <Icon name="lucide:x" class="w-5 h-5" />
-            </button>
-          </div>
+       
           <div class="modal-body">
             <div class="docs-grid">
               <div class="doc-preview-card">
