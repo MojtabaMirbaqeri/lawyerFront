@@ -110,12 +110,13 @@
           :page="page"
           :items-per-page="perPage"
           :total="totalLawyers"
+          show-edges
           :sibling-count="1"
           :ui="{
             list: 'gap-1',
             item: 'min-w-8 h-8 text-sm',
-            first: 'hidden',
-            last: 'hidden',
+            first: 'scale-x-[-1]',
+            last: 'scale-x-[-1]',
             prev: 'scale-x-[-1]',
             next: 'scale-x-[-1]',
           }"

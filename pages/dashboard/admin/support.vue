@@ -192,10 +192,10 @@
                 :items-per-page="reportListPerPage"
                 :total="reportListTotal"
                 show-edges
-                :sibling-count="0"
+                :sibling-count="1"
                 :ui="{
-                  first: 'hidden',
-                  last: 'hidden',
+                  first: 'scale-x-[-1]',
+                  last: 'scale-x-[-1]',
                   prev: 'scale-x-[-1]',
                   next: 'scale-x-[-1]',
                 }" />

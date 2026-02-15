@@ -186,8 +186,13 @@
       <!-- Pagination -->
       <div v-if="total > 15" class="flex items-center justify-between p-4 border-t border-gray-100">
         <span class="text-sm text-gray-500">صفحه {{ page }} از {{ Math.ceil(total / 15) }}</span>
-        <UPagination v-model:page="page" :items-per-page="15" :total="total" :sibling-count="1"
-          :ui="{ list: 'gap-1', item: 'min-w-8 h-8 text-sm', first: 'hidden', last: 'hidden', prev: 'scale-x-[-1]', next: 'scale-x-[-1]' }"
+        <UPagination
+          v-model:page="page"
+          :items-per-page="15"
+          :total="total"
+          show-edges
+          :sibling-count="1"
+          :ui="{ list: 'gap-1', item: 'min-w-8 h-8 text-sm', first: 'scale-x-[-1]', last: 'scale-x-[-1]', prev: 'scale-x-[-1]', next: 'scale-x-[-1]' }"
         />
       </div>
     </div>
