@@ -1,6 +1,44 @@
 <script setup lang="ts">
 const filterStore = useFiltersStore();
 const config = useRuntimeConfig();
+const authStore = useAuthStore();
+
+const IMPERSONATE_KEYS = {
+  token: "adminRestoreToken",
+  user: "adminRestoreUser",
+  flag: "impersonating",
+};
+
+async function enterLawyerPanel(lawyerId: number) {
+  if (typeof sessionStorage === "undefined") return;
+  try {
+    sessionStorage.setItem(IMPERSONATE_KEYS.token, authStore.token || "");
+    sessionStorage.setItem(IMPERSONATE_KEYS.user, JSON.stringify(authStore.user || {}));
+    sessionStorage.setItem(IMPERSONATE_KEYS.flag, "1");
+
+    const res = await usePost({
+      url: `admin/impersonate/lawyer/${lawyerId}`,
+      includeAuthHeader: true,
+      body: {},
+    });
+
+    const data = res?.data?.data;
+    if (res?.statusCode === 200 && data?.token && data?.user) {
+      await authStore.setAuth(data.token, data.user);
+      await navigateTo("/dashboard/lawyer");
+    } else {
+      useToast().add({ title: res?.data?.message || "خطا در ورود به پنل وکیل", color: "error" });
+      sessionStorage.removeItem(IMPERSONATE_KEYS.token);
+      sessionStorage.removeItem(IMPERSONATE_KEYS.user);
+      sessionStorage.removeItem(IMPERSONATE_KEYS.flag);
+    }
+  } catch (e) {
+    useToast().add({ title: "خطا در ورود به پنل وکیل", color: "error" });
+    sessionStorage.removeItem(IMPERSONATE_KEYS.token);
+    sessionStorage.removeItem(IMPERSONATE_KEYS.user);
+    sessionStorage.removeItem(IMPERSONATE_KEYS.flag);
+  }
+}
 
 // تصویر پیش‌فرض وقتی وکیل عکس پروفایل ثبت نکرده
 const defaultAvatarUrl = "/images/nullavatar.png";
@@ -202,6 +240,13 @@ function getRowActions(row: any) {
         navigateTo(`/lawyer/${row.edit_id}/${row.slug}`);
       },
       icon: "lucide:external-link",
+    },
+    {
+      label: "ورود به پنل وکیل",
+      onSelect() {
+        enterLawyerPanel(row.edit_id);
+      },
+      icon: "lucide:log-in",
     },
     {
       type: "separator" as const,
@@ -506,6 +551,13 @@ const exportToExcel = () => {
               ><Icon name="lucide:phone" class="w-3.5 h-3.5" /> {{ lawyer.phone }}</span
             >
           </div>
+          <button
+            type="button"
+            class="mt-2 w-full flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-100"
+            @click.stop="enterLawyerPanel(lawyer.edit_id)">
+            <Icon name="lucide:log-in" class="w-3.5 h-3.5" />
+            ورود به پنل وکیل
+          </button>
         </div>
       </div>
     </div>

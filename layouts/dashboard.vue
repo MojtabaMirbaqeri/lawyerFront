@@ -69,6 +69,22 @@
 
         <!-- Page Content -->
         <main class="dashboard-content">
+          <!-- بنر بازگشت به پنل ادمین (ورود موقت به پنل وکیل) -->
+          <div
+            v-if="showImpersonationBanner"
+            class="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3">
+            <p class="text-sm font-medium text-blue-800">
+              شما در حال مشاهده پنل وکیل به عنوان ادمین هستید.
+            </p>
+            <button
+              type="button"
+              class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              @click="exitImpersonation">
+              <Icon name="lucide:arrow-right-to-line" class="w-4 h-4" />
+              بازگشت به پنل ادمین
+            </button>
+          </div>
+
           <!-- Warning Alert for Lawyers Pending Verification -->
           <UAlert
             v-if="
@@ -119,6 +135,35 @@ const chatStore = useChatStore();
 const route = useRoute();
 
 defineProps(["chatItems"]);
+
+const IMPERSONATE_KEYS = {
+  token: "adminRestoreToken",
+  user: "adminRestoreUser",
+  flag: "impersonating",
+};
+const isImpersonating = ref(false);
+
+const showImpersonationBanner = computed(
+  () =>
+    authStore.user?.user_type === "lawyer" &&
+    isImpersonating.value &&
+    route.path.startsWith("/dashboard/lawyer"),
+);
+
+function exitImpersonation() {
+  if (typeof sessionStorage === "undefined") return;
+  const token = sessionStorage.getItem(IMPERSONATE_KEYS.token);
+  const userStr = sessionStorage.getItem(IMPERSONATE_KEYS.user);
+  sessionStorage.removeItem(IMPERSONATE_KEYS.token);
+  sessionStorage.removeItem(IMPERSONATE_KEYS.user);
+  sessionStorage.removeItem(IMPERSONATE_KEYS.flag);
+  isImpersonating.value = false;
+  try {
+    const user = userStr ? JSON.parse(userStr) : null;
+    if (token && user) authStore.restoreAuth(token, user);
+  } catch (_) {}
+  navigateTo("/dashboard/admin");
+}
 
 // Sidebar state
 const sidebarCollapsed = ref(false);
@@ -193,6 +238,14 @@ const roomName = computed(() => {
 });
 
 onMounted(() => {
+  if (
+    typeof sessionStorage !== "undefined" &&
+    authStore.user?.user_type === "lawyer" &&
+    route.path.startsWith("/dashboard/lawyer") &&
+    sessionStorage.getItem(IMPERSONATE_KEYS.flag) === "1"
+  ) {
+    isImpersonating.value = true;
+  }
   if (chatStore.selectedRoom !== 0) {
     console.log("Room ID exists:", chatStore.selectedRoom);
   }
@@ -203,6 +256,21 @@ watch(
   (newVal) => {
     if (newVal) {
       console.log("Room Info updated:", newVal);
+    }
+  },
+  { immediate: true },
+);
+
+// وقتی به مسیر وکیل می‌رویم، وضعیت امپرسونیشن را از sessionStorage بخوان
+watch(
+  () => route.path,
+  (path) => {
+    if (
+      typeof sessionStorage !== "undefined" &&
+      path.startsWith("/dashboard/lawyer") &&
+      sessionStorage.getItem(IMPERSONATE_KEYS.flag) === "1"
+    ) {
+      isImpersonating.value = true;
     }
   },
   { immediate: true },
