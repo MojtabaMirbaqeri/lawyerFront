@@ -20,6 +20,7 @@
     "@nuxtjs/leaflet": "^1.2.6",
     "@pinia/nuxt": "^0.11.1",
     "@vueuse/core": "^13.6.0",
+    "cropperjs": "^2.1.0",
     "date-fns": "^2.30.0",
     "embla-carousel": "^8.6.0",
     "embla-carousel-autoplay": "^8.6.0",

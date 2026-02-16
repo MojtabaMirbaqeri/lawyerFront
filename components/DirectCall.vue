@@ -39,7 +39,7 @@ const handleClick = (e) => {
           includeAuthHeader: true,
           body: {},
         },
-        false
+        false,
       ).catch(() => {});
     }
   } else {
