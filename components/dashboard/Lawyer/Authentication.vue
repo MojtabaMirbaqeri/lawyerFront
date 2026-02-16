@@ -379,15 +379,34 @@ const isLoading = ref(false);
 const showDocumentsModal = ref(false);
 const idCardPreview = ref(null);
 const licensePreview = ref(null);
+const myKycRequest = ref(null);
 
-// Computed KYC Status
+// وضعیت درخواست احراز هویت از API (register-lawyer/my-request برای وکیل موجود)
+async function fetchMyKycRequest() {
+  if (!authStore.user?.lawyer_id) return;
+  try {
+    const res = await useGet({
+      url: "register-lawyer/my-request",
+      includeAuthHeader: true,
+    }, false);
+    if (res?.data?.data != null) {
+      myKycRequest.value = res.data.data;
+    } else {
+      myKycRequest.value = null;
+    }
+  } catch {
+    myKycRequest.value = null;
+  }
+}
+
+// Computed KYC Status (از user.lawyer_kyc و درخواست ثبت‌نام/کی‌و‌سی برای pending و rejected)
 const kycStatus = computed(() => {
   const lawyer = lawyerData.value?.lawyer_info;
   const user = authStore.user;
 
   if (user?.lawyer_kyc || lawyer?.kyc_approved) return "approved";
-  if (lawyer?.kyc_submitted || lawyer?.kyc_pending) return "pending";
-  if (lawyer?.kyc_rejected) return "rejected";
+  if (myKycRequest.value?.status === "pending" || lawyer?.kyc_submitted || lawyer?.kyc_pending) return "pending";
+  if (myKycRequest.value?.status === "rejected" || lawyer?.kyc_rejected) return "rejected";
   return "not_submitted";
 });
 
@@ -422,7 +441,7 @@ const statusDescription = computed(() => {
 });
 
 const rejectionReason = computed(() => {
-  return lawyerData.value?.lawyer_info?.kyc_rejection_reason || null;
+  return myKycRequest.value?.rejection_reason || lawyerData.value?.lawyer_info?.kyc_rejection_reason || null;
 });
 
 const maskedNationalCode = computed(() => {
@@ -450,6 +469,10 @@ const state = reactive({
   nationalCode: "",
   IDCardPic: null,
   licensePic: null,
+});
+
+onMounted(() => {
+  fetchMyKycRequest();
 });
 
 const schema = object({
@@ -526,7 +549,8 @@ const onSubmit = async (e) => {
           "اطلاعات احراز هویت با موفقیت ارسال شد. نتیجه بررسی از طریق پیامک اطلاع‌رسانی می‌شود.",
         color: "success",
       });
-      authStore.user.lawyer_kyc = true;
+      // درخواست به‌صورت pending ذخیره شده؛ پس از تایید ادمین lawyer_kyc به‌روز می‌شود
+      await fetchMyKycRequest();
     } else {
       toast.add({
         description: "ارسال اطلاعات احراز هویت با خطا مواجه شد",
@@ -535,7 +559,8 @@ const onSubmit = async (e) => {
     }
   } catch (err) {
     console.error("submit error:", err);
-    toast.add({ description: "خطا در ارسال اطلاعات", color: "error" });
+    const msg = err?.data?.message || err?.message || "خطا در ارسال اطلاعات";
+    toast.add({ description: msg, color: "error" });
   } finally {
     isLoading.value = false;
   }
