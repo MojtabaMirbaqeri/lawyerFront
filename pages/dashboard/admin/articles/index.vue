@@ -154,8 +154,9 @@
           v-model:page="page"
           :items-per-page="15"
           :total="total"
+          show-edges
           :sibling-count="1"
-          :ui="{ list: 'gap-1', item: 'min-w-8 h-8 text-sm', first: 'hidden', last: 'hidden', prev: 'scale-x-[-1]', next: 'scale-x-[-1]' }"
+          :ui="{ list: 'gap-1', item: 'min-w-8 h-8 text-sm', first: 'scale-x-[-1]', last: 'scale-x-[-1]', prev: 'scale-x-[-1]', next: 'scale-x-[-1]' }"
         />
       </div>
     </div>
@@ -183,11 +184,7 @@
               </span>
             </div>
             <div v-if="selectedArticle.image" class="article-view-image-wrap">
-              <img
-                :src="articleImageSrc(selectedArticle.image)"
-                :alt="selectedArticle.title"
-                class="article-view-image"
-              />
+              <ArticleImage :image="selectedArticle.image" :alt="selectedArticle.title" variant="single" loading="lazy" class="article-view-image w-full" />
             </div>
             <p v-if="selectedArticle.summary" class="article-view-summary">{{ selectedArticle.summary }}</p>
             <div class="article-view-body ql-editor prose prose-gray max-w-none" v-html="articleBodyHtml"></div>
@@ -258,17 +255,6 @@ const showArticleModal = ref(false);
 const selectedArticle = ref(null);
 const articleViewLoading = ref(false);
 const articleActionLoading = ref(false);
-
-const config = useRuntimeConfig();
-function articleImageSrc(image) {
-  if (!image || typeof image !== "string") return "";
-  const base = (config.public?.imageBase || "").replace(/\/$/, "") || "";
-  const trimmed = image.trim();
-  if (!trimmed) return "";
-  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) return trimmed;
-  const path = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
-  return base ? `${base}${path}` : path;
-}
 
 const articleBodyHtml = computed(() => {
   const b = selectedArticle.value?.body ?? "";

@@ -38,6 +38,9 @@
             <NuxtLink to="/">
               <NuxtImg
                 src="/images/main-logo.svg"
+                width="112"
+                height="36"
+                loading="eager"
                 class="w-28 brightness-0 invert"
               />
             </NuxtLink>
@@ -90,6 +93,9 @@
                   <NuxtImg
                     :src="getChatPartner(item).profile"
                     alt="profile"
+                    width="36"
+                    height="36"
+                    loading="lazy"
                     class="w-9 h-9 rounded-full object-cover ring-2 ring-white/20"
                   />
                 </template>
@@ -186,6 +192,9 @@
             <NuxtLink to="/">
               <NuxtImg
                 src="/images/main-logo.svg"
+                width="128"
+                height="40"
+                loading="eager"
                 class="w-32 brightness-0 invert"
               />
             </NuxtLink>
@@ -235,6 +244,9 @@
                     <NuxtImg
                       :src="getChatPartner(item).profile"
                       alt="profile"
+                      width="36"
+                      height="36"
+                      loading="lazy"
                       class="w-9 h-9 rounded-full object-cover ring-2 ring-white/20"
                     />
                   </template>

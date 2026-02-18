@@ -206,6 +206,25 @@ export const useAuthStore = defineStore("auth", {
       jwtToken.value = token;
     },
 
+    /**
+     * بازگردانی توکن و کاربر (برای خروج از حالت ورود به پنل وکیل و بازگشت به ادمین).
+     * بدون فراخوانی API؛ فقط ست کردن state و cookie.
+     */
+    restoreAuth(token, user) {
+      this.token = token;
+      this.user = user;
+      const jwtToken = useCookie("jwtToken", {
+        default: () => null,
+        serialize: String,
+        deserialize: (value) => (value === "null" ? null : value),
+        maxAge: 60 * 60 * 24 * 7,
+        path: "/",
+        sameSite: "lax",
+        secure: true,
+      });
+      jwtToken.value = token;
+    },
+
     async logout(redirect = true) {
       if (redirect && import.meta.client) {
         await navigateTo("/");

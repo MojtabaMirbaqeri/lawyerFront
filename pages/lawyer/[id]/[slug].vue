@@ -183,6 +183,7 @@
           <!-- Visit types: mobile-only CTA preview -->
 
           <InfoLawyerChooseVisit
+            v-if="lawyer?.is_active"
             :active="lawyer?.is_active"
             :items="items"
             :phone-number="lawyer?.phone"
@@ -377,6 +378,7 @@ const res = await useGet(
 );
 const data = await res.data;
 const lawyer = ref(data?.data ?? {});
+useGlobalStore().lawyerInfo = lawyer;
 
 const fullname = computed(
   () =>

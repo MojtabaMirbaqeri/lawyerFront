@@ -6,7 +6,7 @@
       <div class="blob blob-2"></div>
       <div class="grid-pattern"></div>
     </div>
-    
+
     <div class="container">
       <div class="hero-grid">
         <!-- Content Side -->
@@ -15,18 +15,18 @@
             <UIcon name="heroicons:sparkles-solid" class="size-4!" />
             پلتفرم هوشمند حقوقی
           </div>
-          
+
           <h1 class="hero-title">
             دسترسی آسان به
             <span class="title-highlight">بهترین وکلای</span>
             کشور
           </h1>
-          
+
           <p class="hero-description">
-            با وکیل‌وکیل در کمترین زمان به مشاوره حقوقی تخصصی دسترسی پیدا کنید.
-            بیش از ۱۲۷ هزار وکیل متخصص آماده پاسخگویی هستند.
+            با وکیل‌وکیل در کمترین زمان به مشاوره حقوقی تخصصی دسترسی پیدا کنید. بیش از ۱۲۷
+            هزار وکیل متخصص آماده پاسخگویی هستند.
           </p>
-          
+
           <!-- Search Box -->
           <div class="search-box" ref="searchWrapper">
             <div class="search-inner">
@@ -45,14 +45,16 @@
                 <UIcon name="heroicons:magnifying-glass-solid" class="size-5!" />
               </button>
             </div>
-            
+
             <!-- Suggest Box -->
             <Transition name="fade">
               <div v-if="showSuggestBox" class="suggest-box">
                 <div v-if="loading" class="space-y-2">
                   <USkeleton v-for="i in 3" :key="i" class="h-16 w-full rounded-xl" />
                 </div>
-                <div v-else-if="lawyers?.length" class="max-h-60 overflow-y-auto flex flex-col gap-2">
+                <div
+                  v-else-if="lawyers?.length"
+                  class="max-h-60 overflow-y-auto flex flex-col gap-2">
                   <NuxtLink
                     v-for="lawyer in lawyers"
                     :key="lawyer.id"
@@ -60,29 +62,47 @@
                     class="suggestion-item">
                     <div class="flex items-center gap-3">
                       <div class="size-12 rounded-full bg-gray-100 overflow-hidden">
-                        <NuxtImg v-if="lawyer.profile_image" :src="config.public.imageBase + lawyer.profile_image" class="w-full h-full object-cover" />
-                        <NuxtImg v-else src="/images/nullavatar.png" class="w-full h-full object-cover" />
+                        <NuxtImg
+                          v-if="lawyer.profile_image"
+                          :src="config.public.imageBase + lawyer.profile_image"
+                          width="48"
+                          height="48"
+                          loading="lazy"
+                          class="w-full h-full object-cover" />
+                        <NuxtImg
+                          v-else
+                          src="/images/nullavatar.png"
+                          width="48"
+                          height="48"
+                          loading="lazy"
+                          class="w-full h-full object-cover" />
                       </div>
                       <div>
-                        <h4 class="font-semibold text-gray-800">{{ lawyer.name }} {{ lawyer.family }}</h4>
-                        <p class="text-sm text-gray-500">{{ lawyer.specialty || 'وکیل دادگستری' }}</p>
+                        <h4 class="font-semibold text-gray-800">
+                          {{ lawyer.name }} {{ lawyer.family }}
+                        </h4>
+                        <p class="text-sm text-gray-500">
+                          {{ lawyer.specialty || "وکیل دادگستری" }}
+                        </p>
                       </div>
                     </div>
                     <div class="flex items-center gap-1 text-yellow-500">
                       <UIcon name="heroicons:star-solid" class="size-4!" />
-                      <span class="font-bold">{{ Number(lawyer.average_rating).toFixed(1) }}</span>
+                      <span class="font-bold">{{
+                        Number(lawyer.average_rating).toFixed(1)
+                      }}</span>
                     </div>
                   </NuxtLink>
                 </div>
-                <div v-else class="text-center py-4 text-gray-500">
-                  وکیلی یافت نشد
-                </div>
+                <div v-else class="text-center py-4 text-gray-500">وکیلی یافت نشد</div>
               </div>
             </Transition>
           </div>
-          
+
           <!-- Quick Actions -->
-          <div class="quick-actions" :class="{ 'quick-actions--dropdown-open': showSuggestBox }">
+          <div
+            class="quick-actions"
+            :class="{ 'quick-actions--dropdown-open': showSuggestBox }">
             <button class="quick-btn" @click="navigateTo('/lawyers')">
               <UIcon name="heroicons:squares-2x2-solid" class="size-5!" />
               مشاهده همه وکلا
@@ -93,19 +113,19 @@
             </button>
           </div>
         </div>
-        
+
         <!-- Image Side -->
         <div class="hero-visual">
           <div class="visual-card">
-            <img src="/images/vector-lawyer.webp" alt="Lawyer" class="main-image" />
+            <NuxtImg src="/images/vector-lawyer.webp" alt="Lawyer" class="main-image" width="480" height="400" loading="lazy" />
           </div>
-          
+
           <!-- Floating Cards -->
           <div class="floating-card floating-card--top">
             <UIcon name="heroicons:shield-check-solid" class="size-6! text-green-500" />
             <span>وکلای تأیید شده</span>
           </div>
-          
+
           <div class="floating-card floating-card--bottom">
             <UIcon name="heroicons:star-solid" class="size-6! text-yellow-500" />
             <span>امتیاز ۴.۹ از ۵</span>
@@ -119,7 +139,7 @@
 <script setup>
 const filtersStore = useFiltersStore();
 const searchWrapper = ref(null);
-const lawyerNameFilter = ref('');
+const lawyerNameFilter = ref("");
 const showSuggestBox = ref(false);
 const loading = ref(false);
 const lawyers = ref([]);
@@ -160,7 +180,7 @@ watch(lawyerNameFilter, (val) => {
 const search = () => {
   filtersStore.selectedFilters.searchField = lawyerNameFilter.value;
   showSuggestBox.value = false;
-  navigateTo('/lawyers');
+  navigateTo("/lawyers");
 };
 
 const handleFocus = () => {
@@ -210,15 +230,20 @@ header {
 }
 
 @keyframes blob-float {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(30px, -30px) scale(1.1); }
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(30px, -30px) scale(1.1);
+  }
 }
 
 .grid-pattern {
   @apply absolute inset-0 opacity-[0.03];
-  background-image: 
-    linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 
@@ -324,7 +349,12 @@ header {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 </style>

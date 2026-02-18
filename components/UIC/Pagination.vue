@@ -11,11 +11,11 @@ defineProps(["total", "pageSize"]);
     show-edges
     :total="total"
     :items-per-page="pageSize"
-    :sibling-count="0"
+    :sibling-count="1"
     :ui="{
-      first: 'hidden',
+      first: 'scale-x-[-1] hidden',
+      last: 'scale-x-[-1] hidden',
       prev: 'scale-x-[-1]',
       next: 'scale-x-[-1]',
-      last: 'hidden',
     }" />
 </template>

@@ -291,8 +291,9 @@ const onToggleActive = async (newVal) => {
   }
 };
 
-// Computed completion statuses
+// Computed completion statuses (از authStore.user.lawyer_kyc برای تاییدشده استفاده می‌شود)
 const kycStatus = computed(() => {
+  if (authStore.user?.lawyer_kyc) return "approved";
   const lawyer = lawyerData.value?.lawyer_info;
   if (!lawyer) return "not_submitted";
   if (lawyer.kyc_approved) return "approved";

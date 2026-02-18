@@ -3,7 +3,7 @@
     <UButton icon="stash:image-search" color="neutral" variant="link" class="" :ui="{leadingIcon:'size-6!'}"/>
 
     <template #body>
-        <NuxtImg class="w-full" :src="image" alt=""/>
+        <NuxtImg class="w-full" :src="image" alt="" width="800" height="600" loading="lazy" />
     </template>
   </UModal>
 </template>

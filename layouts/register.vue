@@ -56,7 +56,7 @@
 
     <!-- Right: Form -->
     <div
-      class="flex-1 flex flex-col items-center justify-start lg:justify-center p-4 sm:p-6 lg:p-8 relative min-h-0 overflow-y-auto lg:overflow-hidden"
+      class="flex-1 flex flex-col items-center justify-start lg:justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden"
       style="background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);"
     >
       <!-- Subtle decorative orbs -->
@@ -85,7 +85,7 @@
           class="lg:hidden block text-center relative z-10 mb-4 hover:opacity-90 transition"
           aria-label="بازگشت به صفحه اصلی"
         >
-          <img
+          <NuxtImg
             src="/images/VakilVakilLogo.png"
             alt="وکیل‌وکیل"
             class="h-9 w-auto object-contain mx-auto"

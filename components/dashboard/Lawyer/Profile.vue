@@ -5,7 +5,10 @@
         <div class="relative">
           <NuxtImg
             :src="(localImagePreview ?? profileImagePreview) || '/images/nullavatar.png'"
-            class="size-14 lg:size-16 rounded-full" />
+            width="64"
+            height="64"
+            loading="lazy"
+            class="size-14 lg:size-16 rounded-full object-cover" />
         </div>
         <div>
           <h1 class="text-base font-bold">

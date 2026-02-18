@@ -23,12 +23,8 @@
           :to="`/articles/${article.slug}`"
           class="article-card group block rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:border-gray-300 hover:shadow-md"
         >
-          <div v-if="article.image" class="mb-4 overflow-hidden rounded-lg max-w-xs">
-            <img
-              :src="articleImageSrc(article.image)"
-              :alt="article.title"
-              class="h-28 w-full object-contain block bg-gray-50 transition group-hover:scale-105"
-            />
+          <div v-if="article.image" class="mb-4 overflow-hidden rounded-lg max-w-xs h-28">
+            <ArticleImage :image="article.image" :alt="article.title" variant="card" loading="lazy" class="h-28 w-full" />
           </div>
           <div v-else class="mb-4 flex h-28 items-center justify-center rounded-lg bg-gray-100 max-w-xs">
             <UIcon name="lucide:file-text" class="w-12 h-12 text-gray-400" />
@@ -51,8 +47,9 @@
           v-model:page="page"
           :items-per-page="perPage"
           :total="total"
+          show-edges
           :sibling-count="1"
-          :ui="{ list: 'gap-1', item: 'min-w-8 h-8 text-sm', first: 'hidden', last: 'hidden', prev: 'scale-x-[-1]', next: 'scale-x-[-1]' }"
+          :ui="{ list: 'gap-1', item: 'min-w-8 h-8 text-sm', first: 'scale-x-[-1]', last: 'scale-x-[-1]', prev: 'scale-x-[-1]', next: 'scale-x-[-1]' }"
         />
       </div>
     </div>
@@ -71,17 +68,6 @@ const perPage = ref(15);
 const total = ref(0);
 const articles = ref([]);
 const pending = ref(true);
-
-const config = useRuntimeConfig();
-function articleImageSrc(image) {
-  if (!image || typeof image !== "string") return "";
-  const base = (config.public?.imageBase || "").replace(/\/$/, "") || "";
-  const trimmed = image.trim();
-  if (!trimmed) return "";
-  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) return trimmed;
-  const path = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
-  return base ? `${base}${path}` : path;
-}
 
 async function fetchArticles() {
   pending.value = true;

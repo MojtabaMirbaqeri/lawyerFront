@@ -543,7 +543,7 @@
           <button @click="showImageModal = false" class="image-close-btn">
             <Icon name="lucide:x" class="w-5 h-5" />
           </button>
-          <img :src="previewImageUrl" alt="تصویر لوح افتخار" class="preview-image" />
+          <img :src="previewImageUrl" alt="تصویر لوح افتخار" class="preview-image" width="400" height="300" loading="lazy" />
         </div>
       </template>
     </UModal>

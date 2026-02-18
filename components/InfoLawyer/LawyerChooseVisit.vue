@@ -20,15 +20,19 @@
           >
         </div> -->
         <div class="flex flex-col gap-2.5">
-          <DirectCall
-            v-if="phoneNumber"
-            :phone="phoneNumber"
-            :lawyer-id="lawyerId" />
-          <p
-            v-else
-            class="rounded-xl border border-slate-200/80 bg-slate-50/50 px-4 py-3 text-center text-sm text-slate-500">
-            وکیل نمایش شماره تماس را در سایت فعال نکرده است
-          </p>
+          <!-- <UICSecondaryBtn
+            :disabled="!props.active"
+            @click="
+              navigateTo(
+                `/reserve/${$route.params.id}?visit_type=${
+                  items.find((item) => item.id === activeBtn)?.value
+                }`,
+              )
+            "
+            class="flex items-center justify-center rounded-[8px]!">
+            <span class="text-center text-base">ادامه فرآیند</span>
+          </UICSecondaryBtn> -->
+          <DirectCall :phone="phoneNumber" :lawyer-id="lawyerId" />
         </div>
       </div>
     </div>
@@ -36,7 +40,7 @@
 </template>
 
 <script setup>
-const props = defineProps(["items", "active", "phoneNumber", "lawyerId"]);
+const props = defineProps(["items", "phoneNumber", "lawyerId"]);
 
 const activeBtn = ref("0");
 </script>

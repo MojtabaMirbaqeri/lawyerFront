@@ -3,14 +3,14 @@
     <div class="nav-container">
       <!-- Right (RTL): Logo + horizontal nav (Home, Lawyers, FAQ, Contact) -->
       <NuxtLink to="/" class="logo-block">
-        <img
+        <NuxtImg
           src="/images/VakilVakilLogo.png"
           alt="وکیل‌وکیل"
           class="logo-img"
           width="140"
           height="36"
           loading="eager"
-        />
+          fetchpriority="high" />
       </NuxtLink>
 
       <nav class="desktop-nav">
@@ -35,7 +35,10 @@
                 <hr class="popover-divider" />
                 <UNavigationMenu
                   class="max-h-64! overflow-y-auto popover-list"
-                  :style="{ scrollbarWidth: 'thin', scrollbarColor: '#c0c0c0 transparent' }"
+                  :style="{
+                    scrollbarWidth: 'thin',
+                    scrollbarColor: '#c0c0c0 transparent',
+                  }"
                   orientation="vertical"
                   :items="provinces"
                   :ui="{ list: 'space-y-1.5' }" />
@@ -45,7 +48,10 @@
                 <hr class="popover-divider" />
                 <UNavigationMenu
                   class="max-h-64! overflow-y-auto popover-list"
-                  :style="{ scrollbarWidth: 'thin', scrollbarColor: '#c0c0c0 transparent' }"
+                  :style="{
+                    scrollbarWidth: 'thin',
+                    scrollbarColor: '#c0c0c0 transparent',
+                  }"
                   orientation="vertical"
                   :items="specialties"
                   :ui="{ list: 'space-y-1.5' }" />
@@ -64,9 +70,7 @@
       <!-- Left (RTL): Get Consultation (accent) + Login/Register (rounded, shadow) -->
       <ClientOnly>
         <div class="nav-actions">
-          <NuxtLink to="/lawyers" class="btn-consultation">
-            دریافت مشاوره
-          </NuxtLink>
+          <NuxtLink to="/lawyers" class="btn-consultation"> دریافت مشاوره </NuxtLink>
           <NuxtLink v-if="!auth.token" to="/register" class="btn-login">
             <UIcon name="heroicons:user-solid" class="size-4!" />
             ورود / ثبت نام
@@ -74,7 +78,9 @@
           <UDropdownMenu v-else :items="dropdownItems" :ui="{ content: '' }">
             <button type="button" class="btn-login btn-login--user">
               <UIcon name="heroicons:user-solid" class="size-4!" />
-              <span>{{ useAuthStore().user?.name }} {{ useAuthStore().user?.family }}</span>
+              <span
+                >{{ useAuthStore().user?.name }} {{ useAuthStore().user?.family }}</span
+              >
             </button>
           </UDropdownMenu>
         </div>
@@ -83,35 +89,61 @@
   </header>
 
   <!-- نوار ناوبری ثابت پایین (فقط موبایل)، مثل نمونه تصویر -->
-  <nav
-    class="mobile-bottom-nav lg:!hidden"
-    aria-label="منوی اصلی">
-    <NuxtLink to="/" class="bottom-nav-item" :class="{ 'bottom-nav-item--active': isActive('/') }">
+  <nav class="mobile-bottom-nav lg:!hidden" aria-label="منوی اصلی">
+    <NuxtLink
+      to="/"
+      class="bottom-nav-item"
+      :class="{ 'bottom-nav-item--active': isActive('/') }">
       <UIcon name="lucide:house" class="bottom-nav-icon" />
       <span class="bottom-nav-label">خانه</span>
     </NuxtLink>
-    <NuxtLink to="/lawyers" class="bottom-nav-item" :class="{ 'bottom-nav-item--active': isLawyersActive }">
+
+    <button 
+      type="button"
+      class="bottom-nav-item" 
+      :class="{ 'bottom-nav-item--active': isLawyersActive }"
+      @click="openFiltersDrawer">
       <UIcon name="lucide:layout-list" class="bottom-nav-icon" />
       <span class="bottom-nav-label">لیست وکلا</span>
-    </NuxtLink>
+    </button>
+
     <NuxtLink to="/lawyers" class="bottom-nav-item bottom-nav-item--center">
       <span class="bottom-nav-center-btn">
         <UIcon name="heroicons:chat-bubble-left-right-solid" class="size-6!" />
       </span>
       <span class="bottom-nav-label">مشاوره</span>
     </NuxtLink>
-    <NuxtLink to="/faq" class="bottom-nav-item" :class="{ 'bottom-nav-item--active': isActive('/faq') }">
+    <NuxtLink
+      to="/faq"
+      class="bottom-nav-item"
+      :class="{ 'bottom-nav-item--active': isActive('/faq') }">
       <UIcon name="lucide:help-circle" class="bottom-nav-icon" />
       <span class="bottom-nav-label">سوالات</span>
     </NuxtLink>
     <NuxtLink
       :to="auth?.token ? '/dashboard' : '/register'"
       class="bottom-nav-item"
-      :class="{ 'bottom-nav-item--active': isActive('/register') || isActive('/dashboard') }">
+      :class="{
+        'bottom-nav-item--active': isActive('/register') || isActive('/dashboard'),
+      }">
       <UIcon name="heroicons:user-solid" class="bottom-nav-icon" />
       <span class="bottom-nav-label">{{ auth?.token ? "پنل" : "ورود" }}</span>
     </NuxtLink>
   </nav>
+  
+  <!-- Filters Drawer for Mobile -->
+  <UICDrawer
+    v-model="mobileMenuVisibility"
+    title="لیست وکلا"
+    description="انتخاب استان یا تخصص"
+    class="lg:hidden overflow-y-auto!">
+    <template #default>
+      <LandingLawyersMenu 
+        :provinces="provinces" 
+        :specialties="specialties"
+        @close="mobileMenuVisibility = false" />
+    </template>
+  </UICDrawer>
 </template>
 
 <script setup>
@@ -121,16 +153,24 @@ await auth.ensureUser();
 
 const filtersStore = useFiltersStore();
 const lawyersPopoverVisiblity = ref(false);
+const mobileMenuVisibility = ref(false);
+
+const openFiltersDrawer = () => {
+  mobileMenuVisibility.value = true;
+};
 
 function isActive(path) {
   if (path === "/") return route.path === "/" && !route.hash;
-  if (path === "/faq") return route.path === "/faq" || (route.path === "/" && route.hash === "#faq");
+  if (path === "/faq")
+    return route.path === "/faq" || (route.path === "/" && route.hash === "#faq");
   if (path === "/register") return route.path === "/register";
   if (path === "/dashboard") return route.path.startsWith("/dashboard");
   return false;
 }
 const isLawyersActive = computed(
-  () => route.path === "/lawyers" || (route.path === "/" && (route.hash === "#lawyers" || route.hash === "lawyers"))
+  () =>
+    route.path === "/lawyers" ||
+    (route.path === "/" && (route.hash === "#lawyers" || route.hash === "lawyers")),
 );
 const isScrolled = ref(false);
 
@@ -235,9 +275,13 @@ onMounted(async () => {
       to: `/provinces/${p.en_name}`,
     }));
 
-    const lawyersMenuForProvinces = menuItems.value[0].find((item) => item.label === "لیست وکلا");
+    const lawyersMenuForProvinces = menuItems.value[0].find(
+      (item) => item.label === "لیست وکلا",
+    );
     if (lawyersMenuForProvinces) {
-      const provinceMenu = lawyersMenuForProvinces.children.find((c) => c.label === "استان ها");
+      const provinceMenu = lawyersMenuForProvinces.children.find(
+        (c) => c.label === "استان ها",
+      );
       if (provinceMenu) provinceMenu.children = provinces.value;
     }
   } catch (err) {

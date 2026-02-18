@@ -135,15 +135,15 @@ const createRowProxy = (row, accessorKey) => ({
         :items-per-page="pagination.pageSize"
         :total="pagination.total"
         show-edges
-        :sibling-count="0"
+        :sibling-count="1"
         :default-page="1"
         :ui="{
           list: 'gap-1',
           item: 'min-w-8 h-8 text-sm rounded-lg',
-          first: 'hidden',
+          first: 'scale-x-[-1]',
+          last: 'scale-x-[-1]',
           prev: 'scale-x-[-1]',
           next: 'scale-x-[-1]',
-          last: 'hidden',
         }"
         @update:page="(p) => (page = p)" />
     </div>
