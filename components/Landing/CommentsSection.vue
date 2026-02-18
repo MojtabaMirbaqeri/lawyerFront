@@ -20,14 +20,14 @@
           <UIcon name="heroicons:chevron-left-solid" />
         </button>
 
-        <ThingCarouselContent class="p-[1px]" style="direction: ltr !important">
+        <ThingCarouselContent class="p-[1px] flex items-stretch" style="direction: ltr !important">
           <ThingCarouselItem
             v-for="comment in recentComments?.data"
             :key="comment?.id"
             grab-cursor
-            class="md:basis-1/2 lg:basis-1/3"
+            class="md:basis-1/2 lg:basis-1/3 flex items-stretch min-h-0"
           >
-            <CommentBox :comment-detail="comment" class="comment-card-enhanced" />
+            <CommentBox :comment-detail="comment" class="comment-card-enhanced h-full w-full" />
           </ThingCarouselItem>
         </ThingCarouselContent>
 
