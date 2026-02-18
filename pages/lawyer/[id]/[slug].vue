@@ -483,20 +483,29 @@ const shareContent = async () => {
 };
 
 useSeoMeta({
-  title: () => fullname.value || "جزئیات وکیل",
-  description: () => {
-    const city = lawyer.value?.city || lawyer.value?.province || "ایران";
-    const base =
+  title: () => {
+    const name = fullname.value || "وکیل";
+    const profession =
       lawyer.value?.lawyer_info?.base_lawyer?.title ||
       lawyer.value?.base ||
-      "وکیل پایه یک";
-    return `رزرو وقت مشاوره با ${fullname.value}، ${base} در ${city}. مشاهده سوابق، نظرات و آدرس.`;
+      "وکیل پایه یک دادگستری";
+    const city = lawyer.value?.city || lawyer.value?.province || "ایران";
+    return `${name}، ${profession} در ${city} |`;
+  },
+  description: () => {
+    const name = fullname.value || "وکیل";
+    const profession =
+      lawyer.value?.lawyer_info?.base_lawyer?.title ||
+      lawyer.value?.base ||
+      "وکیل پایه یک دادگستری";
+    return `پروفایل ${name} (${profession}) در؛ مشاهده تخصص‌ها، سوابق. مشاوره آنلاین و تلفنی، امکان رزرو نوبت و شروع گفتگو در وکیل‌وکیل.`;
   },
   keywords: () => {
+    const name = fullname.value || "";
     const city = lawyer.value?.city || lawyer.value?.province || "";
-    const base =
+    const profession =
       lawyer.value?.lawyer_info?.base_lawyer?.title || lawyer.value?.base || "";
-    return `${fullname.value}, وکیل ${city}, ${base}, رزرو وکیل, مشاوره حقوقی`;
+    return `${name}, وکیل ${city}, ${profession}, رزرو وکیل, مشاوره حقوقی, ${name} وکیل, ${name} ${profession}, وکیل ${name}, مشاوره با ${name}, شماره تماس ${name}, رزرو نوبت ${name}, وکیل آنلاین ${name}, وکیل تلفنی ${name}, پروفایل ${name}, ${profession} آنلاین, بهترین ${profession}`;
   },
   ogTitle: () => `${fullname.value} | وکیل دادگستری`,
   ogDescription: () => `درخواست مشاوره حقوقی با ${fullname.value}.`,

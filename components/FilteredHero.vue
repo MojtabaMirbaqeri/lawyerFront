@@ -87,7 +87,7 @@ const handleSearch = () => {
 }
 
 .hero-title {
-  @apply text-2xl md:text-3xl lg:text-4xl font-black text-white leading-tight;
+  @apply text-2xl md:text-3xl max-w-[540px] mx-auto lg:text-4xl font-black text-white leading-normal;
 }
 
 .hero-subtitle {

@@ -27,7 +27,7 @@ export default defineNuxtConfig({
     pageTransition: { name: "page", mode: "out-in" },
     layoutTransition: { name: "page", mode: "out-in" },
     head: {
-      titleTemplate: "%s | وکیل وکیل",
+      titleTemplate: "%s وکیل وکیل (VakilVakil) | لیست وکلا، مشاوره آنلاین و رزرو نوبت",
       htmlAttrs: {
         dir: "rtl",
         lang: "fa",
