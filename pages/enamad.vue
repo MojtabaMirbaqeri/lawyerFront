@@ -12,13 +12,14 @@
           href='https://trustseal.enamad.ir/?id=663517&Code=PunuMAwnJLT4YZ3JSZhy8HqzdPM1EGqR'
           class="block"
         >
-          <img 
-            referrerpolicy='origin' 
-            src='https://trustseal.enamad.ir/logo.aspx?id=663517&Code=PunuMAwnJLT4YZ3JSZhy8HqzdPM1EGqR' 
-            alt='نماد اعتماد الکترونیکی' 
-            style='cursor:pointer' 
-            code='PunuMAwnJLT4YZ3JSZhy8HqzdPM1EGqR'
-            class="max-w-full h-auto"
+          <img
+            referrerpolicy="origin"
+            src="https://trustseal.enamad.ir/logo.aspx?id=663517&Code=PunuMAwnJLT4YZ3JSZhy8HqzdPM1EGqR"
+            alt="نماد اعتماد الکترونیکی"
+            width="120"
+            height="120"
+            loading="lazy"
+            class="max-w-full h-auto cursor-pointer"
           />
         </a>
       </div>

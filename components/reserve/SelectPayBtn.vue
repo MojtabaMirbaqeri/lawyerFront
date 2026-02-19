@@ -16,8 +16,11 @@
       <NuxtImg
         v-if="item.src"
         :src="'/images/' + item.src"
+        width="24"
+        height="24"
+        loading="lazy"
         class="size-6"
-        alt="dargah"
+        alt="دروازه پرداخت"
       />
       <div class="flex flex-col">
         <span class="lg:text-[18px]">

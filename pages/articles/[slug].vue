@@ -23,11 +23,7 @@
           </div>
         </header>
         <div v-if="article.image" class="mb-8 overflow-hidden rounded-xl max-w-xs">
-          <img
-            :src="articleImageSrc(article.image)"
-            :alt="article.title"
-            class="w-full h-28 object-contain block bg-gray-50"
-          />
+          <ArticleImage :image="article.image" :alt="article.title" variant="single" loading="lazy" class="w-full h-28" />
         </div>
         <div class="article-body ql-editor prose prose-gray max-w-none" v-html="articleBodyHtml"></div>
         <footer class="mt-12 pt-6 border-t border-gray-200">
@@ -52,17 +48,6 @@ const slug = computed(() => route.params.slug);
 
 const article = ref(null);
 const pending = ref(true);
-
-const config = useRuntimeConfig();
-function articleImageSrc(image) {
-  if (!image || typeof image !== "string") return "";
-  const base = (config.public?.imageBase || "").replace(/\/$/, "") || "";
-  const trimmed = image.trim();
-  if (!trimmed) return "";
-  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) return trimmed;
-  const path = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
-  return base ? `${base}${path}` : path;
-}
 
 const articleBodyHtml = computed(() => {
   const b = article.value?.body ?? "";

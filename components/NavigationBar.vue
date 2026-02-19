@@ -3,13 +3,14 @@
     <div class="nav-container">
       <!-- Right (RTL): Logo + horizontal nav (Home, Lawyers, FAQ, Contact) -->
       <NuxtLink to="/" class="logo-block">
-        <img
+        <NuxtImg
           src="/images/VakilVakilLogo.png"
           alt="وکیل‌وکیل"
           class="logo-img"
           width="140"
           height="36"
-          loading="eager" />
+          loading="eager"
+          fetchpriority="high" />
       </NuxtLink>
 
       <nav class="desktop-nav">

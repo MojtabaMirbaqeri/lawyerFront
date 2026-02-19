@@ -10,10 +10,13 @@
         ]"
       >
         <div class="avatar shrink-0" v-if="msg.user?.id !== authStore.user.id">
-          <img
+          <NuxtImg
             v-if="msg.user.profile_image && msg.user.profile_image !== '0'"
             :src="msg.user.profile_image"
             alt="avatar"
+            width="36"
+            height="36"
+            loading="lazy"
             class="w-full h-full object-cover"
           />
           <div
@@ -41,9 +44,12 @@
                 v-if="file.file_type === 'image'"
                 class="image-preview-wrapper relative"
               >
-                <img
+                <NuxtImg
                   :src="file.file_url"
                   alt="Image Attachment"
+                  width="250"
+                  height="250"
+                  loading="lazy"
                   class="image-preview"
                 />
                 <div class="absolute inset-0 z-10 cursor-pointer">

@@ -3,13 +3,14 @@
     <!-- Sidebar Header -->
     <div class="sidebar-header">
       <NuxtLink to="/" class="logo-link">
-        <img
+        <NuxtImg
           v-if="!collapsed"
           :src="logoUrl"
           alt="Logo"
           class="logo-full"
           width="140"
-          height="32" />
+          height="32"
+          loading="eager" />
         <div v-else class="logo-mini">
           <Icon name="custom:logo" class="size-6! text-white" />
         </div>
@@ -53,9 +54,12 @@
             :class="{ active: chatStore.selectedRoom === room.id }">
             <div class="chat-avatar">
               <template v-if="getChatPartner(room)?.profile">
-                <img
+                <NuxtImg
                   :src="chatAvatarUrl(getChatPartner(room).profile)"
                   alt="profile"
+                  width="36"
+                  height="36"
+                  loading="lazy"
                   class="avatar avatar-sm" />
               </template>
               <template v-else>

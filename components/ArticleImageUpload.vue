@@ -24,6 +24,9 @@
         :src="previewImageUrl"
         alt="پیش‌نمایش"
         class="preview-image"
+        width="400"
+        height="225"
+        loading="lazy"
         @error="onImageError"
       />
       <div class="preview-actions">

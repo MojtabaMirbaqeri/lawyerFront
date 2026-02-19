@@ -323,10 +323,13 @@
               <div class="doc-preview-card">
                 <h4 class="doc-preview-title">تصویر کارت ملی</h4>
                 <div class="doc-preview-image">
-                  <img
+                  <NuxtImg
                     v-if="lawyerData?.lawyer_info?.national_card_image"
                     :src="useRuntimeConfig().public.imageBase + lawyerData.lawyer_info.national_card_image"
-                    alt="کارت ملی" />
+                    alt="کارت ملی"
+                    width="400"
+                    height="250"
+                    loading="lazy" />
                   <div v-else class="no-image">
                     <Icon name="lucide:image-off" class="w-8 h-8 text-gray-300" />
                   </div>
@@ -335,10 +338,13 @@
               <div class="doc-preview-card">
                 <h4 class="doc-preview-title">تصویر پروانه</h4>
                 <div class="doc-preview-image">
-                  <img
+                  <NuxtImg
                     v-if="lawyerData?.lawyer_info?.license_image"
                     :src="useRuntimeConfig().public.imageBase + lawyerData.lawyer_info.license_image"
-                    alt="پروانه" />
+                    alt="پروانه"
+                    width="400"
+                    height="250"
+                    loading="lazy" />
                   <div v-else class="no-image">
                     <Icon name="lucide:image-off" class="w-8 h-8 text-gray-300" />
                   </div>

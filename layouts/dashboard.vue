@@ -47,9 +47,12 @@
               <div class="user-menu">
                 <div class="user-avatar">
                   <template v-if="authStore.user?.profile_image">
-                    <img
+                    <NuxtImg
                       :src="authStore.user.profile_image"
                       alt="Profile"
+                      width="40"
+                      height="40"
+                      loading="lazy"
                       class="avatar avatar-md" />
                   </template>
                   <template v-else>

@@ -41,9 +41,12 @@
     <div class="comment-footer shrink-0">
       <NuxtLink :to="`/lawyer/${commentDetail?.lawyer?.id}`">
         <div class="lawyer-tag">
-          <img
+          <NuxtImg
             :src="lawyerAvatarSrc"
             alt=""
+            width="36"
+            height="36"
+            loading="lazy"
             class="lawyer-avatar" />
           {{ commentDetail?.lawyer?.full_name }}
         </div>

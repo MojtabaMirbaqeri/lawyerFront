@@ -472,7 +472,7 @@ const exportToExcel = () => {
       <!-- Custom cell for fullName with avatar -->
       <template #cell-fullName="{ row }">
         <div class="flex items-center gap-3">
-          <img v-if="row.profile_image" :src="row.profile_image" class="w-9 h-9 rounded-full object-cover" :alt="row.fullName" />
+          <NuxtImg v-if="row.profile_image" :src="row.profile_image" width="36" height="36" loading="lazy" class="w-9 h-9 rounded-full object-cover" :alt="row.fullName" />
           <div v-else class="avatar-placeholder avatar-sm">{{ getInitials(row.fullName) }}</div>
           <span class="font-medium text-gray-900">{{ row.fullName }}</span>
         </div>
@@ -531,9 +531,12 @@ const exportToExcel = () => {
         @click="navigateTo(`/dashboard/admin/lawyerlist/edit/${lawyer.edit_id}`)">
         <div class="lawyer-card-header">
           <div class="lawyer-avatar">
-            <img
+            <NuxtImg
               v-if="lawyer.profile_image"
               :src="lawyer.profile_image"
+              width="64"
+              height="64"
+              loading="lazy"
               :alt="lawyer.fullName" />
             <div v-else class="avatar-placeholder avatar-lg">
               {{ getInitials(lawyer.fullName) }}

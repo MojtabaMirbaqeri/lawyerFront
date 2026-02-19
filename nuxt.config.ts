@@ -1,7 +1,30 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+function getImageDomains(): string[] {
+  const base = (process.env.IMAGE_BASE || "").trim().replace(/\/$/, "");
+  if (!base) return [];
+  try {
+    const url = new URL(base.startsWith("http") ? base : `https://${base}`);
+    return [url.hostname];
+  } catch {
+    return [];
+  }
+}
+
 export default defineNuxtConfig({
   compatibilityDate: "2025-05-15",
   devtools: { enabled: true },
+  image: {
+    domains: getImageDomains(),
+    quality: 85,
+    format: "webp",
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+    },
+  },
   nitro: {
     prerender: {
       crawlLinks: false,

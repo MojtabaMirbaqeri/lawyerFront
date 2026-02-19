@@ -65,10 +65,16 @@
                         <NuxtImg
                           v-if="lawyer.profile_image"
                           :src="config.public.imageBase + lawyer.profile_image"
+                          width="48"
+                          height="48"
+                          loading="lazy"
                           class="w-full h-full object-cover" />
                         <NuxtImg
                           v-else
                           src="/images/nullavatar.png"
+                          width="48"
+                          height="48"
+                          loading="lazy"
                           class="w-full h-full object-cover" />
                       </div>
                       <div>
@@ -111,7 +117,7 @@
         <!-- Image Side -->
         <div class="hero-visual">
           <div class="visual-card">
-            <img src="/images/vector-lawyer.webp" alt="Lawyer" class="main-image" />
+            <NuxtImg src="/images/vector-lawyer.webp" alt="Lawyer" class="main-image" width="480" height="400" loading="lazy" />
           </div>
 
           <!-- Floating Cards -->

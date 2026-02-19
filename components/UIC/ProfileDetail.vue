@@ -2,7 +2,7 @@
   <div class="lawyer-detail hidden lg:block primary-box">
     <div class="top flex flex-col items-center">
       <div class="avatar max-w-[60px] mb-2">
-        <NuxtImg :src="src" alt="" />
+        <NuxtImg :src="src" alt="" width="60" height="60" loading="lazy" class="rounded-full object-cover" />
       </div>
       <div class="fullname font-semibold">{{ fullname }}</div>
       <div class="skill opacity-60 text-xs">{{ skill }}</div>
