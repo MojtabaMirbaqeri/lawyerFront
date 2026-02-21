@@ -199,6 +199,25 @@ const pendingTab = ref(null);
 const isActiveDisplay = ref(true);
 const toggleActiveLoading = ref(false);
 
+// ادغام سوابق تحصیلی و محل کار (از APIهای جدا) برای چک‌لیست تکمیل پروفایل
+async function mergeEducationAndWorkplaces(rawLawyer) {
+  const id = authStore.user?.lawyer_id;
+  if (!id) return rawLawyer;
+  try {
+    const [educationRes, workplacesRes] = await Promise.all([
+      useGet({ url: "lawyer/profile/education", includeAuthHeader: true }),
+      useGet({ url: "workplaces", includeAuthHeader: true }),
+    ]);
+    const educations = educationRes?.data?.data ?? educationRes?.data ?? [];
+    const workplaces = workplacesRes?.data?.data ?? workplacesRes?.data ?? [];
+    const inner = rawLawyer?.data ?? rawLawyer;
+    const merged = Array.isArray(inner) ? {} : { ...inner, educations, workplaces };
+    return rawLawyer?.data !== undefined ? { ...rawLawyer, data: merged } : merged;
+  } catch {
+    return rawLawyer;
+  }
+}
+
 // Fetch lawyer info
 const fetchLawyerInfo = async () => {
   try {
@@ -208,8 +227,8 @@ const fetchLawyerInfo = async () => {
       url: `lawyers/${authStore.user?.lawyer_id}`,
       includeAuthHeader: true,
     });
-    // res.data contains the actual lawyer data
-    lawyerInfo.value = res.data || res;
+    const raw = res.data || res;
+    lawyerInfo.value = await mergeEducationAndWorkplaces(raw);
   } catch (error) {
     loadError.value = "مشکلی در بارگذاری اطلاعات پیش آمد. لطفاً دوباره تلاش کنید.";
     console.error("Failed to fetch lawyer info:", error);
@@ -233,7 +252,8 @@ const reFetchLawyerInformation = async () => {
       url: `lawyers/${authStore.user?.lawyer_id}`,
       includeAuthHeader: true,
     });
-    lawyerInfo.value = res.data || res;
+    const raw = res.data || res;
+    lawyerInfo.value = await mergeEducationAndWorkplaces(raw);
   } catch (error) {
     console.error("Failed to refresh lawyer info:", error);
   }
@@ -315,8 +335,15 @@ const hasSchedule = computed(() => {
 });
 
 const hasPricing = computed(() => {
-  const info = lawyerData.value?.lawyer_info;
-  return !!(info?.phone_counseling_price || info?.inperson_counseling_price);
+  const d = lawyerData.value;
+  // همان کلیدهای استفاده‌شده در بخش قیمت‌گذاری
+  return !!(
+    d?.consultation_price_phone ||
+    d?.consultation_price_chat ||
+    d?.consultation_price_inperson ||
+    d?.lawyer_info?.phone_counseling_price ||
+    d?.lawyer_info?.inperson_counseling_price
+  );
 });
 
 // Tab definitions with status badges
