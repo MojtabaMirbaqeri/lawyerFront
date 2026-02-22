@@ -105,7 +105,7 @@ const userName = computed(
 const userRole = computed(() =>
   authStore.user?.user_type === "lawyer" ? "وکیل دادگستری" : "کاربر عادی",
 );
-const userAvatar = computed(() => useStorageImageUrl(authStore.user?.profile_image) || "");
+const userAvatar = computed(() => authStore.user?.profile_image || "");
 
 // Dropdown Items
 const dropdownItems = [

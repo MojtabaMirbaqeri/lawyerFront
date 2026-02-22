@@ -21,7 +21,7 @@
           :ui="{ base: 'bg-green-500 size-3.5 ring-2 ring-white right-[8%]' }"> -->
           <UAvatar
             class="size-full"
-            :src="lawyerInfo?.profile_image ? useStorageImageUrl(lawyerInfo.profile_image) : '/images/nullavatar.png'"
+            :src="lawyerInfo?.profile_image ? config.public.imageBase + lawyerInfo.profile_image : '/images/nullavatar.png'"
             :alt="`${lawyerInfo?.name} ${lawyerInfo?.family}`"
             :ui="{ image: 'object-[50%_0%]' }" />
         <!-- </UChip> -->

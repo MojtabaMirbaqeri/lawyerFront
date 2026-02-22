@@ -120,7 +120,10 @@ const logoUrl = computed(() => {
 
 // آواتار چت: مسیرهای نسبی از API را با imageBase ترکیب می‌کنیم
 function chatAvatarUrl(profile) {
-  return useStorageImageUrl(profile);
+  if (!profile) return "";
+  if (profile.startsWith("http://") || profile.startsWith("https://")) return profile;
+  const base = (config.public?.imageBase || "").replace(/\/$/, "");
+  return base ? `${base}${profile.startsWith("/") ? "" : "/"}${profile}` : profile;
 }
 
 // Props

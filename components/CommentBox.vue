@@ -69,8 +69,8 @@ const lawyerAvatarSrc = computed(() => {
     props.commentDetail?.lawyer_info?.profile_image ??
     props.commentDetail?.lawyer?.profile_image;
   if (img) {
-    const url = useStorageImageUrl(img);
-    return url || "/images/nullavatar.png";
+    const base = (config.public?.imageBase || "").replace(/\/$/, "");
+    return base ? `${base}${img}` : img;
   }
   return "/images/nullavatar.png";
 });

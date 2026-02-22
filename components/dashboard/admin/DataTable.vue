@@ -113,7 +113,7 @@ const refetch = async (page: number | null = null, total = false) => {
       edit_id: law.id,
       is_active: law.is_active,
       profile_image: law.lawyer_info?.profile_image
-        ? useStorageImageUrl(law.lawyer_info.profile_image)
+        ? config.public.imageBase + law.lawyer_info.profile_image
         : defaultAvatarUrl,
     };
   });
@@ -160,7 +160,7 @@ const searchRefetch = async (query, start, page) => {
       edit_id: law.id,
       is_active: law.is_active,
       profile_image: law?.profile_image
-        ? useStorageImageUrl(law.profile_image)
+        ? config.public.imageBase + law.profile_image
         : defaultAvatarUrl,
     };
   });
@@ -207,7 +207,7 @@ const data = ref(
       edit_id: law.id,
       is_active: law.is_active,
       profile_image: law.lawyer_info?.profile_image
-        ? useStorageImageUrl(law.lawyer_info.profile_image)
+        ? config.public.imageBase + law.lawyer_info.profile_image
         : defaultAvatarUrl,
     };
   }),

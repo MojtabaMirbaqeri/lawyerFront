@@ -64,7 +64,7 @@
                       <div class="size-12 rounded-full bg-gray-100 overflow-hidden">
                         <NuxtImg
                           v-if="lawyer.profile_image"
-                          :src="useStorageImageUrl(lawyer.profile_image)"
+                          :src="config.public.imageBase + lawyer.profile_image"
                           width="48"
                           height="48"
                           loading="lazy"

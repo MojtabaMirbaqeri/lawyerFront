@@ -202,10 +202,11 @@ watch(
 );
 
 // --- PREVIEW & MAPPED ---
-const profileImagePreview = computed(() => {
-  const url = useStorageImageUrl(lawyerInfo.value?.profile_image);
-  return url || null;
-});
+const profileImagePreview = computed(() =>
+  lawyerInfo.value?.profile_image
+    ? config.public.imageBase + lawyerInfo.value.profile_image
+    : null,
+);
 /** پیش‌نمایش موقت بعد از انتخاب فایل (قبل از آپلود) */
 const localImagePreview = ref(null);
 
@@ -232,21 +233,9 @@ const hasChanges = computed(() => {
   );
 });
 
-// حداکثر حجم عکس پروفایل: ۵ مگابایت (هم‌خوان با اعتبارسنجی بک‌اند)
-const MAX_PROFILE_IMAGE_SIZE = 5 * 1024 * 1024;
-
 // --- METHODS ---
 const handleImageUpload = (file) => {
   if (!(file instanceof File)) return;
-  if (file.size > MAX_PROFILE_IMAGE_SIZE) {
-    useToast().add({
-      color: "error",
-      description: "حجم تصویر پروفایل نباید بیشتر از ۵ مگابایت باشد.",
-    });
-    formData.profile_image = null;
-    localImagePreview.value = null;
-    return;
-  }
   formData.profile_image = file;
   const reader = new FileReader();
   reader.onload = (e) => {

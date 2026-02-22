@@ -47,7 +47,7 @@
                   class="size-full object-cover"
                   :src="
                     lawyer?.lawyer_info?.profile_image
-                      ? useStorageImageUrl(lawyer.lawyer_info.profile_image)
+                      ? config.public.imageBase + lawyer.lawyer_info.profile_image
                       : '/images/nullavatar.png'
                   "
                   :alt="fullname" />
@@ -511,12 +511,12 @@ useSeoMeta({
   },
   ogTitle: () => `${fullname.value} | وکیل دادگستری`,
   ogDescription: () => `درخواست مشاوره حقوقی با ${fullname.value}.`,
-  ogImage: () => useStorageImageUrl(lawyer.value?.lawyer_info?.profile_image) || "/images/default-lawyer.png",
+  ogImage: () => lawyer.value?.lawyer_info?.profile_image || "/images/default-lawyer.png",
   twitterCard: "summary_large_image",
   twitterTitle: () => fullname.value,
   twitterDescription: () => `رزرو وقت مشاوره با ${fullname.value}`,
   twitterImage: () =>
-    useStorageImageUrl(lawyer.value?.lawyer_info?.profile_image) || "/images/default-lawyer.png",
+    lawyer.value?.lawyer_info?.profile_image || "/images/default-lawyer.png",
 });
 
 useHead({
@@ -537,7 +537,7 @@ useHead({
           "@context": "https://schema.org",
           "@type": "Attorney",
           name: fullname.value || "وکیل",
-          image: useStorageImageUrl(lawyer.value?.lawyer_info?.profile_image) || undefined,
+          image: lawyer.value?.lawyer_info?.profile_image,
           address: {
             "@type": "PostalAddress",
             addressLocality: lawyer.value?.city,

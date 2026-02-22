@@ -325,7 +325,7 @@
                 <div class="doc-preview-image">
                   <NuxtImg
                     v-if="lawyerData?.lawyer_info?.national_card_image"
-                    :src="useStorageImageUrl(lawyerData.lawyer_info.national_card_image)"
+                    :src="useRuntimeConfig().public.imageBase + lawyerData.lawyer_info.national_card_image"
                     alt="کارت ملی"
                     width="400"
                     height="250"
@@ -340,7 +340,7 @@
                 <div class="doc-preview-image">
                   <NuxtImg
                     v-if="lawyerData?.lawyer_info?.license_image"
-                    :src="useStorageImageUrl(lawyerData.lawyer_info.license_image)"
+                    :src="useRuntimeConfig().public.imageBase + lawyerData.lawyer_info.license_image"
                     alt="پروانه"
                     width="400"
                     height="250"

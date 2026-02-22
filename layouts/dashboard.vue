@@ -48,7 +48,7 @@
                 <div class="user-avatar">
                   <template v-if="authStore.user?.profile_image">
                     <NuxtImg
-                      :src="useStorageImageUrl(authStore.user.profile_image)"
+                      :src="authStore.user.profile_image"
                       alt="Profile"
                       width="40"
                       height="40"
