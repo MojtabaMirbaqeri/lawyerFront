@@ -15,7 +15,7 @@
                   class="size-full"
                   :src="
                     avatar !== null
-                      ? config.public.imageBase + avatar
+                      ? useStorageImageUrl(avatar)
                       : '/images/nullavatar.png'
                   "
                   :alt="fullname"

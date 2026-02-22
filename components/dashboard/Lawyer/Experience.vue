@@ -895,7 +895,7 @@ async function executeDelete() {
 
 // Image preview
 function showImagePreview(url) {
-  previewImageUrl.value = useRuntimeConfig().public.imageBase +'storage/' + url;
+  previewImageUrl.value = useStorageImageUrl(url || "");
   showImageModal.value = true;
 }
 
