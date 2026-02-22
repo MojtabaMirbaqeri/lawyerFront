@@ -42,7 +42,7 @@
               v-model="formData.profile_image"
               icon="i-lucide-image"
               label="تصویر پروفایل مورد نظر خود را آپلود کنید"
-              description="Image/* (max. 3MB)"
+              description="Image/* (max. 5MB)"
               layout="list"
               accept="image/*"
               :ui="{
