@@ -13,30 +13,44 @@
     <!-- Card Content -->
     <div class="card-header">
       <!-- Avatar -->
-      <div class="avatar-wrapper">
-        <!-- <UChip
-          inset
-          :show="lawyerInfo?.lawyer_info?.is_active"
-          position="bottom-right"
-          :ui="{ base: 'bg-green-500 size-3.5 ring-2 ring-white right-[8%]' }"> -->
-          <UAvatar
-            class="size-full"
-            :src="lawyerInfo?.profile_image ? config.public.imageBase + lawyerInfo.profile_image : '/images/nullavatar.png'"
-            :alt="`${lawyerInfo?.name} ${lawyerInfo?.family}`"
-            :ui="{ image: 'object-[50%_0%]' }" />
-        <!-- </UChip> -->
+      <div class="avatar-block">
+        <div class="avatar-wrapper">
+          <!-- <UChip
+            inset
+            :show="lawyerInfo?.lawyer_info?.is_active"
+            position="bottom-right"
+            :ui="{ base: 'bg-green-500 size-3.5 ring-2 ring-white right-[8%]' }"> -->
+            <UAvatar
+              class="size-full"
+              :src="lawyerInfo?.profile_image ? config.public.imageBase + lawyerInfo.profile_image : '/images/nullavatar.png'"
+              :alt="`${lawyerInfo?.name} ${lawyerInfo?.family}`"
+              :ui="{ image: 'object-[50%_0%]' }" />
+          <!-- </UChip> -->
+        </div>
+        <div class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 verified-badge w-[85px] px-[8px] py-[4px] flex flex-row items-center justify-center gap-[8px] rounded-[26px] z-10 text-white">
+          <svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0 mb-[1px]">
+            <path d="M4.14545 11L3.10909 9.32381L1.14545 8.90476L1.33636 6.96667L0 5.5L1.33636 4.03333L1.14545 2.09524L3.10909 1.67619L4.14545 0L6 0.759524L7.85455 0L8.89091 1.67619L10.8545 2.09524L10.6636 4.03333L12 5.5L10.6636 6.96667L10.8545 8.90476L8.89091 9.32381L7.85455 11L6 10.2405L4.14545 11ZM5.42727 7.35952L8.50909 4.4L7.74545 3.64048L5.42727 5.86667L4.25455 4.76667L3.49091 5.5L5.42727 7.35952Z" fill="white"/>
+          </svg>
+          <span class="text-[12px] font-bold whitespace-nowrap leading-none mt-0.5">تایید شده</span>
+        </div>
       </div>
       
       <!-- Rating Badge -->
       <div class="rating-badge">
         <UIcon name="heroicons:star-solid" class="size-4!" />
-        <span>{{ Number(lawyerInfo?.average_rating || 0).toFixed(1) }}</span>
+        <span class="text-xs">{{ Number(lawyerInfo?.average_rating || 0).toFixed(1) }}</span>
+      </div>
+
+      <!-- Online Badge -->
+      <div class="online-badge">
+        <span class="online-badge-dot" aria-hidden="true" />
+        <span class="text-xs">آنلاین</span>
       </div>
     </div>
 
     <!-- Lawyer Info -->
     <div class="lawyer-info">
-      <h3 class="lawyer-name">{{ lawyerInfo?.name }} {{ lawyerInfo?.family }}</h3>
+      <h3 class="lawyer-name text-lg">{{ lawyerInfo?.name }} {{ lawyerInfo?.family }}</h3>
       <p class="lawyer-title">{{ lawyerInfo?.base || 'وکیل دادگستری' }}</p>
       
       <!-- Location -->
@@ -115,14 +129,22 @@ defineProps({
   @apply relative w-full flex justify-center mb-4;
 }
 
+.avatar-block {
+  @apply relative shrink-0 size-20 lg:size-24;
+}
+
 .avatar-wrapper {
-  @apply size-20 lg:size-24 rounded-full overflow-hidden;
-  background: linear-gradient(135deg, #1e3a5f, #2d5a87);
-  padding: 3px;
+  @apply size-full rounded-full overflow-hidden border-2 border-[#1E3A5F];
+  padding: 0;
+}
+
+.verified-badge {
+  background: linear-gradient(90deg, #0048FF 0%, #002279 100%);
 }
 
 .avatar-wrapper :deep(.relative) {
-  @apply rounded-full overflow-hidden;
+  @apply rounded-full overflow-hidden ring-0 border-0 bg-transparent;
+  box-shadow: none;
 }
 
 .rating-badge {
@@ -132,12 +154,21 @@ defineProps({
   box-shadow: 0 2px 8px rgba(251, 191, 36, 0.4);
 }
 
+.online-badge {
+  @apply absolute top-0 start-0 flex items-center gap-1 px-2 py-1 rounded-lg text-sm font-bold text-white;
+  background: linear-gradient(90deg, #00ff37 0%, #10a630 100%);
+}
+
+.online-badge-dot {
+  @apply size-2 rounded-full bg-white shrink-0;
+}
+
 .lawyer-info {
   @apply mb-4;
 }
 
 .lawyer-name {
-  @apply text-lg lg:text-xl font-bold text-gray-800 mb-1;
+  @apply text-lg lg:text-lg font-bold text-gray-800 mb-1;
 }
 
 .lawyer-title {
