@@ -8,21 +8,37 @@
       <p class="section-subtitle">پاسخ به پرسش‌های رایج درباره خدمات مشاوره حقوقی</p>
     </div>
     
-    <UAccordion
-      :items="faqItems"
-      :ui="{
-        root: 'space-y-3 lg:space-y-4',
-        item: 'bg-white border border-gray-100 rounded-xl lg:rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300',
-        trigger: 'text-base px-4 py-4 lg:p-5 gap-3 lg:text-lg font-medium hover:bg-gray-50/50',
-        body: 'text-base p-4 lg:p-5 bg-gradient-to-br from-[#1e3a5f]/5 to-[#1e3a5f]/10 whitespace-break-spaces border-t border-gray-100',
-      }"
-    >
-      <template #leading="{ index }">
-        <div class="faq-number">
-          {{ index + 1 }}
+    <ClientOnly>
+      <UAccordion
+        :items="faqItems"
+        :ui="{
+          root: 'space-y-3 lg:space-y-4',
+          item: 'bg-white border border-gray-100 rounded-xl lg:rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300',
+          trigger: 'text-base px-4 py-4 lg:p-5 gap-3 lg:text-lg font-medium hover:bg-gray-50/50',
+          body: 'text-base p-4 lg:p-5 bg-gradient-to-br from-[#1e3a5f]/5 to-[#1e3a5f]/10 whitespace-break-spaces border-t border-gray-100',
+        }"
+      >
+        <template #leading="{ index }">
+          <div class="faq-number">
+            {{ index + 1 }}
+          </div>
+        </template>
+      </UAccordion>
+      <template #fallback>
+        <div class="space-y-3 lg:space-y-4">
+          <div
+            v-for="(item, index) in faqItems"
+            :key="index"
+            class="bg-white border border-gray-100 rounded-xl lg:rounded-2xl overflow-hidden shadow-sm p-4 lg:p-5"
+          >
+            <div class="flex items-center gap-3">
+              <div class="faq-number">{{ index + 1 }}</div>
+              <span class="text-base lg:text-lg font-medium">{{ item.label }}</span>
+            </div>
+          </div>
         </div>
       </template>
-    </UAccordion>
+    </ClientOnly>
   </section>
 </template>
 
@@ -67,7 +83,7 @@ const faqItems = [
 }
 
 .section-subtitle {
-  @apply text-gray-500 text-base lg:text-lg mt-2;
+  @apply text-gray-600 text-base lg:text-lg mt-2;
 }
 
 .faq-number {

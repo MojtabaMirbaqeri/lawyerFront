@@ -1898,3 +1898,9 @@ button {
   margin: 0 auto !important;
 }
 
+/* Yektanet branding logo: match displayed aspect ratio to actual (87x40) for Lighthouse */
+.yn-branding img.yn-logo_sign {
+  aspect-ratio: 87 / 40;
+  object-fit: contain;
+}
+

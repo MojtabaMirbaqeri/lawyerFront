@@ -47,7 +47,7 @@
                   class="size-full object-cover"
                   :src="
                     lawyer?.lawyer_info?.profile_image
-                      ? config.public.imageBase + lawyer.lawyer_info.profile_image
+                      ? useImageUrl(lawyer.lawyer_info.profile_image)
                       : '/images/nullavatar.png'
                   "
                   :alt="fullname" />
@@ -345,7 +345,7 @@
               <div class="flex items-start gap-3">
                 <div
                   class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
-                  <UIcon name="hugeicons:shield-check" class="size-5" />
+                  <UIcon name="heroicons:shield-check-solid" class="size-5" />
                 </div>
                 <div>
                   <p class="font-semibold text-slate-800">رزرو امن در سامانه وکیل وکیل</p>

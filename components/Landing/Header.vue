@@ -41,7 +41,7 @@
                 @keydown.enter="search"
                 @focus="handleFocus">
               </UInput>
-              <button class="search-btn" @click="search">
+              <button class="search-btn" @click="search" aria-label="جستجو">
                 <UIcon name="heroicons:magnifying-glass-solid" class="size-5!" />
               </button>
             </div>
@@ -64,7 +64,7 @@
                       <div class="size-12 rounded-full bg-gray-100 overflow-hidden">
                         <NuxtImg
                           v-if="lawyer.profile_image"
-                          :src="config.public.imageBase + lawyer.profile_image"
+                          :src="useImageUrl(lawyer.profile_image)"
                           width="48"
                           height="48"
                           loading="lazy"
@@ -103,12 +103,12 @@
           <div
             class="quick-actions"
             :class="{ 'quick-actions--dropdown-open': showSuggestBox }">
-            <button class="quick-btn" @click="navigateTo('/lawyers')">
-              <UIcon name="heroicons:squares-2x2-solid" class="size-5!" />
+            <button type="button" class="quick-btn" @click="navigateTo('/lawyers')" aria-label="مشاهده همه وکلا">
+              <UIcon name="heroicons:squares-2x2-solid" class="size-5!" aria-hidden="true" />
               مشاهده همه وکلا
             </button>
-            <button class="quick-btn" @click="navigateTo('tel:+982110014488')">
-              <UIcon name="heroicons:phone-solid" class="size-5!" />
+            <button type="button" class="quick-btn" @click="navigateTo('tel:+982110014488')" aria-label="تماس با پشتیبانی">
+              <UIcon name="heroicons:phone-solid" class="size-5!" aria-hidden="true" />
               تماس با پشتیبانی
             </button>
           </div>
@@ -117,7 +117,14 @@
         <!-- Image Side -->
         <div class="hero-visual">
           <div class="visual-card">
-            <NuxtImg src="/images/vector-lawyer.webp" alt="Lawyer" class="main-image" width="480" height="400" loading="lazy" />
+            <NuxtImg
+              src="/images/vector-lawyer.webp"
+              alt="وکیل و مشاوره حقوقی"
+              class="main-image"
+              width="480"
+              height="400"
+              fetchpriority="high"
+              loading="eager" />
           </div>
 
           <!-- Floating Cards -->

@@ -121,7 +121,7 @@ const items = ref([
 }
 
 .section-subtitle {
-  @apply text-gray-500 text-sm lg:text-base mt-1;
+  @apply text-gray-600 text-sm lg:text-base mt-1;
 }
 
 .guide-con {

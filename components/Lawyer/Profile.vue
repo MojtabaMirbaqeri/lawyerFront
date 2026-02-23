@@ -11,9 +11,7 @@
           class="size-full"
           :src="
             information.lawyer_info.profile_image
-              ? `${useRuntimeConfig().public.imageBase}${
-                  information.lawyer_info.profile_image
-                }`
+              ? useImageUrl(information.lawyer_info.profile_image)
               : '/images/nullavatar.png'
           "
           :ui="{

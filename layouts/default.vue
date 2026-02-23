@@ -22,7 +22,7 @@
       </div>
     </Transition>
     <NavigationBar />
-    <div class="">
+    <div id="main" class="" tabindex="-1">
       <slot />
     </div>
     <Footer />

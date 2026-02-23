@@ -1,3 +1,5 @@
+import { parseApiErrorMessage, showApiErrorToast } from "./useApiError";
+
 export async function usePut(
   request = { url: "", includeAuthHeader: false, body: {} },
   showMessage = true
@@ -21,8 +23,6 @@ export async function usePut(
       body: isFormData ? request.body : JSON.stringify(request.body),
     });
 
-    console.log(response);
-
     return {
       data: response.data?.value ?? response,
       status: response.status?.value || true,
@@ -30,48 +30,14 @@ export async function usePut(
       pending: false,
     };
   } catch (error) {
-    if (error.status == 500) {
-      useToast().add({
-        color: "error",
-        description: "خطای فنی رخ داده است.",
-      });
-    }
-    const rawMessage = error?.data?.message || error?.response?._data?.message || null;
-
-    // Convert rawMessage to string if it's an object
-    let errorMessage = null;
-    if (rawMessage) {
-      if (typeof rawMessage === "string") {
-        errorMessage = rawMessage.replace(/\s*\(and\s+\d+\s+more\s+errors?\)/gi, "");
-      } else if (typeof rawMessage === "object") {
-        // Extract all error messages from object
-        const messages = [];
-        Object.values(rawMessage).forEach((errors) => {
-          if (Array.isArray(errors)) {
-            messages.push(...errors);
-          } else if (typeof errors === "string") {
-            messages.push(errors);
-          }
-        });
-        errorMessage = messages.join(" ");
-      }
-    }
-
-    // Show toast error if message exists and showMessage is true
-    if (errorMessage && showMessage) {
-      useToast().add({
-        description: errorMessage,
-        color: "error",
-      });
-    }
-
+    showApiErrorToast(error, { showMessage });
     return {
       status: false,
       pending: false,
       statusCode: error?.response?.status || error?.status || 500,
       data: error?.data ?? error?.response?._data ?? null,
-      error: error.message || "An unknown error occurred",
-      message: errorMessage,
+      error: error?.message || "An unknown error occurred",
+      message: parseApiErrorMessage(error),
     };
   }
 }

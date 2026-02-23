@@ -8,12 +8,27 @@
       <p class="section-subtitle">بهترین وکلا را با توجه به تخصص و رتبه‌بندی انتخاب کنید</p>
     </div>
 
-    <!-- Type Filter -->
-    <div class="type-filter">
-      <UICSelectButton
-        v-model="filtersStore.selectedFilters.lawyerType"
-        :items="lawyerTypes" />
-    </div>
+    <!-- Type Filter (ClientOnly avoids hydration mismatch with SelectButton/Tabs) -->
+    <ClientOnly>
+      <div class="type-filter">
+        <UICSelectButton
+          v-model="filtersStore.selectedFilters.lawyerType"
+          :items="lawyerTypes" />
+      </div>
+      <template #fallback>
+        <div class="type-filter">
+          <div class="flex flex-wrap gap-x-2 gap-y-3">
+            <div
+              v-for="item in lawyerTypes"
+              :key="item.id"
+              class="px-4 py-2 rounded-full border border-gray-300 text-sm lg:text-base"
+            >
+              {{ item.title }}
+            </div>
+          </div>
+        </div>
+      </template>
+    </ClientOnly>
 
     <!-- Phone-only Filter Trigger -->
     <div class="sm:hidden">
@@ -44,15 +59,31 @@
       
       <!-- Lawyers Grid -->
       <main class="lawyers-main">
-        <!-- Sort Tabs -->
-        <div class="sort-bar">
-          <span class="sort-label">مرتب‌سازی:</span>
-          <UICTabs
-            v-model="filtersStore.selectedFilters.sortBy"
-            :content="false"
-            :items="tabItems"
-            :ui="{ trigger: 'shrink-0 text-sm' }" />
-        </div>
+        <!-- Sort Tabs (ClientOnly avoids Reka Tabs ID hydration mismatch) -->
+        <ClientOnly>
+          <div class="sort-bar">
+            <span class="sort-label">مرتب‌سازی:</span>
+            <UICTabs
+              v-model="filtersStore.selectedFilters.sortBy"
+              :content="false"
+              :items="tabItems"
+              :ui="{ trigger: 'shrink-0 text-sm' }" />
+          </div>
+          <template #fallback>
+            <div class="sort-bar">
+              <span class="sort-label">مرتب‌سازی:</span>
+              <div class="flex gap-1 border-b border-default py-1.5">
+                <span
+                  v-for="tab in tabItems"
+                  :key="tab.value"
+                  class="px-3 py-1.5 text-sm"
+                >
+                  {{ tab.label }}
+                </span>
+              </div>
+            </div>
+          </template>
+        </ClientOnly>
         
         <!-- Lawyers Grid -->
         <div v-if="lawyersRef?.data?.length" class="lawyers-grid">
@@ -254,7 +285,7 @@ await fetchLawyers();
 }
 
 .section-subtitle {
-  @apply text-gray-500 text-base lg:text-lg mt-2;
+  @apply text-gray-600 text-base lg:text-lg mt-2;
 }
 
 .type-filter {

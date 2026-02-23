@@ -14,12 +14,12 @@
           همین الان با بهترین وکلای کشور مشاوره کنید
         </p>
         <div class="cta-buttons">
-          <button class="cta-btn cta-btn--primary" @click="navigateTo('/lawyers')">
-            <UIcon name="heroicons:calendar-days-solid" class="size-5!" />
+          <button type="button" class="cta-btn cta-btn--primary" aria-label="رزرو وقت مشاوره" @click="navigateTo('/lawyers')">
+            <UIcon name="heroicons:calendar-days-solid" class="size-5!" aria-hidden="true" />
             رزرو وقت مشاوره
           </button>
-          <button class="cta-btn cta-btn--secondary" @click="navigateTo('tel:+982110014488')">
-            <UIcon name="heroicons:phone-solid" class="size-5!" />
+          <button type="button" class="cta-btn cta-btn--secondary" aria-label="تماس با پشتیبانی" @click="navigateTo('tel:+982110014488')">
+            <UIcon name="heroicons:phone-solid" class="size-5!" aria-hidden="true" />
             تماس با پشتیبانی
           </button>
         </div>

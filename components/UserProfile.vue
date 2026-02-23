@@ -12,7 +12,7 @@
         'flex-col-reverse!': reverse,
       }"
     >
-      <h5 class="text-sm text-gray">{{ detail?.text }}</h5>
+      <p class="text-sm text-gray">{{ detail?.text }}</p>
       <h3 class="user-name">{{ detail?.name }}</h3>
     </div>
   </div>

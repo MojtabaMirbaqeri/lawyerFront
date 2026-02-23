@@ -61,9 +61,11 @@
             <button
               v-for="id in filtersVal.lawyerSpecialty"
               :key="id"
+              type="button"
               class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#1e3a5f]/10 text-[#1e3a5f] text-sm border border-[#1e3a5f]/30"
+              :aria-label="'حذف تخصص ' + (filtersItems.specialties.find((s) => s.id === id)?.title ?? '')"
               @click="removeSpecialty(id)">
-              <UIcon name="hugeicons:cancel-01" class="size-4.5!" />
+              <UIcon name="hugeicons:cancel-01" class="size-4.5!" aria-hidden="true" />
               <span>
                 {{ filtersItems.specialties.find((s) => s.id === id)?.title }}
               </span>

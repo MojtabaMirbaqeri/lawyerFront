@@ -17,24 +17,24 @@
     <!-- Services Section -->
     <LandingServicesSection />
 
-    <!-- Why Choose Us -->
-    <LandingWhyChooseUs />
+    <!-- Why Choose Us (lazy-loaded below-fold) -->
+    <LazyLandingWhyChooseUs />
 
-    <!-- How It Works -->
-    <LandingHowItWorks />
+    <!-- How It Works (lazy-loaded below-fold) -->
+    <LazyLandingHowItWorks />
 
-    <!-- Comments Section -->
+    <!-- Comments Section (lazy-loaded below-fold) -->
     <div class="container">
-      <LandingCommentsSection />
+      <LazyLandingCommentsSection />
     </div>
 
-    <!-- FAQ Section -->
+    <!-- FAQ Section (lazy-loaded below-fold) -->
     <div class="container">
-      <LandingFaqSection />
+      <LazyLandingFaqSection />
     </div>
 
-    <!-- CTA Section (آخرین فراخوان قبل از فوتر) -->
-    <LandingCtaSection />
+    <!-- CTA Section (lazy-loaded below-fold) -->
+    <LazyLandingCtaSection />
   </main>
 </template>
 <script setup>

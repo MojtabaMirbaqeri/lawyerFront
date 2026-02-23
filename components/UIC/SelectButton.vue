@@ -3,15 +3,7 @@
     <button
       v-for="item in items"
       :key="item.id"
-      class="flex items-center gap-1"
-      :class="
-        twMerge(
-          mergedThing.base,
-          isSelected(item.id) && mergedThing.active,
-          item.disabled && mergedThing.disabled,
-          item.nonworking && mergedThing.nonworking
-        )
-      "
+      :class="getButtonClass(item)"
       :disabled="item.disabled || item.nonworking"
       @click="handleClick(item.id)"
     >
@@ -51,7 +43,7 @@ const props = defineProps({
 
 const defaultThing = {
   base: "px-4 py-2 rounded-full border border-gray-300 text-sm lg:text-base transition cursor-pointer",
-  active: "bg-amber-500! border-transparent! text-white!",
+  active: "bg-amber-500! border-transparent! text-gray-900!",
   disabled:
     "bg-gray-100 opacity-60 text-gray-500 border-gray-200 cursor-not-allowed",
   nonworking: "bg-yellow-50 text-yellow-700 border-yellow-300",
@@ -71,6 +63,17 @@ const isSelected = (id) => {
     ? Array.isArray(modelValue.value) && modelValue.value.includes(id)
     : modelValue.value === id;
 };
+
+// Single deterministic class string to avoid SSR/client hydration mismatch (order and selected state)
+function getButtonClass(item) {
+  return twMerge(
+    mergedThing.base,
+    "flex items-center gap-1",
+    isSelected(item.id) ? mergedThing.active : "",
+    item.disabled ? mergedThing.disabled : "",
+    item.nonworking ? mergedThing.nonworking : ""
+  );
+}
 
 const handleClick = (id) => {
   if (props.multiple) {

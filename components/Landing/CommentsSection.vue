@@ -16,7 +16,7 @@
         class="carousel-wrapper"
         style="direction: ltr !important"
       >
-        <button class="handler-button handler-prev" @click="scrollPrev">
+        <button class="handler-button handler-prev" @click="scrollPrev" aria-label="اسلاید قبلی">
           <UIcon name="heroicons:chevron-left-solid" />
         </button>
 
@@ -31,7 +31,7 @@
           </ThingCarouselItem>
         </ThingCarouselContent>
 
-        <button class="handler-button handler-next" @click="scrollNext">
+        <button class="handler-button handler-next" @click="scrollNext" aria-label="اسلاید بعدی">
           <UIcon name="heroicons:chevron-right-solid" />
         </button>
       </ThingCarousel>
@@ -68,7 +68,7 @@ const { data: recentComments } = await useGet({ url: "reviews/recent" });
 }
 
 .section-subtitle {
-  @apply text-gray-500 text-base lg:text-lg mt-2;
+  @apply text-gray-600 text-base lg:text-lg mt-2;
 }
 
 .carousel-container {

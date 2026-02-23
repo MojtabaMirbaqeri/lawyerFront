@@ -81,7 +81,7 @@ const benefits = [
 }
 
 .section-subtitle {
-  @apply text-gray-500 text-base lg:text-lg mt-2;
+  @apply text-gray-600 text-base lg:text-lg mt-2;
 }
 
 .benefits-grid {

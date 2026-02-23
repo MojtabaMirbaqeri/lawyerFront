@@ -118,12 +118,9 @@ const logoUrl = computed(() => {
   return `${base}/images/main-logo.svg`;
 });
 
-// آواتار چت: مسیرهای نسبی از API را با imageBase ترکیب می‌کنیم
+// آواتار چت: مسیرهای نسبی از API را با imageBase ترکیب می‌کنیم (اسلش اول مسیر حذف می‌شود)
 function chatAvatarUrl(profile) {
-  if (!profile) return "";
-  if (profile.startsWith("http://") || profile.startsWith("https://")) return profile;
-  const base = (config.public?.imageBase || "").replace(/\/$/, "");
-  return base ? `${base}${profile.startsWith("/") ? "" : "/"}${profile}` : profile;
+  return useImageUrl(profile) || "";
 }
 
 // Props

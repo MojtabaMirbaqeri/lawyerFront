@@ -204,7 +204,7 @@ watch(
 // --- PREVIEW & MAPPED ---
 const profileImagePreview = computed(() =>
   lawyerInfo.value?.profile_image
-    ? config.public.imageBase + lawyerInfo.value.profile_image
+    ? useImageUrl(lawyerInfo.value.profile_image)
     : null,
 );
 /** پیش‌نمایش موقت بعد از انتخاب فایل (قبل از آپلود) */

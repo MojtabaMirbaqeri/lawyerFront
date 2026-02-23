@@ -1,3 +1,5 @@
+import { parseApiErrorMessage, showApiErrorToast } from "./useApiError";
+
 export async function useGet(
   request = {
     url: "",
@@ -39,48 +41,13 @@ export async function useGet(
         },
       };
     } catch (error) {
-      if (error.status == 500) {
-        useToast().add({
-          color: "error",
-          description: "خطای فنی رخ داده است.",
-        });
-      }
-
-      const rawMessage = error?.data?.message || error?.response?._data?.message || null;
-
-      // Convert rawMessage to string if it's an object
-      let errorMessage = null;
-      if (rawMessage) {
-        if (typeof rawMessage === "string") {
-          errorMessage = rawMessage.replace(/\s*\(and\s+\d+\s+more\s+errors?\)/gi, "");
-        } else if (typeof rawMessage === "object") {
-          // Extract all error messages from object
-          const messages = [];
-          Object.values(rawMessage).forEach((errors) => {
-            if (Array.isArray(errors)) {
-              messages.push(...errors);
-            } else if (typeof errors === "string") {
-              messages.push(errors);
-            }
-          });
-          errorMessage = messages.join(" ");
-        }
-      }
-
-      // Show toast error if message exists and showMessage is true
-      if (errorMessage && showMessage) {
-        useToast().add({
-          description: errorMessage,
-          color: "error",
-        });
-      }
-
+      showApiErrorToast(error, { showMessage });
       return {
         data: null,
         status: false,
         statusCode: error?.response?.status || 500,
         error: error?.message || "An unknown error occurred",
-        message: errorMessage,
+        message: parseApiErrorMessage(error),
         pending: false,
         refresh: null,
       };
@@ -102,47 +69,13 @@ export async function useGet(
       refresh: response.refresh,
     };
   } catch (error) {
-    if (error.status == 500) {
-      useToast().add({
-        color: "error",
-        description: "خطای فنی رخ داده است.",
-      });
-    }
-    const rawMessage = error?.data?.message || error?.response?._data?.message || null;
-
-    // Convert rawMessage to string if it's an object
-    let errorMessage = null;
-    if (rawMessage) {
-      if (typeof rawMessage === "string") {
-        errorMessage = rawMessage.replace(/\s*\(and\s+\d+\s+more\s+errors?\)/gi, "");
-      } else if (typeof rawMessage === "object") {
-        // Extract all error messages from object
-        const messages = [];
-        Object.values(rawMessage).forEach((errors) => {
-          if (Array.isArray(errors)) {
-            messages.push(...errors);
-          } else if (typeof errors === "string") {
-            messages.push(errors);
-          }
-        });
-        errorMessage = messages.join(" ");
-      }
-    }
-
-    // Show toast error if message exists and showMessage is true
-    if (errorMessage && showMessage) {
-      useToast().add({
-        description: errorMessage,
-        color: "error",
-      });
-    }
-
+    showApiErrorToast(error, { showMessage });
     return {
       data: null,
       status: false,
-      statusCode: 500,
-      error: error.message || "An unknown error occurred",
-      message: errorMessage,
+      statusCode: error?.response?.status ?? 500,
+      error: error?.message || "An unknown error occurred",
+      message: parseApiErrorMessage(error),
       pending: false,
       refresh: null,
     };

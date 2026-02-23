@@ -31,9 +31,9 @@
               <span>{{ feature }}</span>
             </div>
           </div>
-          <button type="button" class="service-btn" :disabled="service.comingSoon">
+          <button type="button" class="service-btn" :disabled="service.comingSoon" :aria-label="service.comingSoon ? 'به زودی' : 'انتخاب ' + service.title">
             {{ service.comingSoon ? 'به زودی' : 'انتخاب' }}
-            <UIcon v-if="!service.comingSoon" name="heroicons:arrow-left-solid" class="size-4!" />
+            <UIcon v-if="!service.comingSoon" name="heroicons:arrow-left-solid" class="size-4!" aria-hidden="true" />
           </button>
         </div>
       </div>
@@ -103,7 +103,7 @@ const selectService = (id) => {
 }
 
 .section-subtitle {
-  @apply text-gray-500 text-base lg:text-lg mt-2;
+  @apply text-gray-600 text-base lg:text-lg mt-2;
 }
 
 .services-grid {

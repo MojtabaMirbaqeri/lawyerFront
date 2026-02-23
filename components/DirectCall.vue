@@ -5,12 +5,12 @@
       :href="isPhoneVisible ? `tel:${phone}` : undefined"
       @click="handleClick"
       class="btn-grad w-full text-[15px]! flex! items-center justify-center gap-2 font-medium!">
-      <TransitionGroup name="phone-fade" mode="out-in">
+      <Transition name="phone-fade" mode="out-in">
         <span v-if="!isPhoneVisible" key="text" class="phone-text">تماس مستقیم</span>
         <span v-else key="phone" class="phone-number" dir="ltr">
           شماره تماس: {{ phone }}
         </span>
-      </TransitionGroup>
+      </Transition>
     </component>
   </div>
 </template>
@@ -79,7 +79,7 @@ const handleClick = (e) => {
   text-decoration: none;
 }
 
-/* انیمیشن TransitionGroup */
+/* انیمیشن Transition */
 .phone-fade-enter-active,
 .phone-fade-leave-active {
   transition: all 0.3s ease;

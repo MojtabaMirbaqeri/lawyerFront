@@ -10,6 +10,17 @@ function getImageDomains(): string[] {
   }
 }
 
+function getApiPreconnect(): { rel: string; href: string }[] {
+  const apiEp = (process.env.API_EP || "").trim();
+  if (!apiEp) return [];
+  try {
+    const origin = new URL(apiEp.startsWith("http") ? apiEp : `https://${apiEp}`).origin;
+    return [{ rel: "preconnect", href: origin }];
+  } catch {
+    return [];
+  }
+}
+
 export default defineNuxtConfig({
   compatibilityDate: "2025-05-15",
   devtools: { enabled: true },
@@ -37,6 +48,12 @@ export default defineNuxtConfig({
       "/sitemap.xml": { swr: 86400 },
       "/sitemap_index.xml": { swr: 86400 }, // Add explicit rule for index
       "/sitemap-*.xml.gz": { swr: 86400 },
+      // Long-lived cache for built assets (Lighthouse cache insight)
+      "/_nuxt/**": {
+        headers: {
+          "Cache-Control": "public, max-age=31536000, immutable",
+        },
+      },
     },
   },
   runtimeConfig: {
@@ -65,15 +82,9 @@ export default defineNuxtConfig({
         },
         { name: "format-detection", content: "telephone=no" },
       ],
+      link: getApiPreconnect(),
       script: [
-        {
-          type: "text/javascript",
-          innerHTML: `["keydown","touchmove","touchstart","mouseover"].forEach(function(v){window.addEventListener(v,function(){if(!window.isGoftinoAdded){window.isGoftinoAdded=1;var i="DfL38U",d=document,g=d.createElement("script"),s="https://www.goftino.com/widget/"+i,l=localStorage.getItem("goftino_"+i);g.type="text/javascript",g.async=!0,g.src=l?s+"?o="+l:s;d.getElementsByTagName("head")[0].appendChild(g);}})});`,
-        },
-        {
-          type: "text/javascript",
-          innerHTML: ` !function(e,t,n){e.yektanetAnalyticsObject=n,e[n]=e[n]||function(){e[n].q.push(arguments)},e[n].q=e[n].q||[];var a=t.getElementsByTagName("head")[0],r=new Date,c="https://cdn.yektanet.com/superscript/LFcYdvcQ/native-vakilvakil.com-45548/yn_pub.js?v="+r.getFullYear().toString()+"0"+r.getMonth()+"0"+r.getDate()+"0"+r.getHours(),s=t.createElement("link");s.rel="preload",s.as="script",s.href=c,a.appendChild(s);var l=t.createElement("script");l.async=!0,l.src=c,a.appendChild(l)}(window,document,"yektanet");`,
-        },
+        { src: "/scripts/third-party-loaders.js", defer: true },
       ],
     },
   },
@@ -104,7 +115,13 @@ export default defineNuxtConfig({
     name: "وکیل وکیل",
     defaultLocale: "fa",
   },
-  css: ["@/assets/css/main.css", "@/assets/Webfonts/fontiran.css"],
+  css: [
+    "@/assets/css/main.css",
+    "@/assets/Webfonts/fontiran.css",
+    "leaflet/dist/leaflet.css",
+    "leaflet.markercluster/dist/MarkerCluster.css",
+    "leaflet.markercluster/dist/MarkerCluster.Default.css",
+  ],
   ui: {
     colorMode: false,
   },
@@ -123,5 +140,24 @@ export default defineNuxtConfig({
         dir: "./assets/icons",
       },
     ],
+  },
+  vite: {
+    build: {
+      // Source maps disabled in production to reduce deploy size; enable if debugging prod
+      sourcemap: false,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes("node_modules")) {
+              if (id.includes("vue") || id.includes("pinia") || id.includes("vue-router")) return "vue-vendor";
+              if (id.includes("@nuxt/ui") || id.includes("radix-vue")) return "ui-vendor";
+              // Do not chunk leaflet by name "leaflet" - it causes 404 requests for /_nuxt/leaflet/dist/leaflet.css
+              if (id.includes("quill")) return "quill";
+              if (id.includes("nuxt-rating") || id.includes("nuxt-countdown")) return "misc-vendor";
+            }
+          },
+        },
+      },
+    },
   },
 });

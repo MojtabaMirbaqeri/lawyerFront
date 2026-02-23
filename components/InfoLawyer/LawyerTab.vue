@@ -1,13 +1,29 @@
 <template>
   <section>
     <div class="">
-      <UICTabs
-        class="lg:w-[601px] xl:w-[683px] primary-box shadow-none"
-        :content="true"
-        v-model="setdef"
-        :items="items"
-        :ui="{ trigger:'shrink-0' }"
-      />
+      <ClientOnly>
+        <UICTabs
+          class="lg:w-[601px] xl:w-[683px] primary-box shadow-none"
+          :content="true"
+          v-model="setdef"
+          :items="items"
+          :ui="{ trigger:'shrink-0' }"
+        />
+        <template #fallback>
+          <div class="lg:w-[601px] xl:w-[683px] primary-box shadow-none">
+            <div class="relative flex p-1 border-b border-default py-1.5 -mb-px">
+              <span
+                v-for="item in items"
+                :key="item.value"
+                class="px-3 py-1.5 text-sm font-semibold shrink-0"
+              >
+                {{ item.label }}
+              </span>
+            </div>
+            <div class="p-4" v-html="newDis" />
+          </div>
+        </template>
+      </ClientOnly>
     </div>
   </section>
 </template>
