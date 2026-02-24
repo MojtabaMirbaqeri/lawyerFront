@@ -10,6 +10,7 @@ export async function useGet(
   const jwtToken = useCookie("jwtToken");
 
   const headers = {
+    "X-Request-Id": useRequestId(),
     ...(request.includeAuthHeader && jwtToken.value
       ? { Authorization: `Bearer ${jwtToken.value}` }
       : {}),

@@ -8,6 +8,7 @@ export async function usePut(
   const isFormData = typeof FormData !== "undefined" && request.body instanceof FormData;
 
   const headers = {
+    "X-Request-Id": useRequestId(),
     ...(request.includeAuthHeader && jwtToken.value
       ? { Authorization: `Bearer ${jwtToken.value}` }
       : {}),
