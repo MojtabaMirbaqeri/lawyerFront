@@ -27,7 +27,9 @@
               :ui="{ image: 'object-[50%_0%]' }" />
           <!-- </UChip> -->
         </div>
-        <div class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 verified-badge w-[85px] px-[8px] py-[4px] flex flex-row items-center justify-center gap-[8px] rounded-[26px] z-10 text-white">
+        <div
+          v-if="isVerified"
+          class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 verified-badge w-[85px] px-[8px] py-[4px] flex flex-row items-center justify-center gap-[8px] rounded-[26px] z-10 text-white">
           <svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0 mb-[1px]">
             <path d="M4.14545 11L3.10909 9.32381L1.14545 8.90476L1.33636 6.96667L0 5.5L1.33636 4.03333L1.14545 2.09524L3.10909 1.67619L4.14545 0L6 0.759524L7.85455 0L8.89091 1.67619L10.8545 2.09524L10.6636 4.03333L12 5.5L10.6636 6.96667L10.8545 8.90476L8.89091 9.32381L7.85455 11L6 10.2405L4.14545 11ZM5.42727 7.35952L8.50909 4.4L7.74545 3.64048L5.42727 5.86667L4.25455 4.76667L3.49091 5.5L5.42727 7.35952Z" fill="white"/>
           </svg>
@@ -87,7 +89,7 @@
 <script setup>
 const config = useRuntimeConfig();
 
-defineProps({
+const props = defineProps({
   lawyerInfo: {
     type: Object,
     required: true,
@@ -100,6 +102,10 @@ defineProps({
     type: String,
   },
 });
+
+const isVerified = computed(() =>
+  props.lawyerInfo?.site_verified === true || props.lawyerInfo?.lawyer_info?.site_verified === true
+);
 </script>
 
 <style scoped>
