@@ -21,6 +21,35 @@ export default defineEventHandler(async (event) => {
     priority: 0.8,
     changefreq: "monthly",
   });
+  urls.push({
+    loc: "/legal/questions",
+    priority: 0.8,
+    changefreq: "daily",
+  });
+
+  // Legal Q&A: categories and published questions
+  try {
+    const categoriesRes = await $fetch<{ data: { slug: string }[] }>(`${apiEndpoint}legal/categories`);
+    if (categoriesRes?.data && Array.isArray(categoriesRes.data)) {
+      categoriesRes.data.forEach((c) => {
+        urls.push({ loc: `/legal/categories/${c.slug}`, priority: 0.7, changefreq: "weekly" });
+      });
+    }
+    const questionsRes = await $fetch<{ data: { slug: string; id: number }[] }>(
+      `${apiEndpoint}legal/questions?per_page=500&sort=newest`
+    );
+    if (questionsRes?.data && Array.isArray(questionsRes.data)) {
+      questionsRes.data.forEach((q) => {
+        urls.push({
+          loc: `/legal/questions/${q.slug || q.id}`,
+          priority: 0.7,
+          changefreq: "weekly",
+        });
+      });
+    }
+  } catch (e) {
+    console.error("Sitemap: Failed to fetch legal Q&A", e);
+  }
 
   // 1. Add Provinces
   provinces.forEach((p) => {

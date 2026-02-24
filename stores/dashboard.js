@@ -55,6 +55,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/admin/articles",
       icon: "lucide:file-text",
     },
+    {
+      title: "سوال و جواب حقوقی",
+      url: "/dashboard/admin/legal-qa",
+      icon: "lucide:help-circle",
+    },
     { 
       title: "کد تخفیف", 
       url: "/dashboard/admin/coupons", 
@@ -126,6 +131,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
           icon: "lucide:file-text",
         },
         {
+          title: "پاسخ‌های حقوقی",
+          url: "/dashboard/lawyer/legal-answers",
+          icon: "lucide:message-circle-question",
+        },
+        {
           title: "تیکت‌ها",
           url: "/dashboard/ticket/tickets",
           icon: "lucide:ticket",
@@ -147,6 +157,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       title: "نوبت‌های من", 
       url: "/dashboard/appointments", 
       icon: "lucide:calendar" 
+    },
+    {
+      title: "سوالات من",
+      url: "/dashboard/user/legal-questions",
+      icon: "lucide:help-circle",
     },
     { 
       title: "تراکنش‌ها", 
