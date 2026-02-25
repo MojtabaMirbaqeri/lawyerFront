@@ -57,6 +57,24 @@
           :required="field.required"
         />
       </template>
+      <template v-else-if="field.type === 'checkbox'">
+        <div class="flex flex-wrap gap-4">
+          <label
+            v-for="opt in (field.options || [])"
+            :key="String(opt.value)"
+            class="flex items-center gap-2 cursor-pointer"
+          >
+            <input
+              type="checkbox"
+              :value="opt.value"
+              :checked="(form[field.name] as unknown[])?.includes(opt.value)"
+              class="form-checkbox rounded border-gray-300"
+              @change="toggleCheckbox(field.name, opt.value)"
+            />
+            <span>{{ opt.label }}</span>
+          </label>
+        </div>
+      </template>
       <template v-else-if="field.type === 'repeater'">
         <div class="repeater">
           <div
@@ -147,11 +165,23 @@ watch(fields, (f) => {
   f.forEach((field) => {
     if (field.type === 'repeater' && !(field.name in form)) {
       form[field.name] = [{ heir_type: '', count: 1 }]
-    } else if (field.type !== 'repeater' && !(field.name in form)) {
+    } else if (field.type === 'checkbox' && !(field.name in form)) {
+      form[field.name] = []
+    } else if (field.type !== 'repeater' && field.type !== 'checkbox' && !(field.name in form)) {
       form[field.name] = field.type === 'number' ? 0 : ''
     }
   })
 }, { immediate: true })
+
+function toggleCheckbox(fieldName: string, value: unknown) {
+  const arr = (form[fieldName] as unknown[]) || []
+  const idx = arr.indexOf(value)
+  if (idx === -1) {
+    form[fieldName] = [...arr, value]
+  } else {
+    form[fieldName] = arr.filter((_, i) => i !== idx)
+  }
+}
 
 function addRepeaterRow(name: string, itemSchema: FormFieldSchema[]) {
   const row: Record<string, unknown> = {}

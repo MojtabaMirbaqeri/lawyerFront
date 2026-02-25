@@ -1,52 +1,224 @@
 <template>
-  <div class="rates-admin">
-    <div class="page-header flex items-center gap-4 mb-6">
-      <NuxtLink to="/dashboard/admin/legal-calculators" class="text-primary-600 hover:underline">لیست ماشین‌حساب‌ها</NuxtLink>
-      <h1 class="text-xl font-bold">نرخ‌ها و ضرایب</h1>
+  <div class="rates-admin-page">
+    <div class="page-header">
+      <div class="flex flex-wrap items-center gap-3">
+        <NuxtLink to="/dashboard/admin/legal-calculators" class="btn-secondary text-sm! py-1.5! px-3!">
+          <Icon name="lucide:arrow-right" class="w-4 h-4" />
+          لیست ماشین‌حساب‌ها
+        </NuxtLink>
+        <button
+          v-if="calculatorSlug === 'blood-money'"
+          type="button"
+          class="btn-secondary flex items-center gap-2"
+          @click="showDiyahHelp = true"
+        >
+          <Icon name="lucide:book-open" class="w-4 h-4" />
+          راهنما و نمونه کامل دیه
+        </button>
+        <h1 class="page-title">نرخ‌ها و ضرایب</h1>
+      </div>
     </div>
-    <div class="card-dashboard p-6">
-      <h2 class="font-semibold mb-4">افزودن نرخ</h2>
-      <form class="flex flex-wrap gap-4 items-end mb-8" @submit.prevent="addRate">
-        <div>
-          <label class="block text-sm mb-1">کلید (key)</label>
-          <input v-model="newRate.key" type="text" class="rounded border px-3 py-2 w-48" required />
+
+    <Teleport v-if="calculatorSlug === 'blood-money'" to="body">
+      <Transition name="rates-diyah-help-fade">
+        <div
+          v-if="showDiyahHelp"
+          class="admin-diyah-help-overlay"
+          role="dialog"
+          aria-modal="true"
+          @click.self="showDiyahHelp = false"
+        >
+          <div class="admin-diyah-help-modal">
+            <div class="admin-diyah-help-header">
+              <h2 class="admin-diyah-help-title">
+                <Icon name="lucide:book-open" class="w-5 h-5" />
+                راهنما و نمونه کامل نرخ‌های ماشین‌حساب دیه
+              </h2>
+              <button type="button" class="admin-diyah-help-close" aria-label="بستن" @click="showDiyahHelp = false">
+                <Icon name="lucide:x" class="w-5 h-5" />
+              </button>
+            </div>
+            <div class="admin-diyah-help-body">
+              <p class="admin-diyah-help-intro">
+                برای هر نسخه (سال) ماشین‌حساب دیه، نرخ‌های زیر را با «افزودن نرخ» اضافه کنید. مقدارهای JSON را می‌توانید از نمونه‌های زیر کپی کنید.
+              </p>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">نمونه کامل نرخ‌ها</h3>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">کلید: full_diyah_amount — نوع: numeric</span>
+                  <pre class="admin-diyah-sample-pre">500000000</pre>
+                </div>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">کلید: victim_gender_multipliers — نوع: json</span>
+                  <pre class="admin-diyah-sample-pre">{{ diyahSampleVictimGender }}</pre>
+                </div>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">کلید: incident_categories — نوع: json</span>
+                  <pre class="admin-diyah-sample-pre">{{ diyahSampleIncidentCategories }}</pre>
+                </div>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">کلید: special_conditions — نوع: json</span>
+                  <pre class="admin-diyah-sample-pre">{{ diyahSampleSpecialConditions }}</pre>
+                </div>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">کلید: haram_month_multiplier — نوع: numeric</span>
+                  <pre class="admin-diyah-sample-pre">1.33</pre>
+                </div>
+              </section>
+              <p class="admin-diyah-help-note">
+                پس از ذخیره، در صفحه عمومی «محاسبه دیه» فیلدهای سال، نوع جنایت (درصدی، قتل نفس، جنین، اعضای بدن، جنابت بر میت)، جنسیت مقتول و محاسبه در ماه حرام از همین نرخ‌ها استفاده می‌شوند.
+              </p>
+            </div>
+            <div class="admin-diyah-help-footer">
+              <button type="button" class="btn-primary" @click="showDiyahHelp = false">متوجه شدم</button>
+            </div>
+          </div>
         </div>
-        <div>
-          <label class="block text-sm mb-1">نوع مقدار</label>
-          <select v-model="newRate.value_type" class="rounded border px-3 py-2">
-            <option value="numeric">numeric</option>
-            <option value="text">text</option>
-            <option value="json">json</option>
-            <option value="boolean">boolean</option>
-          </select>
+      </Transition>
+    </Teleport>
+
+    <div class="card-dashboard">
+      <div class="card-dashboard-header">
+        <h2 class="card-dashboard-title">افزودن نرخ</h2>
+      </div>
+      <div class="card-dashboard-body">
+        <p v-if="addError" class="text-sm text-red-600 mb-2">{{ addError }}</p>
+        <form class="add-rate-form mb-6" @submit.prevent="addRate">
+          <div class="add-rate-row">
+            <div class="add-rate-field">
+              <label class="add-rate-label">کلید (key)</label>
+              <input v-model="newRate.key" type="text" class="input-dashboard add-rate-input font-mono" required />
+            </div>
+            <div class="add-rate-field add-rate-field-type">
+              <label class="add-rate-label">نوع مقدار</label>
+              <select v-model="newRate.value_type" class="select-dashboard add-rate-input">
+                <option value="numeric">numeric</option>
+                <option value="text">text</option>
+                <option value="json">json</option>
+                <option value="boolean">boolean</option>
+              </select>
+            </div>
+            <div v-if="newRate.value_type === 'numeric'" class="add-rate-field add-rate-field-value">
+              <label class="add-rate-label">مقدار عددی</label>
+              <input v-model.number="newRate.value_numeric" type="number" step="any" class="input-dashboard add-rate-input" />
+            </div>
+            <div v-else-if="newRate.value_type === 'text'" class="add-rate-field add-rate-field-value">
+              <label class="add-rate-label">مقدار متنی</label>
+              <input v-model="newRate.value_text" type="text" class="input-dashboard add-rate-input" />
+            </div>
+            <div v-else-if="newRate.value_type === 'boolean'" class="add-rate-field add-rate-field-value">
+              <label class="add-rate-label">مقدار</label>
+              <select v-model="newRate.value_text" class="select-dashboard add-rate-input">
+                <option value="true">true</option>
+                <option value="false">false</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </div>
+            <div v-else-if="newRate.value_type === 'json'" class="add-rate-field add-rate-field-json">
+              <label class="add-rate-label">JSON (آرایه یا شی)</label>
+              <textarea v-model="newRate.value_json_text" class="input-dashboard add-rate-input font-mono text-sm" rows="2" placeholder='[{"key":"value"}]' />
+            </div>
+            <div class="add-rate-field add-rate-field-btn">
+              <label class="add-rate-label add-rate-label-invisible">دکمه</label>
+              <button type="submit" class="btn-primary shrink-0" :disabled="addPending">
+                <Icon name="lucide:plus" class="w-4 h-4" />
+                افزودن نرخ
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div class="overflow-x-auto">
+          <table class="table-dashboard">
+            <thead>
+              <tr>
+                <th>کلید</th>
+                <th>نوع</th>
+                <th>مقدار</th>
+                <th>عملیات</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="r in rates" :key="r.id">
+                <td class="font-mono text-sm">{{ r.key }}</td>
+                <td>{{ r.value_type }}</td>
+                <td class="text-sm max-w-xs truncate">
+                  <template v-if="editingId === r.id">
+                    <input
+                      v-if="r.value_type === 'numeric'"
+                      v-model.number="editPayload.value_numeric"
+                      type="number"
+                      step="any"
+                      class="input-dashboard w-32"
+                    />
+                    <input
+                      v-else-if="r.value_type === 'text' || r.value_type === 'boolean'"
+                      v-model="editPayload.value_text"
+                      type="text"
+                      class="input-dashboard w-full max-w-xs"
+                    />
+                    <textarea
+                      v-else-if="r.value_type === 'json'"
+                      v-model="editPayload.value_json_text"
+                      class="input-dashboard w-full max-w-md font-mono text-sm"
+                      rows="3"
+                    />
+                  </template>
+                  <template v-else>{{ displayValue(r) }}</template>
+                </td>
+                <td>
+                  <div class="flex gap-2">
+                    <template v-if="editingId === r.id">
+                      <button
+                        type="button"
+                        class="btn-primary text-sm! py-1! px-2!"
+                        :disabled="savePending"
+                        @click="saveEdit(r)"
+                      >
+                        ذخیره
+                      </button>
+                      <button
+                        type="button"
+                        class="btn-secondary text-sm! py-1! px-2!"
+                        @click="cancelEdit"
+                      >
+                        انصراف
+                      </button>
+                    </template>
+                    <template v-else>
+                      <button
+                        type="button"
+                        class="btn-secondary text-sm! py-1! px-2!"
+                        @click="startEdit(r)"
+                      >
+                        <Icon name="lucide:pencil" class="w-4 h-4" />
+                        ویرایش
+                      </button>
+                      <button
+                        type="button"
+                        class="text-red-600 hover:text-red-800"
+                        :disabled="deletePending === r.id"
+                        @click="removeRate(r)"
+                      >
+                        <Icon name="lucide:trash-2" class="w-4 h-4" />
+                      </button>
+                    </template>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div v-if="newRate.value_type === 'numeric'">
-          <label class="block text-sm mb-1">مقدار عددی</label>
-          <input v-model.number="newRate.value_numeric" type="number" step="any" class="rounded border px-3 py-2 w-32" />
+
+        <div v-if="rates.length === 0 && !pending" class="empty-state py-12">
+          <div class="empty-state-icon">
+            <Icon name="lucide:list" class="w-8 h-8" />
+          </div>
+          <h4 class="empty-state-title">نرخی ثبت نشده است</h4>
+          <p class="empty-state-description">با فرم بالا نرخ‌ها و ضرایب را اضافه کنید.</p>
         </div>
-        <div v-else-if="newRate.value_type === 'text'">
-          <label class="block text-sm mb-1">مقدار متنی</label>
-          <input v-model="newRate.value_text" type="text" class="rounded border px-3 py-2 w-48" />
-        </div>
-        <button type="submit" class="btn-primary" :disabled="addPending">افزودن</button>
-      </form>
-      <table class="w-full text-right">
-        <thead>
-          <tr class="border-b">
-            <th class="p-2">کلید</th>
-            <th class="p-2">نوع</th>
-            <th class="p-2">مقدار</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="r in rates" :key="r.id" class="border-b">
-            <td class="p-2 font-mono text-sm">{{ r.key }}</td>
-            <td class="p-2">{{ r.value_type }}</td>
-            <td class="p-2 text-sm">{{ displayValue(r) }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <p v-if="rates.length === 0 && !pending" class="text-gray-500 py-4">نرخی ثبت نشده است.</p>
+      </div>
     </div>
   </div>
 </template>
@@ -59,12 +231,31 @@ const versionId = computed(() => route.params.versionId as string)
 const rates = ref<Record<string, unknown>[]>([])
 const pending = ref(true)
 const addPending = ref(false)
+const calculatorSlug = ref<string | null>(null)
+const showDiyahHelp = ref(false)
+
+const diyahSampleVictimGender = '{"male":1,"female":0.5}'
+const diyahSampleIncidentCategories = `[
+  {"key":"percentage","label":"درصدی","multiplier":1},
+  {"key":"murder","label":"قتل نفس","multiplier":1},
+  {"key":"fetus","label":"جنین","multiplier":0.05},
+  {"key":"body_parts","label":"اعضای بدن","multiplier":1},
+  {"key":"deceased_violation","label":"جنابت بر میت","multiplier":1}
+]`
+const diyahSampleSpecialConditions = '[{"value":"haram_month","label":"محاسبه دیه در ماه حرام"}]'
+
 const newRate = reactive({
   key: '',
   value_type: 'numeric' as string,
   value_numeric: 0 as number | '',
   value_text: '',
+  value_json_text: '[]',
 })
+const addError = ref('')
+const editingId = ref<number | null>(null)
+const savePending = ref(false)
+const deletePending = ref<number | null>(null)
+const editPayload = reactive<{ value_numeric?: number; value_text?: string; value_json_text?: string }>({})
 
 function displayValue(r: Record<string, unknown>): string {
   if (r.value_type === 'numeric') return String(r.value_numeric ?? '')
@@ -85,22 +276,230 @@ async function load() {
 }
 
 async function addRate() {
+  addError.value = ''
   addPending.value = true
   const body: Record<string, unknown> = {
     key: newRate.key,
     value_type: newRate.value_type,
   }
   if (newRate.value_type === 'numeric') body.value_numeric = newRate.value_numeric
-  else if (newRate.value_type === 'text') body.value_text = newRate.value_text
-  await usePost({
+  else if (newRate.value_type === 'text' || newRate.value_type === 'boolean') body.value_text = newRate.value_text
+  else if (newRate.value_type === 'json') {
+    try {
+      body.value_json = JSON.parse(newRate.value_json_text || '[]')
+    } catch {
+      addError.value = 'JSON نامعتبر است.'
+      addPending.value = false
+      return
+    }
+  }
+  const res = await usePost({
     url: `admin/legal-calculator-versions/${versionId.value}/rates`,
     includeAuthHeader: true,
     body,
   }, true)
   addPending.value = false
+  if (res.status !== false) await load()
+  else if (res.message) addError.value = res.message
+}
+
+function startEdit(r: Record<string, unknown>) {
+  editingId.value = r.id as number
+  editPayload.value_numeric = r.value_numeric != null ? Number(r.value_numeric) : undefined
+  editPayload.value_text = r.value_text != null ? String(r.value_text) : ''
+  editPayload.value_json_text = r.value_json != null ? JSON.stringify(r.value_json, null, 2) : '[]'
+}
+
+function cancelEdit() {
+  editingId.value = null
+}
+
+async function saveEdit(r: Record<string, unknown>) {
+  savePending.value = true
+  const payload: Record<string, unknown> = {
+    key: r.key,
+    value_type: r.value_type,
+    value_numeric: r.value_numeric,
+    value_text: r.value_text,
+    value_json: r.value_json,
+  }
+  if (r.value_type === 'numeric') payload.value_numeric = editPayload.value_numeric
+  else if (r.value_type === 'text' || r.value_type === 'boolean') payload.value_text = editPayload.value_text
+  else if (r.value_type === 'json') {
+    try {
+      payload.value_json = JSON.parse(editPayload.value_json_text || '[]')
+    } catch {
+      useToast().add({ color: 'error', description: 'JSON نامعتبر است.' })
+      savePending.value = false
+      return
+    }
+  }
+  await usePatch({
+    url: `admin/legal-calculator-rates/${r.id}`,
+    includeAuthHeader: true,
+    body: payload,
+  }, true)
+  savePending.value = false
+  editingId.value = null
   await load()
 }
 
-onMounted(() => load())
-watch(versionId, load)
+async function removeRate(r: Record<string, unknown>) {
+  if (!confirm('آیا از حذف این نرخ اطمینان دارید؟')) return
+  const rid = r.id as number
+  deletePending.value = rid
+  const res = await useDelete({ url: `admin/legal-calculator-rates/${rid}`, includeAuthHeader: true })
+  deletePending.value = null
+  if (res.status !== false) await load()
+}
+
+async function loadVersion() {
+  const res = await useGet({ url: `admin/legal-calculator-versions/${versionId.value}`, includeAuthHeader: true }, false)
+  const body = res.data as { data?: { calculator?: { slug?: string } } }
+  const slug = body?.data?.calculator?.slug
+  calculatorSlug.value = typeof slug === 'string' ? slug : null
+}
+
+onMounted(() => {
+  load()
+  loadVersion()
+})
+watch(versionId, () => {
+  load()
+  loadVersion()
+})
+
+useHead({ title: 'نرخ‌های نسخه | پنل ادمین' })
 </script>
+
+<style scoped>
+@reference "tailwindcss";
+
+.rates-admin-page {
+  @apply space-y-6;
+}
+
+.add-rate-form {
+  /* form spacing handled by .add-rate-row */
+}
+
+.add-rate-row {
+  @apply flex flex-nowrap items-end gap-3;
+}
+
+.add-rate-field {
+  flex: 0 0 auto;
+}
+
+.add-rate-field:first-child .add-rate-input {
+  width: 11rem;
+}
+
+.add-rate-field-type {
+  min-width: 7rem;
+}
+
+.add-rate-field-value .add-rate-input {
+  width: 8rem;
+}
+
+.add-rate-field-json {
+  flex: 1 1 12rem;
+  min-width: 12rem;
+}
+
+.add-rate-field-json .add-rate-input {
+  width: 100%;
+  min-height: 4rem;
+}
+
+.add-rate-field-btn {
+  flex-shrink: 0;
+}
+
+.add-rate-label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+
+.add-rate-label-invisible {
+  @apply opacity-0 pointer-events-none;
+}
+
+.add-rate-input {
+  @apply block;
+}
+
+.page-header {
+  @apply flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4;
+}
+
+.page-title {
+  @apply text-xl font-bold text-gray-900;
+}
+
+.admin-diyah-help-overlay {
+  @apply fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 p-4;
+}
+
+.admin-diyah-help-modal {
+  @apply my-8 w-full max-w-2xl rounded-xl bg-white shadow-xl;
+}
+
+.admin-diyah-help-header {
+  @apply flex items-center justify-between border-b border-gray-200 px-6 py-4;
+}
+
+.admin-diyah-help-title {
+  @apply flex items-center gap-2 text-lg font-bold text-gray-900;
+}
+
+.admin-diyah-help-close {
+  @apply rounded-lg p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700;
+}
+
+.admin-diyah-help-body {
+  @apply max-h-[70vh] overflow-y-auto px-6 py-4;
+}
+
+.admin-diyah-help-intro {
+  @apply mb-4 text-sm text-gray-600;
+}
+
+.admin-diyah-sample-section {
+  @apply mb-4;
+}
+
+.admin-diyah-sample-title {
+  @apply mb-3 text-sm font-semibold text-gray-800;
+}
+
+.admin-diyah-sample-block {
+  @apply mb-3 rounded-lg border border-gray-200 bg-gray-50 p-3;
+}
+
+.admin-diyah-sample-label {
+  @apply mb-1 block text-xs font-medium text-gray-500;
+}
+
+.admin-diyah-sample-pre {
+  @apply overflow-x-auto font-mono text-xs text-gray-800 whitespace-pre-wrap break-all;
+}
+
+.admin-diyah-help-note {
+  @apply mt-3 rounded-lg bg-blue-50 p-3 text-sm text-blue-800;
+}
+
+.admin-diyah-help-footer {
+  @apply border-t border-gray-200 px-6 py-4;
+}
+
+.rates-diyah-help-fade-enter-active,
+.rates-diyah-help-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.rates-diyah-help-fade-enter-from,
+.rates-diyah-help-fade-leave-to {
+  opacity: 0;
+}
+</style>
