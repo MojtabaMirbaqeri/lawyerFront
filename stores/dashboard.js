@@ -80,6 +80,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/admin/sms",
       icon: "lucide:send",
     },
+    {
+      title: "ماشین‌حساب‌های حقوقی",
+      url: "/dashboard/admin/legal-calculators",
+      icon: "lucide:calculator",
+    },
     { 
       title: "چت", 
       url: "/chat", 
