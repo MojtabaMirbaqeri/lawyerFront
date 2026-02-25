@@ -64,12 +64,18 @@
             v-for="n in notificationStore.list"
             :key="n.id"
             class="notification-row"
-            :class="{ 'notification-row--unread': !n.read_at }">
+            :class="[
+              { 'notification-row--unread': !n.read_at },
+              `notification-row--severity-${severityClass(n.severity)}`
+            ]">
             <button
               type="button"
               class="notification-row-inner"
               @click="onRowClick(n)">
-              <span v-if="!n.read_at" class="notification-row-dot" />
+              <span class="notification-row-icon" :class="`notification-row-icon--${severityClass(n.severity)}`">
+                <Icon :name="severityIcon(n.severity)" class="w-5 h-5" />
+              </span>
+              <span v-if="!n.read_at" class="notification-row-dot" :class="`notification-row-dot--${severityClass(n.severity)}`" />
               <div class="notification-row-content">
                 <span class="notification-row-title">{{ n.title }}</span>
                 <p class="notification-row-message">{{ n.message }}</p>
@@ -128,6 +134,16 @@ const totalPages = computed(() => {
   if (m?.last_page !== undefined) return m.last_page;
   return 1;
 });
+
+function severityClass(severity) {
+  const s = (severity || 'info').toLowerCase();
+  return ['info', 'success', 'warning', 'error'].includes(s) ? s : 'info';
+}
+
+function severityIcon(severity) {
+  const map = { info: 'lucide:info', success: 'lucide:check-circle', warning: 'lucide:alert-triangle', error: 'lucide:alert-circle' };
+  return map[severityClass(severity)] || map.info;
+}
 
 function timeAgo(dateStr) {
   if (!dateStr) return '';
@@ -201,18 +217,80 @@ watch([filter, page], () => {
 
 .notification-row {
   @apply list-none;
+  border-right-width: 4px;
+  border-right-style: solid;
 }
 
 .notification-row--unread {
-  @apply bg-blue-50/30;
+  @apply font-medium;
+}
+
+.notification-row--severity-info {
+  border-right-color: #3b82f6;
+  @apply bg-blue-50/25;
+}
+
+.notification-row--severity-success {
+  border-right-color: #10b981;
+  @apply bg-emerald-50/25;
+}
+
+.notification-row--severity-warning {
+  border-right-color: #f59e0b;
+  @apply bg-amber-50/25;
+}
+
+.notification-row--severity-error {
+  border-right-color: #ef4444;
+  @apply bg-red-50/25;
 }
 
 .notification-row-inner {
-  @apply w-full flex items-center gap-3 px-4 py-4 text-right hover:bg-gray-50 transition-colors;
+  @apply w-full flex items-center gap-3 px-4 py-4 text-right transition-colors;
+}
+
+.notification-row-inner:hover {
+  @apply bg-gray-50/70;
+}
+
+.notification-row-icon {
+  @apply shrink-0 rounded-full p-2;
+}
+
+.notification-row-icon--info {
+  @apply bg-blue-100 text-blue-600;
+}
+
+.notification-row-icon--success {
+  @apply bg-emerald-100 text-emerald-600;
+}
+
+.notification-row-icon--warning {
+  @apply bg-amber-100 text-amber-600;
+}
+
+.notification-row-icon--error {
+  @apply bg-red-100 text-red-600;
 }
 
 .notification-row-dot {
-  @apply w-2 h-2 rounded-full bg-blue-500 shrink-0;
+  @apply w-2.5 h-2.5 rounded-full shrink-0;
+}
+
+.notification-row-dot--info {
+  @apply bg-blue-500;
+}
+
+.notification-row-dot--success {
+  @apply bg-emerald-500;
+}
+
+.notification-row-dot--warning {
+  @apply bg-amber-500;
+}
+
+.notification-row-dot--error {
+  @apply bg-red-500;
 }
 
 .notification-row-content {

@@ -69,14 +69,20 @@
                           :key="n.id"
                           type="button"
                           class="notification-item"
-                          :class="{ 'notification-item--unread': !n.read_at }"
+                          :class="[
+                            { 'notification-item--unread': !n.read_at },
+                            `notification-item--${severityClass(n.severity)}`
+                          ]"
                           @click="onNotificationClick(n)">
+                          <span class="notification-item-icon" :class="`notification-item-icon--${severityClass(n.severity)}`">
+                            <Icon :name="severityIcon(n.severity)" class="w-4 h-4" />
+                          </span>
                           <div class="notification-item-content">
                             <span class="notification-item-title">{{ n.title }}</span>
                             <p class="notification-item-message">{{ (n.message || '').slice(0, 80) }}{{ (n.message || '').length > 80 ? '…' : '' }}</p>
                             <span class="notification-item-time">{{ timeAgo(n.created_at) }}</span>
                           </div>
-                          <span v-if="!n.read_at" class="notification-item-dot" />
+                          <span v-if="!n.read_at" class="notification-item-dot" :class="`notification-item-dot--${severityClass(n.severity)}`" />
                         </button>
                       </template>
                     </div>
@@ -224,6 +230,16 @@ async function markAllReadAndClose() {
   await notificationStore.markAllAsRead();
   notificationPopoverOpen.value = false;
   useToast().add({ title: 'همه اعلان‌ها خوانده شدند', color: 'success' });
+}
+
+function severityClass(severity) {
+  const s = (severity || 'info').toLowerCase();
+  return ['info', 'success', 'warning', 'error'].includes(s) ? s : 'info';
+}
+
+function severityIcon(severity) {
+  const map = { info: 'lucide:info', success: 'lucide:check-circle', warning: 'lucide:alert-triangle', error: 'lucide:alert-circle' };
+  return map[severityClass(severity)] || map.info;
 }
 
 watch(notificationPopoverOpen, (open) => {
@@ -553,10 +569,58 @@ watch(
   @apply overflow-y-auto flex-1 min-h-0;
 }
 .notification-item {
-  @apply w-full flex items-start gap-2 px-4 py-3 text-right border-b border-gray-50 hover:bg-gray-50 transition-colors;
+  @apply w-full flex items-start gap-2 px-4 py-3 text-right border-b border-gray-50 transition-colors;
+  border-right-width: 3px;
+  border-right-style: solid;
+}
+.notification-item:hover {
+  @apply bg-gray-50/80;
 }
 .notification-item--unread {
+  @apply font-medium;
+}
+.notification-item--severity-info {
+  border-right-color: #3b82f6;
+  @apply bg-blue-50/30;
+}
+.notification-item--severity-info:hover {
   @apply bg-blue-50/50;
+}
+.notification-item--severity-success {
+  border-right-color: #10b981;
+  @apply bg-emerald-50/30;
+}
+.notification-item--severity-success:hover {
+  @apply bg-emerald-50/50;
+}
+.notification-item--severity-warning {
+  border-right-color: #f59e0b;
+  @apply bg-amber-50/30;
+}
+.notification-item--severity-warning:hover {
+  @apply bg-amber-50/50;
+}
+.notification-item--severity-error {
+  border-right-color: #ef4444;
+  @apply bg-red-50/30;
+}
+.notification-item--severity-error:hover {
+  @apply bg-red-50/50;
+}
+.notification-item-icon {
+  @apply shrink-0 mt-0.5 rounded-full p-1.5;
+}
+.notification-item-icon--info {
+  @apply bg-blue-100 text-blue-600;
+}
+.notification-item-icon--success {
+  @apply bg-emerald-100 text-emerald-600;
+}
+.notification-item-icon--warning {
+  @apply bg-amber-100 text-amber-600;
+}
+.notification-item-icon--error {
+  @apply bg-red-100 text-red-600;
 }
 .notification-item-content {
   @apply flex-1 min-w-0;
@@ -571,7 +635,19 @@ watch(
   @apply block text-[10px] text-gray-400 mt-1;
 }
 .notification-item-dot {
-  @apply w-2 h-2 rounded-full bg-blue-500 shrink-0 mt-1.5;
+  @apply w-2 h-2 rounded-full shrink-0 mt-1.5;
+}
+.notification-item-dot--info {
+  @apply bg-blue-500;
+}
+.notification-item-dot--success {
+  @apply bg-emerald-500;
+}
+.notification-item-dot--warning {
+  @apply bg-amber-500;
+}
+.notification-item-dot--error {
+  @apply bg-red-500;
 }
 .notifications-dropdown-footer {
   @apply flex items-center justify-between gap-2 px-4 py-2 border-t border-gray-100 bg-gray-50/50 rounded-b-xl;

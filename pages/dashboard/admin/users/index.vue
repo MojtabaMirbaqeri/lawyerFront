@@ -258,9 +258,9 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">لینک (اختیاری)</label>
                 <input
                   v-model="sendForm.action_url"
-                  type="url"
+                  type="text"
                   class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
-                  placeholder="https://..."
+                  placeholder="/dashboard/notifications یا آدرس کامل"
                 />
               </div>
             </form>
