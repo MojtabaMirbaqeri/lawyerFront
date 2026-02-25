@@ -7,7 +7,9 @@ export const useDashboardStore = defineStore("dashboard", () => {
   const openSidebar = ref(false);
   const auth = useAuthStore();
 
-  const commonRoutes = [];
+  const commonRoutes = [
+    { title: "اعلان‌ها", url: "/dashboard/notifications", icon: "lucide:bell" },
+  ];
 
   const adminRoutes = [
     { 

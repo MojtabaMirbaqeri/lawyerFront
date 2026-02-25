@@ -191,9 +191,91 @@
           </div>
           <div class="modal-footer">
             <button @click="showUserModal = false" class="btn-secondary">بستن</button>
-            <button class="btn-primary" @click="sendNotification(selectedUser)">
+            <button class="btn-primary" @click="openSendNotificationModal(selectedUser)">
               <Icon name="lucide:bell" class="w-4 h-4" />
               ارسال نوتیفیکیشن
+            </button>
+          </div>
+        </div>
+      </template>
+    </UModal>
+
+    <!-- Send Notification Modal -->
+    <UModal v-model:open="showSendNotificationModal" title="ارسال اعلان">
+      <template #body>
+        <div class="modal-content">
+          <div class="modal-body">
+            <p v-if="sendNotificationRecipientName" class="text-sm text-gray-600 mb-4">
+              ارسال به: <strong>{{ sendNotificationRecipientName }}</strong>
+            </p>
+            <form class="space-y-4" @submit.prevent="submitSendNotification">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">عنوان (الزامی)</label>
+                <input
+                  v-model="sendForm.title"
+                  type="text"
+                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                  placeholder="عنوان اعلان"
+                  maxlength="255"
+                  required
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">متن (الزامی)</label>
+                <textarea
+                  v-model="sendForm.message"
+                  rows="3"
+                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                  placeholder="متن اعلان"
+                  maxlength="2000"
+                  required
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">دسته</label>
+                <select
+                  v-model="sendForm.category"
+                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm">
+                  <option value="system">سیستمی</option>
+                  <option value="admin">ادمین</option>
+                  <option value="booking">نوبت</option>
+                  <option value="lawyer">وکیل</option>
+                  <option value="payment">پرداخت</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">سطح</label>
+                <select
+                  v-model="sendForm.severity"
+                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm">
+                  <option value="info">اطلاع</option>
+                  <option value="success">موفقیت</option>
+                  <option value="warning">هشدار</option>
+                  <option value="error">خطا</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">لینک (اختیاری)</label>
+                <input
+                  v-model="sendForm.action_url"
+                  type="url"
+                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                  placeholder="https://..."
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" @click="showSendNotificationModal = false" class="btn-secondary">
+              انصراف
+            </button>
+            <button
+              type="button"
+              class="btn-primary"
+              :disabled="sendNotificationLoading || !sendForm.title.trim() || !sendForm.message.trim()"
+              @click="submitSendNotification">
+              <Icon v-if="sendNotificationLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
+              <span v-else>ارسال</span>
             </button>
           </div>
         </div>
@@ -239,6 +321,18 @@ const activityFilterItems = [
 ];
 const selectedUser = ref(null);
 
+const showSendNotificationModal = ref(false);
+const sendNotificationRecipientIds = ref([]);
+const sendNotificationRecipientName = ref("");
+const sendNotificationLoading = ref(false);
+const sendForm = ref({
+  title: "",
+  message: "",
+  category: "system",
+  severity: "info",
+  action_url: "",
+});
+
 // Table configuration
 const tableColumns = [
   { key: 'fullName', label: 'کاربر' },
@@ -264,7 +358,7 @@ const getUserActions = (user) => [
   {
     label: 'ارسال نوتیفیکیشن',
     icon: 'lucide:bell',
-    onSelect: () => sendNotification(user),
+    onSelect: () => openSendNotificationModal(user),
   },
   {
     label: 'مسدود کردن',
@@ -359,9 +453,42 @@ const viewUserTickets = () => {
   useToast().add({ title: 'این قابلیت به زودی اضافه می‌شود', color: 'info' });
 };
 
-const sendNotification = (user) => {
-  useToast().add({ title: `ارسال نوتیفیکیشن به ${user.fullName}`, color: 'info' });
-};
+function openSendNotificationModal(user) {
+  sendNotificationRecipientIds.value = user?.id ? [user.id] : [];
+  sendNotificationRecipientName.value = user?.fullName ? user.fullName : "";
+  sendForm.value = { title: "", message: "", category: "system", severity: "info", action_url: "" };
+  showSendNotificationModal.value = true;
+}
+
+async function submitSendNotification() {
+  if (!sendForm.value.title.trim() || !sendForm.value.message.trim()) return;
+  if (sendNotificationRecipientIds.value.length === 0) {
+    useToast().add({ title: "لطفاً حداقل یک گیرنده انتخاب کنید", color: "error" });
+    return;
+  }
+  sendNotificationLoading.value = true;
+  try {
+    const res = await usePost({
+      url: "admin/notifications/send",
+      includeAuthHeader: true,
+      body: {
+        user_ids: sendNotificationRecipientIds.value,
+        title: sendForm.value.title.trim(),
+        message: sendForm.value.message.trim(),
+        category: sendForm.value.category,
+        severity: sendForm.value.severity,
+        action_url: sendForm.value.action_url?.trim() || undefined,
+      },
+    });
+    if (res.status && res.data?.data !== undefined) {
+      useToast().add({ title: "اعلان با موفقیت ارسال شد", color: "success" });
+      showSendNotificationModal.value = false;
+      showUserModal.value = false;
+    }
+  } finally {
+    sendNotificationLoading.value = false;
+  }
+}
 
 const blockUser = () => {
   useToast().add({ title: `این قابلیت به زودی اضافه می‌شود`, color: 'warning' });
