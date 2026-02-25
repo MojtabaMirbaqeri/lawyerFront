@@ -244,6 +244,14 @@ const handleImageUpload = (file) => {
 
 const updateProfile = async () => {
   if (!hasChanges.value || isLoading.value) return;
+  if(formData.specialties.length === 0 || formData.services.length === 0) {
+    useToast().add({
+      title: "خطا",
+      description: "انتخاب حداقل یک تخصص و یک خدمت الزامی می باشد.",
+      color: "error",
+    });
+    return;
+  }
   isLoading.value = true;
 
   try {

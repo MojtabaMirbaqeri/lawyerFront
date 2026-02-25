@@ -455,7 +455,7 @@ const reviewCount = computed(
 const specialtyTitles = computed(() => {
   const sp = lawyer.value?.lawyer_info?.specialties;
   if (!Array.isArray(sp)) return [];
-  return sp.map((id) => filterStore?.lawyerSpecialties?.[id]?.title).filter(Boolean);
+  return sp.map((id) => filterStore?.lawyerSpecialties?.find((item) => item.id == id)?.title);
 });
 
 const shareContent = async () => {
