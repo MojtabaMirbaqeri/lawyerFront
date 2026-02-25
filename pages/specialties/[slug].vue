@@ -28,17 +28,17 @@ if (!specialty) {
 }
 
 // Page metadata
-const pageTitle = computed(() => `${specialty.title}`);
+const pageTitle = computed(() => `وکیل ${specialty.title}: لیست بهترین وکلای ${specialty.title} آنلاین و تلفنی`);
 const pageSubtitle = computed(
-  () => `بهترین وکلای متخصص در ${specialty.title} را پیدا کنید`,
+  () => `بهترین وکیل ${specialty.title} را از بین وکلای برتر انتخاب کنید. مشاوره آنلاین و تلفنی، پاسخگویی فوری و امکان رزرو نوبت در وکیل‌وکیل.`,
 );
 
 useSeoMeta({
-  title: () => `وکیل ${specialty.title} | رزرو نوبت ${specialty.title} | وکیل وکیل`,
+  title: () => `بهترین وکیل ${specialty.title} |`,
   description: () =>
-    `بهترین وکلای متخصص ${specialty.title} با سابقه درخشان. رزرو آنلاین نوبت مشاوره. مشاوره تلفنی، حضوری و آنلاین ${specialty.title}.`,
+    `بهترین وکیل ${specialty.title} را از بین وکلای برتر انتخاب کنید. مشاوره آنلاین و تلفنی، پاسخگویی فوری و امکان رزرو نوبت در وکیل‌وکیل.`,
   keywords: () =>
-    `وکیل ${specialty.title}, ${specialty.title}, مشاوره ${specialty.title}, وکیل خوب ${specialty.title}, رزرو وکیل ${specialty.title}, وکیل پایه یک ${specialty.title}, وکیل متخصص ${specialty.title}, مشاور ${specialty.title}, بهترین وکیل ${specialty.title}, هزینه وکیل ${specialty.title}, تعرفه وکیل ${specialty.title}, مشاوره رایگان ${specialty.title}, مشاوره آنلاین ${specialty.title}, مشاوره تلفنی ${specialty.title}, نوبت ${specialty.title}, وکیل ارزان ${specialty.title}, شماره وکیل ${specialty.title}`,
+    `وکیل ${specialty.title}, ${specialty.title}, مشاوره ${specialty.title}, وکیل خوب ${specialty.title}, رزرو وکیل ${specialty.title}, وکیل پایه یک ${specialty.title}, وکیل متخصص ${specialty.title}, مشاور ${specialty.title}, بهترین وکیل ${specialty.title}, هزینه وکیل ${specialty.title}, تعرفه وکیل ${specialty.title}, مشاوره رایگان ${specialty.title}, مشاوره آنلاین ${specialty.title}, مشاوره تلفنی ${specialty.title}, نوبت ${specialty.title}, وکیل ارزان ${specialty.title}, شماره وکیل ${specialty.title}, مشاوره حقوقی ${specialty.title}, وکیل ${specialty.title} آنلاین, وکیل ${specialty.title} تلفنی, وکیل ${specialty.title} فوری, لیست وکلای ${specialty.title}`,
 
   // Open Graph
   ogTitle: () => `وکیل ${specialty.title} | رزرو نوبت آنلاین`,

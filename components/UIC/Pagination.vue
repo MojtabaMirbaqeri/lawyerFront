@@ -13,8 +13,8 @@ defineProps(["total", "pageSize"]);
     :items-per-page="pageSize"
     :sibling-count="1"
     :ui="{
-      first: 'scale-x-[-1]',
-      last: 'scale-x-[-1]',
+      first: 'scale-x-[-1] hidden',
+      last: 'scale-x-[-1] hidden',
       prev: 'scale-x-[-1]',
       next: 'scale-x-[-1]',
     }" />

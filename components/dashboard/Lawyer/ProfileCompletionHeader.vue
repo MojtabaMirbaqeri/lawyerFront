@@ -77,82 +77,17 @@ const props = defineProps({
 
 const emit = defineEmits(['navigate']);
 
-// Calculate completion status for each section
-const checklistItems = computed(() => {
-  // Handle both nested {data: {lawyer_info: {}}} and flat {lawyer_info: {}} structures
-  const rawData = props.lawyerInfo?.data || props.lawyerInfo;
-  const info = rawData?.lawyer_info || {};
-  
-  // Personal info check
-  const hasPersonalInfo = !!(info.gender && info.father_name && info.birth_date && info.province_id && info.city_id);
-  
-  // Profile check (about, specialties)
-  const hasProfile = !!(info.about && info.about.length > 50);
-  
-  // KYC status
-  const kycCompleted = props.kycStatus === 'approved';
-  const kycPending = props.kycStatus === 'pending';
-  
-  return [
-    {
-      id: 'personal_information',
-      label: 'اطلاعات شخصی',
-      weight: 20,
-      status: hasPersonalInfo ? 'completed' : 'incomplete',
-      hint: hasPersonalInfo ? null : 'نام، جنسیت، تاریخ تولد',
-      cta: 'تکمیل اطلاعات شخصی',
-    },
-    {
-      id: 'profile',
-      label: 'پروفایل و معرفی',
-      weight: 15,
-      status: hasProfile ? 'completed' : 'incomplete',
-      hint: hasProfile ? null : 'درباره من، تخصص‌ها',
-      cta: 'تکمیل پروفایل',
-    },
-    {
-      id: 'experience',
-      label: 'سوابق تحصیلی',
-      weight: 15,
-      status: props.hasEducation ? 'completed' : 'incomplete',
-      hint: props.hasEducation ? null : 'حداقل یک سابقه تحصیلی',
-      cta: 'افزودن سابقه تحصیلی',
-    },
-    {
-      id: 'workplaces',
-      label: 'محل کار',
-      weight: 20,
-      status: props.hasWorkplace ? 'completed' : 'incomplete',
-      hint: props.hasWorkplace ? null : 'حداقل یک محل کار',
-      cta: 'افزودن محل کار',
-    },
-    {
-      id: 'pricing',
-      label: 'قیمت‌گذاری',
-      weight: 15,
-      status: props.hasPricing ? 'completed' : 'incomplete',
-      hint: props.hasPricing ? null : 'تعیین قیمت مشاوره',
-      cta: 'تنظیم قیمت‌ها',
-    },
-    {
-      id: 'authentication',
-      label: 'احراز هویت',
-      weight: 15,
-      status: kycCompleted ? 'completed' : (kycPending ? 'pending' : 'incomplete'),
-      hint: kycCompleted ? 'تایید شده' : (kycPending ? 'در انتظار بررسی' : 'ارسال مدارک'),
-      cta: 'ارسال مدارک',
-    },
-  ];
-});
-
-const completionPercentage = computed(() => {
-  const completed = checklistItems.value
-    .filter(item => item.status === 'completed')
-    .reduce((sum, item) => sum + item.weight, 0);
-  return Math.min(100, completed);
-});
-
-const isComplete = computed(() => completionPercentage.value >= 100);
+// منطق یکسان با داشبورد از طریق composable
+const input = computed(() => ({
+  lawyerInfo: props.lawyerInfo,
+  kycStatus: props.kycStatus,
+  hasEducation: props.hasEducation,
+  hasWorkplace: props.hasWorkplace,
+  hasSchedule: props.hasSchedule,
+  hasPricing: props.hasPricing,
+}));
+const { checklistItems, completionPercentage, isComplete, nextIncompleteSection } =
+  useProfileCompletion(input);
 
 const completionClass = computed(() => {
   if (completionPercentage.value >= 100) return 'complete';
@@ -166,9 +101,6 @@ const completionIcon = computed(() => {
   return 'lucide:alert-circle';
 });
 
-const nextIncompleteSection = computed(() => {
-  return checklistItems.value.find(item => item.status === 'incomplete');
-});
 </script>
 
 <style scoped>

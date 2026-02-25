@@ -28,16 +28,16 @@ if (!province) {
 }
 
 // Page metadata
-const pageTitle = computed(() => `وکلای استان ${province.name}`);
+const pageTitle = computed(() => `وکیل ${province.name}: لیست بهترین وکلای ${province.name} آنلاین و تلفنی`);
 const pageSubtitle = computed(() => `بهترین وکلای ${province.name} را پیدا کنید`);
 
 useSeoMeta({
   title: () =>
-    `وکیل استان ${province.name} | رزرو نوبت وکیل ${province.name} | وکیل وکیل`,
+    ` لیست وکلای ${province.name} |`,
   description: () =>
-    `بهترین وکلای استان ${province.name} با امکان رزرو آنلاین نوبت. مشاوره حقوقی تلفنی، حضوری و آنلاین. وکیل ${province.name} با تجربه و متخصص.`,
+    `بهترین وکیل ${province.name} را در وکیل‌وکیل پیدا کنید؛ با فیلتر تخصصی جستجو کنید، پروفایل‌ها و سوابق را ببینید، مشاوره آنلاین/تلفنی بگیرید و نوبت را فوری رزرو کنید.`,
   keywords: () =>
-    `وکیل ${province.name}, وکیل استان ${province.name}, رزرو وکیل ${province.name}, مشاوره حقوقی ${province.name}, وکیل خوب ${province.name}, وکیل پایه یک ${province.name}, شماره وکیل ${province.name}, بهترین وکیل ${province.name}, وکیل متخصص ${province.name}, وکیل ارزان ${province.name}, آدرس وکیل ${province.name}, تلفن وکیل ${province.name}, رزرو آنلاین وکیل ${province.name}, مشاوره تلفنی ${province.name}, مشاوره حضوری ${province.name}, وکیل خانواده ${province.name}, وکیل طلاق ${province.name}, وکیل کیفری ${province.name}, وکیل ملکی ${province.name}, نوبت وکیل ${province.name}`,
+    `وکیل ${province.name}, وکیل استان ${province.name}, رزرو وکیل ${province.name}, مشاوره حقوقی ${province.name}, وکیل خوب ${province.name}, وکیل پایه یک ${province.name}, شماره وکیل ${province.name}, بهترین وکیل ${province.name}, وکیل متخصص ${province.name}, وکیل ارزان ${province.name}, آدرس وکیل ${province.name}, تلفن وکیل ${province.name}, رزرو آنلاین وکیل ${province.name}, مشاوره تلفنی ${province.name}, مشاوره حضوری ${province.name}, وکیل خانواده ${province.name}, وکیل طلاق ${province.name}, وکیل کیفری ${province.name}, وکیل ملکی ${province.name}, نوبت وکیل ${province.name}, وکیل آنلاین ${province.name}, وکیل تلفنی ${province.name}, لیست وکلا در ${province.name}, وکیل فوری ${province.name}`,
 
   // Open Graph
   ogTitle: () => `وکیل استان ${province.name} | رزرو نوبت آنلاین`,

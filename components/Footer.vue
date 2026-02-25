@@ -10,7 +10,7 @@
         <div class="footer-grid">
           <!-- Brand Section -->
           <div class="footer-brand">
-            <img src="/images/VakilVakilLogo.png" alt="وکیل وکیل" class="h-10 mb-4" />
+            <NuxtImg src="/images/VakilVakilLogo.png" alt="وکیل وکیل" class="h-10 mb-4" width="160" height="40" loading="lazy" />
             <p class="brand-tagline">
               پلتفرم هوشمند رزرو نوبت وکیل و دریافت مشاوره حقوقی آنلاین
             </p>
@@ -64,16 +64,10 @@
               <p class="download-label">دانلود اپلیکیشن</p>
               <div class="download-badges">
                 <NuxtLink to="#">
-                  <img
-                    src="/images/footer/GooglePlayDownloadApp.svg"
-                    alt="دانلود از گوگل پلی"
-                    class="download-badge" />
+                  <NuxtImg src="/images/footer/GooglePlayDownloadApp.svg" alt="دانلود از گوگل پلی" class="download-badge" width="135" height="40" loading="lazy" />
                 </NuxtLink>
                 <NuxtLink to="#">
-                  <img
-                    src="/images/footer/CafeBazzarDownloadApp.svg"
-                    alt="دانلود از کافه‌بازار"
-                    class="download-badge" />
+                  <NuxtImg src="/images/footer/CafeBazzarDownloadApp.svg" alt="دانلود از کافه‌بازار" class="download-badge" width="135" height="40" loading="lazy" />
                 </NuxtLink>
               </div>
             </div>
@@ -88,7 +82,7 @@
               :key="license.name"
               :to="license.src"
               class="badge-item">
-              <img :src="license.image" :alt="license.name" />
+              <NuxtImg v-if="license.image" :src="license.image" :alt="license.name" width="80" height="80" loading="lazy" />
             </NuxtLink>
           </div>
         </div>

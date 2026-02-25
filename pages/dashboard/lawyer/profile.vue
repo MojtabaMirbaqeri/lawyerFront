@@ -57,6 +57,43 @@
         </div>
       </div>
 
+      <!-- بلوک درخواست نمایش به عنوان وکیل تایید شده -->
+      <div class="profile-visibility-card site-verification-block">
+        <div class="visibility-content">
+          <div class="visibility-icon" :class="{ inactive: !siteVerified }">
+            <Icon :name="siteVerified ? 'lucide:badge-check' : 'lucide:badge-plus'" class="w-5 h-5" />
+          </div>
+          <div class="visibility-text">
+            <h3 class="visibility-title">نمایش به عنوان وکیل تایید شده</h3>
+            <p class="visibility-desc">
+              <template v-if="siteVerified">
+                شما به عنوان وکیل تایید شده در سایت نمایش داده می‌شوید.
+              </template>
+              <template v-else-if="verificationRequestStatus === 'pending'">
+                درخواست شما در انتظار بررسی است. پس از تایید توسط تیم پشتیبانی، بج «تایید شده» در کارت شما نمایش داده می‌شود.
+              </template>
+              <template v-else-if="isProfileComplete">
+                با زدن دکمه زیر درخواست خود را برای نمایش به عنوان وکیل تایید شده ارسال کنید. پس از بررسی و تایید، در لیست وکلا با بج «تایید شده» نمایش داده خواهید شد.
+              </template>
+              <template v-else>
+                برای ارسال درخواست نمایش به عنوان وکیل تایید شده، ابتدا پروفایل خود را کامل کنید (اطلاعات شخصی، پروفایل، سوابق، محل کار، قیمت‌گذاری و ساعات کاری).
+              </template>
+            </p>
+          </div>
+          <div v-if="!siteVerified && verificationRequestStatus !== 'pending' && isProfileComplete" class="visibility-switch">
+            <button
+              type="button"
+              class="btn-primary"
+              :disabled="verificationSubmitLoading"
+              @click="submitVerificationRequest">
+              <Icon v-if="verificationSubmitLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
+              <Icon v-else name="lucide:send" class="w-4 h-4" />
+              ثبت به عنوان تایید شده
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Tab Navigation -->
       <div class="profile-tabs mb-4">
         <!-- Desktop Tabs -->
@@ -198,6 +235,31 @@ const pendingChanges = ref({});
 const pendingTab = ref(null);
 const isActiveDisplay = ref(true);
 const toggleActiveLoading = ref(false);
+const verificationSubmitLoading = ref(false);
+
+// ادغام سوابق تحصیلی، محل کار و ساعات کاری (از APIهای جدا) برای چک‌لیست تکمیل پروفایل
+async function mergeEducationAndWorkplaces(rawLawyer) {
+  const id = authStore.user?.lawyer_id;
+  if (!id) return rawLawyer;
+  try {
+    const [educationRes, workplacesRes, scheduleRes] = await Promise.all([
+      useGet({ url: "lawyer/profile/education", includeAuthHeader: true }),
+      useGet({ url: "workplaces", includeAuthHeader: true }),
+      useGet({ url: "lawyer_schedules/weekly", includeAuthHeader: true }),
+    ]);
+    const educations = educationRes?.data?.data ?? educationRes?.data ?? [];
+    const workplaces = workplacesRes?.data?.data ?? workplacesRes?.data ?? [];
+    const weeklySchedule =
+      scheduleRes?.data?.weekly_schedule ?? scheduleRes?.weekly_schedule ?? [];
+    const inner = rawLawyer?.data ?? rawLawyer;
+    const merged = Array.isArray(inner)
+      ? {}
+      : { ...inner, educations, workplaces, weeklySchedule };
+    return rawLawyer?.data !== undefined ? { ...rawLawyer, data: merged } : merged;
+  } catch {
+    return rawLawyer;
+  }
+}
 
 // Fetch lawyer info
 const fetchLawyerInfo = async () => {
@@ -208,8 +270,8 @@ const fetchLawyerInfo = async () => {
       url: `lawyers/${authStore.user?.lawyer_id}`,
       includeAuthHeader: true,
     });
-    // res.data contains the actual lawyer data
-    lawyerInfo.value = res.data || res;
+    const raw = res.data || res;
+    lawyerInfo.value = await mergeEducationAndWorkplaces(raw);
   } catch (error) {
     loadError.value = "مشکلی در بارگذاری اطلاعات پیش آمد. لطفاً دوباره تلاش کنید.";
     console.error("Failed to fetch lawyer info:", error);
@@ -233,7 +295,8 @@ const reFetchLawyerInformation = async () => {
       url: `lawyers/${authStore.user?.lawyer_id}`,
       includeAuthHeader: true,
     });
-    lawyerInfo.value = res.data || res;
+    const raw = res.data || res;
+    lawyerInfo.value = await mergeEducationAndWorkplaces(raw);
   } catch (error) {
     console.error("Failed to refresh lawyer info:", error);
   }
@@ -291,8 +354,9 @@ const onToggleActive = async (newVal) => {
   }
 };
 
-// Computed completion statuses
+// Computed completion statuses (از authStore.user.lawyer_kyc برای تاییدشده استفاده می‌شود)
 const kycStatus = computed(() => {
+  if (authStore.user?.lawyer_kyc) return "approved";
   const lawyer = lawyerData.value?.lawyer_info;
   if (!lawyer) return "not_submitted";
   if (lawyer.kyc_approved) return "approved";
@@ -309,13 +373,34 @@ const hasWorkplace = computed(() => {
   return (lawyerData.value?.workplaces?.length || 0) > 0;
 });
 
+// ساعات کاری وقتی «تکمیل» است که حداقل یک روز دارای حداقل یک بازه (چت/تلفن/حضوری) باشد
 const hasSchedule = computed(() => {
-  return (lawyerData.value?.weeklySchedule?.length || 0) > 0;
+  const schedule = lawyerData.value?.weeklySchedule;
+  if (!schedule || !Array.isArray(schedule)) return false;
+  return schedule.some((day) => {
+    const s = day?.schedules;
+    if (!s) return false;
+    const chat = s.chat ?? [];
+    const phone = s.phone ?? [];
+    const inperson = s.inperson ?? [];
+    return (
+      (Array.isArray(chat) && chat.length > 0) ||
+      (Array.isArray(phone) && phone.length > 0) ||
+      (Array.isArray(inperson) && inperson.length > 0)
+    );
+  });
 });
 
 const hasPricing = computed(() => {
-  const info = lawyerData.value?.lawyer_info;
-  return !!(info?.phone_counseling_price || info?.inperson_counseling_price);
+  const d = lawyerData.value;
+  // همان کلیدهای استفاده‌شده در بخش قیمت‌گذاری
+  return !!(
+    d?.consultation_price_phone ||
+    d?.consultation_price_chat ||
+    d?.consultation_price_inperson ||
+    d?.lawyer_info?.phone_counseling_price ||
+    d?.lawyer_info?.inperson_counseling_price
+  );
 });
 
 // Tab definitions with status badges
@@ -403,6 +488,41 @@ const hasProfileComplete = computed(() => {
   const info = lawyerData.value?.lawyer_info;
   return !!(info?.about && info?.about.length > 50);
 });
+
+// تکمیل بودن پروفایل برای امکان درخواست «تایید شده»
+const isProfileComplete = computed(
+  () =>
+    hasPersonalInfoComplete.value &&
+    hasProfileComplete.value &&
+    hasEducation.value &&
+    hasWorkplace.value &&
+    hasSchedule.value &&
+    hasPricing.value
+);
+
+// وضعیت تایید سایت و درخواست (از پاسخ GET lawyers/{id} برای پروفایل خود وکیل)
+const siteVerified = computed(() => lawyerData.value?.site_verified === true);
+const verificationRequestStatus = computed(() => lawyerData.value?.verification_request_status ?? null);
+
+async function submitVerificationRequest() {
+  verificationSubmitLoading.value = true;
+  try {
+    const res = await usePost({
+      url: "lawyer/verification-request",
+      includeAuthHeader: true,
+    });
+    if (res.statusCode === 201 || res.statusCode === 200) {
+      await reFetchLawyerInformation();
+      toast.add({ title: "درخواست شما با موفقیت ثبت شد", color: "success" });
+    } else {
+      toast.add({ title: res.message || "خطا در ثبت درخواست", color: "error" });
+    }
+  } catch (e) {
+    toast.add({ title: "خطا در ثبت درخواست", color: "error" });
+  } finally {
+    verificationSubmitLoading.value = false;
+  }
+}
 
 // Active component mapping
 const activeComponent = computed(() => {

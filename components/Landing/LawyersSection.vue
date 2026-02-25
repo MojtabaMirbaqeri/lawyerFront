@@ -73,7 +73,7 @@
         </Transition>
         
         <!-- Pagination -->
-        <div class="pagination-wrapper">
+        <div v-if="lawyersRef?.meta" class="pagination-wrapper">
           <UICPagination
             v-model="currentLawyersPage"
             :total="lawyersRef.meta.total"
@@ -223,8 +223,8 @@ async function fetchLawyers() {
       name: filtersStore.selectedFilters.searchField,
     },
   });
-  lawyersRef.value = data;
-  if (!useGlobalStore().lawyersCount) {
+  lawyersRef.value = data ?? { data: [], meta: { total: 0, per_page: 12 } };
+  if (data?.meta && !useGlobalStore().lawyersCount) {
     useGlobalStore().lawyersCount = data.meta.total;
   }
   if (!isFirstLoad.value) {

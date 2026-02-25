@@ -85,7 +85,7 @@
           class="lg:hidden block text-center relative z-10 mb-4 hover:opacity-90 transition"
           aria-label="بازگشت به صفحه اصلی"
         >
-          <img
+          <NuxtImg
             src="/images/VakilVakilLogo.png"
             alt="وکیل‌وکیل"
             class="h-9 w-auto object-contain mx-auto"

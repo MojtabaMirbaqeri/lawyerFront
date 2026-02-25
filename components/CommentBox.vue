@@ -1,6 +1,6 @@
 <template>
-  <div class="comment-box">
-    <div class="comment-header">
+  <div class="comment-box h-full flex flex-col">
+    <div class="comment-header shrink-0">
       <UserProfile
         :detail="{
           name: `${commentDetail?.user?.name} ${commentDetail?.user?.family}`,
@@ -16,8 +16,8 @@
       </div>
     </div>
 
-    <div class="comment-content">
-      <p class="comment-text">
+    <div class="comment-content flex-1 min-h-0 flex flex-col">
+      <p class="comment-text flex-1 min-h-0">
         {{
           (commentDetail?.comment?.length ?? 0) > 160
             ? commentDetail?.comment?.slice(0, 160) + "..."
@@ -38,12 +38,15 @@
       </p>
     </div>
 
-    <div class="comment-footer">
+    <div class="comment-footer shrink-0">
       <NuxtLink :to="`/lawyer/${commentDetail?.lawyer?.id}`">
         <div class="lawyer-tag">
-          <img
+          <NuxtImg
             :src="lawyerAvatarSrc"
             alt=""
+            width="36"
+            height="36"
+            loading="lazy"
             class="lawyer-avatar" />
           {{ commentDetail?.lawyer?.full_name }}
         </div>
@@ -102,7 +105,7 @@ const displayDate = computed(() => {
 @reference "tailwindcss";
 
 .comment-box {
-  @apply bg-white p-4 rounded-2xl space-y-3 border border-gray-200 select-none;
+  @apply bg-white p-4 rounded-2xl space-y-3 border border-gray-200 select-none flex flex-col h-full;
 }
 
 .comment-header {
@@ -130,6 +133,7 @@ const displayDate = computed(() => {
 }
 
 .comment-content {
+  @apply flex-1 min-h-0 flex flex-col;
 }
 
 .comment-text {
@@ -137,6 +141,7 @@ const displayDate = computed(() => {
 }
 
 .comment-footer {
+  @apply shrink-0;
 }
 
 .lawyer-tag {

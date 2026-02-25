@@ -62,15 +62,15 @@ if (import.meta.client) {
         aria-labelledby="confirm-modal-title"
         @click.self="close"
       >
-        <div class="confirm-modal">
+        <div class="confirm-modal" dir="rtl">
           <div class="confirm-modal-header">
-            <div :class="['confirm-icon', variant]">
-              <Icon :name="iconName" class="w-6 h-6" />
-            </div>
-            <h3 id="confirm-modal-title" class="confirm-title">{{ title }}</h3>
             <button @click="close" class="close-btn" type="button" aria-label="بستن">
               <Icon name="lucide:x" class="w-5 h-5" />
             </button>
+            <h3 id="confirm-modal-title" class="confirm-title">{{ title }}</h3>
+            <div :class="['confirm-icon', variant]">
+              <Icon :name="iconName" class="w-6 h-6" />
+            </div>
           </div>
 
           <div class="confirm-modal-body">
@@ -121,7 +121,7 @@ if (import.meta.client) {
 }
 
 .confirm-modal {
-  @apply bg-white rounded-xl w-full overflow-hidden;
+  @apply bg-white rounded-xl w-full overflow-hidden shadow-xl max-w-md;
 }
 
 .confirm-modal-header {
@@ -129,7 +129,7 @@ if (import.meta.client) {
 }
 
 .confirm-icon {
-  @apply w-10 h-10 rounded-full flex items-center justify-center;
+  @apply w-10 h-10 shrink-0 rounded-full flex items-center justify-center;
 }
 
 .confirm-icon.danger {
@@ -145,7 +145,7 @@ if (import.meta.client) {
 }
 
 .confirm-title {
-  @apply flex-1 text-lg font-semibold text-gray-900;
+  @apply flex-1 text-lg font-semibold text-gray-900 text-right;
 }
 
 .close-btn {
@@ -157,11 +157,11 @@ if (import.meta.client) {
 }
 
 .confirm-message {
-  @apply text-sm text-gray-600 leading-relaxed;
+  @apply text-sm text-gray-600 leading-relaxed text-right;
 }
 
 .confirm-modal-footer {
-  @apply flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 bg-transparent;
+  @apply flex items-center justify-start gap-3 px-6 py-4 border-t border-gray-100 bg-gray-50/50;
 }
 
 .btn-secondary {

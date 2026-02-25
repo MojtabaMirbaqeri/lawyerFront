@@ -202,7 +202,55 @@ const { data: dashboardRes } = await useGet({
   includeAuthHeader: true,
 });
 
-const comProfile = ref(dashboardRes?.data?.profile_completion?.completion_percentage || 0);
+// داده وکیل برای محاسبه درصد تکمیل (همان منطق صفحه پروفایل؛ ادغام سوابق تحصیلی و محل کار از APIهای جدا)
+const lawyerId = authStore.user?.lawyer_id;
+const lawyerMerged = ref(null);
+if (lawyerId) {
+  try {
+    const [lawyerRes, educationRes, workplacesRes] = await Promise.all([
+      useGet({ url: `lawyers/${lawyerId}`, includeAuthHeader: true }),
+      useGet({ url: "lawyer/profile/education", includeAuthHeader: true }),
+      useGet({ url: "workplaces", includeAuthHeader: true }),
+    ]);
+    const raw = lawyerRes?.data ?? lawyerRes;
+    const inner = raw?.data ?? raw;
+    const educations = educationRes?.data?.data ?? educationRes?.data ?? [];
+    const workplaces = workplacesRes?.data?.data ?? workplacesRes?.data ?? [];
+    const merged = Array.isArray(inner) ? {} : { ...inner, educations, workplaces };
+    lawyerMerged.value = raw?.data !== undefined ? { ...raw, data: merged } : merged;
+  } catch {
+    lawyerMerged.value = null;
+  }
+}
+const lawyerData = computed(() => lawyerMerged.value);
+const kycStatus = computed(() => {
+  if (authStore.user?.lawyer_kyc) return "approved";
+  const lawyer = lawyerData.value?.lawyer_info;
+  if (!lawyer) return "not_submitted";
+  if (lawyer.kyc_approved) return "approved";
+  if (lawyer.kyc_submitted) return "pending";
+  if (lawyer.kyc_rejected) return "rejected";
+  return "not_submitted";
+});
+const profileCompletionInput = computed(() => {
+  const d = lawyerData.value;
+  return {
+    lawyerInfo: d,
+    kycStatus: kycStatus.value,
+    hasEducation: (d?.educations?.length ?? 0) > 0,
+    hasWorkplace: (d?.workplaces?.length ?? 0) > 0,
+    hasSchedule: (d?.weeklySchedule?.length ?? 0) > 0,
+    hasPricing: !!(
+      d?.consultation_price_phone ||
+      d?.consultation_price_chat ||
+      d?.consultation_price_inperson ||
+      d?.lawyer_info?.phone_counseling_price ||
+      d?.lawyer_info?.inperson_counseling_price
+    ),
+  };
+});
+const { completionPercentage } = useProfileCompletion(profileCompletionInput);
+const comProfile = completionPercentage;
 
 // Helpers
 const formatCurrency = (value) => {

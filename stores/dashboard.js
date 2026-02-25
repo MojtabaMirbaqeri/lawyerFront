@@ -31,6 +31,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       icon: "lucide:user-check",
     },
     {
+      title: "درخواست‌های تایید وکلا",
+      url: "/dashboard/admin/lawyer-verification",
+      icon: "lucide:badge-check",
+    },
+    {
       title: "کاربران",
       url: "/dashboard/admin/users",
       icon: "lucide:users",

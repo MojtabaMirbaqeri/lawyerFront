@@ -543,7 +543,7 @@
           <button @click="showImageModal = false" class="image-close-btn">
             <Icon name="lucide:x" class="w-5 h-5" />
           </button>
-          <img :src="previewImageUrl" alt="تصویر لوح افتخار" class="preview-image" />
+          <img :src="previewImageUrl" alt="تصویر لوح افتخار" class="preview-image" width="400" height="300" loading="lazy" />
         </div>
       </template>
     </UModal>
@@ -554,6 +554,7 @@
 import { object, string, mixed } from "yup";
 
 const toast = useToast();
+const reFetchLawyer = inject("reFetchLawyerInformation", null);
 
 // State
 const isInitialLoading = ref(true);
@@ -732,6 +733,7 @@ async function onEducationSubmit(event) {
         university: "",
         place_of_study: "",
       });
+      await reFetchLawyer?.();
     } else {
       toast.add({ description: "خطا در افزودن سابقه تحصیلی.", color: "error" });
     }
@@ -878,6 +880,7 @@ async function executeDelete() {
       historyRef.value = historyRef.value.filter((i) => i.id !== item.id);
       toast.add({ description: "آیتم با موفقیت حذف شد.", color: "success" });
       showDeleteConfirm.value = false;
+      await reFetchLawyer?.();
     } else {
       toast.add({ description: res.message || "خطا در حذف آیتم.", color: "error" });
     }

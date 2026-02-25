@@ -12,6 +12,9 @@
             <NuxtImg
               class="filter-blue w-full"
               :src="`/images/${option.image}`"
+              width="48"
+              height="48"
+              loading="lazy"
               alt=""
             />
           </div>

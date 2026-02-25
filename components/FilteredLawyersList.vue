@@ -2,7 +2,7 @@
   <section id="lawyers" class="space-y-4">
     <div ref="lawyersListRef" class="lg:flex gap-4 xl:gap-5 items-start">
       <LandingSidebar class="hidden lg:block sticky top-[80px] grow-0 shrink" />
-      <main class="space-y-4 grow shrink-0">
+      <main class="space-y-4 grow">
         <UICTabs
           v-model="sortBy"
           :content="false"

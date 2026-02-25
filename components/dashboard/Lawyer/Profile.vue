@@ -5,7 +5,10 @@
         <div class="relative">
           <NuxtImg
             :src="(localImagePreview ?? profileImagePreview) || '/images/nullavatar.png'"
-            class="size-14 lg:size-16 rounded-full" />
+            width="64"
+            height="64"
+            loading="lazy"
+            class="size-14 lg:size-16 rounded-full object-cover" />
         </div>
         <div>
           <h1 class="text-base font-bold">
@@ -39,7 +42,7 @@
               v-model="formData.profile_image"
               icon="i-lucide-image"
               label="تصویر پروفایل مورد نظر خود را آپلود کنید"
-              description="Image/* (max. 3MB)"
+              description="Image/* (max. 5MB)"
               layout="list"
               accept="image/*"
               :ui="{
