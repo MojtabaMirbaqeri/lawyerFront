@@ -37,6 +37,17 @@
     <template #visit="{ item }">
       <InfoLawyerVisitTima :sch="item.sch" />
     </template>
+    <template #comment="{ item }">
+      <div class="scroll-mt-24">
+        <ClientOnly>
+          <info-lawyer-comment
+            :id="item.lawyerId"
+            :lawyer-full-name="item.lawyerFullName"
+            :initial-reviews="item.initialReviews"
+            :initial-reviews-last-page="item.initialReviewsLastPage" />
+        </ClientOnly>
+      </div>
+    </template>
   </UTabs>
 </template>
 <script setup>

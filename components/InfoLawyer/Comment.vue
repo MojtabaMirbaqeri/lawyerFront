@@ -138,18 +138,16 @@
 </template>
 
 <script setup>
-const props = defineProps(["lawyerFullName", "id"]);
-const res = await useGet({ url: `lawyers/${useRoute().params.id}/reviews` });
-const data = await res.data;
-const lastPage = ref(data.meta.last_page);
+const props = defineProps(["lawyerFullName", "id", "initialReviews", "initialReviewsLastPage"]);
+
 const authStore = useAuthStore();
 const isLoading = ref(false);
-
 const rate = ref(5);
-
 const currentPageComment = ref(1);
 
-const comments = ref(await data.data);
+// دادهٔ اولیه از صفحه پاس داده شده؛ فچ فقط برای «مشاهده بیشتر» انجام می‌شود
+const comments = ref([...(props.initialReviews ?? [])]);
+const lastPage = ref(props.initialReviewsLastPage ?? 1);
 
 const commentHandle = async () => {
   currentPageComment.value++;

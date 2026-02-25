@@ -9,7 +9,7 @@
     </div>
 
     <!-- Type Filter -->
-    <div class="type-filter">
+    <div v-if="showFilters" class="type-filter">
       <UICSelectButton
         v-model="filtersStore.selectedFilters.lawyerType"
         :items="lawyerTypes" />
@@ -38,14 +38,14 @@
     <!-- Main Content -->
     <div ref="lawyersListRef" class="lawyers-layout">
       <!-- Sidebar Filters -->
-      <aside class="filters-sidebar">
+      <aside  v-if="showFilters" class="filters-sidebar">
         <LandingSidebar />
       </aside>
       
       <!-- Lawyers Grid -->
       <main class="lawyers-main">
         <!-- Sort Tabs -->
-        <div class="sort-bar">
+        <div v-if="showFilters" class="sort-bar">
           <span class="sort-label">مرتب‌سازی:</span>
           <UICTabs
             v-model="filtersStore.selectedFilters.sortBy"
@@ -94,6 +94,7 @@ const props = defineProps({
   link: { type: String, default: "lawyer/" },
   titlebtn: { type: String, default: "رزرو مشاوره" },
   hideSectionHeader: { type: Boolean, default: false },
+  showFilters: { type: Boolean, default: true },
 });
 const lawyersRef = ref(null);
 
@@ -299,7 +300,7 @@ await fetchLawyers();
 }
 
 .lawyers-grid {
-  @apply grid grid-cols-1 md:grid-cols-3 gap-5;
+  @apply grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5;
 }
 
 .pagination-wrapper {

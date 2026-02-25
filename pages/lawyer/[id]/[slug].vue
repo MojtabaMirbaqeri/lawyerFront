@@ -186,6 +186,7 @@
             v-if="lawyer?.is_active"
             :active="lawyer?.is_active"
             :items="items"
+            :lawyer-name="fullname"
             :phone-number="lawyer?.phone"
             :lawyer-id="lawyer?.id"
             class="block lg:hidden" />
@@ -202,7 +203,11 @@
             <info-lawyer-tab
               :dis="lawyer?.lawyer_info?.about"
               :pos="[+lawyer?.latitude, +lawyer?.longitude]"
-              :sch="sch" />
+              :sch="sch"
+              :lawyer-id="lawyer?.id"
+              :lawyer-full-name="fullname"
+              :initial-reviews="initialReviews"
+              :initial-reviews-last-page="initialReviewsLastPage" />
           </section>
 
           <!-- راهنمای رزرو -->
@@ -290,12 +295,6 @@
             </div>
           </section>
 
-          <!-- Comments -->
-          <ClientOnly>
-            <section id="comment" class="scroll-mt-24">
-              <info-lawyer-comment :id="lawyer?.id" :lawyer-full-name="fullname" />
-            </section>
-          </ClientOnly>
         </div>
 
         <!-- Right: Sticky sidebar -->
@@ -304,6 +303,7 @@
             <InfoLawyerChooseVisit
               :active="lawyer?.is_active"
               :items="items"
+              :lawyer-name="fullname"
               :phone-number="lawyer?.phone"
               :lawyer-id="lawyer?.id"
               class="hidden lg:block" />
@@ -379,6 +379,14 @@ const res = await useGet(
 const data = await res.data;
 const lawyer = ref(data?.data ?? {});
 useGlobalStore().lawyerInfo = lawyer;
+
+const reviewsRes = await useGet({
+  url: `lawyers/${route.params.id}/reviews`,
+  includeAuthHeader: true,
+});
+const reviewsPayload = await reviewsRes.data;
+const initialReviews = reviewsPayload?.data ?? [];
+const initialReviewsLastPage = reviewsPayload?.meta?.last_page ?? 1;
 
 const fullname = computed(
   () =>
