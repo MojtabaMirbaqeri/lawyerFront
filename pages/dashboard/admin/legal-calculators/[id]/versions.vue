@@ -19,6 +19,15 @@
           <Icon name="lucide:book-open" class="w-4 h-4" />
           راهنما و نمونه کامل دیه
         </button>
+        <button
+          v-if="calculatorSlug === 'dowry'"
+          type="button"
+          class="btn-secondary flex items-center gap-2"
+          @click="showDowryHelp = true"
+        >
+          <Icon name="lucide:book-open" class="w-4 h-4" />
+          راهنما و نمونه کامل مهریه
+        </button>
         <h1 class="page-title">نسخه‌ها</h1>
       </div>
     </div>
@@ -75,6 +84,51 @@
             </div>
             <div class="admin-diyah-help-footer">
               <button type="button" class="btn-primary" @click="showDiyahHelp = false">متوجه شدم</button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+
+    <Teleport v-if="calculatorSlug === 'dowry'" to="body">
+      <Transition name="diyah-help-fade">
+        <div
+          v-if="showDowryHelp"
+          class="admin-diyah-help-overlay"
+          role="dialog"
+          aria-modal="true"
+          @click.self="showDowryHelp = false"
+        >
+          <div class="admin-diyah-help-modal">
+            <div class="admin-diyah-help-header">
+              <h2 class="admin-diyah-help-title">
+                <Icon name="lucide:book-open" class="w-5 h-5" />
+                راهنما و نمونه کامل ماشین‌حساب مهریه
+              </h2>
+              <button type="button" class="admin-diyah-help-close" aria-label="بستن" @click="showDowryHelp = false">
+                <Icon name="lucide:x" class="w-5 h-5" />
+              </button>
+            </div>
+            <div class="admin-diyah-help-body">
+              <p class="admin-diyah-help-intro">
+                ماشین‌حساب مهریه برای محاسبه <strong>مبلغ مهریه به نرخ روز</strong> طبق فرمول قوه‌قضاییه و بر اساس <strong>شاخص تورم سالانه بانک مرکزی</strong> استفاده می‌شود. ابتدا یک نسخه (مثلاً برچسب «۱۴۰۴») با تاریخ اثر ایجاد کنید، سپس از جدول زیر روی «نرخ‌ها» کلیک کنید و برای هر سال شمسی، شاخص همان سال را با کلید <code class="font-mono text-xs bg-gray-200 px-1 rounded">coefficient_YYYY</code> از نوع numeric اضافه کنید.
+              </p>
+              <p class="admin-diyah-help-intro">
+                <strong>فرمول:</strong> مبلغ به نرخ روز = مبلغ مهریه × (شاخص سال مطالبه ÷ شاخص سال عقد). مقادیر شاخص را از جدول «شاخص بهای کالاها و خدمات مصرفی» بانک مرکزی بگیرید و هر سال به‌روزرسانی کنید.
+              </p>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">نمونه شاخص (سال مبنا ۱۳۹۵ = ۱۰۰)</h3>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">۱۳۹۵=100، ۱۴۰۰=437.042، ۱۴۰۱=640.225، ۱۴۰۲=974.75، ۱۴۰۳=1306.77، ۱۴۰۴=تقریبی تا اعلام رسمی</span>
+                  <pre class="admin-diyah-sample-pre">هر سال را به‌صورت یک نرخ جدا (کلید coefficient_YYYY، نوع numeric) در صفحه نرخ‌ها اضافه کنید.</pre>
+                </div>
+              </section>
+              <p class="admin-diyah-help-note">
+                در صفحه عمومی، کاربر سال عقد، سال اخذ مهریه و مبلغ مهریه (به تومان) را وارد می‌کند و مبلغ به نرخ روز بر اساس همین شاخص‌ها محاسبه می‌شود.
+              </p>
+            </div>
+            <div class="admin-diyah-help-footer">
+              <button type="button" class="btn-primary" @click="showDowryHelp = false">متوجه شدم</button>
             </div>
           </div>
         </div>
@@ -221,6 +275,7 @@ const pending = ref(true)
 const addPending = ref(false)
 const calculatorSlug = ref<string | null>(null)
 const showDiyahHelp = ref(false)
+const showDowryHelp = ref(false)
 
 const diyahSampleVictimGender = '{"male":1,"female":0.5}'
 const diyahSampleIncidentCategories = `[

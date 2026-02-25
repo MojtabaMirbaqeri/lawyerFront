@@ -15,6 +15,25 @@
           <Icon name="lucide:book-open" class="w-4 h-4" />
           راهنما و نمونه کامل دیه
         </button>
+        <button
+          v-if="calculatorSlug === 'dowry'"
+          type="button"
+          class="btn-secondary flex items-center gap-2"
+          @click="showDowryHelp = true"
+        >
+          <Icon name="lucide:book-open" class="w-4 h-4" />
+          راهنما و نمونه کامل مهریه
+        </button>
+        <button
+          v-if="calculatorSlug === 'dowry'"
+          type="button"
+          class="btn-primary flex items-center gap-2"
+          :disabled="syncInflationPending"
+          @click="syncInflationIndex"
+        >
+          <Icon name="lucide:download" class="w-4 h-4" />
+          {{ syncInflationPending ? 'در حال ثبت...' : 'دریافت و ثبت خودکار شاخص تورم' }}
+        </button>
         <h1 class="page-title">نرخ‌ها و ضرایب</h1>
       </div>
     </div>
@@ -71,6 +90,74 @@
             </div>
             <div class="admin-diyah-help-footer">
               <button type="button" class="btn-primary" @click="showDiyahHelp = false">متوجه شدم</button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+
+    <Teleport v-if="calculatorSlug === 'dowry'" to="body">
+      <Transition name="rates-diyah-help-fade">
+        <div
+          v-if="showDowryHelp"
+          class="admin-diyah-help-overlay"
+          role="dialog"
+          aria-modal="true"
+          @click.self="showDowryHelp = false"
+        >
+          <div class="admin-diyah-help-modal">
+            <div class="admin-diyah-help-header">
+              <h2 class="admin-diyah-help-title">
+                <Icon name="lucide:book-open" class="w-5 h-5" />
+                راهنما و نمونه کامل نرخ‌های ماشین‌حساب مهریه
+              </h2>
+              <button type="button" class="admin-diyah-help-close" aria-label="بستن" @click="showDowryHelp = false">
+                <Icon name="lucide:x" class="w-5 h-5" />
+              </button>
+            </div>
+            <div class="admin-diyah-help-body">
+              <p class="admin-diyah-help-intro">
+                محاسبه مهریه به نرخ روز طبق <strong>فرمول قوه‌قضاییه</strong> و بر اساس <strong>شاخص بهای کالاها و خدمات مصرفی (سالانه)</strong> بانک مرکزی انجام می‌شود. برای هر نسخه باید برای هر سال شمسی یک نرخ از نوع <strong>numeric</strong> با کلید <code class="font-mono text-xs bg-gray-200 px-1 rounded">coefficient_YYYY</code> تعریف کنید و مقدار آن را برابر <strong>شاخص سالانه</strong> همان سال قرار دهید (منبع: اعلام بانک مرکزی).
+              </p>
+              <p class="admin-diyah-help-intro">
+                <strong>فرمول:</strong> مبلغ به نرخ روز = مبلغ مهریه × (شاخص سال مطالبه ÷ شاخص سال عقد). اگر برای سالی شاخص تعریف نشده باشد، عدد ۱ استفاده می‌شود.
+              </p>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">نمونه شاخص‌های سالانه (بر اساس جدول بانک مرکزی — سال مبنا ۱۳۹۵ = ۱۰۰)</h3>
+                <p class="admin-diyah-help-intro mb-3">
+                  هر ردیف را با «افزودن نرخ» اضافه کنید؛ مقدارها را از آخرین جدول شاخص سالانه بانک مرکزی به‌روز کنید.
+                </p>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">کلید: coefficient_1395 — نوع: numeric (سال مبنا)</span>
+                  <pre class="admin-diyah-sample-pre">100</pre>
+                </div>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">کلید: coefficient_1400 — نوع: numeric</span>
+                  <pre class="admin-diyah-sample-pre">437.042</pre>
+                </div>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">کلید: coefficient_1401 — نوع: numeric</span>
+                  <pre class="admin-diyah-sample-pre">640.225</pre>
+                </div>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">کلید: coefficient_1402 — نوع: numeric</span>
+                  <pre class="admin-diyah-sample-pre">974.75</pre>
+                </div>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">کلید: coefficient_1403 — نوع: numeric</span>
+                  <pre class="admin-diyah-sample-pre">1306.77</pre>
+                </div>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">کلید: coefficient_1404 — نوع: numeric (بر اساس اعلام سالانه به‌روز شود)</span>
+                  <pre class="admin-diyah-sample-pre">1750</pre>
+                </div>
+              </section>
+              <p class="admin-diyah-help-note">
+                برای سال‌های قبل از ۱۳۹۵ یا بعد از ۱۴۰۴ هم می‌توانید نرخ <code class="font-mono text-xs bg-gray-200 px-1 rounded">coefficient_۱۳۳۰</code> تا <code class="font-mono text-xs bg-gray-200 px-1 rounded">coefficient_1410</code> با مقادیر شاخص رسمی اضافه کنید. منبع معتبر: جدول شاخص سالانه بانک مرکزی جمهوری اسلامی ایران.
+              </p>
+            </div>
+            <div class="admin-diyah-help-footer">
+              <button type="button" class="btn-primary" @click="showDowryHelp = false">متوجه شدم</button>
             </div>
           </div>
         </div>
@@ -233,6 +320,8 @@ const pending = ref(true)
 const addPending = ref(false)
 const calculatorSlug = ref<string | null>(null)
 const showDiyahHelp = ref(false)
+const showDowryHelp = ref(false)
+const syncInflationPending = ref(false)
 
 const diyahSampleVictimGender = '{"male":1,"female":0.5}'
 const diyahSampleIncidentCategories = `[
@@ -358,6 +447,23 @@ async function loadVersion() {
   const body = res.data as { data?: { calculator?: { slug?: string } } }
   const slug = body?.data?.calculator?.slug
   calculatorSlug.value = typeof slug === 'string' ? slug : null
+}
+
+async function syncInflationIndex() {
+  if (syncInflationPending.value) return
+  syncInflationPending.value = true
+  const res = await usePost({
+    url: `admin/legal-calculator-versions/${versionId.value}/rates/sync-inflation-index`,
+    includeAuthHeader: true,
+    body: {},
+  }, true)
+  syncInflationPending.value = false
+  if (res.status !== false && res.message) {
+    useToast().add({ color: 'success', description: res.message })
+    await load()
+  } else if (res.message) {
+    useToast().add({ color: 'error', description: res.message })
+  }
 }
 
 onMounted(() => {
