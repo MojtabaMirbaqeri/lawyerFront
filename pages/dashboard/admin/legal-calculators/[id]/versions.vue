@@ -28,6 +28,15 @@
           <Icon name="lucide:book-open" class="w-4 h-4" />
           راهنما و نمونه کامل مهریه
         </button>
+        <button
+          v-if="calculatorSlug === 'inheritance'"
+          type="button"
+          class="btn-secondary flex items-center gap-2"
+          @click="showInheritanceHelp = true"
+        >
+          <Icon name="lucide:book-open" class="w-4 h-4" />
+          راهنما و نمونه کامل ارث
+        </button>
         <h1 class="page-title">نسخه‌ها</h1>
       </div>
     </div>
@@ -129,6 +138,41 @@
             </div>
             <div class="admin-diyah-help-footer">
               <button type="button" class="btn-primary" @click="showDowryHelp = false">متوجه شدم</button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+
+    <Teleport v-if="calculatorSlug === 'inheritance'" to="body">
+      <Transition name="diyah-help-fade">
+        <div
+          v-if="showInheritanceHelp"
+          class="admin-diyah-help-overlay"
+          role="dialog"
+          aria-modal="true"
+          @click.self="showInheritanceHelp = false"
+        >
+          <div class="admin-diyah-help-modal">
+            <div class="admin-diyah-help-header">
+              <h2 class="admin-diyah-help-title">
+                <Icon name="lucide:book-open" class="w-5 h-5" />
+                راهنما و نمونه کامل ماشین‌حساب ارث (سهم‌الارث)
+              </h2>
+              <button type="button" class="admin-diyah-help-close" aria-label="بستن" @click="showInheritanceHelp = false">
+                <Icon name="lucide:x" class="w-5 h-5" />
+              </button>
+            </div>
+            <div class="admin-diyah-help-body">
+              <p class="admin-diyah-help-intro">
+                ماشین‌حساب ارث بر اساس <strong>قانون مدنی</strong> و قواعد فقهی در <strong>سه طبقه وراث</strong> (درجه ۱: پدر، مادر، اولاد، همسر — درجه ۲: برادر، خواهر، اجداد — درجه ۳: عمو، عمه، دایی، خاله) محاسبه می‌کند. <strong>نیازی به تعریف نرخ نیست</strong>؛ یک نسخه (مثلاً ۱۴۰۴) با تاریخ اثر کافی است. فرم در سایت به‌صورت <strong>آکاردئون</strong> با چهار بخش (مشخصات ترکه و همسر، وارث درجه اول، دوم، سوم) نمایش داده می‌شود؛ در صورت انتخاب «دارای زن» فیلد <strong>تعداد زن</strong> (تعدد زوجات) نمایش داده می‌شود. در صفحه «نرخ‌ها» راهنمای کامل ارث را هم ببینید.
+              </p>
+              <p class="admin-diyah-help-note">
+                کاربر در سایت با باز کردن هر بخش، مبلغ ترکه، وضعیت همسر (و در صورت تعدد زوجات تعداد زن)، تعداد فرزندان، حیات والدین و در صورت نیاز برادران/خواهران، اجداد و عمو/عمه/دایی/خاله را وارد می‌کند و جدول سهم هر وارث نمایش داده می‌شود.
+              </p>
+            </div>
+            <div class="admin-diyah-help-footer">
+              <button type="button" class="btn-primary" @click="showInheritanceHelp = false">متوجه شدم</button>
             </div>
           </div>
         </div>
@@ -276,6 +320,7 @@ const addPending = ref(false)
 const calculatorSlug = ref<string | null>(null)
 const showDiyahHelp = ref(false)
 const showDowryHelp = ref(false)
+const showInheritanceHelp = ref(false)
 
 const diyahSampleVictimGender = '{"male":1,"female":0.5}'
 const diyahSampleIncidentCategories = `[

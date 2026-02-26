@@ -25,6 +25,15 @@
           راهنما و نمونه کامل مهریه
         </button>
         <button
+          v-if="calculatorSlug === 'inheritance'"
+          type="button"
+          class="btn-secondary flex items-center gap-2"
+          @click="showInheritanceHelp = true"
+        >
+          <Icon name="lucide:book-open" class="w-4 h-4" />
+          راهنما و نمونه کامل ارث
+        </button>
+        <button
           v-if="calculatorSlug === 'dowry'"
           type="button"
           class="btn-primary flex items-center gap-2"
@@ -158,6 +167,81 @@
             </div>
             <div class="admin-diyah-help-footer">
               <button type="button" class="btn-primary" @click="showDowryHelp = false">متوجه شدم</button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+
+    <Teleport v-if="calculatorSlug === 'inheritance'" to="body">
+      <Transition name="rates-diyah-help-fade">
+        <div
+          v-if="showInheritanceHelp"
+          class="admin-diyah-help-overlay"
+          role="dialog"
+          aria-modal="true"
+          @click.self="showInheritanceHelp = false"
+        >
+          <div class="admin-diyah-help-modal">
+            <div class="admin-diyah-help-header">
+              <h2 class="admin-diyah-help-title">
+                <Icon name="lucide:book-open" class="w-5 h-5" />
+                راهنما و نمونه کامل ماشین‌حساب ارث (سهم‌الارث)
+              </h2>
+              <button type="button" class="admin-diyah-help-close" aria-label="بستن" @click="showInheritanceHelp = false">
+                <Icon name="lucide:x" class="w-5 h-5" />
+              </button>
+            </div>
+            <div class="admin-diyah-help-body">
+              <p class="admin-diyah-help-intro">
+                ماشین‌حساب ارث بر اساس <strong>قانون مدنی جمهوری اسلامی ایران</strong> و قواعد فقهی، سهم هر وارث را در <strong>سه طبقه</strong> محاسبه می‌کند. <strong>نیازی به تعریف نرخ در این صفحه نیست</strong>؛ فقط یک نسخه (مثلاً ۱۴۰۴) با تاریخ اثر داشته باشید. فرم در سایت به‌صورت <strong>آکاردئون</strong> (چهار بخش قابل باز و بسته) نمایش داده می‌شود.
+              </p>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">بخش‌های فرم (آکاردئون)</h3>
+                <p class="admin-diyah-help-intro mb-2">
+                  <strong>۱. مشخصات ترکه و همسر:</strong> مبلغ ترکه (تومان)، وضعیت همسر (مجرد / دارای شوهر / دارای زن). در صورت انتخاب «دارای زن» فیلد <strong>تعداد زن</strong> نمایش داده می‌شود (تعدد زوجات) و در نتیجه به‌صورت «زوجه (×N)» محاسبه می‌شود.<br />
+                  <strong>۲. وارث درجه اول:</strong> تعداد فرزندان پسر و دختر، پدر و مادر در قید حیات.<br />
+                  <strong>۳. وارث درجه دوم:</strong> برادران/خواهران (ابوینی، ابی، امی)، حیات اجداد (جد ابی، جده ابی، جد امی، جده امی).<br />
+                  <strong>۴. وارث درجه سوم:</strong> عمو، عمه، دایی، خاله (ابوینی، ابی، امی).
+                </p>
+              </section>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">قواعد سهم (خلاصه)</h3>
+                <p class="admin-diyah-help-intro mb-2">
+                  <strong>طبقه ۱:</strong> همسر (زوج ۱/۲ یا ۱/۴، زوجه ۱/۴ یا ۱/۸)، پدر و مادر هر کدام ۱/۶ با وجود فرزند، باقی‌مانده بین فرزندان (پسر ۲ واحد، دختر ۱ واحد).<br />
+                  <strong>طبقه ۲:</strong> برادر/خواهر امی (یکی ۱/۶، چند نفر ۱/۳)، بقیه ابوینی/ابی (ذکور ۲× اناث). در نبود برادر/خواهر: اجداد امی ۱/۳، ابی ۲/۳.<br />
+                  <strong>طبقه ۳:</strong> دایی/خاله امی (یکی ۱/۶، چند نفر ۱/۳)، بقیه عمو/عمه (۲/۳، ذکور ۲× اناث).
+                </p>
+              </section>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">نمونه JSON کامل ورودی (متغیرهای قابل ویرایش)</h3>
+                <p class="admin-diyah-help-intro mb-2">
+                  در API محاسبه ارث، بدنهٔ درخواست می‌تواند شامل متغیرهای زیر باشد. مقادیر زیر یک نمونهٔ کامل است؛ فیلدهای اختیاری را در صورت عدم نیاز حذف یا صفر قرار دهید.
+                </p>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">بدنهٔ POST (نمونه) — قابل کپی</span>
+                  <pre class="admin-diyah-sample-pre">{{ inheritanceSampleJson }}</pre>
+                </div>
+                <p class="admin-diyah-help-intro mt-2 mb-1 font-medium">شرح متغیرها:</p>
+                <ul class="admin-diyah-help-list text-sm text-gray-700 space-y-1 mb-2">
+                  <li><code class="bg-gray-100 px-1 rounded">estate_amount</code> (عدد، اجباری) — مبلغ ترکه به تومان</li>
+                  <li><code class="bg-gray-100 px-1 rounded">spouse_type</code> (رشته) — <code>""</code> یا <code>"husband"</code> یا <code>"wife"</code></li>
+                  <li><code class="bg-gray-100 px-1 rounded">wives_count</code> (عدد، اختیاری، حداقل ۱) — تعداد زن در صورت تعدد زوجات</li>
+                  <li><code class="bg-gray-100 px-1 rounded">sons_count</code>, <code class="bg-gray-100 px-1 rounded">daughters_count</code> (عدد، اجباری) — تعداد فرزندان پسر و دختر</li>
+                  <li><code class="bg-gray-100 px-1 rounded">father_alive</code>, <code class="bg-gray-100 px-1 rounded">mother_alive</code> (بولین، اجباری) — پدر/مادر در قید حیات</li>
+                  <li><code class="bg-gray-100 px-1 rounded">brothers_abuyini</code>, <code class="bg-gray-100 px-1 rounded">brothers_abi</code>, <code class="bg-gray-100 px-1 rounded">brothers_umi</code> — تعداد برادران (ابوینی، ابی، امی)</li>
+                  <li><code class="bg-gray-100 px-1 rounded">sisters_abuyini</code>, <code class="bg-gray-100 px-1 rounded">sisters_abi</code>, <code class="bg-gray-100 px-1 rounded">sisters_umi</code> — تعداد خواهران (ابوینی، ابی، امی)</li>
+                  <li><code class="bg-gray-100 px-1 rounded">grandfather_paternal_alive</code>, <code class="bg-gray-100 px-1 rounded">grandmother_paternal_alive</code> — جد ابی / جده ابی در قید حیات</li>
+                  <li><code class="bg-gray-100 px-1 rounded">grandfather_maternal_alive</code>, <code class="bg-gray-100 px-1 rounded">grandmother_maternal_alive</code> — جد امی / جده امی در قید حیات</li>
+                  <li><code class="bg-gray-100 px-1 rounded">uncles_abuyini</code>, <code class="bg-gray-100 px-1 rounded">aunts_abuyini</code>, <code class="bg-gray-100 px-1 rounded">uncles_abi</code>, <code class="bg-gray-100 px-1 rounded">aunts_abi</code>, <code class="bg-gray-100 px-1 rounded">uncles_umi</code>, <code class="bg-gray-100 px-1 rounded">aunts_umi</code> — تعداد عمو، عمه، دایی، خاله (ابوینی، ابی، امی)</li>
+                </ul>
+              </section>
+              <p class="admin-diyah-help-note">
+                کاربر در صفحه عمومی با باز کردن هر بخش آکاردئون، فیلدهای مربوطه را پر می‌کند و جدول سهم هر وارث و مبلغ به تومان نمایش داده می‌شود.
+              </p>
+            </div>
+            <div class="admin-diyah-help-footer">
+              <button type="button" class="btn-primary" @click="showInheritanceHelp = false">متوجه شدم</button>
             </div>
           </div>
         </div>
@@ -321,6 +405,7 @@ const addPending = ref(false)
 const calculatorSlug = ref<string | null>(null)
 const showDiyahHelp = ref(false)
 const showDowryHelp = ref(false)
+const showInheritanceHelp = ref(false)
 const syncInflationPending = ref(false)
 
 const diyahSampleVictimGender = '{"male":1,"female":0.5}'
@@ -332,6 +417,33 @@ const diyahSampleIncidentCategories = `[
   {"key":"deceased_violation","label":"جنابت بر میت","multiplier":1}
 ]`
 const diyahSampleSpecialConditions = '[{"value":"haram_month","label":"محاسبه دیه در ماه حرام"}]'
+
+/** نمونه JSON کامل ورودی ماشین‌حساب ارث — همه متغیرهایی که کاربر می‌تواند در API ارسال کند */
+const inheritanceSampleJson = `{
+  "estate_amount": 500000000,
+  "spouse_type": "wife",
+  "wives_count": 1,
+  "sons_count": 2,
+  "daughters_count": 1,
+  "father_alive": true,
+  "mother_alive": true,
+  "brothers_abuyini": 0,
+  "brothers_abi": 0,
+  "brothers_umi": 0,
+  "sisters_abuyini": 0,
+  "sisters_abi": 0,
+  "sisters_umi": 0,
+  "grandfather_paternal_alive": false,
+  "grandmother_paternal_alive": false,
+  "grandfather_maternal_alive": false,
+  "grandmother_maternal_alive": false,
+  "uncles_abuyini": 0,
+  "aunts_abuyini": 0,
+  "uncles_abi": 0,
+  "aunts_abi": 0,
+  "uncles_umi": 0,
+  "aunts_umi": 0
+}`
 
 const newRate = reactive({
   key: '',
