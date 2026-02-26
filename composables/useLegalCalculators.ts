@@ -31,6 +31,8 @@ export interface FormFieldSchema {
   helper_text?: string
   min?: number
   item_schema?: FormFieldSchema[]
+  /** When set, field is only shown when form values match (e.g. { claim_type: 'non_financial' }) */
+  show_when?: Record<string, string>
 }
 
 export interface CalculatorResult {

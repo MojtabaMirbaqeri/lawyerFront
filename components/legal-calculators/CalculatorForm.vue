@@ -140,7 +140,7 @@
         <h3 class="form-section-title">{{ field.label }}</h3>
         <p v-if="field.helper_text" class="form-section-hint">{{ field.helper_text }}</p>
       </div>
-      <div v-else-if="(field.name !== 'wives_count' || form.spouse_type === 'wife')" class="form-field">
+      <div v-else-if="isFieldVisible(field)" class="form-field">
       <label v-if="field.label" class="form-label">
         {{ field.label }}
         <span v-if="field.required" class="text-red-500">*</span>
@@ -218,7 +218,7 @@
       <template v-else-if="field.type === 'repeater'">
         <div class="repeater">
           <div
-            v-for="(item, idx) in (form[field.name] as Record<string, unknown[]>)"
+            v-for="(item, idx) in (form[field.name] as Record<string, unknown>[])"
             :key="idx"
             class="repeater-row flex flex-wrap gap-2 items-end"
           >
@@ -252,7 +252,7 @@
             <button
               type="button"
               class="btn-remove"
-              @click="removeRepeaterRow(field.name, idx)"
+              @click="removeRepeaterRow(field.name, Number(idx))"
             >
               حذف
             </button>
@@ -323,11 +323,18 @@ const groups = computed(() => {
 
 const hasAccordion = computed(() => groups.value.length > 1)
 
-/** فیلد «تعداد زن» فقط وقتی وضعیت همسر «دارای زن» است نمایش داده می‌شود */
+/** فیلدها با توجه به show_when و منطق خاص (مثلاً wives_count) فیلتر می‌شوند */
+function isFieldVisible(field: FormFieldSchema): boolean {
+  if (field.name === 'wives_count') return form.spouse_type === 'wife'
+  const showWhen = field.show_when
+  if (!showWhen || typeof showWhen !== 'object') return true
+  return Object.entries(showWhen).every(([key, value]) => form[key] === value)
+}
+
 const groupsWithVisibleFields = computed(() =>
   groups.value.map((g) => ({
     ...g,
-    fields: g.fields.filter((f) => f.name !== 'wives_count' || form.spouse_type === 'wife'),
+    fields: g.fields.filter((f) => isFieldVisible(f)),
   }))
 )
 
@@ -386,8 +393,9 @@ function onSubmit() {
   const payload: Record<string, unknown> = {}
   fields.value.forEach((field) => {
     if (field.type === 'section') return
-    let v = form[field.name]
-    if (field.name === 'wives_count' && form.spouse_type !== 'wife') v = 1
+    if (!isFieldVisible(field)) return
+    const v = form[field.name]
+    if (field.name === 'wives_count' && form.spouse_type !== 'wife') return
     if (v !== undefined && v !== '') payload[field.name] = v
   })
   emit('submit', payload)

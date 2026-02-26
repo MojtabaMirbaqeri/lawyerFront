@@ -34,6 +34,15 @@
           راهنما و نمونه کامل ارث
         </button>
         <button
+          v-if="calculatorSlug === 'court-fee'"
+          type="button"
+          class="btn-secondary flex items-center gap-2"
+          @click="showCourtFeeHelp = true"
+        >
+          <Icon name="lucide:book-open" class="w-4 h-4" />
+          راهنما و نمونه کامل حق دادرسی
+        </button>
+        <button
           v-if="calculatorSlug === 'dowry'"
           type="button"
           class="btn-primary flex items-center gap-2"
@@ -266,6 +275,88 @@
       </Transition>
     </Teleport>
 
+    <Teleport v-if="calculatorSlug === 'court-fee'" to="body">
+      <Transition name="rates-diyah-help-fade">
+        <div
+          v-if="showCourtFeeHelp"
+          class="admin-diyah-help-overlay"
+          role="dialog"
+          aria-modal="true"
+          @click.self="showCourtFeeHelp = false"
+        >
+          <div class="admin-diyah-help-modal">
+            <div class="admin-diyah-help-header">
+              <h2 class="admin-diyah-help-title">
+                <Icon name="lucide:book-open" class="w-5 h-5" />
+                راهنما و نمونه کامل حق دادرسی
+              </h2>
+              <button type="button" class="admin-diyah-help-close" aria-label="بستن" @click="showCourtFeeHelp = false">
+                <Icon name="lucide:x" class="w-5 h-5" />
+              </button>
+            </div>
+            <div class="admin-diyah-help-body">
+              <p class="admin-diyah-help-intro">
+                ماشین‌حساب حق دادرسی بر اساس <strong>نوع دعوا</strong> (مالی، غیر مالی، چک، کیفری)، <strong>زیرنوع (نوع ان)</strong> برای دعاوی غیر مالی، و <strong>مرحلهٔ رسیدگی</strong> محاسبه می‌کند. همهٔ گزینه‌ها و نرخ‌ها از همین صفحه قابل شخصی‌سازی هستند.
+              </p>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">فرمول نحوه محاسبه</h3>
+                <ul class="admin-diyah-help-list text-sm text-gray-700 space-y-2 mb-2">
+                  <li><strong>دعاوی مالی:</strong> حق دادرسی = مبلغ خواسته × (نرخ درصد ÷ ۱۰۰). سپس اگر نرخ از حداقل (<code class="bg-gray-100 px-1 rounded">min_fee</code>) کمتر باشد برابر حداقل، و اگر حداکثر (<code class="bg-gray-100 px-1 rounded">max_fee</code>) تعریف شده و نرخ از آن بیشتر باشد برابر حداکثر قرار می‌گیرد. نرخ درصد از <code class="bg-gray-100 px-1 rounded">fee_rate_percent</code> خوانده می‌شود.</li>
+                  <li><strong>دعاوی چک:</strong> همان فرمول مالی؛ ولی نرخ درصد و حداقل/حداکثر از <code class="bg-gray-100 px-1 rounded">fee_rate_check</code>, <code class="bg-gray-100 px-1 rounded">min_fee_check</code>, <code class="bg-gray-100 px-1 rounded">max_fee_check</code> خوانده می‌شود.</li>
+                  <li><strong>دعاوی غیر مالی:</strong> مبلغ خواسته نادیده گرفته می‌شود. حق دادرسی یک مبلغ ثابت (به ریال) است که از جدول <code class="bg-gray-100 px-1 rounded">fee_table_non_financial</code> بر اساس <strong>زیرنوع</strong> (نوع ان) و <strong>مرحلهٔ رسیدگی</strong> انتخاب می‌شود.</li>
+                  <li><strong>دعاوی کیفری:</strong> مبلغ خواسته نادیده گرفته می‌شود. حق دادرسی یک مبلغ ثابت (به ریال) است که از جدول <code class="bg-gray-100 px-1 rounded">fee_table_criminal</code> بر اساس <strong>مرحلهٔ رسیدگی</strong> انتخاب می‌شود.</li>
+                </ul>
+                <p class="admin-diyah-help-intro mb-0 text-xs">
+                  خلاصه: مالی و چک = درصد از مبلغ خواسته + حداقل/حداکثر؛ غیر مالی و کیفری = حق ثابت از جدول نرخ به ازای هر (زیرنوع و) مرحله.
+                </p>
+              </section>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">نمونه کامل JSON — نوع دعوا (claim_types)</h3>
+                <p class="admin-diyah-help-intro mb-2">کلید: <code class="font-mono text-xs bg-gray-200 px-1 rounded">claim_types</code> — نوع: json</p>
+                <div class="admin-diyah-sample-block">
+                  <pre class="admin-diyah-sample-pre">{{ courtFeeSampleClaimTypes }}</pre>
+                </div>
+              </section>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">نمونه کامل JSON — زیرنوع غیر مالی (non_financial_sub_types)</h3>
+                <p class="admin-diyah-help-intro mb-2">کلید: <code class="font-mono text-xs bg-gray-200 px-1 rounded">non_financial_sub_types</code> — نوع: json. این فیلد فقط وقتی نوع دعوا «غیر مالی» است در فرم نمایش داده می‌شود.</p>
+                <div class="admin-diyah-sample-block">
+                  <pre class="admin-diyah-sample-pre">{{ courtFeeSampleNonFinancialSubTypes }}</pre>
+                </div>
+              </section>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">نمونه کامل JSON — مراحل رسیدگی (stages)</h3>
+                <p class="admin-diyah-help-intro mb-2">کلید: <code class="font-mono text-xs bg-gray-200 px-1 rounded">stages</code> — نوع: json</p>
+                <div class="admin-diyah-sample-block">
+                  <pre class="admin-diyah-sample-pre">{{ courtFeeSampleStages }}</pre>
+                </div>
+              </section>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">جدول حق ثابت غیر مالی (fee_table_non_financial)</h3>
+                <p class="admin-diyah-help-intro mb-2">کلید: <code class="font-mono text-xs bg-gray-200 px-1 rounded">fee_table_non_financial</code> — نوع: json. ساختار: شی دو سطحی؛ سطح اول <code>value</code> زیرنوع (مثلاً commercial، family)، سطح دوم <code>value</code> مرحله (مثلاً initial، appeal). مقدار هر سلول مبلغ حق دادرسی به ریال است.</p>
+                <div class="admin-diyah-sample-block">
+                  <pre class="admin-diyah-sample-pre text-xs">{{ courtFeeSampleFeeTableNonFinancial }}</pre>
+                </div>
+              </section>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">جدول حق ثابت کیفری (fee_table_criminal)</h3>
+                <p class="admin-diyah-help-intro mb-2">کلید: <code class="font-mono text-xs bg-gray-200 px-1 rounded">fee_table_criminal</code> — نوع: json. شی با کلید مراحل (initial، objection، appeal، retrial، supreme، third_party) و مقدار مبلغ به ریال.</p>
+                <div class="admin-diyah-sample-block">
+                  <pre class="admin-diyah-sample-pre">{{ courtFeeSampleFeeTableCriminal }}</pre>
+                </div>
+              </section>
+              <p class="admin-diyah-help-note">
+                برای دعاوی <strong>مالی</strong> و <strong>چک</strong> از نرخ درصد و حداقل/حداکثر (<code class="font-mono text-xs bg-gray-200 px-1 rounded">fee_rate_percent</code>, <code class="font-mono text-xs bg-gray-200 px-1 rounded">min_fee</code>, <code class="font-mono text-xs bg-gray-200 px-1 rounded">max_fee</code> و برای چک: <code class="font-mono text-xs bg-gray-200 px-1 rounded">fee_rate_check</code>, <code class="font-mono text-xs bg-gray-200 px-1 rounded">min_fee_check</code>, <code class="font-mono text-xs bg-gray-200 px-1 rounded">max_fee_check</code>) استفاده می‌شود. مبلغ خواسته فقط برای مالی و چک معتبر است.
+              </p>
+            </div>
+            <div class="admin-diyah-help-footer">
+              <button type="button" class="btn-primary" @click="showCourtFeeHelp = false">متوجه شدم</button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+
     <div class="card-dashboard">
       <div class="card-dashboard-header">
         <h2 class="card-dashboard-title">افزودن نرخ</h2>
@@ -424,7 +515,43 @@ const calculatorSlug = ref<string | null>(null)
 const showDiyahHelp = ref(false)
 const showDowryHelp = ref(false)
 const showInheritanceHelp = ref(false)
+const showCourtFeeHelp = ref(false)
 const syncInflationPending = ref(false)
+
+/** نمونه‌های JSON حق دادرسی — قابل کپی در پنل */
+const courtFeeSampleClaimTypes = `[
+  {"value":"financial","label":"مالی"},
+  {"value":"non_financial","label":"غیر مالی"},
+  {"value":"check","label":"چک"},
+  {"value":"criminal","label":"کیفری"}
+]`
+const courtFeeSampleNonFinancialSubTypes = `[
+  {"value":"commercial","label":"مربوط به امور تجاری و شرکتها"},
+  {"value":"civil_status","label":"مربوط به اسناد سجلی و امور حسبی"},
+  {"value":"family","label":"دعاوی مربوط به امور خانواده (موضوع صلاحیت دادگاه خانواده)"},
+  {"value":"provisional","label":"تامین خواسته و دستور موقت (به استثناء دعاوی قابل فرجام و امور خانواده و اعتراض به آراء مراجع غیر دادگستری)"},
+  {"value":"objection_non_judicial","label":"اعتراض به آراء مراجع غیر دادگستری"},
+  {"value":"appealable","label":"دعاوی قابل فرجام"},
+  {"value":"other","label":"سایر دعاوی"}
+]`
+const courtFeeSampleStages = `[
+  {"value":"initial","label":"بدوی"},
+  {"value":"objection","label":"واخواهی"},
+  {"value":"appeal","label":"تجدیدنظر"},
+  {"value":"retrial","label":"اعاده دادرسی"},
+  {"value":"supreme","label":"فرجام‌خواهی"},
+  {"value":"third_party","label":"اعتراض ثالث"}
+]`
+const courtFeeSampleFeeTableNonFinancial = `{
+  "commercial": {"initial":1000000,"objection":500000,"appeal":500000,"retrial":500000,"supreme":500000,"third_party":500000},
+  "civil_status": {"initial":500000,"objection":300000,"appeal":300000,"retrial":300000,"supreme":300000,"third_party":300000},
+  "family": {"initial":500000,"objection":300000,"appeal":300000,"retrial":300000,"supreme":300000,"third_party":300000},
+  "provisional": {"initial":500000,"objection":300000,"appeal":300000,"retrial":300000,"supreme":300000,"third_party":300000},
+  "objection_non_judicial": {"initial":500000,"objection":300000,"appeal":300000,"retrial":300000,"supreme":300000,"third_party":300000},
+  "appealable": {"initial":500000,"objection":300000,"appeal":300000,"retrial":300000,"supreme":300000,"third_party":300000},
+  "other": {"initial":500000,"objection":300000,"appeal":300000,"retrial":300000,"supreme":300000,"third_party":300000}
+}`
+const courtFeeSampleFeeTableCriminal = '{"initial":500000,"objection":300000,"appeal":300000,"retrial":300000,"supreme":300000,"third_party":300000}'
 
 const diyahSampleVictimGender = '{"male":1,"female":0.5}'
 const diyahSampleIncidentCategories = `[
