@@ -43,6 +43,15 @@
           راهنما و نمونه کامل حق دادرسی
         </button>
         <button
+          v-if="calculatorSlug === 'attorney-fee'"
+          type="button"
+          class="btn-secondary flex items-center gap-2"
+          @click="showAttorneyFeeHelp = true"
+        >
+          <Icon name="lucide:book-open" class="w-4 h-4" />
+          راهنما و نمونه کامل حق الوکاله
+        </button>
+        <button
           v-if="calculatorSlug === 'dowry'"
           type="button"
           class="btn-primary flex items-center gap-2"
@@ -357,6 +366,69 @@
       </Transition>
     </Teleport>
 
+    <Teleport v-if="calculatorSlug === 'attorney-fee'" to="body">
+      <Transition name="rates-diyah-help-fade">
+        <div
+          v-if="showAttorneyFeeHelp"
+          class="admin-diyah-help-overlay"
+          role="dialog"
+          aria-modal="true"
+          @click.self="showAttorneyFeeHelp = false"
+        >
+          <div class="admin-diyah-help-modal">
+            <div class="admin-diyah-help-header">
+              <h2 class="admin-diyah-help-title">
+                <Icon name="lucide:book-open" class="w-5 h-5" />
+                راهنما و نمونه کامل حق الوکاله
+              </h2>
+              <button type="button" class="admin-diyah-help-close" aria-label="بستن" @click="showAttorneyFeeHelp = false">
+                <Icon name="lucide:x" class="w-5 h-5" />
+              </button>
+            </div>
+            <div class="admin-diyah-help-body">
+              <p class="admin-diyah-help-intro">
+                ماشین‌حساب حق الوکاله بر اساس <strong>موضوع وکالت</strong> (مالی، امور حسبی، کیفری، سایر)، <strong>نتیجه دعوا</strong>، <strong>روزهای ماموریت</strong> داخل/خارج استان، چک‌باکس‌ها (وکیل پس از نقض رأی، تسخیری/معاضدتی، گواهی تخصصی، ورود/جلب/اعتراض ثالث/تقابل) و <strong>مبلغ موضوع پرونده</strong> محاسبه می‌کند. همهٔ گزینه‌ها و نرخ‌ها از همین صفحه قابل شخصی‌سازی هستند.
+              </p>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">فرمول نحوه محاسبه</h3>
+                <ul class="admin-diyah-help-list text-sm text-gray-700 space-y-2 mb-2">
+                  <li><strong>حق پایه:</strong> مبلغ موضوع پرونده × (نرخ تعرفه ÷ ۱۰۰) با اعمال حداقل حق (<code class="bg-gray-100 px-1 rounded">min_fee</code>). نرخ از <code class="bg-gray-100 px-1 rounded">tariff_percent</code> خوانده می‌شود.</li>
+                  <li><strong>نتیجه دعوا:</strong> در صورت انتخاب نتیجه، حق پایه در ضریب همان نتیجه (از <code class="bg-gray-100 px-1 rounded">outcome_fee_table</code>) ضرب می‌شود.</li>
+                  <li><strong>ماموریت:</strong> (روز داخل استان × <code class="bg-gray-100 px-1 rounded">per_diem_in</code>) + (روز خارج استان × <code class="bg-gray-100 px-1 rounded">per_diem_out</code>) به حق پایه اضافه می‌شود.</li>
+                  <li><strong>چک‌باکس‌ها:</strong> وکیل پس از نقض رأی → ضریب <code class="bg-gray-100 px-1 rounded">after_reversal_multiplier</code>؛ تسخیری/معاضدتی → ضریب <code class="bg-gray-100 px-1 rounded">legal_aid_multiplier</code>؛ گواهی تخصصی → افزایش <code class="bg-gray-100 px-1 rounded">specialty_bonus_percent</code>٪؛ ورود/جلب/اعتراض ثالث/تقابل → افزایش <code class="bg-gray-100 px-1 rounded">third_party_bonus_percent</code>٪.</li>
+                </ul>
+              </section>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">نمونه JSON — موضوع وکالت (case_categories)</h3>
+                <div class="admin-diyah-sample-block">
+                  <pre class="admin-diyah-sample-pre">{{ attorneyFeeSampleCaseCategories }}</pre>
+                </div>
+              </section>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">نمونه JSON — نتیجه دعوا (case_outcomes)</h3>
+                <div class="admin-diyah-sample-block">
+                  <pre class="admin-diyah-sample-pre text-xs">{{ attorneyFeeSampleCaseOutcomes }}</pre>
+                </div>
+              </section>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">نرخ ماموریت و ضرایب</h3>
+                <p class="admin-diyah-help-intro mb-2">کلیدهای عددی: <code class="font-mono text-xs bg-gray-200 px-1 rounded">per_diem_in</code>, <code class="font-mono text-xs bg-gray-200 px-1 rounded">per_diem_out</code> (ریال در روز)، <code class="font-mono text-xs bg-gray-200 px-1 rounded">legal_aid_multiplier</code>, <code class="font-mono text-xs bg-gray-200 px-1 rounded">after_reversal_multiplier</code>, <code class="font-mono text-xs bg-gray-200 px-1 rounded">specialty_bonus_percent</code>, <code class="font-mono text-xs bg-gray-200 px-1 rounded">third_party_bonus_percent</code>.</p>
+                <div class="admin-diyah-sample-block">
+                  <pre class="admin-diyah-sample-pre">{{ attorneyFeeSampleOutcomeTable }}</pre>
+                </div>
+              </section>
+              <p class="admin-diyah-help-note">
+                نمونهٔ کامل <code class="font-mono text-xs bg-gray-200 px-1 rounded">outcome_fee_table</code> (ضریب به ازای هر نتیجه) در بلوک بالا آمده است. با «افزودن نرخ» هر کلید را با نوع و مقدار مناسب اضافه یا ویرایش کنید.
+              </p>
+            </div>
+            <div class="admin-diyah-help-footer">
+              <button type="button" class="btn-primary" @click="showAttorneyFeeHelp = false">متوجه شدم</button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+
     <div class="card-dashboard">
       <div class="card-dashboard-header">
         <h2 class="card-dashboard-title">افزودن نرخ</h2>
@@ -516,6 +588,7 @@ const showDiyahHelp = ref(false)
 const showDowryHelp = ref(false)
 const showInheritanceHelp = ref(false)
 const showCourtFeeHelp = ref(false)
+const showAttorneyFeeHelp = ref(false)
 const syncInflationPending = ref(false)
 
 /** نمونه‌های JSON حق دادرسی — قابل کپی در پنل */
@@ -552,6 +625,32 @@ const courtFeeSampleFeeTableNonFinancial = `{
   "other": {"initial":500000,"objection":300000,"appeal":300000,"retrial":300000,"supreme":300000,"third_party":300000}
 }`
 const courtFeeSampleFeeTableCriminal = '{"initial":500000,"objection":300000,"appeal":300000,"retrial":300000,"supreme":300000,"third_party":300000}'
+
+/** نمونه‌های JSON حق الوکاله */
+const attorneyFeeSampleCaseCategories = `[
+  {"value":"financial","label":"مالی"},
+  {"value":"probate","label":"امور حسبی"},
+  {"value":"criminal","label":"کیفری"},
+  {"value":"other","label":"سایر"}
+]`
+const attorneyFeeSampleCaseOutcomes = `[
+  {"value":"dismissal_before_defense","label":"قرار ابطال دادخواست پیش از دفاع و پاسخ دعوا"},
+  {"value":"dismissal_after_defense","label":"قرار ابطال دادخواست پس از دفاع و پاسخ دعوا"},
+  {"value":"appeal_dismissal_before_defense","label":"قرار سقوط دعوا تجدیدنظر قبل از پاسخ و دفاع از دعوا"},
+  {"value":"appeal_dismissal_after_defense","label":"قرار سقوط دعوا تجدیدنظر پس از پاسخ و دفاع از دعوا"},
+  {"value":"rejection_statute_of_limitations","label":"قرار رد دعوا به علت قبول ایراد مرور زمان"},
+  {"value":"rejection_retrial","label":"قرار رد تقاضای اعاده دادرسی"},
+  {"value":"rejection_res_judicata","label":"قرار رد دعوا به علت اعتبار امر مختومه"}
+]`
+const attorneyFeeSampleOutcomeTable = `{
+  "dismissal_before_defense": 0.25,
+  "dismissal_after_defense": 0.5,
+  "appeal_dismissal_before_defense": 0.25,
+  "appeal_dismissal_after_defense": 0.5,
+  "rejection_statute_of_limitations": 0.5,
+  "rejection_retrial": 0.5,
+  "rejection_res_judicata": 0.5
+}`
 
 const diyahSampleVictimGender = '{"male":1,"female":0.5}'
 const diyahSampleIncidentCategories = `[

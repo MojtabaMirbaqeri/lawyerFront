@@ -98,6 +98,12 @@
                   ماشین‌حساب <strong>حق دادرسی</strong> نوع دعوا (مالی، غیر مالی، چک، کیفری)، زیرنوع برای غیر مالی، و مرحلهٔ رسیدگی (بدوی، واخواهی، تجدیدنظر و …) را از <strong>نرخ‌های نسخه</strong> می‌خواند. همهٔ گزینه‌ها و نرخ‌ها (از جمله <code>claim_types</code>, <code>non_financial_sub_types</code>, <code>stages</code> و جداول حق ثابت) از پنل نرخ‌های همان نسخه <strong>قابل ویرایش</strong> هستند. در صفحهٔ نرخ‌های نسخهٔ حق دادرسی دکمه <strong>«راهنما و نمونه کامل حق دادرسی»</strong> را بزنید تا نمونهٔ JSON قابل کپی را ببینید.
                 </p>
               </section>
+              <section class="help-section">
+                <h3 class="help-section-title">۹. مثال: ماشین‌حساب حق الوکاله</h3>
+                <p class="help-text">
+                  ماشین‌حساب <strong>حق الوکاله</strong> موضوع وکالت (مالی، امور حسبی، کیفری، سایر)، نتیجه دعوا، روزهای ماموریت داخل/خارج استان، چک‌باکس‌ها (وکیل پس از نقض رأی، تسخیری/معاضدتی، گواهی تخصصی، ورود/جلب/اعتراض ثالث/تقابل) و مبلغ موضوع پرونده را از <strong>نرخ‌های نسخه</strong> می‌خواند. همهٔ گزینه‌ها و نرخ‌ها (<code>case_categories</code>, <code>case_outcomes</code>, <code>tariff_percent</code>, <code>min_fee</code>, <code>per_diem_in</code>, <code>per_diem_out</code>, <code>outcome_fee_table</code> و ضرایب چک‌باکس) از پنل نرخ‌های همان نسخه <strong>قابل ویرایش</strong> هستند. در صفحهٔ نرخ‌های نسخهٔ حق الوکاله دکمه <strong>«راهنما و نمونه کامل حق الوکاله»</strong> را بزنید تا نمونهٔ JSON و فرمول محاسبه را ببینید.
+                </p>
+              </section>
             </div>
             <div class="help-modal-footer">
               <button type="button" class="btn-primary" @click="showHelpModal = false">
