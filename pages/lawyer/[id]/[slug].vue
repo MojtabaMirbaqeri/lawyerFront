@@ -53,11 +53,19 @@
                   :alt="fullname" />
               </div>
               <div
+                v-if="isVerified"
+                class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 verified-badge w-[85px] px-[8px] py-[4px] flex flex-row items-center justify-center gap-[8px] rounded-[26px] z-10 text-white">
+                <svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0 mb-[1px]">
+                  <path d="M4.14545 11L3.10909 9.32381L1.14545 8.90476L1.33636 6.96667L0 5.5L1.33636 4.03333L1.14545 2.09524L3.10909 1.67619L4.14545 0L6 0.759524L7.85455 0L8.89091 1.67619L10.8545 2.09524L10.6636 4.03333L12 5.5L10.6636 6.96667L10.8545 8.90476L8.89091 9.32381L7.85455 11L6 10.2405L4.14545 11ZM5.42727 7.35952L8.50909 4.4L7.74545 3.64048L5.42727 5.86667L4.25455 4.76667L3.49091 5.5L5.42727 7.35952Z" fill="white"/>
+                </svg>
+                <span class="text-[12px] font-bold whitespace-nowrap leading-none mt-0.5">تایید شده</span>
+              </div>
+              <!-- <div
                 v-if="lawyer?.is_active"
                 class="absolute -bottom-1 -end-1 flex items-center gap-1 rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-bold text-white shadow">
                 <span class="size-1.5 rounded-full bg-white animate-pulse" />
                 فعال
-              </div>
+              </div> -->
             </div>
             <div class="flex flex-col gap-1 min-w-0">
               <h1
@@ -386,6 +394,12 @@ const fullname = computed(
     "وکیل",
 );
 
+const isVerified = computed(
+  () =>
+    lawyer.value?.site_verified === true ||
+    lawyer.value?.lawyer_info?.site_verified === true,
+);
+
 const commentHash = computed(() => route.path + "#comment");
 
 const breadcrumbItems = computed(() => {
@@ -556,3 +570,9 @@ useHead({
   ],
 });
 </script>
+
+<style scoped>
+.verified-badge {
+  background: linear-gradient(90deg, #0048FF 0%, #002279 100%);
+}
+</style>
