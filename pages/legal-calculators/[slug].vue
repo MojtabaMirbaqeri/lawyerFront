@@ -22,6 +22,15 @@
               <Icon name="lucide:help-circle" class="w-5 h-5" />
               راهنمای محاسبه دیه
             </button>
+            <button
+              v-if="slug === 'delay-damages'"
+              type="button"
+              class="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+              @click="showDelayDamagesHelp = true"
+            >
+              <Icon name="lucide:help-circle" class="w-5 h-5" />
+              راهنمای محاسبه خسارت تأخیر تأدیه
+            </button>
           </div>
         </header>
 
@@ -73,6 +82,56 @@
             </div>
           </Transition>
         </Teleport>
+
+        <Teleport v-if="slug === 'delay-damages'" to="body">
+          <Transition name="diyah-help-fade">
+            <div
+              v-if="showDelayDamagesHelp"
+              class="diyah-help-overlay"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="delay-damages-help-title"
+              @click.self="showDelayDamagesHelp = false"
+            >
+              <div class="diyah-help-modal">
+                <div class="diyah-help-header">
+                  <h2 id="delay-damages-help-title" class="diyah-help-title">
+                    <Icon name="lucide:book-open" class="w-5 h-5" />
+                    راهنمای محاسبه خسارت تأخیر تأدیه
+                  </h2>
+                  <button
+                    type="button"
+                    class="diyah-help-close"
+                    aria-label="بستن"
+                    @click="showDelayDamagesHelp = false"
+                  >
+                    <Icon name="lucide:x" class="w-5 h-5" />
+                  </button>
+                </div>
+                <div class="diyah-help-body">
+                  <p class="diyah-help-intro">
+                    طبق <strong>ماده ۵۲۲ آیین دادرسی مدنی</strong>، خسارت تأخیر تأدیه با در نظر گرفتن کاهش ارزش پول و <strong>شاخص سالانه بانک مرکزی</strong> محاسبه می‌شود.
+                  </p>
+                  <p class="diyah-help-intro">
+                    <strong>نوع محاسبه:</strong> سالانه (فقط سال سررسید و سال پرداخت) یا ماهانه (به‌همراه ماه سررسید و ماه پرداخت برای دقت بیشتر).
+                  </p>
+                  <p class="diyah-help-intro">
+                    <strong>فرمول:</strong> مبلغ به‌روز = مبلغ اصل × (شاخص زمان پرداخت ÷ شاخص زمان سررسید)؛ خسارت تأخیر = مبلغ به‌روز − مبلغ اصل.
+                  </p>
+                  <p class="diyah-help-note">
+                    نتیجهٔ محاسبه صرفاً جنبه اطلاع‌رسانی دارد و برای مطالبه رسمی مشاوره حقوقی توصیه می‌شود.
+                  </p>
+                </div>
+                <div class="diyah-help-footer">
+                  <button type="button" class="diyah-help-btn" @click="showDelayDamagesHelp = false">
+                    متوجه شدم
+                  </button>
+                </div>
+              </div>
+            </div>
+          </Transition>
+        </Teleport>
+
         <div class="calc-grid">
           <!-- فرم مخصوص مهریه -->
           <div
@@ -147,6 +206,106 @@
               </form>
             </div>
           </div>
+          <!-- فرم مخصوص خسارت تأخیر تأدیه (انتخابگر سال/ماه شبیه تصویر) -->
+          <div
+            v-else-if="slug === 'delay-damages'"
+            class="delay-damages-card"
+          >
+            <div class="delay-damages-card-header">
+              <span class="delay-damages-card-accent" />
+              <div>
+                <h2 class="delay-damages-card-title">محاسبه خسارت تأخیر تأدیه</h2>
+                <p class="delay-damages-card-subtitle">بر اساس شاخص سالانه بانک مرکزی (ماده ۵۲۲)</p>
+              </div>
+            </div>
+            <div class="delay-damages-card-body">
+              <p class="delay-damages-instruction">
+                محاسبه خسارت تاخیر تادیه به دو روش استفاده از شاخص متوسط سال و استفاده از شاخص هر ماه به صورت جداگانه امکان‌پذیر است.
+              </p>
+              <form class="delay-damages-form" @submit.prevent="onDelayDamagesSubmit">
+                <div class="delay-damages-fields">
+                  <div class="delay-damages-field delay-damages-field-full">
+                    <label class="delay-damages-label">نوع محاسبه</label>
+                    <div class="delay-damages-radio-group">
+                      <label class="delay-damages-radio">
+                        <input v-model="delayDamagesForm.calculation_type" type="radio" value="yearly" />
+                        <span>سالانه</span>
+                      </label>
+                      <label class="delay-damages-radio">
+                        <input v-model="delayDamagesForm.calculation_type" type="radio" value="monthly" />
+                        <span>ماهانه</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="delay-damages-field">
+                    <label class="delay-damages-label">مبلغ (به تومان)</label>
+                    <input
+                      v-model.number="delayDamagesForm.principal_amount"
+                      type="number"
+                      min="0"
+                      step="1"
+                      class="delay-damages-input"
+                      placeholder="مثلاً ۱۰,۰۰۰,۰۰۰"
+                      required
+                    >
+                  </div>
+                  <template v-if="delayDamagesForm.calculation_type === 'yearly'">
+                    <div class="delay-damages-field">
+                      <LegalCalculatorsYearPicker
+                        v-model="delayDamagesForm.due_year"
+                        label="سال سررسید"
+                        :min-year="1315"
+                        :max-year="1410"
+                      />
+                    </div>
+                    <div class="delay-damages-field">
+                      <LegalCalculatorsYearPicker
+                        v-model="delayDamagesForm.payment_year"
+                        label="سال پرداخت"
+                        :min-year="1315"
+                        :max-year="1410"
+                      />
+                    </div>
+                  </template>
+                  <template v-else>
+                    <div class="delay-damages-field">
+                      <LegalCalculatorsMonthYearPicker
+                        v-model="delayDamagesForm.due_date"
+                        label="زمان سررسید"
+                        :min-year="1315"
+                        :max-year="1410"
+                      />
+                    </div>
+                    <div class="delay-damages-field">
+                      <LegalCalculatorsMonthYearPicker
+                        v-model="delayDamagesForm.payment_date"
+                        label="زمان پرداخت"
+                        :min-year="1315"
+                        :max-year="1410"
+                      />
+                    </div>
+                  </template>
+                  <div v-if="delayDamagesVersionOptions.length" class="delay-damages-field delay-damages-field-full">
+                    <label class="delay-damages-label">نسخه شاخص</label>
+                    <select v-model="delayDamagesForm.version_label" class="delay-damages-input">
+                      <option value="">آخرین نسخه</option>
+                      <option
+                        v-for="opt in delayDamagesVersionOptions"
+                        :key="String(opt.value)"
+                        :value="opt.value"
+                      >
+                        {{ opt.label }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <button type="submit" class="delay-damages-submit" :disabled="calcPending">
+                  <Icon v-if="!calcPending" name="lucide:calculator" class="w-5 h-5" />
+                  {{ calcPending ? 'در حال محاسبه...' : 'محاسبه خسارت تأخیر' }}
+                </button>
+              </form>
+            </div>
+          </div>
           <!-- فرم عمومی سایر ماشین‌حساب‌ها -->
           <div v-else class="form-panel">
             <h2 class="form-panel-title">ورودی‌ها</h2>
@@ -214,6 +373,7 @@
 
 <script setup lang="ts">
 import type { CalculatorDetail, CalculatorResult } from '~/composables/useLegalCalculators'
+import type { PersianMonthYear } from '~/utils/persianDate'
 
 const route = useRoute()
 const slug = computed(() => route.params.slug as string)
@@ -225,12 +385,60 @@ const pending = ref(true)
 const calcPending = ref(false)
 const error = ref<string | null>(null)
 const showDiyahHelp = ref(false)
+const showDelayDamagesHelp = ref(false)
 
 const dowryForm = reactive<{ marriage_year: number | ''; claim_year: number | ''; original_amount: number | '' }>({
   marriage_year: '',
   claim_year: '',
   original_amount: '',
 })
+
+const delayDamagesForm = reactive<{
+  calculation_type: 'yearly' | 'monthly'
+  principal_amount: number | ''
+  due_year: number | null
+  payment_year: number | null
+  due_date: PersianMonthYear | null
+  payment_date: PersianMonthYear | null
+  version_label: string
+}>({
+  calculation_type: 'yearly',
+  principal_amount: '',
+  due_year: null,
+  payment_year: null,
+  due_date: null,
+  payment_date: null,
+  version_label: '',
+})
+
+const delayDamagesVersionOptions = computed(() => {
+  const schema = detail.value?.form_schema
+  if (!schema?.fields) return []
+  const field = schema.fields.find((f: { name: string }) => f.name === 'version_label')
+  return (field?.options ?? []) as { value: string; label: string }[]
+})
+
+async function onDelayDamagesSubmit() {
+  const payload: Record<string, unknown> = {
+    calculation_type: delayDamagesForm.calculation_type,
+    principal_amount: delayDamagesForm.principal_amount,
+    version_label: delayDamagesForm.version_label || undefined,
+  }
+  if (delayDamagesForm.calculation_type === 'yearly') {
+    if (delayDamagesForm.due_year == null || delayDamagesForm.payment_year == null) return
+    payload.due_year = delayDamagesForm.due_year
+    payload.payment_year = delayDamagesForm.payment_year
+  } else {
+    const due = delayDamagesForm.due_date
+    const pay = delayDamagesForm.payment_date
+    if (!due?.year || !due?.month || !pay?.year || !pay?.month) return
+    payload.due_year = due.year
+    payload.payment_year = pay.year
+    payload.due_month = due.month
+    payload.payment_month = pay.month
+  }
+  await onCalculate(payload)
+}
 
 const dowryYearOptions = computed(() => {
   const schema = detail.value?.form_schema
@@ -465,5 +673,58 @@ watch(slug, loadDetail, { immediate: true })
 }
 .dowry-result-disclaimer {
   @apply text-xs text-gray-500 border-t border-gray-100 pt-3;
+}
+
+/* کارت خسارت تأخیر تأدیه */
+.delay-damages-card {
+  @apply rounded-xl border border-gray-200 bg-white shadow-sm;
+}
+.delay-damages-card-header {
+  @apply flex items-center gap-3 border-b border-amber-200 bg-amber-50/80 px-5 py-4;
+}
+.delay-damages-card-accent {
+  @apply h-8 w-1 shrink-0 rounded-full bg-amber-500;
+}
+.delay-damages-card-title {
+  @apply text-lg font-semibold text-gray-900;
+}
+.delay-damages-card-subtitle {
+  @apply mt-0.5 text-xs text-gray-600;
+}
+.delay-damages-card-body {
+  @apply p-6;
+}
+.delay-damages-instruction {
+  @apply mb-5 text-sm text-gray-600;
+}
+.delay-damages-form {
+  @apply space-y-5;
+}
+.delay-damages-fields {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-4 items-end;
+}
+.delay-damages-field-full {
+  @apply sm:col-span-2;
+}
+.delay-damages-field {
+  @apply flex flex-col gap-1;
+}
+.delay-damages-label {
+  @apply text-sm font-medium text-gray-700;
+}
+.delay-damages-input {
+  @apply w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-100;
+}
+.delay-damages-radio-group {
+  @apply flex flex-wrap gap-4;
+}
+.delay-damages-radio {
+  @apply flex items-center gap-2 cursor-pointer text-sm text-gray-700;
+}
+.delay-damages-radio input {
+  @apply rounded-full border-amber-500 text-amber-600 focus:ring-amber-500;
+}
+.delay-damages-submit {
+  @apply w-full rounded-lg bg-amber-600 px-6 py-3 text-base font-medium text-white hover:bg-amber-700 disabled:opacity-50 transition-colors;
 }
 </style>

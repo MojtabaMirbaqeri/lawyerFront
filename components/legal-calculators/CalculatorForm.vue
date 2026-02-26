@@ -356,7 +356,8 @@ watch(fields, (f) => {
     } else if (field.type === 'checkbox' && !(field.name in form)) {
       form[field.name] = []
     } else if (field.type === 'radio' && !(field.name in form)) {
-      form[field.name] = false
+      const firstOpt = field.options?.[0]
+      form[field.name] = firstOpt != null && 'value' in firstOpt ? firstOpt.value : false
     } else if (field.type !== 'repeater' && field.type !== 'checkbox' && !(field.name in form)) {
       form[field.name] = field.type === 'number' ? (field.name === 'wives_count' ? 1 : 0) : ''
     }

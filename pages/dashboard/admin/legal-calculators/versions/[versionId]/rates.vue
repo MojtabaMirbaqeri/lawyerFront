@@ -52,7 +52,16 @@
           راهنما و نمونه کامل حق الوکاله
         </button>
         <button
-          v-if="calculatorSlug === 'dowry'"
+          v-if="calculatorSlug === 'delay-damages'"
+          type="button"
+          class="btn-secondary flex items-center gap-2"
+          @click="showDelayDamagesHelp = true"
+        >
+          <Icon name="lucide:book-open" class="w-4 h-4" />
+          راهنما و نمونه کامل خسارت تأخیر تأدیه
+        </button>
+        <button
+          v-if="calculatorSlug === 'dowry' || calculatorSlug === 'delay-damages'"
           type="button"
           class="btn-primary flex items-center gap-2"
           :disabled="syncInflationPending"
@@ -429,6 +438,62 @@
       </Transition>
     </Teleport>
 
+    <Teleport v-if="calculatorSlug === 'delay-damages'" to="body">
+      <Transition name="rates-diyah-help-fade">
+        <div
+          v-if="showDelayDamagesHelp"
+          class="admin-diyah-help-overlay"
+          role="dialog"
+          aria-modal="true"
+          @click.self="showDelayDamagesHelp = false"
+        >
+          <div class="admin-diyah-help-modal">
+            <div class="admin-diyah-help-header">
+              <h2 class="admin-diyah-help-title">
+                <Icon name="lucide:book-open" class="w-5 h-5" />
+                راهنما و نمونه کامل خسارت تأخیر تأدیه
+              </h2>
+              <button type="button" class="admin-diyah-help-close" aria-label="بستن" @click="showDelayDamagesHelp = false">
+                <Icon name="lucide:x" class="w-5 h-5" />
+              </button>
+            </div>
+            <div class="admin-diyah-help-body">
+              <p class="admin-diyah-help-intro">
+                محاسبه خسارت تأخیر تأدیه طبق <strong>ماده ۵۲۲ آیین دادرسی مدنی</strong> و بر اساس <strong>شاخص بهای کالاها و خدمات مصرفی (سالانه)</strong> بانک مرکزی انجام می‌شود. کاربر می‌تواند <strong>نوع محاسبه</strong> را «سالانه» یا «ماهانه» انتخاب کند؛ در حالت ماهانه فیلدهای ماه سررسید و ماه پرداخت نمایش داده می‌شوند و با درون‌یابی خطی بین ضرایب دو سال، دقت بیشتری اعمال می‌شود.
+              </p>
+              <p class="admin-diyah-help-intro">
+                <strong>فرمول:</strong> مبلغ به‌روز = مبلغ اصل × (شاخص زمان پرداخت ÷ شاخص زمان سررسید)؛ خسارت تأخیر = مبلغ به‌روز − مبلغ اصل. جمع کل = مبلغ به‌روز.
+              </p>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">نمونه شاخص‌های سالانه (ضرایب coefficient_YYYY)</h3>
+                <p class="admin-diyah-help-intro mb-3">
+                  برای هر نسخه، برای هر سال شمسی یک نرخ از نوع <strong>numeric</strong> با کلید <code class="font-mono text-xs bg-gray-200 px-1 rounded">coefficient_YYYY</code> تعریف کنید. مقدارها را از جدول شاخص سالانه بانک مرکزی به‌روز کنید (سال مبنا ۱۳۹۵ = ۱۰۰).
+                </p>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">کلید: coefficient_1395 — نوع: numeric (سال مبنا)</span>
+                  <pre class="admin-diyah-sample-pre">100</pre>
+                </div>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">کلید: coefficient_1396 تا coefficient_1404 — نوع: numeric</span>
+                  <pre class="admin-diyah-sample-pre">109.6, 143.842, 203.15, 298.858, 437.042, 640.225, 974.75, 1306.77, 1750</pre>
+                </div>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">نمونه تک‌تک (برای کپی با «افزودن نرخ»)</span>
+                  <pre class="admin-diyah-sample-pre">{{ delayDamagesSampleCoefficients }}</pre>
+                </div>
+              </section>
+              <p class="admin-diyah-help-note">
+                برای سال‌های قبل از ۱۳۹۵ یا بعد از ۱۴۰۴ هم می‌توانید نرخ <code class="font-mono text-xs bg-gray-200 px-1 rounded">coefficient_۱۳۳۰</code> تا <code class="font-mono text-xs bg-gray-200 px-1 rounded">coefficient_1410</code> با مقادیر شاخص رسمی اضافه کنید. منبع: جدول شاخص سالانه بانک مرکزی جمهوری اسلامی ایران.
+              </p>
+            </div>
+            <div class="admin-diyah-help-footer">
+              <button type="button" class="btn-primary" @click="showDelayDamagesHelp = false">متوجه شدم</button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+
     <div class="card-dashboard">
       <div class="card-dashboard-header">
         <h2 class="card-dashboard-title">افزودن نرخ</h2>
@@ -589,6 +654,7 @@ const showDowryHelp = ref(false)
 const showInheritanceHelp = ref(false)
 const showCourtFeeHelp = ref(false)
 const showAttorneyFeeHelp = ref(false)
+const showDelayDamagesHelp = ref(false)
 const syncInflationPending = ref(false)
 
 /** نمونه‌های JSON حق دادرسی — قابل کپی در پنل */
@@ -651,6 +717,18 @@ const attorneyFeeSampleOutcomeTable = `{
   "rejection_retrial": 0.5,
   "rejection_res_judicata": 0.5
 }`
+
+/** نمونه ضرایب خسارت تأخیر تأدیه (برای راهنمای پنل) */
+const delayDamagesSampleCoefficients = `coefficient_1395 = 100
+coefficient_1396 = 109.6
+coefficient_1397 = 143.842
+coefficient_1398 = 203.15
+coefficient_1399 = 298.858
+coefficient_1400 = 437.042
+coefficient_1401 = 640.225
+coefficient_1402 = 974.75
+coefficient_1403 = 1306.77
+coefficient_1404 = 1750`
 
 const diyahSampleVictimGender = '{"male":1,"female":0.5}'
 const diyahSampleIncidentCategories = `[
