@@ -70,6 +70,15 @@
           راهنما و نمونه کامل هزینه کارشناسی
         </button>
         <button
+          v-if="calculatorSlug === 'execution-cost'"
+          type="button"
+          class="btn-secondary flex items-center gap-2"
+          @click="showExecutionCostHelp = true"
+        >
+          <Icon name="lucide:book-open" class="w-4 h-4" />
+          راهنما و نمونه کامل هزینه اجرای احکام
+        </button>
+        <button
           v-if="calculatorSlug === 'dowry' || calculatorSlug === 'delay-damages'"
           type="button"
           class="btn-primary flex items-center gap-2"
@@ -642,6 +651,68 @@
       </Transition>
     </Teleport>
 
+    <Teleport v-if="calculatorSlug === 'execution-cost'" to="body">
+      <Transition name="rates-diyah-help-fade">
+        <div
+          v-if="showExecutionCostHelp"
+          class="admin-diyah-help-overlay"
+          role="dialog"
+          aria-modal="true"
+          @click.self="showExecutionCostHelp = false"
+        >
+          <div class="admin-diyah-help-modal">
+            <div class="admin-diyah-help-header">
+              <h2 class="admin-diyah-help-title">
+                <Icon name="lucide:book-open" class="w-5 h-5" />
+                راهنما و نمونه کامل هزینه اجرای احکام
+              </h2>
+              <button type="button" class="admin-diyah-help-close" aria-label="بستن" @click="showExecutionCostHelp = false">
+                <Icon name="lucide:x" class="w-5 h-5" />
+              </button>
+            </div>
+            <div class="admin-diyah-help-body">
+              <p class="admin-diyah-help-intro">
+                نرخ‌های ماشین‌حساب <strong>هزینه اجرای احکام</strong> از این صفحه خوانده می‌شوند. کاربر در سایت فیلدهای <strong>سال</strong> (نسخه مقررات)، <strong>دسته‌بندی</strong> و در صورت انتخاب «دعاوی مالی» فیلد <strong>مبلغ حکم (ریال)</strong> را پر می‌کند.
+              </p>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">سال و دسته‌بندی</h3>
+                <p class="admin-diyah-help-intro mb-2">
+                  <strong>سال:</strong> انتخاب نسخهٔ مقررات (برچسب نسخه به‌صورت سال نمایش داده می‌شود). در صورت خالی بودن، آخرین نسخهٔ فعال استفاده می‌شود.<br />
+                  <strong>دسته‌بندی:</strong> شش گزینه؛ فقط برای «دعاوی مالی» مبلغ حکم در فرم نمایش داده می‌شود و هزینه به‌صورت درصد از مبلغ با حداقل و حداکثر محاسبه می‌شود. برای سایر دسته‌ها هزینه ثابت از جدول نرخ خوانده می‌شود.
+                </p>
+              </section>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">نرخ‌های مورد نیاز</h3>
+                <ul class="admin-diyah-help-list text-sm text-gray-700 space-y-1 mb-2">
+                  <li><code class="font-mono text-xs bg-gray-200 px-1 rounded">enforcement_categories</code> (نوع json) — آرایهٔ دسته‌ها با <code>value</code> و <code>label</code>.</li>
+                  <li>برای دعاوی مالی: <code class="font-mono text-xs bg-gray-200 px-1 rounded">execution_rate_percent</code>, <code class="font-mono text-xs bg-gray-200 px-1 rounded">min_cost</code>, <code class="font-mono text-xs bg-gray-200 px-1 rounded">max_cost</code> (اختیاری؛ نوع numeric، مبلغ به ریال).</li>
+                  <li>برای سایر دسته‌ها: <code class="font-mono text-xs bg-gray-200 px-1 rounded">fee_table_execution</code> (نوع json) — شیء که کلید = value دسته و مقدار = مبلغ ثابت به ریال.</li>
+                </ul>
+              </section>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">نمونه JSON — enforcement_categories</h3>
+                <div class="admin-diyah-sample-block">
+                  <pre class="admin-diyah-sample-pre text-xs">{{ executionCostSampleCategories }}</pre>
+                </div>
+              </section>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">نمونه JSON — fee_table_execution</h3>
+                <div class="admin-diyah-sample-block">
+                  <pre class="admin-diyah-sample-pre text-xs">{{ executionCostSampleFeeTable }}</pre>
+                </div>
+              </section>
+              <p class="admin-diyah-help-note">
+                می‌توانید از بخش «ورود / افزودن گروهی با JSON» با یک شیء مثل <code class="font-mono text-xs bg-gray-200 px-1 rounded">{"enforcement_categories": [...], "execution_rate_percent": 2, "min_cost": 1000000, "fee_table_execution": {...}}</code> نرخ‌ها را یک‌جا ایجاد یا به‌روز کنید.
+              </p>
+            </div>
+            <div class="admin-diyah-help-footer">
+              <button type="button" class="btn-primary" @click="showExecutionCostHelp = false">متوجه شدم</button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+
     <!-- بخش افزودن/ورود گروهی با JSON -->
     <div class="card-dashboard">
       <div class="card-dashboard-header flex flex-wrap items-center justify-between gap-2">
@@ -852,6 +923,7 @@ const showCourtFeeHelp = ref(false)
 const showAttorneyFeeHelp = ref(false)
 const showDelayDamagesHelp = ref(false)
 const showExpertFeeHelp = ref(false)
+const showExecutionCostHelp = ref(false)
 const syncInflationPending = ref(false)
 
 /** نمونه‌های JSON حق دادرسی — قابل کپی در پنل */
@@ -941,6 +1013,23 @@ const expertFeeSampleGroupWithFields = `{
     { "id": "water", "label": "آب", "fee_type": "mixed", "fee_rule": {} },
     { "id": "mines", "label": "معادن", "fee_type": "article_11_plus_percent", "fee_rule": { "extra_percent": 35 } }
   ]
+}`
+
+/** نمونه‌های JSON هزینه اجرای احکام */
+const executionCostSampleCategories = `[
+  {"value": "financial", "label": "دعاوی مالی"},
+  {"value": "non_financial_enforcement", "label": "اجرای احکام دعاوی غیر مالی"},
+  {"value": "not_valued", "label": "احکامی که محکوم به آن تقویم نشده"},
+  {"value": "non_judicial_bodies", "label": "هزینه اجرای آرا و تصمیمات مراجع غیردادگستری"},
+  {"value": "provisional_enforcement", "label": "هزینه اجرای موقت احکام در کلیه مراجع قضایی"},
+  {"value": "third_party_objection", "label": "اعتراض شخص ثالث به اجرای احکام مدنی"}
+]`
+const executionCostSampleFeeTable = `{
+  "non_financial_enforcement": 500000,
+  "not_valued": 500000,
+  "non_judicial_bodies": 500000,
+  "provisional_enforcement": 500000,
+  "third_party_objection": 500000
 }`
 
 /** نمونه ضرایب خسارت تأخیر تأدیه (برای راهنمای پنل) */
