@@ -512,34 +512,126 @@
           aria-modal="true"
           @click.self="showExpertFeeHelp = false"
         >
-          <div class="admin-diyah-help-modal">
+          <div class="admin-diyah-help-modal admin-expert-fee-help-modal">
             <div class="admin-diyah-help-header">
               <h2 class="admin-diyah-help-title">
                 <Icon name="lucide:book-open" class="w-5 h-5" />
-                راهنما و نمونه کامل هزینه کارشناسی
+                راهنمای کامل نرخ‌های ماشین‌حساب هزینه کارشناسی
               </h2>
               <button type="button" class="admin-diyah-help-close" aria-label="بستن" @click="showExpertFeeHelp = false">
                 <Icon name="lucide:x" class="w-5 h-5" />
               </button>
             </div>
             <div class="admin-diyah-help-body">
-              <p class="admin-diyah-help-intro">
-                نرخ <code class="font-mono text-xs bg-gray-200 px-1 rounded">expertise_groups</code> یک آرایهٔ JSON از <strong>گروه‌های کارشناسی</strong> است. هر گروه شامل: <code class="bg-gray-100 px-1 rounded">id</code> (یکتا)، <code class="bg-gray-100 px-1 rounded">label</code> (برچسب فارسی)، <code class="bg-gray-100 px-1 rounded">fee_type</code> (<code>percent</code> یا <code>fixed</code>)، <code class="bg-gray-100 px-1 rounded">fee_value</code> (عدد)، و در صورت نیاز <code class="bg-gray-100 px-1 rounded">fields</code> (آرایهٔ رشته‌ها با همان فیلدها: id، label، fee_type، fee_value). اگر <code>fields</code> خالی باشد فقط گروه در فرم نمایش داده می‌شود؛ اگر پر باشد فیلد «رشته» برای آن گروه نمایش داده می‌شود و نرخ از رشتهٔ انتخاب‌شده گرفته می‌شود.
-              </p>
               <section class="admin-diyah-sample-section">
-                <h3 class="admin-diyah-sample-title">نمونه JSON — گروه بدون رشته</h3>
-                <div class="admin-diyah-sample-block">
-                  <pre class="admin-diyah-sample-pre">{{ expertFeeSampleGroupNoFields }}</pre>
+                <h3 class="admin-diyah-sample-title">۱. این صفحه چه کاری انجام می‌دهد؟</h3>
+                <p class="admin-diyah-help-intro mb-2">
+                  در این صفحه نرخ‌ها و <strong>تعرفه گروه‌های کارشناسی رسمی</strong> را برای ماشین‌حساب «هزینه کارشناسی» تعریف می‌کنید. کاربر در سایت گروه کارشناسی (و در صورت وجود، رشته) را انتخاب و مبلغ موضوع را به <strong>تومان</strong> وارد می‌کند؛ سیستم بر اساس تعرفهٔ شما حق‌العمل تخمینی را محاسبه می‌کند.
+                </p>
+                <p class="admin-diyah-help-intro mb-0">
+                  <strong>نکته:</strong> مبلغ قطعی را مرجع تعیین کارشناس (دادگاه) اعلام می‌کند؛ خروجی ماشین‌حساب فقط <strong>تخمین</strong> است.
+                </p>
+              </section>
+
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">۲. چه نرخی باید اضافه کنید؟</h3>
+                <p class="admin-diyah-help-intro mb-2">
+                  فقط یک نرخ با مشخصات زیر کافی است:
+                </p>
+                <ul class="admin-diyah-help-list text-sm text-gray-700 space-y-1 mb-2">
+                  <li><strong>کلید (key):</strong> <code class="font-mono text-xs bg-gray-200 px-1 rounded">expertise_groups</code></li>
+                  <li><strong>نوع مقدار:</strong> <code class="font-mono text-xs bg-gray-200 px-1 rounded">json</code></li>
+                  <li><strong>مقدار:</strong> یک <strong>آرایه</strong> از گروه‌های کارشناسی (هر گروه یک شیء JSON است).</li>
+                </ul>
+                <p class="admin-diyah-help-intro mb-0">
+                  می‌توانید از بخش <strong>«ورود / افزودن گروهی با JSON»</strong> (بالای همین صفحه) استفاده کنید: در جعبهٔ متن یک شیء مثل <code class="font-mono text-xs bg-gray-200 px-1 rounded">{"expertise_groups": [ ... ]}</code> paste کنید و دکمهٔ «اعمال JSON و ذخیره نرخ‌ها» را بزنید تا نرخ <code>expertise_groups</code> یک‌جا ایجاد یا به‌روز شود.
+                </p>
+              </section>
+
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">۳. ساختار هر گروه کارشناسی</h3>
+                <p class="admin-diyah-help-intro mb-2">
+                  هر عنصر آرایهٔ <code>expertise_groups</code> یک <strong>گروه</strong> است و این فیلدها را دارد:
+                </p>
+                <ul class="admin-diyah-help-list text-sm text-gray-700 space-y-1 mb-3">
+                  <li><code class="bg-gray-100 px-1 rounded">id</code> — شناسهٔ یکتا (انگلیسی، مثلاً <code>eval_pricing</code>، <code>water_mines</code>)</li>
+                  <li><code class="bg-gray-100 px-1 rounded">label</code> — عنوان فارسی که در فرم به کاربر نشان داده می‌شود</li>
+                  <li><code class="bg-gray-100 px-1 rounded">fee_type</code> — نوع تعرفه (جدول زیر)</li>
+                  <li><code class="bg-gray-100 px-1 rounded">fee_rule</code> — شیء قواعد محاسبه (بسته به <code>fee_type</code> متفاوت است)</li>
+                  <li><code class="bg-gray-100 px-1 rounded">fields</code> — اختیاری؛ آرایهٔ «رشته»ها برای این گروه (مثلاً آب، معادن). اگر خالی باشد فقط گروه در فرم دیده می‌شود؛ اگر پر باشد فیلد «رشته» برای آن گروه نمایش داده می‌شود.</li>
+                </ul>
+                <p class="admin-diyah-help-intro mb-2 font-medium">انواع <code>fee_type</code> و معنای آن‌ها:</p>
+                <div class="admin-expert-fee-table-wrap overflow-x-auto mb-3">
+                  <table class="admin-expert-fee-table">
+                    <thead>
+                      <tr>
+                        <th>fee_type</th>
+                        <th>معنی برای ادمین</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td><code>tiered</code></td><td>تعرفه پلکانی (جدول brackets). مبلغ موضوع در بازه‌های مختلف، نرخ متفاوت دارد (مثل ماده ۱۱ و اجاره‌بها).</td></tr>
+                      <tr><td><code>article_11</code></td><td>همان تعرفهٔ ماده ۱۱ (از گروه «ارزیابی - قیمت‌گذاری» خوانده می‌شود). فقط مبلغ موضوع را وارد کنید.</td></tr>
+                      <tr><td><code>article_11_plus_percent</code></td><td>حق پایه = ماده ۱۱؛ سپس یک درصد اضافه (مثلاً ۵۰٪ یا ۱۰۰٪). در <code>fee_rule</code> مقدار <code>extra_percent</code> را بگذارید.</td></tr>
+                      <tr><td><code>dynamic_by_subject</code></td><td>این گروه خودش عدد ثابت ندارد؛ کاربر باید <strong>رشته</strong> را انتخاب کند. هر رشته می‌تواند <code>fee_type</code> و <code>fee_rule</code> خودش را داشته باشد.</td></tr>
+                      <tr><td><code>mixed</code></td><td>بسته به موضوع پرونده نرخ متفاوت است. اگر کاربر مبلغ وارد کند، سیستم با ماده ۱۱ تخمین می‌زند؛ وگرنه فقط توضیح نمایش داده می‌شود.</td></tr>
+                      <tr><td><code>range_or_article_11</code></td><td>بازهٔ ثابت یا ماده ۱۱. در <code>fee_rule</code> می‌توانید <code>minimum_fee</code> و <code>maximum_fee</code> بگذارید.</td></tr>
+                      <tr><td><code>article_9</code> / <code>article_9_range</code></td><td>تعرفهٔ ماده ۹ یا بازه. در صورت وارد بودن مبلغ، تخمین با ماده ۱۱ یا بازه نمایش داده می‌شود.</td></tr>
+                    </tbody>
+                  </table>
                 </div>
               </section>
+
               <section class="admin-diyah-sample-section">
-                <h3 class="admin-diyah-sample-title">نمونه JSON — گروه با رشته (fields)</h3>
+                <h3 class="admin-diyah-sample-title">۴. توضیح <code>fee_rule</code> برای نوع پلکانی (tiered)</h3>
+                <p class="admin-diyah-help-intro mb-2">
+                  برای <code>fee_type: "tiered"</code> داخل <code>fee_rule</code> این موارد را قرار دهید:
+                </p>
+                <ul class="admin-diyah-help-list text-sm text-gray-700 space-y-1 mb-2">
+                  <li><code class="bg-gray-100 px-1 rounded">brackets</code> — آرایهٔ پلکانی. هر پله: <code>to</code> (حد بالای بازه به ریال)، <code>from</code> (حد پایین؛ در پلهٔ اول معمولاً نگذارید)، <code>mode</code>: <code>"fixed"</code> (مبلغ ثابت) یا <code>"percent_on_excess"</code> (درصد از مازاد)، <code>value</code> (عدد ثابت به ریال یا درصد)، <code>base_threshold</code> (فقط برای percent_on_excess؛ مبلغ مبنا به ریال).</li>
+                  <li><code class="bg-gray-100 px-1 rounded">minimum_fee</code> — حداقل حق‌العمل به ریال (اختیاری).</li>
+                  <li><code class="bg-gray-100 px-1 rounded">maximum_fee_per_expert</code> یا <code>maximum_fee</code> — حداکثر حق‌العمل به ریال (اختیاری).</li>
+                  <li><code class="bg-gray-100 px-1 rounded">currency</code> — معمولاً <code>"IRR"</code> (ریال).</li>
+                </ul>
+                <p class="admin-diyah-help-intro mb-0">
+                  <strong>مهم:</strong> مبلغی که کاربر در فرم وارد می‌کند به <strong>تومان</strong> است؛ سیستم آن را به ریال (×۱۰) تبدیل کرده و با <code>brackets</code> محاسبه می‌کند. خروجی دوباره به تومان نمایش داده می‌شود.
+                </p>
+              </section>
+
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">۵. گروه «ارزیابی - قیمت‌گذاری ماده ۱۱» (eval_pricing)</h3>
+                <p class="admin-diyah-help-intro mb-2">
+                  این گروه باید در آرایه حتماً وجود داشته باشد و <code>fee_type: "tiered"</code> با <code>brackets</code> کامل ماده ۱۱ داشته باشد. گروه‌های دیگر که <code>article_11</code> یا <code>article_11_plus_percent</code> هستند از همین جدول استفاده می‌کنند.
+                </p>
                 <div class="admin-diyah-sample-block">
-                  <pre class="admin-diyah-sample-pre">{{ expertFeeSampleGroupWithFields }}</pre>
+                  <span class="admin-diyah-sample-label">نمونهٔ خلاصه — گروه پلکانی (ماده ۱۱)</span>
+                  <pre class="admin-diyah-sample-pre text-xs">{{ expertFeeSampleGroupNoFields }}</pre>
                 </div>
               </section>
+
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">۶. گروه دارای «رشته» (مثال: مهندسی آب و معادن)</h3>
+                <p class="admin-diyah-help-intro mb-2">
+                  اگر گروهی چند <strong>رشته</strong> دارد (مثل آب، مواد، معادن)، آن را با <code>fee_type: "dynamic_by_subject"</code> و آرایهٔ <code>fields</code> تعریف کنید. هر عنصر <code>fields</code>: <code>id</code>، <code>label</code>، و در صورت نیاز <code>fee_type</code> و <code>fee_rule</code> (مثلاً <code>article_11_plus_percent</code> با <code>extra_percent: 35</code>).
+                </p>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">نمونه — گروه با رشته‌ها</span>
+                  <pre class="admin-diyah-sample-pre text-xs">{{ expertFeeSampleGroupWithFields }}</pre>
+                </div>
+              </section>
+
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">۷. خلاصهٔ گام‌به‌گام برای ادمین</h3>
+                <ol class="admin-diyah-help-list text-sm text-gray-700 space-y-2 list-decimal list-inside">
+                  <li>روی «ورود / افزودن گروهی با JSON» بروید و در جعبهٔ متن بنویسید: <code class="font-mono text-xs bg-gray-200 px-1 rounded">{"expertise_groups": [ ... ]}</code> — به‌جای <code>...</code> آرایهٔ گروه‌ها را (از نمونه‌های بالا یا فایل تعرفه) paste کنید.</li>
+                  <li>دکمهٔ «اعمال JSON و ذخیره نرخ‌ها» را بزنید. اگر نرخ <code>expertise_groups</code> از قبل وجود داشته باشد به‌روز می‌شود؛ وگرنه ساخته می‌شود.</li>
+                  <li>یا به‌صورت تک‌تک: «افزودن نرخ» → کلید <code>expertise_groups</code>، نوع <code>json</code>، و در قسمت JSON آرایهٔ کامل گروه‌ها را paste کنید.</li>
+                  <li>حتماً گروه <code>eval_pricing</code> (ارزیابی - قیمت‌گذاری ماده ۱۱) را با <code>brackets</code> کامل در آرایه داشته باشید تا محاسبهٔ ماده ۱۱ برای بقیه گروه‌ها کار کند.</li>
+                </ol>
+              </section>
+
               <p class="admin-diyah-help-note">
-                مبلغ نهایی حق‌العمل کارشناسی را <strong>مرجع تعیین کارشناس</strong> اعلام می‌کند؛ خروجی ماشین‌حساب صرفاً تخمینی است.
+                مبلغ نهایی حق‌العمل کارشناسی را <strong>مرجع تعیین کارشناس</strong> اعلام می‌کند؛ خروجی ماشین‌حساب صرفاً تخمینی است. در صورت نیاز می‌توانید از دکمهٔ «کپی JSON نرخ‌های فعلی» استفاده کنید تا محتوای فعلی نرخ‌ها را ببینید و پس از ویرایش دوباره اعمال کنید.
               </p>
             </div>
             <div class="admin-diyah-help-footer">
@@ -550,9 +642,57 @@
       </Transition>
     </Teleport>
 
+    <!-- بخش افزودن/ورود گروهی با JSON -->
+    <div class="card-dashboard">
+      <div class="card-dashboard-header flex flex-wrap items-center justify-between gap-2">
+        <h2 class="card-dashboard-title">ورود / افزودن گروهی با JSON</h2>
+        <button
+          type="button"
+          class="btn-secondary text-sm! py-1.5! px-3!"
+          :disabled="rates.length === 0"
+          @click="copyCurrentRatesAsJson"
+        >
+          <Icon name="lucide:copy" class="w-4 h-4" />
+          کپی JSON نرخ‌های فعلی
+        </button>
+      </div>
+      <div class="card-dashboard-body">
+        <p class="text-sm text-gray-600 mb-2">
+          یک شیء JSON وارد کنید که هر <strong>کلید</strong> آن نام نرخ و <strong>مقدار</strong> آن مقدار نرخ باشد. نرخ‌های موجود با همان کلید به‌روزرسانی و نرخ‌های جدید اضافه می‌شوند. مقدار عددی → numeric، متن → text، true/false → boolean، آرایه یا شیء → json.
+        </p>
+        <p v-if="bulkJsonError" class="text-sm text-red-600 mb-2">{{ bulkJsonError }}</p>
+        <div class="flex flex-col gap-3 mb-4">
+          <textarea
+            v-model="bulkJsonText"
+            class="input-dashboard font-mono text-sm min-h-[140px] w-full rounded-lg border border-gray-300 p-3"
+            placeholder='{"full_diyah_amount": 500000000, "victim_gender_multipliers": {"male":1,"female":0.5}}'
+            spellcheck="false"
+          />
+          <div class="flex gap-2">
+            <button
+              type="button"
+              class="btn-primary"
+              :disabled="bulkJsonPending || !bulkJsonText.trim()"
+              @click="applyBulkJson"
+            >
+              <Icon name="lucide:upload" class="w-4 h-4" />
+              {{ bulkJsonPending ? 'در حال اعمال...' : 'اعمال JSON و ذخیره نرخ‌ها' }}
+            </button>
+            <button
+              type="button"
+              class="btn-secondary"
+              @click="bulkJsonText = ''; bulkJsonError = ''"
+            >
+              پاک کردن
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="card-dashboard">
       <div class="card-dashboard-header">
-        <h2 class="card-dashboard-title">افزودن نرخ</h2>
+        <h2 class="card-dashboard-title">افزودن نرخ (تک‌تک)</h2>
       </div>
       <div class="card-dashboard-body">
         <p v-if="addError" class="text-sm text-red-600 mb-2">{{ addError }}</p>
@@ -775,22 +915,31 @@ const attorneyFeeSampleOutcomeTable = `{
   "rejection_res_judicata": 0.5
 }`
 
-/** نمونه‌های JSON هزینه کارشناسی (expertise_groups) */
+/** نمونه‌های JSON هزینه کارشناسی (expertise_groups) — فرمت tiered و fee_rule */
 const expertFeeSampleGroupNoFields = `{
   "id": "eval_pricing",
   "label": "کارشناسی ارزیابی - قیمت‌گذاری طبق ماده ۱۱",
-  "fee_type": "percent",
-  "fee_value": 2,
-  "fields": []
+  "fee_type": "tiered",
+  "fee_rule": {
+    "article": "11",
+    "currency": "IRR",
+    "minimum_fee": 6000000,
+    "maximum_fee_per_expert": 1180000000,
+    "brackets": [
+      { "to": 250000000, "mode": "fixed", "value": 6000000 },
+      { "from": 250000001, "to": 1000000000, "mode": "percent_on_excess", "value": 0.45, "base_threshold": 250000000 },
+      { "from": 1000000001, "to": 5000000000, "mode": "percent_on_excess", "value": 0.30, "base_threshold": 1000000000 }
+    ]
+  }
 }`
 const expertFeeSampleGroupWithFields = `{
   "id": "water_mines",
   "label": "مهندسی آب و معادن",
-  "fee_type": "percent",
-  "fee_value": 2,
+  "fee_type": "dynamic_by_subject",
+  "fee_rule": { "note": "بر اساس رشته/موضوع محاسبه می‌شود." },
   "fields": [
-    { "id": "water", "label": "آب", "fee_type": "percent", "fee_value": 2 },
-    { "id": "mines", "label": "معادن", "fee_type": "percent", "fee_value": 2 }
+    { "id": "water", "label": "آب", "fee_type": "mixed", "fee_rule": {} },
+    { "id": "mines", "label": "معادن", "fee_type": "article_11_plus_percent", "fee_rule": { "extra_percent": 35 } }
   ]
 }`
 
@@ -904,6 +1053,10 @@ const inheritanceShareRatesJson = `{
   "uncle_unit": 2,
   "aunt_unit": 1
 }`
+
+const bulkJsonText = ref('')
+const bulkJsonError = ref('')
+const bulkJsonPending = ref(false)
 
 const newRate = reactive({
   key: '',
@@ -1038,6 +1191,111 @@ async function syncInflationIndex() {
   }
 }
 
+/** تعیین نوع مقدار از روی مقدار JavaScript */
+function inferValueType(val: unknown): 'numeric' | 'text' | 'boolean' | 'json' {
+  if (typeof val === 'number' && !Number.isNaN(val)) return 'numeric'
+  if (typeof val === 'boolean') return 'boolean'
+  if (typeof val === 'string') return 'text'
+  if (val !== null && (Array.isArray(val) || (typeof val === 'object'))) return 'json'
+  return 'text'
+}
+
+/** ساخت بدنهٔ نرخ برای API از نوع و مقدار */
+function buildRatePayload(key: string, value: unknown): { key: string; value_type: string; value_numeric?: number; value_text?: string; value_json?: unknown } {
+  const value_type = inferValueType(value)
+  const payload: Record<string, unknown> = { key, value_type }
+  if (value_type === 'numeric') payload.value_numeric = Number(value)
+  else if (value_type === 'text' || value_type === 'boolean') payload.value_text = String(value)
+  else if (value_type === 'json') payload.value_json = value
+  return payload as { key: string; value_type: string; value_numeric?: number; value_text?: string; value_json?: unknown }
+}
+
+async function applyBulkJson() {
+  bulkJsonError.value = ''
+  const raw = bulkJsonText.value.trim()
+  if (!raw) return
+  let obj: Record<string, unknown>
+  try {
+    const parsed = JSON.parse(raw)
+    if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      bulkJsonError.value = 'لطفاً یک شیء JSON (object) وارد کنید، نه آرایه یا مقدار ساده.'
+      return
+    }
+    obj = parsed as Record<string, unknown>
+  } catch {
+    bulkJsonError.value = 'متن واردشده JSON معتبر نیست.'
+    return
+  }
+  const entries = Object.entries(obj)
+  if (entries.length === 0) {
+    bulkJsonError.value = 'شیء JSON خالی است.'
+    return
+  }
+  bulkJsonPending.value = true
+  let applied = 0
+  let failed = 0
+  for (const [key, value] of entries) {
+    if (!key || key.trim() === '') continue
+    const payload = buildRatePayload(key.trim(), value)
+    const existing = rates.value.find((r) => String(r.key) === key.trim()) as Record<string, unknown> | undefined
+    if (existing && existing.id != null) {
+      const patchBody = {
+        key: payload.key,
+        value_type: payload.value_type,
+        value_numeric: payload.value_numeric,
+        value_text: payload.value_text,
+        value_json: payload.value_json,
+      }
+      const res = await usePatch({
+        url: `admin/legal-calculator-rates/${existing.id}`,
+        includeAuthHeader: true,
+        body: patchBody,
+      }, true)
+      if (res.status !== false) applied += 1
+      else failed += 1
+    } else {
+      const res = await usePost({
+        url: `admin/legal-calculator-versions/${versionId.value}/rates`,
+        includeAuthHeader: true,
+        body: payload,
+      }, true)
+      if (res.status !== false) applied += 1
+      else failed += 1
+    }
+  }
+  bulkJsonPending.value = false
+  await load()
+  if (failed === 0) {
+    useToast().add({ color: 'success', description: `${applied} نرخ با موفقیت اعمال شد.` })
+    bulkJsonText.value = ''
+  } else {
+    bulkJsonError.value = `${applied} نرخ اعمال شد، ${failed} مورد خطا داشت.`
+    useToast().add({ color: 'warning', description: bulkJsonError.value })
+  }
+}
+
+function copyCurrentRatesAsJson() {
+  const obj: Record<string, unknown> = {}
+  for (const r of rates.value) {
+    const key = String(r.key ?? '')
+    if (!key) continue
+    if (r.value_type === 'numeric') obj[key] = r.value_numeric != null ? Number(r.value_numeric) : 0
+    else if (r.value_type === 'text' || r.value_type === 'boolean') obj[key] = r.value_text != null ? String(r.value_text) : ''
+    else if (r.value_type === 'json') obj[key] = r.value_json ?? []
+    else obj[key] = r.value_text != null ? String(r.value_text) : ''
+  }
+  const json = JSON.stringify(obj, null, 2)
+  if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(json).then(
+      () => useToast().add({ color: 'success', description: 'JSON نرخ‌های فعلی در کلیپبورد کپی شد.' }),
+      () => useToast().add({ color: 'error', description: 'کپی به کلیپبورد انجام نشد.' })
+    )
+  } else {
+    bulkJsonText.value = json
+    useToast().add({ color: 'info', description: 'JSON در جعبهٔ متن بالا قرار داده شد؛ می‌توانید کپی کنید.' })
+  }
+}
+
 onMounted(() => {
   load()
   loadVersion()
@@ -1121,6 +1379,31 @@ useHead({ title: 'نرخ‌های نسخه | پنل ادمین' })
 
 .admin-diyah-help-modal {
   @apply my-8 w-full max-w-2xl rounded-xl bg-white shadow-xl;
+}
+
+.admin-expert-fee-help-modal {
+  @apply max-w-4xl;
+}
+
+.admin-expert-fee-table-wrap {
+  @apply rounded-lg border border-gray-200 overflow-hidden;
+}
+
+.admin-expert-fee-table {
+  @apply w-full text-sm border-collapse;
+}
+
+.admin-expert-fee-table th,
+.admin-expert-fee-table td {
+  @apply border border-gray-200 px-3 py-2 text-right;
+}
+
+.admin-expert-fee-table th {
+  @apply bg-gray-100 font-semibold text-gray-800;
+}
+
+.admin-expert-fee-table td code {
+  @apply font-mono text-xs bg-gray-100 px-1 rounded;
 }
 
 .admin-diyah-help-header {
