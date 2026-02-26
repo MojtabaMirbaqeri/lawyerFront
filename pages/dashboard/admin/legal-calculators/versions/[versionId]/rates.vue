@@ -61,6 +61,15 @@
           راهنما و نمونه کامل خسارت تأخیر تأدیه
         </button>
         <button
+          v-if="calculatorSlug === 'expert-fee'"
+          type="button"
+          class="btn-secondary flex items-center gap-2"
+          @click="showExpertFeeHelp = true"
+        >
+          <Icon name="lucide:book-open" class="w-4 h-4" />
+          راهنما و نمونه کامل هزینه کارشناسی
+        </button>
+        <button
           v-if="calculatorSlug === 'dowry' || calculatorSlug === 'delay-damages'"
           type="button"
           class="btn-primary flex items-center gap-2"
@@ -494,6 +503,53 @@
       </Transition>
     </Teleport>
 
+    <Teleport v-if="calculatorSlug === 'expert-fee'" to="body">
+      <Transition name="rates-diyah-help-fade">
+        <div
+          v-if="showExpertFeeHelp"
+          class="admin-diyah-help-overlay"
+          role="dialog"
+          aria-modal="true"
+          @click.self="showExpertFeeHelp = false"
+        >
+          <div class="admin-diyah-help-modal">
+            <div class="admin-diyah-help-header">
+              <h2 class="admin-diyah-help-title">
+                <Icon name="lucide:book-open" class="w-5 h-5" />
+                راهنما و نمونه کامل هزینه کارشناسی
+              </h2>
+              <button type="button" class="admin-diyah-help-close" aria-label="بستن" @click="showExpertFeeHelp = false">
+                <Icon name="lucide:x" class="w-5 h-5" />
+              </button>
+            </div>
+            <div class="admin-diyah-help-body">
+              <p class="admin-diyah-help-intro">
+                نرخ <code class="font-mono text-xs bg-gray-200 px-1 rounded">expertise_groups</code> یک آرایهٔ JSON از <strong>گروه‌های کارشناسی</strong> است. هر گروه شامل: <code class="bg-gray-100 px-1 rounded">id</code> (یکتا)، <code class="bg-gray-100 px-1 rounded">label</code> (برچسب فارسی)، <code class="bg-gray-100 px-1 rounded">fee_type</code> (<code>percent</code> یا <code>fixed</code>)، <code class="bg-gray-100 px-1 rounded">fee_value</code> (عدد)، و در صورت نیاز <code class="bg-gray-100 px-1 rounded">fields</code> (آرایهٔ رشته‌ها با همان فیلدها: id، label، fee_type، fee_value). اگر <code>fields</code> خالی باشد فقط گروه در فرم نمایش داده می‌شود؛ اگر پر باشد فیلد «رشته» برای آن گروه نمایش داده می‌شود و نرخ از رشتهٔ انتخاب‌شده گرفته می‌شود.
+              </p>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">نمونه JSON — گروه بدون رشته</h3>
+                <div class="admin-diyah-sample-block">
+                  <pre class="admin-diyah-sample-pre">{{ expertFeeSampleGroupNoFields }}</pre>
+                </div>
+              </section>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">نمونه JSON — گروه با رشته (fields)</h3>
+                <div class="admin-diyah-sample-block">
+                  <pre class="admin-diyah-sample-pre">{{ expertFeeSampleGroupWithFields }}</pre>
+                </div>
+              </section>
+              <p class="admin-diyah-help-note">
+                مبلغ نهایی حق‌العمل کارشناسی را <strong>مرجع تعیین کارشناس</strong> اعلام می‌کند؛ خروجی ماشین‌حساب صرفاً تخمینی است.
+              </p>
+            </div>
+            <div class="admin-diyah-help-footer">
+              <button type="button" class="btn-primary" @click="showExpertFeeHelp = false">متوجه شدم</button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+
     <div class="card-dashboard">
       <div class="card-dashboard-header">
         <h2 class="card-dashboard-title">افزودن نرخ</h2>
@@ -655,6 +711,7 @@ const showInheritanceHelp = ref(false)
 const showCourtFeeHelp = ref(false)
 const showAttorneyFeeHelp = ref(false)
 const showDelayDamagesHelp = ref(false)
+const showExpertFeeHelp = ref(false)
 const syncInflationPending = ref(false)
 
 /** نمونه‌های JSON حق دادرسی — قابل کپی در پنل */
@@ -716,6 +773,25 @@ const attorneyFeeSampleOutcomeTable = `{
   "rejection_statute_of_limitations": 0.5,
   "rejection_retrial": 0.5,
   "rejection_res_judicata": 0.5
+}`
+
+/** نمونه‌های JSON هزینه کارشناسی (expertise_groups) */
+const expertFeeSampleGroupNoFields = `{
+  "id": "eval_pricing",
+  "label": "کارشناسی ارزیابی - قیمت‌گذاری طبق ماده ۱۱",
+  "fee_type": "percent",
+  "fee_value": 2,
+  "fields": []
+}`
+const expertFeeSampleGroupWithFields = `{
+  "id": "water_mines",
+  "label": "مهندسی آب و معادن",
+  "fee_type": "percent",
+  "fee_value": 2,
+  "fields": [
+    { "id": "water", "label": "آب", "fee_type": "percent", "fee_value": 2 },
+    { "id": "mines", "label": "معادن", "fee_type": "percent", "fee_value": 2 }
+  ]
 }`
 
 /** نمونه ضرایب خسارت تأخیر تأدیه (برای راهنمای پنل) */

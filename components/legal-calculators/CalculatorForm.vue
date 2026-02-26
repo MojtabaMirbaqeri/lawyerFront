@@ -34,7 +34,7 @@
               >
                 <option value="">انتخاب کنید</option>
                 <option
-                  v-for="opt in (field.options || [])"
+                  v-for="opt in optionsForField(field)"
                   :key="String(opt.value)"
                   :value="opt.value"
                 >
@@ -153,7 +153,7 @@
         >
           <option value="">انتخاب کنید</option>
           <option
-            v-for="opt in (field.options || [])"
+            v-for="opt in optionsForField(field)"
             :key="String(opt.value)"
             :value="opt.value"
           >
@@ -323,9 +323,21 @@ const groups = computed(() => {
 
 const hasAccordion = computed(() => groups.value.length > 1)
 
-/** فیلدها با توجه به show_when و منطق خاص (مثلاً wives_count) فیلتر می‌شوند */
+/** گزینه‌های نمایشی برای فیلد؛ برای expert_field بر اساس expert_group فیلتر می‌شود (options با group_id). */
+function optionsForField(field: FormFieldSchema): { value: string; label: string; group_id?: string }[] {
+  const opts = (field.options || []) as { value: string; label: string; group_id?: string }[]
+  if (field.name === 'expert_field' && opts.some((o) => 'group_id' in o && o.group_id != null)) {
+    const group = form.expert_group as string
+    if (!group) return []
+    return opts.filter((o) => o.group_id === group)
+  }
+  return opts
+}
+
+/** فیلدها با توجه به show_when و منطق خاص (مثلاً wives_count، expert_field) فیلتر می‌شوند */
 function isFieldVisible(field: FormFieldSchema): boolean {
   if (field.name === 'wives_count') return form.spouse_type === 'wife'
+  if (field.name === 'expert_field') return optionsForField(field).length > 0
   const showWhen = field.show_when
   if (!showWhen || typeof showWhen !== 'object') return true
   return Object.entries(showWhen).every(([key, value]) => form[key] === value)
@@ -347,6 +359,17 @@ function toggleSection(idx: number) {
   else open.push(idx)
   openSections.value = open.sort((a, b) => a - b)
 }
+
+watch(
+  () => form.expert_group,
+  () => {
+    const expertFieldSchema = fields.value.find((f) => f.name === 'expert_field')
+    if (expertFieldSchema) {
+      const allowed = optionsForField(expertFieldSchema).map((o) => o.value)
+      if (form.expert_field && !allowed.includes(form.expert_field as string)) form.expert_field = ''
+    }
+  }
+)
 
 watch(fields, (f) => {
   f.forEach((field) => {
