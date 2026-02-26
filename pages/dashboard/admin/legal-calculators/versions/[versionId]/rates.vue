@@ -224,6 +224,7 @@
                 </div>
                 <p class="admin-diyah-help-intro mt-2 mb-1 font-medium">شرح متغیرها:</p>
                 <ul class="admin-diyah-help-list text-sm text-gray-700 space-y-1 mb-2">
+                  <li><code class="bg-gray-100 px-1 rounded">version_label</code> (اختیاری) — نسخهٔ مقررات (مثلاً ۱۴۰۴)؛ در صورت ارسال، نرخ‌های سهم از همین نسخه در پنل خوانده می‌شوند.</li>
                   <li><code class="bg-gray-100 px-1 rounded">estate_amount</code> (عدد، اجباری) — مبلغ ترکه به تومان</li>
                   <li><code class="bg-gray-100 px-1 rounded">spouse_type</code> (رشته) — <code>""</code> یا <code>"husband"</code> یا <code>"wife"</code></li>
                   <li><code class="bg-gray-100 px-1 rounded">wives_count</code> (عدد، اختیاری، حداقل ۱) — تعداد زن در صورت تعدد زوجات</li>
@@ -235,6 +236,23 @@
                   <li><code class="bg-gray-100 px-1 rounded">grandfather_maternal_alive</code>, <code class="bg-gray-100 px-1 rounded">grandmother_maternal_alive</code> — جد امی / جده امی در قید حیات</li>
                   <li><code class="bg-gray-100 px-1 rounded">uncles_abuyini</code>, <code class="bg-gray-100 px-1 rounded">aunts_abuyini</code>, <code class="bg-gray-100 px-1 rounded">uncles_abi</code>, <code class="bg-gray-100 px-1 rounded">aunts_abi</code>, <code class="bg-gray-100 px-1 rounded">uncles_umi</code>, <code class="bg-gray-100 px-1 rounded">aunts_umi</code> — تعداد عمو، عمه، دایی، خاله (ابوینی، ابی، امی)</li>
                 </ul>
+              </section>
+              <section class="admin-diyah-sample-section">
+                <h3 class="admin-diyah-sample-title">نرخ‌های سهم (ضرایب) — قابل ویرایش توسط شما</h3>
+                <p class="admin-diyah-help-intro mb-2">
+                  می‌توانید سهم‌های ارث را از همین صفحه با <strong>«افزودن نرخ»</strong> تعریف یا ویرایش کنید. هر نرخ از نوع <strong>numeric</strong> است. اگر برای یک کلید نرخ تعریف نشده باشد، مقدار پیش‌فرض قانونی (جدول زیر) استفاده می‌شود.
+                </p>
+                <div class="admin-diyah-sample-block">
+                  <span class="admin-diyah-sample-label">کلیدها و مقادیر پیش‌فرض (متن)</span>
+                  <pre class="admin-diyah-sample-pre text-xs">{{ inheritanceShareRatesHelp }}</pre>
+                </div>
+                <div class="admin-diyah-sample-block mt-3">
+                  <span class="admin-diyah-sample-label">نمونه کامل JSON نرخ‌های سهم — برای کپی و مرجع (هر کلید را با «افزودن نرخ» به‌صورت جداگانه، نوع numeric و مقدار متناظر اضافه کنید)</span>
+                  <pre class="admin-diyah-sample-pre text-xs">{{ inheritanceShareRatesJson }}</pre>
+                </div>
+                <p class="admin-diyah-help-note">
+                  با «افزودن نرخ» هر ردیف را با کلید و مقدار (مثلاً 0.5 برای یک‌دوم) اضافه کنید. با ویرایش مقدار، محاسبهٔ ارث در سایت از ضرایب جدید استفاده می‌کند.
+                </p>
               </section>
               <p class="admin-diyah-help-note">
                 کاربر در صفحه عمومی با باز کردن هر بخش آکاردئون، فیلدهای مربوطه را پر می‌کند و جدول سهم هر وارث و مبلغ به تومان نمایش داده می‌شود.
@@ -420,6 +438,7 @@ const diyahSampleSpecialConditions = '[{"value":"haram_month","label":"محاس�
 
 /** نمونه JSON کامل ورودی ماشین‌حساب ارث — همه متغیرهایی که کاربر می‌تواند در API ارسال کند */
 const inheritanceSampleJson = `{
+  "version_label": "1404",
   "estate_amount": 500000000,
   "spouse_type": "wife",
   "wives_count": 1,
@@ -443,6 +462,67 @@ const inheritanceSampleJson = `{
   "aunts_abi": 0,
   "uncles_umi": 0,
   "aunts_umi": 0
+}`
+
+/** راهنمای نرخ‌های سهم ارث (کلید + مقدار پیش‌فرض) برای پنل ادمین */
+const inheritanceShareRatesHelp = `همسر (طبقه ۱ و ۲ و ۳):
+  share_spouse_husband_no_children   = 0.5     (زوج بدون فرزند: ۱/۲)
+  share_spouse_husband_with_children = 0.25    (زوج با فرزند: ۱/۴)
+  share_spouse_wife_no_children      = 0.25    (زوجه بدون فرزند: ۱/۴)
+  share_spouse_wife_with_children    = 0.125   (زوجه با فرزند: ۱/۸)
+
+پدر و مادر (طبقه ۱):
+  share_father_with_children = 0.166667   (پدر با وجود فرزند: ۱/۶)
+  share_mother_with_children = 0.166667   (مادر با وجود فرزند: ۱/۶)
+  share_father_no_children  = 0.666667   (پدر بدون فرزند: ۲/۳)
+  share_mother_no_children  = 0.333333   (مادر بدون فرزند: ۱/۳)
+  share_father_only         = 1          (فقط پدر)
+  share_mother_only         = 1          (فقط مادر)
+
+واحد فرزندان (نسبت پسر به دختر):
+  son_unit     = 2    (پسر ۲ واحد)
+  daughter_unit = 1   (دختر ۱ واحد)
+
+برادر/خواهر امی (طبقه ۲):
+  share_maternal_sibling_one  = 0.166667   (یکی: ۱/۶)
+  share_maternal_sibling_many = 0.333333   (چند نفر: ۱/۳)
+  brother_unit = 2    (برادر ابوینی/ابی: ۲ واحد)
+  sister_unit  = 1    (خواهر ابوینی/ابی: ۱ واحد)
+
+اجداد (طبقه ۲):
+  share_maternal_grandparent = 0.333333   (سهم مادری از باقی‌مانده: ۱/۳)
+  share_paternal_grandparent = 0.666667   (سهم پدری: ۲/۳)
+
+دایی/خاله و عمو/عمه (طبقه ۳):
+  share_maternal_uncle_one  = 0.166667   (دایی/خاله امی یکی: ۱/۶)
+  share_maternal_uncle_many = 0.333333   (چند نفر: ۱/۳)
+  uncle_unit = 2    (عمو: ۲ واحد)
+  aunt_unit  = 1    (عمه: ۱ واحد)`
+
+/** نمونه کامل JSON همه نرخ‌های سهم ارث — برای کپی و ویرایش (هر کلید را به‌صورت نرخ جدا با نوع numeric اضافه کنید) */
+const inheritanceShareRatesJson = `{
+  "share_spouse_husband_no_children": 0.5,
+  "share_spouse_husband_with_children": 0.25,
+  "share_spouse_wife_no_children": 0.25,
+  "share_spouse_wife_with_children": 0.125,
+  "share_father_with_children": 0.166667,
+  "share_mother_with_children": 0.166667,
+  "share_father_no_children": 0.666667,
+  "share_mother_no_children": 0.333333,
+  "share_father_only": 1,
+  "share_mother_only": 1,
+  "son_unit": 2,
+  "daughter_unit": 1,
+  "share_maternal_sibling_one": 0.166667,
+  "share_maternal_sibling_many": 0.333333,
+  "brother_unit": 2,
+  "sister_unit": 1,
+  "share_maternal_grandparent": 0.333333,
+  "share_paternal_grandparent": 0.666667,
+  "share_maternal_uncle_one": 0.166667,
+  "share_maternal_uncle_many": 0.333333,
+  "uncle_unit": 2,
+  "aunt_unit": 1
 }`
 
 const newRate = reactive({
