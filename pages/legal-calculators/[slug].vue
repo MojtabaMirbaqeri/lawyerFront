@@ -134,187 +134,172 @@
 
         <div class="calc-grid">
           <!-- فرم مخصوص مهریه -->
-          <div
+          <LegalCalculatorsCalculatorThemedCard
             v-if="slug === 'dowry'"
-            class="dowry-card"
+            theme="red"
+            title="محاسبه مهریه به نرخ روز"
+            subtitle="آنلاین و بر اساس شاخص بانک مرکزی"
+            instruction="سال عقد، سال اخذ مهریه و مبلغ مهریه را وارد کنید. محاسبه طبق فرمول قوه‌قضاییه و شاخص بهای کالاها و خدمات مصرفی بانک مرکزی انجام می‌شود."
           >
-            <div class="dowry-card-header">
-              <span class="dowry-card-header-accent" />
-              <div>
-                <h2 class="dowry-card-title">محاسبه مهریه به نرخ روز</h2>
-                <p class="dowry-card-subtitle">آنلاین و بر اساس شاخص بانک مرکزی</p>
+            <form class="dowry-form" @submit.prevent="onDowrySubmit">
+              <div class="dowry-fields">
+                <div class="dowry-field">
+                  <label class="dowry-label">مبلغ مهریه<span class="dowry-hint"> (به تومان)</span></label>
+                  <input
+                    v-model.number="dowryForm.original_amount"
+                    type="number"
+                    min="0"
+                    step="1"
+                    class="dowry-input"
+                    placeholder="مثلاً ۵۰,۰۰۰,۰۰۰"
+                    required
+                  >
+                </div>
+                <div class="dowry-field">
+                  <label class="dowry-label">سال عقد</label>
+                  <select
+                    v-model.number="dowryForm.marriage_year"
+                    class="dowry-input"
+                    required
+                  >
+                    <option value="">انتخاب کنید</option>
+                    <option
+                      v-for="opt in dowryYearOptions"
+                      :key="String(opt.value)"
+                      :value="opt.value"
+                    >
+                      {{ opt.label }}
+                    </option>
+                  </select>
+                </div>
+                <div class="dowry-field">
+                  <label class="dowry-label">سال اخذ مهریه</label>
+                  <select
+                    v-model.number="dowryForm.claim_year"
+                    class="dowry-input"
+                    required
+                  >
+                    <option value="">انتخاب کنید</option>
+                    <option
+                      v-for="opt in dowryYearOptions"
+                      :key="String(opt.value)"
+                      :value="opt.value"
+                    >
+                      {{ opt.label }}
+                    </option>
+                  </select>
+                </div>
               </div>
-            </div>
-            <div class="dowry-card-body">
-              <p class="dowry-instruction">
-                سال عقد، سال اخذ مهریه و مبلغ مهریه را وارد کنید. محاسبه طبق <strong>فرمول قوه‌قضاییه</strong> و <strong>شاخص بهای کالاها و خدمات مصرفی</strong> بانک مرکزی انجام می‌شود.
-              </p>
-              <form class="dowry-form" @submit.prevent="onDowrySubmit">
-                <div class="dowry-fields">
-                  <div class="dowry-field">
-                    <label class="dowry-label">مبلغ مهریه<span class="dowry-hint"> (به تومان)</span>
+              <button type="submit" class="dowry-submit" :disabled="calcPending">
+                <Icon v-if="!calcPending" name="lucide:calculator" class="w-5 h-5" />
+                {{ calcPending ? 'در حال محاسبه...' : 'محاسبه نرخ روز مهریه' }}
+              </button>
+            </form>
+          </LegalCalculatorsCalculatorThemedCard>
+          <!-- فرم مخصوص خسارت تأخیر تأدیه -->
+          <LegalCalculatorsCalculatorThemedCard
+            v-else-if="slug === 'delay-damages'"
+            theme="amber"
+            title="محاسبه خسارت تأخیر تأدیه"
+            subtitle="بر اساس شاخص سالانه بانک مرکزی (ماده ۵۲۲)"
+            instruction="محاسبه خسارت تاخیر تادیه به دو روش استفاده از شاخص متوسط سال و استفاده از شاخص هر ماه به صورت جداگانه امکان‌پذیر است."
+          >
+            <form class="delay-damages-form" @submit.prevent="onDelayDamagesSubmit">
+              <div class="delay-damages-fields">
+                <div class="delay-damages-field delay-damages-field-full">
+                  <label class="delay-damages-label">نوع محاسبه</label>
+                  <div class="delay-damages-radio-group">
+                    <label class="delay-damages-radio">
+                      <input v-model="delayDamagesForm.calculation_type" type="radio" value="yearly" />
+                      <span>سالانه</span>
                     </label>
-                    <input
-                      v-model.number="dowryForm.original_amount"
-                      type="number"
-                      min="0"
-                      step="1"
-                      class="dowry-input"
-                      placeholder="مثلاً ۵۰,۰۰۰,۰۰۰"
-                      required
-                    >
-                  </div>
-                  <div class="dowry-field">
-                    <label class="dowry-label">سال عقد</label>
-                    <select
-                      v-model.number="dowryForm.marriage_year"
-                      class="dowry-input"
-                      required
-                    >
-                      <option value="">انتخاب کنید</option>
-                      <option
-                        v-for="opt in dowryYearOptions"
-                        :key="String(opt.value)"
-                        :value="opt.value"
-                      >
-                        {{ opt.label }}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="dowry-field">
-                    <label class="dowry-label">سال اخذ مهریه</label>
-                    <select
-                      v-model.number="dowryForm.claim_year"
-                      class="dowry-input"
-                      required
-                    >
-                      <option value="">انتخاب کنید</option>
-                      <option
-                        v-for="opt in dowryYearOptions"
-                        :key="String(opt.value)"
-                        :value="opt.value"
-                      >
-                        {{ opt.label }}
-                      </option>
-                    </select>
+                    <label class="delay-damages-radio">
+                      <input v-model="delayDamagesForm.calculation_type" type="radio" value="monthly" />
+                      <span>ماهانه</span>
+                    </label>
                   </div>
                 </div>
-                <button type="submit" class="dowry-submit" :disabled="calcPending">
-                  <Icon v-if="!calcPending" name="lucide:calculator" class="w-5 h-5" />
-                  {{ calcPending ? 'در حال محاسبه...' : 'محاسبه نرخ روز مهریه' }}
-                </button>
-              </form>
-            </div>
-          </div>
-          <!-- فرم مخصوص خسارت تأخیر تأدیه (انتخابگر سال/ماه شبیه تصویر) -->
-          <div
-            v-else-if="slug === 'delay-damages'"
-            class="delay-damages-card"
-          >
-            <div class="delay-damages-card-header">
-              <span class="delay-damages-card-accent" />
-              <div>
-                <h2 class="delay-damages-card-title">محاسبه خسارت تأخیر تأدیه</h2>
-                <p class="delay-damages-card-subtitle">بر اساس شاخص سالانه بانک مرکزی (ماده ۵۲۲)</p>
-              </div>
-            </div>
-            <div class="delay-damages-card-body">
-              <p class="delay-damages-instruction">
-                محاسبه خسارت تاخیر تادیه به دو روش استفاده از شاخص متوسط سال و استفاده از شاخص هر ماه به صورت جداگانه امکان‌پذیر است.
-              </p>
-              <form class="delay-damages-form" @submit.prevent="onDelayDamagesSubmit">
-                <div class="delay-damages-fields">
-                  <div class="delay-damages-field delay-damages-field-full">
-                    <label class="delay-damages-label">نوع محاسبه</label>
-                    <div class="delay-damages-radio-group">
-                      <label class="delay-damages-radio">
-                        <input v-model="delayDamagesForm.calculation_type" type="radio" value="yearly" />
-                        <span>سالانه</span>
-                      </label>
-                      <label class="delay-damages-radio">
-                        <input v-model="delayDamagesForm.calculation_type" type="radio" value="monthly" />
-                        <span>ماهانه</span>
-                      </label>
-                    </div>
+                <div class="delay-damages-field">
+                  <label class="delay-damages-label">مبلغ (به تومان)</label>
+                  <input
+                    v-model.number="delayDamagesForm.principal_amount"
+                    type="number"
+                    min="0"
+                    step="1"
+                    class="delay-damages-input"
+                    placeholder="مثلاً ۱۰,۰۰۰,۰۰۰"
+                    required
+                  >
+                </div>
+                <template v-if="delayDamagesForm.calculation_type === 'yearly'">
+                  <div class="delay-damages-field">
+                    <LegalCalculatorsYearPicker
+                      v-model="delayDamagesForm.due_year"
+                      label="سال سررسید"
+                      :min-year="1315"
+                      :max-year="1410"
+                    />
                   </div>
                   <div class="delay-damages-field">
-                    <label class="delay-damages-label">مبلغ (به تومان)</label>
-                    <input
-                      v-model.number="delayDamagesForm.principal_amount"
-                      type="number"
-                      min="0"
-                      step="1"
-                      class="delay-damages-input"
-                      placeholder="مثلاً ۱۰,۰۰۰,۰۰۰"
-                      required
+                    <LegalCalculatorsYearPicker
+                      v-model="delayDamagesForm.payment_year"
+                      label="سال پرداخت"
+                      :min-year="1315"
+                      :max-year="1410"
+                    />
+                  </div>
+                </template>
+                <template v-else>
+                  <div class="delay-damages-field">
+                    <LegalCalculatorsMonthYearPicker
+                      v-model="delayDamagesForm.due_date"
+                      label="زمان سررسید"
+                      :min-year="1315"
+                      :max-year="1410"
+                    />
+                  </div>
+                  <div class="delay-damages-field">
+                    <LegalCalculatorsMonthYearPicker
+                      v-model="delayDamagesForm.payment_date"
+                      label="زمان پرداخت"
+                      :min-year="1315"
+                      :max-year="1410"
+                    />
+                  </div>
+                </template>
+                <div v-if="delayDamagesVersionOptions.length" class="delay-damages-field delay-damages-field-full">
+                  <label class="delay-damages-label">نسخه شاخص</label>
+                  <select v-model="delayDamagesForm.version_label" class="delay-damages-input">
+                    <option value="">آخرین نسخه</option>
+                    <option
+                      v-for="opt in delayDamagesVersionOptions"
+                      :key="String(opt.value)"
+                      :value="opt.value"
                     >
-                  </div>
-                  <template v-if="delayDamagesForm.calculation_type === 'yearly'">
-                    <div class="delay-damages-field">
-                      <LegalCalculatorsYearPicker
-                        v-model="delayDamagesForm.due_year"
-                        label="سال سررسید"
-                        :min-year="1315"
-                        :max-year="1410"
-                      />
-                    </div>
-                    <div class="delay-damages-field">
-                      <LegalCalculatorsYearPicker
-                        v-model="delayDamagesForm.payment_year"
-                        label="سال پرداخت"
-                        :min-year="1315"
-                        :max-year="1410"
-                      />
-                    </div>
-                  </template>
-                  <template v-else>
-                    <div class="delay-damages-field">
-                      <LegalCalculatorsMonthYearPicker
-                        v-model="delayDamagesForm.due_date"
-                        label="زمان سررسید"
-                        :min-year="1315"
-                        :max-year="1410"
-                      />
-                    </div>
-                    <div class="delay-damages-field">
-                      <LegalCalculatorsMonthYearPicker
-                        v-model="delayDamagesForm.payment_date"
-                        label="زمان پرداخت"
-                        :min-year="1315"
-                        :max-year="1410"
-                      />
-                    </div>
-                  </template>
-                  <div v-if="delayDamagesVersionOptions.length" class="delay-damages-field delay-damages-field-full">
-                    <label class="delay-damages-label">نسخه شاخص</label>
-                    <select v-model="delayDamagesForm.version_label" class="delay-damages-input">
-                      <option value="">آخرین نسخه</option>
-                      <option
-                        v-for="opt in delayDamagesVersionOptions"
-                        :key="String(opt.value)"
-                        :value="opt.value"
-                      >
-                        {{ opt.label }}
-                      </option>
-                    </select>
-                  </div>
+                      {{ opt.label }}
+                    </option>
+                  </select>
                 </div>
-                <button type="submit" class="delay-damages-submit" :disabled="calcPending">
-                  <Icon v-if="!calcPending" name="lucide:calculator" class="w-5 h-5" />
-                  {{ calcPending ? 'در حال محاسبه...' : 'محاسبه خسارت تأخیر' }}
-                </button>
-              </form>
-            </div>
-          </div>
-          <!-- فرم عمومی سایر ماشین‌حساب‌ها -->
-          <div v-else class="form-panel">
-            <h2 class="form-panel-title">ورودی‌ها</h2>
+              </div>
+              <button type="submit" class="delay-damages-submit" :disabled="calcPending">
+                <Icon v-if="!calcPending" name="lucide:calculator" class="w-5 h-5" />
+                {{ calcPending ? 'در حال محاسبه...' : 'محاسبه خسارت تأخیر' }}
+              </button>
+            </form>
+          </LegalCalculatorsCalculatorThemedCard>
+          <!-- فرم عمومی سایر ماشین‌حساب‌ها (دیه، ارث، حق‌الثبت و ...) -->
+          <LegalCalculatorsCalculatorThemedCard
+            v-else
+            :theme="calculatorTheme"
+            :title="(detail.metadata?.title as string) ?? 'ورودی‌ها'"
+            :subtitle="(detail.metadata?.short_description as string) ?? undefined"
+          >
             <LegalCalculatorsCalculatorForm
               :schema="detail.form_schema"
               :pending="calcPending"
               @submit="onCalculate"
             />
-          </div>
+          </LegalCalculatorsCalculatorThemedCard>
           <div class="result-panel">
             <!-- نتیجه مخصوص مهریه: کارت با عنوان، مبلغ درشت، جزئیات و فرمول -->
             <template v-if="result && slug === 'dowry'">
@@ -375,8 +360,23 @@
 import type { CalculatorDetail, CalculatorResult } from '~/composables/useLegalCalculators'
 import type { PersianMonthYear } from '~/utils/persianDate'
 
+type CalculatorTheme = 'red' | 'amber' | 'blue' | 'emerald' | 'violet'
+
+/** نقشه slug به تم رنگی برای ماشین‌حساب‌های عمومی */
+const SLUG_THEME_MAP: Record<string, CalculatorTheme> = {
+  'blood-money': 'blue',
+  inheritance: 'emerald',
+  'registration-fee': 'violet',
+}
+
+const DEFAULT_CALCULATOR_THEME: CalculatorTheme = 'blue'
+
 const route = useRoute()
 const slug = computed(() => route.params.slug as string)
+
+const calculatorTheme = computed<CalculatorTheme>(() => {
+  return SLUG_THEME_MAP[slug.value] ?? DEFAULT_CALCULATOR_THEME
+})
 
 const { fetchCalculatorBySlug, calculate } = useLegalCalculators()
 const detail = ref<CalculatorDetail | null>(null)
@@ -510,14 +510,6 @@ watch(slug, loadDetail, { immediate: true })
   @apply grid gap-8 lg:grid-cols-2;
 }
 
-.form-panel {
-  @apply rounded-xl border border-gray-200 bg-white p-6 shadow-sm;
-}
-
-.form-panel-title {
-  @apply mb-4 text-lg font-semibold text-gray-900;
-}
-
 .diyah-help-overlay {
   @apply fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 p-4;
 }
@@ -572,28 +564,7 @@ watch(slug, loadDetail, { immediate: true })
   opacity: 0;
 }
 
-/* کارت مهریه */
-.dowry-card {
-  @apply rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden;
-}
-.dowry-card-header {
-  @apply flex items-center gap-3 border-b border-gray-200 bg-gray-800 px-5 py-4;
-}
-.dowry-card-header-accent {
-  @apply h-8 w-1 shrink-0 rounded-full bg-red-500;
-}
-.dowry-card-title {
-  @apply text-lg font-semibold text-white;
-}
-.dowry-card-subtitle {
-  @apply mt-0.5 text-xs text-gray-300;
-}
-.dowry-card-body {
-  @apply p-6;
-}
-.dowry-instruction {
-  @apply mb-5 text-sm text-gray-600;
-}
+/* فرم مهریه (layout داخل کارت تم‌دار) */
 .dowry-form {
   @apply space-y-5;
 }
@@ -613,7 +584,7 @@ watch(slug, loadDetail, { immediate: true })
   @apply text-xs text-gray-500 mt-0.5;
 }
 .dowry-submit {
-  @apply w-full rounded-lg bg-red-600 px-6 py-3 text-base font-medium text-white hover:bg-red-700 disabled:opacity-50 transition-colors;
+  @apply w-full rounded-lg px-6 py-3 text-base font-medium text-white disabled:opacity-50 transition-colors;
 }
 
 /* کارت نتیجه مهریه */
@@ -675,28 +646,7 @@ watch(slug, loadDetail, { immediate: true })
   @apply text-xs text-gray-500 border-t border-gray-100 pt-3;
 }
 
-/* کارت خسارت تأخیر تأدیه */
-.delay-damages-card {
-  @apply rounded-xl border border-gray-200 bg-white shadow-sm;
-}
-.delay-damages-card-header {
-  @apply flex items-center gap-3 border-b border-amber-200 bg-amber-50/80 px-5 py-4;
-}
-.delay-damages-card-accent {
-  @apply h-8 w-1 shrink-0 rounded-full bg-amber-500;
-}
-.delay-damages-card-title {
-  @apply text-lg font-semibold text-gray-900;
-}
-.delay-damages-card-subtitle {
-  @apply mt-0.5 text-xs text-gray-600;
-}
-.delay-damages-card-body {
-  @apply p-6;
-}
-.delay-damages-instruction {
-  @apply mb-5 text-sm text-gray-600;
-}
+/* فرم خسارت تأخیر (layout داخل کارت تم‌دار) */
 .delay-damages-form {
   @apply space-y-5;
 }
@@ -722,9 +672,9 @@ watch(slug, loadDetail, { immediate: true })
   @apply flex items-center gap-2 cursor-pointer text-sm text-gray-700;
 }
 .delay-damages-radio input {
-  @apply rounded-full border-amber-500 text-amber-600 focus:ring-amber-500;
+  @apply rounded-full;
 }
 .delay-damages-submit {
-  @apply w-full rounded-lg bg-amber-600 px-6 py-3 text-base font-medium text-white hover:bg-amber-700 disabled:opacity-50 transition-colors;
+  @apply w-full rounded-lg px-6 py-3 text-base font-medium text-white disabled:opacity-50 transition-colors;
 }
 </style>
