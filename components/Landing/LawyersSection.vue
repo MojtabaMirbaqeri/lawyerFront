@@ -114,20 +114,18 @@ const scrollToElement = useScrollToElement(80);
 const isFilterChange = ref(false);
 const isInitialLoad = ref(true);
 
-// Read URL params FIRST before setting defaults
+// Read URL params FIRST and sync store from URL only (تا با جابجایی صفحه فیلتر/سرچ باقی نماند)
 const urlFilters = readFromUrl();
 
-// Set defaults or use URL values
-if (urlFilters.page) currentLawyersPage.value = urlFilters.page;
+currentLawyersPage.value = urlFilters.page;
 filtersStore.selectedFilters.sortBy = urlFilters.sort || tabItems.value[0].value;
-filtersStore.selectedFilters.lawyerType = urlFilters.type || lawyerTypes[0].id;
-if (urlFilters.gender) filtersStore.selectedFilters.gender = urlFilters.gender;
-if (urlFilters.province) filtersStore.selectedFilters.province = urlFilters.province;
-if (urlFilters.specialty)
-  filtersStore.selectedFilters.lawyerSpecialty = urlFilters.specialty;
-if (urlFilters.city) filtersStore.selectedFilters.city = urlFilters.city;
-if (urlFilters.visit) filtersStore.selectedFilters.visitType = urlFilters.visit;
-if (urlFilters.search) filtersStore.selectedFilters.searchField = urlFilters.search;
+filtersStore.selectedFilters.lawyerType = urlFilters.type ?? lawyerTypes[0].id;
+filtersStore.selectedFilters.gender = urlFilters.gender ?? null;
+filtersStore.selectedFilters.province = urlFilters.province ?? 0;
+filtersStore.selectedFilters.lawyerSpecialty = urlFilters.specialty ?? null;
+filtersStore.selectedFilters.city = urlFilters.city ?? null;
+filtersStore.selectedFilters.visitType = urlFilters.visit ? [urlFilters.visit] : [];
+filtersStore.selectedFilters.searchField = urlFilters.search || null;
 
 onMounted(async () => {
   const res = await fetch("/lawyer-sample.json");

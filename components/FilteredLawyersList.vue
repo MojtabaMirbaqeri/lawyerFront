@@ -60,10 +60,8 @@ const sortBy = ref(urlFilters.sort);
 const lawyersRef = ref({ data: [], meta: { total: 0, per_page: 10 } });
 const lawyersListRef = ref(null);
 
-// همگام‌سازی جستجو از URL به استور (برای نمایش در FilteredHero)
-if (urlFilters.search) {
-  filtersStore.selectedFilters.searchField = urlFilters.search;
-}
+// همگام‌سازی فیلتر جستجو فقط از URL (با جابجایی صفحه سرچ باقی نماند)
+filtersStore.selectedFilters.searchField = urlFilters.search || null;
 
 const tabItems = ref(filtersStore.sortItems);
 
