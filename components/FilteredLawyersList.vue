@@ -60,6 +60,11 @@ const sortBy = ref(urlFilters.sort);
 const lawyersRef = ref({ data: [], meta: { total: 0, per_page: 10 } });
 const lawyersListRef = ref(null);
 
+// همگام‌سازی جستجو از URL به استور (برای نمایش در FilteredHero)
+if (urlFilters.search) {
+  filtersStore.selectedFilters.searchField = urlFilters.search;
+}
+
 const tabItems = ref(filtersStore.sortItems);
 
 // Fetch lawyers based on props and URL params
@@ -77,6 +82,11 @@ async function fetchLawyers() {
     query["specialty_id[]"] = props.specialtyId;
   }
 
+  const searchTerm = filtersStore.selectedFilters.searchField?.trim();
+  if (searchTerm) {
+    query.name = searchTerm;
+  }
+
   const { data } = await useGet({
     url: "lawyers",
     query,
@@ -85,21 +95,44 @@ async function fetchLawyers() {
   lawyersRef.value = data;
 }
 
+function getUrlFilters() {
+  return {
+    sort: sortBy.value,
+    page: currentPage.value,
+    search: filtersStore.selectedFilters.searchField?.trim() || null,
+  };
+}
+
 // Watch page and sort changes and update URL + fetch
 watch([currentPage, sortBy], () => {
-  writeToUrl({ sort: sortBy.value, page: currentPage.value }, true);
+  writeToUrl(getUrlFilters(), true);
   fetchLawyers();
 });
+
+// وقتی از هیرو جستجو زده شد: صفحه ۱، به‌روزرسانی URL و fetch
+watch(
+  () => filtersStore.selectedFilters.searchField,
+  (newVal) => {
+    currentPage.value = 1;
+    writeToUrl(getUrlFilters(), true);
+    fetchLawyers();
+  }
+);
 
 // Watch URL changes (browser back/forward)
 watch(
   () => route.query,
   () => {
     const filters = readFromUrl();
-    if (filters.page !== currentPage.value || filters.sort !== sortBy.value) {
+    const pageChanged = filters.page !== currentPage.value;
+    const sortChanged = filters.sort !== sortBy.value;
+    const searchChanged = filters.search !== (filtersStore.selectedFilters.searchField || null);
+    if (pageChanged || sortChanged || searchChanged) {
       currentPage.value = filters.page;
       sortBy.value = filters.sort;
-      // fetchLawyers will be called by the watch above
+      if (filters.search !== undefined)
+        filtersStore.selectedFilters.searchField = filters.search || null;
+      fetchLawyers();
     }
   }
 );

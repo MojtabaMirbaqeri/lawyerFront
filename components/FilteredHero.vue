@@ -41,14 +41,26 @@ const props = defineProps({
   },
 });
 
-const searchQuery = ref("");
+const route = useRoute();
 const filtersStore = useFiltersStore();
 
-const handleSearch = () => {
-  if (searchQuery.value.trim()) {
-    filtersStore.selectedFilters.searchField = searchQuery.value;
+// مقدار اولیه از URL یا استور (مثلاً برای /provinces/tehran?search=...)
+const searchQuery = ref(
+  route.query.search || filtersStore.selectedFilters.searchField || ""
+);
+
+// همگام با تغییر URL (مثلاً دکمه بازگشت)
+watch(
+  () => route.query.search,
+  (val) => {
+    searchQuery.value = val || "";
   }
-};
+);
+
+const handleSearch = () => {
+  const term = searchQuery.value.trim();
+  filtersStore.selectedFilters.searchField = term || null;
+}
 </script>
 
 <style scoped>
