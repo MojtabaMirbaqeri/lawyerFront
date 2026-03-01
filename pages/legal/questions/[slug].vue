@@ -148,7 +148,14 @@
                   <UIcon name="lucide:user" class="size-5 text-gray-500" />
                 </div>
                 <div class="legal-answer-author">
-                  <span class="font-semibold text-gray-900">{{ ans.lawyer?.full_name || 'وکیل' }}</span>
+                  <NuxtLink
+                    v-if="ans.lawyer?.id"
+                    :to="lawyerProfilePath(ans.lawyer)"
+                    class="font-semibold text-gray-900 hover:text-primary hover:underline"
+                  >
+                    {{ ans.lawyer?.full_name || 'وکیل' }}
+                  </NuxtLink>
+                  <span v-else class="font-semibold text-gray-900">{{ ans.lawyer?.full_name || 'وکیل' }}</span>
                   <span class="text-xs text-gray-500">{{ ans.created_at_formatted }}</span>
                 </div>
               </div>
@@ -218,6 +225,12 @@ function answerBody(body) {
   if (!body) return "";
   if (body.includes("<") && body.includes(">")) return body;
   return body.replace(/\n/g, "<br />");
+}
+
+function lawyerProfilePath(lawyer) {
+  if (!lawyer?.id) return '/lawyer';
+  const slug = (lawyer.full_name || 'profile').trim().replace(/\s+/g, '-') || 'profile';
+  return `/lawyer/${lawyer.id}/${slug}`;
 }
 
 async function fetchQuestion() {
