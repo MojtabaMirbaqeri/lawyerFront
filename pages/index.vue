@@ -20,6 +20,9 @@
     <!-- Why Choose Us -->
     <LandingWhyChooseUs />
 
+    <!-- Find lawyers by province (map) -->
+    <LandingFindActiveLawyersByProvinceSection />
+
     <!-- How It Works -->
     <LandingHowItWorks />
 
