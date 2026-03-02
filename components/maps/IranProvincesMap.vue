@@ -18,7 +18,8 @@
         v-else
         class="map-placeholder"
       >
-        در حال بارگذاری نقشه...
+        <div class="map-placeholder-pulse" />
+        <span class="map-placeholder-text">در حال بارگذاری نقشه...</span>
       </div>
     </div>
     <Teleport to="body">
@@ -40,10 +41,12 @@ import { resolveProvinceLawyersRoute } from '~/utils/provinceRouteMap'
 
 const props = defineProps<{
   provincesWithCounts: ProvinceWithCount[]
+  highlightedProvince: ProvinceWithCount | null
 }>()
 
 const emit = defineEmits<{
   select: [province: ProvinceWithCount]
+  'update:highlightedProvince': [value: ProvinceWithCount | null]
 }>()
 
 const mapWrapperRef = ref<HTMLElement | null>(null)
@@ -80,15 +83,19 @@ function onMapClick(e: MouseEvent) {
 }
 
 function onMapMouseOver(e: MouseEvent) {
-  mapWrapperRef.value?.querySelectorAll('.province-hover').forEach((el) => el.classList.remove('province-hover'))
+  applyMapHighlight(null)
   const target = (e.target as HTMLElement)?.closest?.('path')
   if (!target?.id) {
     hoveredProvince.value = null
+    emit('update:highlightedProvince', null)
     return
   }
   const province = getProvinceFromPath(target.id)
   hoveredProvince.value = province ?? null
-  if (province) target.classList.add('province-hover')
+  if (province) {
+    target.classList.add('province-hover')
+    emit('update:highlightedProvince', province)
+  }
 }
 
 function onMapMouseLeave(e: MouseEvent) {
@@ -96,9 +103,31 @@ function onMapMouseLeave(e: MouseEvent) {
   const related = e.relatedTarget as Node | null
   if (wrapper && related && !wrapper.contains(related)) {
     hoveredProvince.value = null
-    wrapper.querySelectorAll('.province-hover').forEach((el) => el.classList.remove('province-hover'))
+    emit('update:highlightedProvince', null)
+    nextTick(() => applyMapHighlight(props.highlightedProvince ?? null))
   }
 }
+
+function applyMapHighlight(province: ProvinceWithCount | null) {
+  const wrapper = mapWrapperRef.value
+  const provincesG = wrapper?.querySelector('#provinces')
+  if (!provincesG) return
+  const paths = provincesG.querySelectorAll('path')
+  paths.forEach((path) => {
+    path.classList.remove('province-hover')
+    if (province && getProvinceFromPath(path.id)?.en_name === province.en_name) {
+      path.classList.add('province-hover')
+    }
+  })
+}
+
+watch(
+  () => [props.highlightedProvince, svgContent.value] as const,
+  () => {
+    if (!hoveredProvince.value) nextTick(() => applyMapHighlight(props.highlightedProvince ?? null))
+  },
+  { immediate: true }
+)
 
 function onMapMouseMove(e: MouseEvent) {
   if (hoveredProvince.value) {
@@ -112,7 +141,7 @@ function onMapMouseMove(e: MouseEvent) {
 @reference "tailwindcss";
 
 .iran-provinces-map {
-  @apply w-full max-w-4xl mx-auto;
+  @apply w-full mx-auto;
 }
 
 .map-wrapper {
@@ -136,7 +165,21 @@ function onMapMouseMove(e: MouseEvent) {
 }
 
 .map-placeholder {
-  @apply flex items-center justify-center py-24 text-gray-500;
+  @apply flex flex-col items-center justify-center gap-3 py-24;
+}
+
+.map-placeholder-pulse {
+  @apply w-16 h-16 rounded-full bg-blue-100;
+  animation: map-pulse 1.2s ease-in-out infinite;
+}
+
+.map-placeholder-text {
+  @apply text-sm text-gray-500;
+}
+
+@keyframes map-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1.05); }
 }
 
 .map-tooltip-fixed {
