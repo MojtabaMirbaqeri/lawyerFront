@@ -196,6 +196,7 @@
             :items="items"
             :phone-number="lawyer?.phone"
             :lawyer-id="lawyer?.id"
+            :has-working-hours="hasWorkingHours"
             class="block lg:hidden" />
 
           <!-- Section: About / Location / Schedule -->
@@ -314,6 +315,7 @@
               :items="items"
               :phone-number="lawyer?.phone"
               :lawyer-id="lawyer?.id"
+              :has-working-hours="hasWorkingHours"
               class="hidden lg:block" />
 
             <!-- قیمت‌گذاری سریع -->
@@ -429,6 +431,13 @@ const result = await useGet({
 });
 const sch = await result.data;
 useFiltersStore().price = sch.prices;
+
+/** وکیل حداقل برای یک نوع مشاوره ساعت کاری دارد */
+const hasWorkingHours = computed(
+  () =>
+    !!(sch?.phone?.length || sch?.inperson?.length || sch?.chat?.length)
+);
+
 const items = ref([
   {
     id: "1",

@@ -21,7 +21,11 @@
 
             <div class="slots selectBtnCon">
               <span>انتخاب زمان جلسه:</span>
-              <UICSelectButton v-model="defVisitTime" :items="timeSlots" />
+              <div v-if="slotsLoading" class="text-sm text-slate-500">در حال بارگذاری زمان‌های موجود...</div>
+              <template v-else-if="timeSlots.length === 0">
+                <p class="text-sm text-slate-500">برای این روز زمانی موجود نیست.</p>
+              </template>
+              <UICSelectButton v-else v-model="defVisitTime" :items="timeSlots" />
             </div>
           </div>
 
@@ -64,8 +68,23 @@
         </div>
         <div v-if="step === 2" class="step2 flex flex-col gap-3">
           <UICBackBtn @click="step--" />
-          <ReservePayDetail :detailPrice="detailPrice" />
+          <div v-if="effectiveBookingPolicy" class="primary-box p-4 rounded-lg border border-gray-200">
+            <p class="text-sm text-muted-foreground">
+              <span v-if="effectiveBookingPolicy.auto_accept">تایید خودکار: نوبت بلافاصله رزرو می‌شود.</span>
+              <span v-else>نیاز به تایید وکیل: پس از ثبت، وکیل درخواست را بررسی می‌کند.</span>
+            </p>
+            <p class="text-sm text-muted-foreground mt-1">
+              <span v-if="effectiveBookingPolicy.policy === 'offline_only'">پرداخت آنلاین لازم نیست.</span>
+              <span v-else-if="effectiveBookingPolicy.policy === 'deposit_required'">پیش‌پرداخت لازم است.</span>
+              <span v-else-if="effectiveBookingPolicy.policy === 'full_payment_required'">پرداخت کامل لازم است.</span>
+            </p>
+          </div>
+          <ReservePayDetail
+            :detail-price="detailPrice"
+            :booking-policy="effectiveBookingPolicy"
+            :visit-type="route.query.visit_type || 'inperson'" />
           <ReserveSelectPay
+            :booking-policy="effectiveBookingPolicy"
             @subCopun="(val) => addOffer(val)"
             @subReserve="addReserve"
             class="flex lg:hidden"
@@ -83,12 +102,13 @@
           :fullname="`${lawyer.name} ${lawyer.family}`"
           skill="وکیل پایه یک دادگستری"
           :active-day="activeDay"
-          paymentType="پرداخت حضوری"
+          :paymentType="effectiveBookingPolicy && (effectiveBookingPolicy.policy === 'deposit_required' || effectiveBookingPolicy.policy === 'full_payment_required') ? 'پرداخت آنلاین' : 'پرداخت حضوری'"
           v-model="step" />
 
         <ReserveSelectPay
           v-if="step === 2"
           class="hidden lg:flex"
+          :booking-policy="effectiveBookingPolicy"
           @subCopun="(val) => addOffer(val)"
           @subReserve="addReserve" />
       </div>
@@ -106,11 +126,13 @@ const fileModel = ref("");
 const route = useRoute();
 
 const addReserve = async () => {
+  const timeStr = String(defVisitTime.value || "").trim();
+  const timeForApi = timeStr.includes(":") && timeStr.split(":").length === 2 ? `${timeStr}:00` : timeStr;
   const body = {
     lawyer_id: lawyer.value.id,
     type: route.query.visit_type,
-    date: activeDay.value,
-    time: defVisitTime.value,
+    date: selectedDate.value || activeDay.value,
+    time: timeForApi,
     duration: +deftime.value,
     description: dismodel.value,
     coupon_code: codeOffer.value,
@@ -121,12 +143,24 @@ const addReserve = async () => {
     body: body,
   });
   if (res.statusCode === 200 || res.statusCode === 201) {
+    const appointment = res.data?.data;
+    const status = appointment?.status;
+    let title = "نوبت شما با موفقیت ثبت شد.";
+    if (status === "pending_lawyer_confirmation") {
+      title = "درخواست رزرو شما ثبت شد. در انتظار تایید وکیل هستید.";
+    } else if (status === "awaiting_payment") {
+      title = "درخواست تایید شد. لطفا پرداخت را انجام دهید.";
+    }
     useToast().add({
-      title: "نوبت شما با موفقیت ثبت شد.",
+      title,
       icon: "hugeicons:appointment-02",
       color: "success",
     });
-    navigateTo("/dashboard/appointments");
+    if (status === "awaiting_payment" && appointment?.id) {
+      navigateTo(`/dashboard/appointments?pay=${appointment.id}`);
+    } else {
+      navigateTo("/dashboard/appointments");
+    }
   } else if (res.statusCode === 422) {
     useToast().add({
       title: "در این بازه زمانی وکیل نوبت دیگری دارد.",
@@ -180,6 +214,17 @@ const resData = await response.data;
 const lawyerSchedules = resData.data.schedules;
 
 const basePrice = resData.data.basePrice;
+const bookingPolicy = ref(resData.data.booking_policy || null);
+
+/** برای چت و تلفنی فقط پرداخت کامل؛ برای حضوری همان سیاست وکیل */
+const effectiveBookingPolicy = computed(() => {
+  const visitType = route.query.visit_type || "inperson";
+  const policy = bookingPolicy.value;
+  if (visitType === "phone" || visitType === "chat") {
+    return policy ? { ...policy, policy: "full_payment_required" } : { policy: "full_payment_required" };
+  }
+  return policy;
+});
 
 const step = ref(1);
 
@@ -214,45 +259,109 @@ const selectedDate = ref(null);
 const holidayDates = ref([]);
 const dateButtons = ref([]);
 
-const bookingData = ref([]);
+const detailPrice = ref();
 
-resData.data.weekly_data.forEach((day) => {
-  day.appointments.forEach((appointment) => {
-    bookingData.value.push({
-      lawyer_id: Number(resData.data.lawyer_id),
-      type: resData.data.visit_type,
-      date: day.date,
-      time: appointment.time,
-      duration: Number(appointment.duration),
-      description: appointment.description,
-    });
-  });
-});
+/** اسلات‌های زمانی از API (ساختار جدید: ساعت کاری، زمان‌های مسدود، بافر، نوبت‌های موجود) */
+const timeSlots = ref([]);
+const slotsLoading = ref(false);
 
-console.log(bookingData.value);
-
-function addTimeAndDuration(timeStr, durationMinutes) {
-  const [h, m, s] = timeStr.split(":").map(Number);
-  const totalMinutes = h * 60 + m + durationMinutes;
-
-  const newHour = Math.floor(totalMinutes / 60);
-  const newMinute = totalMinutes % 60;
-
-  return String(newHour).padStart(2, "0") + ":" + String(newMinute).padStart(2, "0");
+/** تبدیل زمان API (H:i یا H:i:s) به دقیقه برای محاسبه پایان */
+function timeToMinutes(t) {
+  const parts = String(t).split(":").map(Number);
+  return (parts[0] || 0) * 60 + (parts[1] || 0);
+}
+function minutesToTimeStr(m) {
+  const h = Math.floor(m / 60);
+  const min = m % 60;
+  return `${String(h).padStart(2, "0")}:${String(min).padStart(2, "0")}`;
 }
 
-// رزروهای ثبت‌شده
-const bookings = ref(
-  bookingData.value.map((b) => {
-    return {
-      date: b.date,
-      start: toMinutes(b.time),
-      end: toMinutes(addTimeAndDuration(b.time, b.duration)),
-    };
-  })
-);
+/** ساخت لیست همهٔ اسلات‌های ممکن یک روز از بازهٔ کاری وکیل */
+function buildAllSlotsForDay(weekdayIndex) {
+  const config = availableDays[weekdayIndex];
+  if (!config) return [];
+  const startMin = timeToMinutes(config.start);
+  const endMin = timeToMinutes(config.end);
+  const duration = selectedDuration.value;
+  const slots = [];
+  for (let start = startMin; start + duration <= endMin; start += 30) {
+    const end = start + duration;
+    const startLabel = minutesToTimeStr(start);
+    const endLabel = minutesToTimeStr(end);
+    slots.push({ id: startLabel, title: `${startLabel} - ${endLabel}` });
+  }
+  return slots;
+}
 
-const detailPrice = ref();
+/** دریافت اسلات‌های موجود از API و ترکیب با همهٔ اسلات روز (غیرقابل‌رزرو با رنگ قرمز) */
+async function fetchAvailableSlots() {
+  const date = selectedDate.value;
+  if (!date || !route.params.id || !route.query.visit_type) {
+    timeSlots.value = [];
+    return;
+  }
+  const btn = dateButtons.value.find((b) => b.id === activeDay.value);
+  const weekdayIndex = btn?.weekdayIndex;
+  const allSlotsForDay = weekdayIndex != null ? buildAllSlotsForDay(weekdayIndex) : [];
+
+  slotsLoading.value = true;
+  timeSlots.value = [];
+  try {
+    const res = await useGet({
+      url: `lawyers/${route.params.id}/available-slots`,
+      query: {
+        date,
+        visit_type: route.query.visit_type,
+        duration: selectedDuration.value,
+      },
+    });
+    const data = res.data?.data;
+    const rawSlots = Array.isArray(data?.slots) ? data.slots : [];
+    const duration = selectedDuration.value;
+    const availableIds = new Set(
+      rawSlots.map((timeStr) => minutesToTimeStr(timeToMinutes(timeStr)))
+    );
+
+    if (allSlotsForDay.length > 0) {
+      timeSlots.value = allSlotsForDay.map((slot) => {
+        const available = availableIds.has(slot.id);
+        return {
+          ...slot,
+          disabled: !available,
+          unavailable: !available,
+        };
+      });
+    } else {
+      timeSlots.value = rawSlots.map((timeStr) => {
+        const startMin = timeToMinutes(timeStr);
+        const endMin = startMin + duration;
+        const startLabel = minutesToTimeStr(startMin);
+        const endLabel = minutesToTimeStr(endMin);
+        return {
+          id: startLabel,
+          title: `${startLabel} - ${endLabel}`,
+          disabled: false,
+          unavailable: false,
+        };
+      });
+    }
+
+    const firstAvailable = timeSlots.value.find((s) => !s.unavailable);
+    if (firstAvailable) {
+      defVisitTime.value = firstAvailable.id;
+    } else if (timeSlots.value.length > 0) {
+      defVisitTime.value = null;
+    }
+    if (defVisitTime.value) {
+      const exists = timeSlots.value.some((s) => s.id === defVisitTime.value && !s.unavailable);
+      if (!exists) defVisitTime.value = firstAvailable?.id ?? null;
+    }
+  } catch (e) {
+    timeSlots.value = [];
+  } finally {
+    slotsLoading.value = false;
+  }
+}
 
 onMounted(() => {
   fetchHolidays();
@@ -262,37 +371,41 @@ onMounted(() => {
 watch(
   () => deftime.value,
   (newVal) => {
-    console.log(newVal);
     if (step.value === 1) {
       detailPrice.value = useCalculatePrice(newVal, basePrice);
     }
+    if (selectedDate.value) fetchAvailableSlots();
   }
 );
 
 watch(activeDay, (newVal) => {
   const found = dateButtons.value.find((btn) => btn.id === newVal);
   if (found) selectedDate.value = found.iso;
-  console.log(newVal);
 });
 
-// دریافت لیست تعطیلات رسمی از API باد صبا
+watch(selectedDate, (val) => {
+  if (val) fetchAvailableSlots();
+});
+
+// دریافت لیست تعطیلات رسمی از API باد صبا (موقتاً غیرفعال — در صورت قطع اتصال، دکمه‌های روز ساخته نمی‌شدند)
 function fetchHolidays() {
-  const today = new Date();
-  const { jy, jm } = gregorianToJalali(
-    today.getFullYear(),
-    today.getMonth() + 1,
-    today.getDate()
-  );
+  // const today = new Date();
+  // const { jy, jm } = gregorianToJalali(
+  //   today.getFullYear(),
+  //   today.getMonth() + 1,
+  //   today.getDate()
+  // );
+  // fetch(`https://badesaba.ir/api/site/getDataCalendar/${jm}/${jy}`)
+  //   .then((res) => res.json())
+  //   .then((data) => {
+  //     holidayDates.value = data
+  //       .filter((d) => d.events.some((e) => e.holiday))
+  //       .map((d) => d.date);
+  //     generateDateButtons();
+  //   });
 
-  fetch(`https://badesaba.ir/api/site/getDataCalendar/${jm}/${jy}`)
-    .then((res) => res.json())
-    .then((data) => {
-      holidayDates.value = data
-        .filter((d) => d.events.some((e) => e.holiday))
-        .map((d) => d.date);
-
-      generateDateButtons();
-    });
+  holidayDates.value = [];
+  generateDateButtons();
 }
 
 // تولید دکمه‌های انتخاب روز
@@ -329,73 +442,8 @@ function generateDateButtons() {
   }
 }
 
-// تولید اسلات‌های زمانی
-const timeSlots = computed(() => {
-  if (!selectedDate.value) return [];
-
-  const btn = dateButtons.value.find((b) => b.id === activeDay.value);
-  if (!btn) return [];
-
-  const weekdayIndex = btn.weekdayIndex;
-  const config = availableDays[weekdayIndex];
-  if (!config) return [];
-
-  const startTime = toMinutes(config.start);
-  const endTime = toMinutes(config.end);
-  const slots = [];
-
-  // چک کردن اینکه آیا تاریخ انتخابی امروز است
-  const today = new Date();
-  const todayISO = today.toISOString().split("T")[0];
-  const isToday = selectedDate.value === todayISO;
-
-  // ساعت و دقیقه فعلی به دقیقه تبدیل می‌شود
-  const currentMinutes = isToday ? today.getHours() * 60 + today.getMinutes() : 0;
-
-  for (let start = startTime; start + selectedDuration.value <= endTime; start += 30) {
-    const end = start + selectedDuration.value;
-
-    // اگر امروز است و ساعت شروع نوبت گذشته، نمایش نده
-    if (isToday && start <= currentMinutes) {
-      continue;
-    }
-
-    const isFree = !bookings.value.some(
-      (b) => b.date === selectedDate.value && overlap(start, end, b.start, b.end)
-    );
-    slots.push({
-      title: `${formatTime(start)} - ${formatTime(end)}`,
-      disabled: !isFree,
-      id: formatTime(start),
-    });
-  }
-
-  return slots;
-});
-
-watchEffect(() => {
-  const available = timeSlots.value.filter((t) => !t.disabled);
-  if (available.length > 0) {
-    defVisitTime.value = available[0].id;
-  }
-});
 
 /* Helpers */
-function toMinutes(t) {
-  const [h, m] = t.split(":").map(Number);
-  return h * 60 + m;
-}
-
-function formatTime(m) {
-  return (
-    String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0")
-  );
-}
-
-function overlap(aS, aE, bS, bE) {
-  return aS < bE && bS < aE;
-}
-
 function formatJalali(d) {
   return new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
     weekday: "short",

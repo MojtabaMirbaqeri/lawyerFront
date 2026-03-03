@@ -157,11 +157,11 @@
               <td class="font-mono">{{ apt.time }}</td>
               <td><span class="badge" :class="getStatusBadgeClass(apt.status)">{{ getStatusLabel(apt.status) }}</span></td>
               <td>
-                <div v-if="apt.status !== 'done'" class="flex items-center justify-end gap-1">
-                  <button v-if="apt.status !== 'cancelled' && authStore.user?.user_type === 'lawyer'" @click="completeAppointment(apt.id)" class="btn-icon" title="اتمام جلسه">
+                <div class="flex items-center justify-end gap-1">
+                  <button v-if="apt.status === 'reserved' && authStore.user?.user_type === 'lawyer'" @click="completeAppointment(apt.id)" class="btn-icon" title="اتمام جلسه">
                     <Icon name="lucide:check" class="w-4 h-4" />
                   </button>
-                  <button v-if="apt.status !== 'cancelled' && authStore.user?.user_type !== 'lawyer'" @click="openCancelModal(apt.id)" class="btn-icon" title="لغو نوبت">
+                  <button v-if="!['cancelled','done','rejected_by_lawyer','expired','payment_expired'].includes(apt.status) && authStore.user?.user_type !== 'lawyer'" @click="openCancelModal(apt.id)" class="btn-icon" title="لغو نوبت">
                     <Icon name="lucide:x" class="w-4 h-4" />
                   </button>
                   <button v-if="apt.status === 'cancelled'" @click="rebookAppointment(apt)" class="btn-primary text-sm! py-1.5! px-3!">
@@ -248,9 +248,14 @@ const currentWeekOffset = ref(0);
 const statusFilterItems = [
   { id: null, label: 'همه وضعیت‌ها' },
   { id: 'reserved', label: 'رزرو شده' },
+  { id: 'pending_lawyer_confirmation', label: 'در انتظار تایید وکیل' },
+  { id: 'awaiting_payment', label: 'در انتظار پرداخت' },
   { id: 'pending_payment', label: 'در انتظار پرداخت' },
   { id: 'done', label: 'تکمیل شده' },
   { id: 'cancelled', label: 'لغو شده' },
+  { id: 'rejected_by_lawyer', label: 'رد شده توسط وکیل' },
+  { id: 'expired', label: 'منقضی شده' },
+  { id: 'payment_expired', label: 'پرداخت منقضی شده' },
 ];
 
 const typeFilterItems = [
@@ -260,8 +265,11 @@ const typeFilterItems = [
   { id: 'chat', label: 'چت' },
 ];
 
-// Status counts
-const statusCounts = ref({ reserved: 0, pending_payment: 0, done: 0, cancelled: 0 });
+// Status counts (include all possible statuses for display)
+const statusCounts = ref({
+  reserved: 0, pending_payment: 0, pending_lawyer_confirmation: 0, awaiting_payment: 0,
+  done: 0, cancelled: 0, rejected_by_lawyer: 0, expired: 0, payment_expired: 0,
+});
 
 // Fetch data
 const refetch = async (pageNum = null, setTotal = false) => {
@@ -348,7 +356,10 @@ const filteredData = computed(() => {
 });
 
 function calculateStatusCounts() {
-  statusCounts.value = { reserved: 0, pending_payment: 0, done: 0, cancelled: 0 };
+  statusCounts.value = {
+    reserved: 0, pending_payment: 0, pending_lawyer_confirmation: 0, awaiting_payment: 0,
+    done: 0, cancelled: 0, rejected_by_lawyer: 0, expired: 0, payment_expired: 0,
+  };
   data.value.forEach(a => {
     if (statusCounts.value[a.status] !== undefined) {
       statusCounts.value[a.status]++;
@@ -392,7 +403,11 @@ const getDayAppointments = (date) => {
 };
 
 const getEventClass = (status) => {
-  const classes = { reserved: 'event-success', pending_payment: 'event-warning', done: 'event-info', cancelled: 'event-error' };
+  const classes = {
+    reserved: 'event-success', pending_payment: 'event-warning', awaiting_payment: 'event-warning',
+    pending_lawyer_confirmation: 'event-warning', done: 'event-info', cancelled: 'event-error',
+    rejected_by_lawyer: 'event-error', expired: 'event-error', payment_expired: 'event-error',
+  };
   return classes[status] || '';
 };
 
@@ -408,12 +423,20 @@ function getTypeBadgeClass(type) {
 }
 
 function getStatusLabel(status) {
-  const labels = { reserved: 'رزرو شده', pending_payment: 'در انتظار پرداخت', done: 'تکمیل شده', cancelled: 'لغو شده' };
+  const labels = {
+    reserved: 'رزرو شده', pending_payment: 'در انتظار پرداخت', awaiting_payment: 'در انتظار پرداخت',
+    pending_lawyer_confirmation: 'در انتظار تایید وکیل', done: 'تکمیل شده', cancelled: 'لغو شده',
+    rejected_by_lawyer: 'رد شده', expired: 'منقضی شده', payment_expired: 'پرداخت منقضی شده', no_show: 'عدم حضور',
+  };
   return labels[status] || status;
 }
 
 function getStatusBadgeClass(status) {
-  const classes = { reserved: 'badge-success', pending_payment: 'badge-warning', done: 'badge-info', cancelled: 'badge-error' };
+  const classes = {
+    reserved: 'badge-success', pending_payment: 'badge-warning', awaiting_payment: 'badge-warning',
+    pending_lawyer_confirmation: 'badge-warning', done: 'badge-info', cancelled: 'badge-error',
+    rejected_by_lawyer: 'badge-error', expired: 'badge-error', payment_expired: 'badge-error', no_show: 'badge-gray',
+  };
   return classes[status] || 'badge-gray';
 }
 

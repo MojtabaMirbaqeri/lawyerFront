@@ -9,10 +9,11 @@
           mergedThing.base,
           isSelected(item.id) && mergedThing.active,
           item.disabled && mergedThing.disabled,
-          item.nonworking && mergedThing.nonworking
+          item.nonworking && mergedThing.nonworking,
+          item.unavailable && mergedThing.unavailable
         )
       "
-      :disabled="item.disabled || item.nonworking"
+      :disabled="item.disabled || item.nonworking || item.unavailable"
       @click="handleClick(item.id)"
     >
       <UIcon
@@ -55,6 +56,8 @@ const defaultThing = {
   disabled:
     "bg-gray-100 opacity-60 text-gray-500 border-gray-200 cursor-not-allowed",
   nonworking: "bg-yellow-50 text-yellow-700 border-yellow-300",
+  /** اسلات رزروشده / غیرقابل رزرو */
+  unavailable: "bg-red-50! text-red-600 border-red-300 cursor-not-allowed",
   icon: "size-4!",
 };
 
@@ -63,6 +66,7 @@ const mergedThing = {
   active: twMerge(defaultThing.active, props.ui.active),
   disabled: twMerge(defaultThing.disabled, props.ui.disabled),
   nonworking: twMerge(defaultThing.nonworking, props.ui.nonworking),
+  unavailable: twMerge(defaultThing.unavailable, props.ui.unavailable),
   icon: twMerge(defaultThing.icon, props.ui.icon),
 };
 

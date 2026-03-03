@@ -35,7 +35,7 @@
     <div class="payment primary-box flex flex-col gap-3">
       <div class="title">شیوه پرداخت</div>
       <div class="buttons">
-        <ReserveSelectPayBtn v-model="selectDargah" :items="items" />
+        <ReserveSelectPayBtn v-model="selectDargah" :items="paymentMethodItems" />
       </div>
       <div class="checkbox hidden lg:block">
         <UCheckbox v-model="checkBoxVal">
@@ -80,7 +80,7 @@
           class="rounded-[8px]! justify-center! w-full"
           @click="$emit('subReserve')">
           <span class="text-center text-base">
-            {{ selectDargah === "1" ? "ثبت نوبت" : "پرداخت" }}
+            {{ isOnlinePaymentOnly ? "پرداخت" : (selectDargah === "1" ? "ثبت نوبت" : "پرداخت") }}
           </span>
         </UICSecondaryBtn>
       </div>
@@ -93,30 +93,44 @@ import { object, string } from "yup";
 import type { InferType } from "yup";
 import type { FormSubmitEvent } from "@nuxt/ui";
 
+const props = defineProps<{
+  /** وقتی پیش‌پرداخت یا پرداخت کامل لازم است، فقط درگاه‌ها نمایش داده می‌شوند */
+  bookingPolicy?: { policy?: string } | null;
+}>();
+
 const selectDargah = ref("1");
 
 const checkBoxVal = ref(false);
 
-const items = ref([
-  {
-    id: "1",
-    title: "پرداخت حضوری",
-    src: "office.png",
-    disabled: false,
+const allPaymentOptions = [
+  { id: "1", title: "پرداخت حضوری", src: "office.png", disabled: false },
+  { id: "2", title: "درگاه به پرداخت بانک ملت", src: "behpardakht.webp", disabled: true },
+  { id: "3", title: "درگاه بانک سامان", src: "samanBank.webp", disabled: true },
+];
+
+/** در حالت پیش‌پرداخت یا پرداخت کامل فقط درگاه‌های پرداخت */
+const isOnlinePaymentOnly = computed(
+  () =>
+    props.bookingPolicy?.policy === "deposit_required" ||
+    props.bookingPolicy?.policy === "full_payment_required"
+);
+
+const paymentMethodItems = computed(() => {
+  if (isOnlinePaymentOnly.value) {
+    return allPaymentOptions.filter((o) => o.id !== "1");
+  }
+  return allPaymentOptions;
+});
+
+watch(
+  () => [paymentMethodItems.value, isOnlinePaymentOnly.value],
+  () => {
+    if (isOnlinePaymentOnly.value && selectDargah.value === "1") {
+      selectDargah.value = paymentMethodItems.value[0]?.id ?? "2";
+    }
   },
-  {
-    id: "2",
-    title: "درگاه به پرداخت بانک ملت",
-    src: "behpardakht.webp",
-    disabled: true,
-  },
-  {
-    id: "3",
-    title: "درگاه بانک سامان",
-    src: "samanBank.webp",
-    disabled: true,
-  },
-]);
+  { immediate: true }
+);
 
 const schema = object({
   code: string().required("لطفا کد تخفیف را وارد کنید"),

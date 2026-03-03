@@ -111,6 +111,21 @@ export const useDashboardStore = defineStore("dashboard", () => {
           icon: "lucide:calendar",
         },
         {
+          title: "درخواست‌های در انتظار تایید",
+          url: "/dashboard/lawyer/pending-bookings",
+          icon: "lucide:clock",
+        },
+        {
+          title: "تنظیمات رزرو",
+          url: "/dashboard/lawyer/booking-settings",
+          icon: "lucide:settings",
+        },
+        {
+          title: "بازه‌های مسدود",
+          url: "/dashboard/lawyer/blocked-times",
+          icon: "lucide:calendar-off",
+        },
+        {
           title: "مدیریت چت",
           url: "/dashboard/lawyer/chats",
           icon: "lucide:message-square",
