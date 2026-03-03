@@ -80,16 +80,16 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/admin/sms",
       icon: "lucide:send",
     },
+    {
+      title: "تنظیمات",
+      url: "/dashboard/admin/settings",
+      icon: "lucide:settings",
+    },
     { 
       title: "چت", 
       url: "/chat", 
       icon: "lucide:message-square" 
     },
-    // {
-    //   title: "تنظیمات",
-    //   url: "/dashboard/admin/settings",
-    //   icon: "lucide:settings",
-    // },
   ];
 
   const lawyerRoutes = computed(() => {

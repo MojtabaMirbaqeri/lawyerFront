@@ -228,9 +228,21 @@ const schema = yup.object({
   inperson: yup.string().required("قیمت مشاوره حضوری الزامی است"),
 });
 
-// Constants
-const platformFeePercent = 15;
+// Platform commission percent from API (default 20 until loaded)
+const platformFeePercent = ref(20);
 const minPrice = 50000;
+
+// Fetch platform commission percent from settings (same as backend)
+onMounted(async () => {
+  try {
+    const res = await useGet({ url: "settings", includeAuthHeader: true }, false);
+    if (res.status && res.data?.platform_commission_percent != null) {
+      platformFeePercent.value = Math.min(100, Math.max(0, Number(res.data.platform_commission_percent)));
+    }
+  } catch (_) {
+    // keep default 20
+  }
+});
 const durationOptions = [
   { value: 15, label: "۱۵ دقیقه" },
   { value: 30, label: "۳۰ دقیقه" },
@@ -298,7 +310,7 @@ function handlePriceInput(field, value) {
 
 function calculateNetIncome(price) {
   if (!price) return 0;
-  return Math.floor(price * (1 - platformFeePercent / 100));
+  return Math.floor(price * (1 - platformFeePercent.value / 100));
 }
 
 function resetPrices() {
