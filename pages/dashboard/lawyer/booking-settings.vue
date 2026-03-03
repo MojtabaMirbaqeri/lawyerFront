@@ -29,19 +29,6 @@
             </div>
             <USwitch v-model="form.auto_accept" />
           </div>
-          <div v-if="!form.auto_accept" class="setting-row rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-800/40 p-4">
-            <label class="block">
-              <span class="setting-label">مدت زمان پاسخ‌گویی به درخواست (دقیقه)</span>
-              <p class="setting-hint">پس از این مدت، درخواست رزرو منقضی می‌شود.</p>
-            </label>
-            <UInput
-              v-model="form.manual_approval_timeout_minutes"
-              type="number"
-              min="5"
-              max="1440"
-              class="w-28"
-            />
-          </div>
         </div>
       </div>
 
@@ -162,30 +149,6 @@
         </div>
       </div>
 
-      <!-- لغو و مهلت‌ها -->
-      <div class="card-dashboard overflow-hidden">
-        <div class="section-header">
-          <UIcon name="lucide:calendar-x" class="section-icon" />
-          <div>
-            <h2 class="section-title">لغو توسط کاربر</h2>
-            <p class="section-desc">تا چند ساعت قبل از زمان نوبت، کاربر می‌تواند نوبت را لغو کند.</p>
-          </div>
-        </div>
-        <div class="card-dashboard-body p-6 pt-0">
-          <div>
-            <label class="setting-label block mb-2">مهلت لغو (ساعت)</label>
-            <UInput
-              v-model="form.cancellation_window_hours"
-              type="number"
-              min="0"
-              max="168"
-              class="w-28"
-            />
-            <p class="setting-hint mt-1">مثال: 24 یعنی تا ۲۴ ساعت قبل از نوبت امکان لغو وجود دارد.</p>
-          </div>
-        </div>
-      </div>
-
       <!-- دکمه ذخیره -->
       <div class="flex flex-row justify-end px-1 py-2">
         <button
@@ -213,9 +176,7 @@ const form = ref({
   buffer_after_minutes: 0,
   minimum_notice_minutes: 0,
   booking_horizon_days: 30,
-  manual_approval_timeout_minutes: 60,
   payment_timeout_minutes: 15,
-  cancellation_window_hours: 24,
 });
 const loading = ref(true);
 const saving = ref(false);
@@ -233,9 +194,7 @@ const fetchSettings = async () => {
         buffer_after_minutes: d.buffer_after_minutes ?? 0,
         minimum_notice_minutes: d.minimum_notice_minutes ?? 0,
         booking_horizon_days: d.booking_horizon_days ?? 30,
-        manual_approval_timeout_minutes: d.manual_approval_timeout_minutes ?? 60,
         payment_timeout_minutes: d.payment_timeout_minutes ?? 15,
-        cancellation_window_hours: d.cancellation_window_hours ?? 24,
       };
     }
   } catch (e) {
