@@ -153,6 +153,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
           url: "/dashboard",
           icon: "lucide:layout-dashboard",
         },
+        {
+          title: "کیف پول",
+          url: "/dashboard/wallet",
+          icon: "lucide:wallet",
+        },
       ];
     }
   });
@@ -162,6 +167,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       title: "نوبت‌های من", 
       url: "/dashboard/appointments", 
       icon: "lucide:calendar" 
+    },
+    {
+      title: "کیف پول",
+      url: "/dashboard/wallet",
+      icon: "lucide:wallet",
     },
     { 
       title: "تراکنش‌ها", 
