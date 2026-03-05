@@ -34,7 +34,7 @@
         </ul>
       </div>
     </div>
-    <UModal v-model:open="showAddModal">
+    <UModal v-model:open="showAddModal" class="overflow-visible">
       <template #content>
         <div class="modal-content">
           <div class="modal-header">
@@ -46,11 +46,33 @@
           <form class="modal-body space-y-4" @submit.prevent="submitAdd">
             <div>
               <label class="block text-sm font-medium mb-1">از</label>
-              <UInput v-model="addForm.start_at" type="datetime-local" required />
+              <div class="date-picker-wrap">
+                <PersianDate
+                  v-model="addForm.start_at"
+                  :column="1"
+                  mode="single"
+                  type="datetime"
+                >
+                  <template #icon>
+                    <UIcon name="solar:calendar-linear" class="h-full! w-5!" />
+                  </template>
+                </PersianDate>
+              </div>
             </div>
             <div>
               <label class="block text-sm font-medium mb-1">تا</label>
-              <UInput v-model="addForm.end_at" type="datetime-local" required />
+              <div class="date-picker-wrap">
+                <PersianDate
+                  v-model="addForm.end_at"
+                  :column="1"
+                  mode="single"
+                  type="datetime"
+                >
+                  <template #icon>
+                    <UIcon name="solar:calendar-linear" class="h-full! w-5!" />
+                  </template>
+                </PersianDate>
+              </div>
             </div>
             <div>
               <label class="block text-sm font-medium mb-1">نوع</label>
@@ -79,8 +101,13 @@
 </template>
 
 <script setup>
+import PersianDate from "@alireza-ab/vue3-persian-datepicker";
+import { toGregorian } from "jalaali-js";
+
 useHead({ title: 'بازه‌های مسدود | وکیل وکیل' });
 const toast = useToast();
+
+const pad = (n) => String(n).padStart(2, "0");
 const items = ref([]);
 const loading = ref(true);
 const deletingId = ref(null);
@@ -108,29 +135,60 @@ async function fetchItems() {
     loading.value = false;
   }
 }
+/** مقدار اولیه به فرمت "YYYY-MM-DD HH:mm" برای PersianDate type="datetime" (میلادی برای سازگاری) */
+function getInitialDateTime(date) {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
 function openAddModal() {
   const now = new Date();
+  const end = new Date(now.getTime() + 60 * 60 * 1000);
   addForm.value = {
-    start_at: now.toISOString().slice(0, 16),
-    end_at: new Date(now.getTime() + 60 * 60 * 1000).toISOString().slice(0, 16),
+    start_at: getInitialDateTime(now),
+    end_at: getInitialDateTime(end),
     type: 'other',
     note: '',
   };
   showAddModal.value = true;
 }
-function toDateTimeLocal(iso) {
-  const d = new Date(iso);
-  const pad = (n) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+
+/** تبدیل خروجی datepicker (شمسی یا میلادی) به فرمت API: "YYYY-MM-DD HH:mm:ss" میلادی */
+function toApiDateTime(value) {
+  if (!value || typeof value !== 'string') return '';
+  const trimmed = value.trim();
+  const [datePart, timePart] = trimmed.split(/\s+/);
+  if (!datePart) return '';
+  const parts = datePart.split('-').map(Number);
+  if (parts.length < 3) return '';
+  let [y, m, d] = parts;
+  let gy, gm, gd;
+  if (y >= 1300 && y <= 1500) {
+    const g = toGregorian(y, m, d);
+    gy = g.gy;
+    gm = g.gm;
+    gd = g.gd;
+  } else {
+    gy = y;
+    gm = m;
+    gd = d;
+  }
+  const time = (timePart || '00:00').slice(0, 5);
+  return `${gy}-${pad(gm)}-${pad(gd)} ${time}:00`;
 }
 async function submitAdd() {
+  const start = toApiDateTime(addForm.value.start_at);
+  const end = toApiDateTime(addForm.value.end_at);
+  if (!start || !end) {
+    toast.add({ title: 'لطفاً تاریخ و ساعت شروع و پایان را انتخاب کنید', color: 'error' });
+    return;
+  }
   try {
     await usePost({
       url: 'lawyer/blocked-times',
       includeAuthHeader: true,
       body: {
-        start_at: toDateTimeLocal(addForm.value.start_at),
-        end_at: toDateTimeLocal(addForm.value.end_at),
+        start_at: start,
+        end_at: end,
         type: addForm.value.type,
         note: addForm.value.note || undefined,
       },
@@ -157,3 +215,11 @@ async function remove(id) {
 }
 onMounted(fetchItems);
 </script>
+
+<style scoped>
+@reference "tailwindcss";
+
+.date-picker-wrap {
+  @apply relative;
+}
+</style>
