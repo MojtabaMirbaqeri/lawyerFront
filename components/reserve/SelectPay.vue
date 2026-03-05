@@ -78,7 +78,7 @@
           :disabled="!checkBoxVal"
           :class="{ 'mix-blend-luminosity': !checkBoxVal }"
           class="rounded-[8px]! justify-center! w-full"
-          @click="$emit('subReserve')">
+          @click="$emit('subReserve', selectDargah)">
           <span class="text-center text-base">
             {{ isOnlinePaymentOnly ? "پرداخت" : (selectDargah === "1" ? "ثبت نوبت" : "پرداخت") }}
           </span>
@@ -94,8 +94,8 @@ import type { InferType } from "yup";
 import type { FormSubmitEvent } from "@nuxt/ui";
 
 const props = defineProps<{
-  /** وقتی پیش‌پرداخت یا پرداخت کامل لازم است، فقط درگاه‌ها نمایش داده می‌شوند */
-  bookingPolicy?: { policy?: string } | null;
+  /** سیاست مؤثر شامل policy و showInPersonPayment (برای تلفنی/چت پرداخت حضوری نمایش داده نمی‌شود) */
+  bookingPolicy?: { policy?: string; showInPersonPayment?: boolean } | null;
 }>();
 
 const selectDargah = ref("1");
@@ -104,29 +104,37 @@ const checkBoxVal = ref(false);
 
 const allPaymentOptions = [
   { id: "1", title: "پرداخت حضوری", src: "office.png", disabled: false },
-  { id: "2", title: "درگاه به پرداخت بانک ملت", src: "behpardakht.webp", disabled: true },
-  { id: "3", title: "درگاه بانک سامان", src: "samanBank.webp", disabled: true },
+  { id: "zarinpal", title: "درگاه زرین‌پال", src: "zarinpal.png", disabled: false },
 ];
 
-/** در حالت پیش‌پرداخت یا پرداخت کامل فقط درگاه‌های پرداخت */
-const isOnlinePaymentOnly = computed(
-  () =>
-    props.bookingPolicy?.policy === "deposit_required" ||
-    props.bookingPolicy?.policy === "full_payment_required"
+const showInPersonPayment = computed(() => props.bookingPolicy?.showInPersonPayment !== false);
+const policy = computed(() => props.bookingPolicy?.policy ?? "offline_only");
+const hasOnlinePolicy = computed(
+  () => policy.value === "deposit_required" || policy.value === "full_payment_required"
 );
 
+/** گزینه‌های پرداخت: تلفنی/چت فقط درگاه؛ حضوری با قابلیت حضوری = حضوری + درگاه اگر پیش/کامل؛ حضوری بدون قابلیت حضوری = فقط درگاه یا فقط ثبت نوبت */
 const paymentMethodItems = computed(() => {
-  if (isOnlinePaymentOnly.value) {
-    return allPaymentOptions.filter((o) => o.id !== "1");
+  if (!showInPersonPayment.value) {
+    if (hasOnlinePolicy.value) return allPaymentOptions.filter((o) => o.id !== "1");
+    return [{ id: "1", title: "ثبت نوبت (پرداخت در محل توسط وکیل)", src: "office.png", disabled: false }];
   }
-  return allPaymentOptions;
+  if (hasOnlinePolicy.value) return allPaymentOptions.filter((o) => o.id === "1" || o.id === "zarinpal");
+  return allPaymentOptions.filter((o) => o.id === "1");
 });
 
+/** فقط وقتی پرداخت آنلاین اجباری است (بدون گزینه حضوری) دکمه «پرداخت» است وگرنه «ثبت نوبت» یا «پرداخت» */
+const isOnlinePaymentOnly = computed(
+  () => !showInPersonPayment.value && hasOnlinePolicy.value
+);
+
 watch(
-  () => [paymentMethodItems.value, isOnlinePaymentOnly.value],
+  () => [paymentMethodItems.value, showInPersonPayment.value, hasOnlinePolicy.value],
   () => {
-    if (isOnlinePaymentOnly.value && selectDargah.value === "1") {
-      selectDargah.value = paymentMethodItems.value[0]?.id ?? "2";
+    const items = paymentMethodItems.value;
+    const currentInItems = items.some((o) => o.id === selectDargah.value);
+    if (!currentInItems) {
+      selectDargah.value = items.find((o) => o.id === "1")?.id ?? items.find((o) => o.id === "zarinpal")?.id ?? items[0]?.id ?? "1";
     }
   },
   { immediate: true }

@@ -59,6 +59,39 @@
       </div>
     </div>
 
+    <!-- Payment summary (when ?pay= is set and appointment awaits payment) -->
+    <div v-if="payAppointmentId && (payAppointmentLoading || payAppointment)" class="card-dashboard mb-4">
+      <div class="card-dashboard-body p-5">
+        <div v-if="payAppointmentLoading" class="flex items-center gap-2 text-slate-600">
+          <Icon name="lucide:loader-2" class="w-5 h-5 animate-spin" />
+          <span>در حال بارگذاری اطلاعات پرداخت...</span>
+        </div>
+        <template v-else-if="payAppointment && payAppointment.status === 'awaiting_payment' && payAppointment.payment">
+          <h2 class="text-lg font-semibold mb-3">پرداخت نوبت مشاوره</h2>
+          <div class="rounded-lg border border-slate-200 bg-slate-50 p-4 mb-4">
+            <p class="text-sm text-slate-600"><span class="font-medium">وکیل:</span> {{ payAppointment.lawyer?.name }} {{ payAppointment.lawyer?.family }}</p>
+            <p class="text-sm text-slate-600 mt-1"><span class="font-medium">تاریخ و زمان:</span> {{ payAppointment.date }} — {{ payAppointment.time?.slice(0, 5) }}</p>
+            <p class="text-sm text-slate-600 mt-1"><span class="font-medium">مبلغ قابل پرداخت:</span> <span class="font-bold text-slate-900">{{ (payAppointment.payment?.amount ?? 0).toLocaleString('fa-IR') }} تومان</span></p>
+            <p class="text-xs text-slate-500 mt-2">پس از پرداخت موفق، نوبت شما رزرو نهایی می‌شود.</p>
+          </div>
+          <p v-if="startPaymentError" class="text-sm text-red-600 mb-3">{{ startPaymentError }}</p>
+          <UButton
+            :loading="startPaymentLoading"
+            :disabled="startPaymentLoading"
+            class="bg-[#1e3a5f] hover:bg-[#2a4a75] text-white"
+            @click="goToGateway"
+          >
+            <Icon v-if="!startPaymentLoading" name="lucide:credit-card" class="w-4 h-4 ml-2" />
+            {{ startPaymentLoading ? 'در حال آماده‌سازی پرداخت...' : 'پرداخت از طریق زرین‌پال' }}
+          </UButton>
+        </template>
+        <div v-else-if="payAppointment && payAppointment.status !== 'awaiting_payment'" class="text-slate-600">
+          <p>این نوبت در مرحله پرداخت نیست. وضعیت: {{ getStatusLabel(payAppointment.status) }}</p>
+          <NuxtLink to="/dashboard/appointments" class="text-[#1e3a5f] underline mt-2 inline-block">بازگشت به لیست نوبت‌ها</NuxtLink>
+        </div>
+      </div>
+    </div>
+
     <!-- Filters -->
     <div class="card-dashboard">
       <div class="card-dashboard-body py-4!">
@@ -232,6 +265,7 @@ import { h, resolveComponent } from "vue";
 useHead({ title: "نوبت‌ها | وکیلینجا" });
 
 const authStore = useAuthStore();
+const route = useRoute();
 
 // State
 const viewMode = ref('list');
@@ -243,6 +277,13 @@ const typeFilter = ref(null);
 const isCancelModalOpen = ref(false);
 const appointmentToCancelId = ref(null);
 const currentWeekOffset = ref(0);
+
+// Payment flow (when ?pay=appointment_id)
+const payAppointmentId = computed(() => route.query.pay ? String(route.query.pay).trim() : null);
+const payAppointment = ref(null);
+const payAppointmentLoading = ref(false);
+const startPaymentLoading = ref(false);
+const startPaymentError = ref('');
 
 // Filter items for UICSelect
 const statusFilterItems = [
@@ -331,6 +372,49 @@ calculateStatusCounts();
 
 // Watch page changes
 watch(() => page.value, (newPage) => refetch(newPage));
+
+// Fetch appointment for payment when ?pay= is set
+watch(payAppointmentId, async (id) => {
+  if (!id) {
+    payAppointment.value = null;
+    return;
+  }
+  payAppointment.value = null;
+  startPaymentError.value = '';
+  payAppointmentLoading.value = true;
+  try {
+    const res = await useGet({ url: `appointments/${id}`, includeAuthHeader: true }, false);
+    payAppointment.value = res.data?.data ?? res.data ?? null;
+  } catch (e) {
+    payAppointment.value = null;
+  } finally {
+    payAppointmentLoading.value = false;
+  }
+}, { immediate: true });
+
+async function goToGateway() {
+  if (!payAppointment.value?.id || !payAppointment.value?.payment) return;
+  startPaymentError.value = '';
+  startPaymentLoading.value = true;
+  try {
+    const res = await usePost({
+      url: 'payments',
+      includeAuthHeader: true,
+      body: { appointment_id: payAppointment.value.id },
+    }, false);
+    const payload = res.data?.data ?? res.data;
+    const redirectUrl = payload?.redirect_url ?? payload?.gateway_url;
+    if (redirectUrl) {
+      window.location.href = redirectUrl;
+      return;
+    }
+    startPaymentError.value = res.data?.message || 'امکان اتصال به درگاه پرداخت وجود ندارد.';
+  } catch (e) {
+    startPaymentError.value = e?.data?.message || e?.message || 'امکان ایجاد پرداخت وجود ندارد.';
+  } finally {
+    startPaymentLoading.value = false;
+  }
+}
 
 // Filter functions
 const applyFilters = () => {

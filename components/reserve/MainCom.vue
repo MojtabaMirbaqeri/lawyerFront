@@ -102,7 +102,7 @@
           :fullname="`${lawyer.name} ${lawyer.family}`"
           skill="وکیل پایه یک دادگستری"
           :active-day="activeDay"
-          :paymentType="effectiveBookingPolicy && (effectiveBookingPolicy.policy === 'deposit_required' || effectiveBookingPolicy.policy === 'full_payment_required') ? 'پرداخت آنلاین' : 'پرداخت حضوری'"
+          :paymentType="paymentTypeLabel"
           v-model="step" />
 
         <ReserveSelectPay
@@ -125,17 +125,21 @@ const codeOffer = ref("");
 const fileModel = ref("");
 const route = useRoute();
 
-const addReserve = async () => {
+const addReserve = async (selectedGateway) => {
   const timeStr = String(defVisitTime.value || "").trim();
   const timeForApi = timeStr.includes(":") && timeStr.split(":").length === 2 ? `${timeStr}:00` : timeStr;
+  const visitType = route.query.visit_type || "inperson";
+  const showInPerson = effectiveBookingPolicy.value?.showInPersonPayment === true;
+  const paymentMethod = (visitType === "inperson" && showInPerson && selectedGateway === "1") ? "in_person" : "online";
   const body = {
     lawyer_id: lawyer.value.id,
-    type: route.query.visit_type,
+    type: visitType,
     date: selectedDate.value || activeDay.value,
     time: timeForApi,
     duration: +deftime.value,
     description: dismodel.value,
     coupon_code: codeOffer.value,
+    payment_method: paymentMethod,
   };
   const res = await usePost({
     url: "appointments",
@@ -157,7 +161,29 @@ const addReserve = async () => {
       color: "success",
     });
     if (status === "awaiting_payment" && appointment?.id) {
-      navigateTo(`/dashboard/appointments?pay=${appointment.id}`);
+      if (selectedGateway === "zarinpal") {
+        try {
+          const payRes = await usePost({
+            url: "payments",
+            includeAuthHeader: true,
+            body: { appointment_id: appointment.id },
+          });
+          const redirectUrl = payRes.data?.data?.redirect_url;
+          if (redirectUrl) {
+            window.location.href = redirectUrl;
+            return;
+          }
+        } catch (e) {
+          useToast().add({
+            title: "خطا در اتصال به درگاه. لطفا از صفحه نوبت‌ها پرداخت را انجام دهید.",
+            icon: "hugeicons:appointment-02",
+            color: "error",
+          });
+        }
+        navigateTo(`/dashboard/appointments?pay=${appointment.id}`);
+      } else {
+        navigateTo(`/dashboard/appointments?pay=${appointment.id}`);
+      }
     } else {
       navigateTo("/dashboard/appointments");
     }
@@ -216,14 +242,28 @@ const lawyerSchedules = resData.data.schedules;
 const basePrice = resData.data.basePrice;
 const bookingPolicy = ref(resData.data.booking_policy || null);
 
-/** برای چت و تلفنی فقط پرداخت کامل؛ برای حضوری همان سیاست وکیل */
+/** برای چت و تلفنی: پرداخت حضوری نمایش داده نمی‌شود؛ اگر وکیل offline_only انتخاب کرده برای تلفنی/چت به full_payment_required تفسیر می‌شود. برای حضوری: showInPersonPayment از تنظیمات وکیل. */
 const effectiveBookingPolicy = computed(() => {
   const visitType = route.query.visit_type || "inperson";
   const policy = bookingPolicy.value;
   if (visitType === "phone" || visitType === "chat") {
-    return policy ? { ...policy, policy: "full_payment_required" } : { policy: "full_payment_required" };
+    const base = policy ? { ...policy } : {};
+    const effectivePolicy = base.policy === "offline_only" ? "full_payment_required" : (base.policy ?? "full_payment_required");
+    return { ...base, policy: effectivePolicy, showInPersonPayment: false };
   }
-  return policy;
+  const showInPerson = policy?.allow_in_person_payment !== false;
+  return policy ? { ...policy, showInPersonPayment: showInPerson } : { policy: "offline_only", showInPersonPayment: true };
+});
+
+/** برچسب نوع پرداخت برای کارت سایدبار (حضوری / آنلاین / هر دو) */
+const paymentTypeLabel = computed(() => {
+  const ep = effectiveBookingPolicy.value;
+  if (!ep) return "پرداخت حضوری";
+  const hasOnline = ep.policy === "deposit_required" || ep.policy === "full_payment_required";
+  const hasInPerson = ep.showInPersonPayment === true;
+  if (hasOnline && hasInPerson) return "پرداخت حضوری یا آنلاین";
+  if (hasOnline) return "پرداخت آنلاین";
+  return "پرداخت حضوری";
 });
 
 const step = ref(1);

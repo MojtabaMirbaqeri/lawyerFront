@@ -14,6 +14,29 @@
         icon="lucide:calendar-clock"
       >
 
+        <!-- فعال/غیرفعال کردن نوع مشاوره -->
+        <div class="consultation-types-master">
+          <p class="consultation-types-master-label">نوع مشاوره‌هایی که ارائه می‌دهید را انتخاب کنید</p>
+          <div class="consultation-types-master-switches">
+            <div
+              v-for="type in consultationTypes"
+              :key="type.key"
+              class="consultation-type-master-row"
+            >
+              <div class="consultation-type-master-info">
+                <span :class="['consultation-type-master-badge', type.key]">{{ type.label }}</span>
+                <span class="consultation-type-master-hint">
+                  {{ typeMasterEnabled[type.key] ? 'فعال — در روزهای زیر زمان تعیین کنید' : 'غیرفعال' }}
+                </span>
+              </div>
+              <USwitch
+                :model-value="typeMasterEnabled[type.key]"
+                @update:model-value="onMasterTypeChange(type.key, $event)"
+              />
+            </div>
+          </div>
+        </div>
+
         <!-- Global Settings -->
         <!-- <div class="schedule-settings">
           <div class="setting-group">
@@ -63,9 +86,9 @@
               <div class="day-info">
                 <span class="day-name">{{ day.label }}</span>
                 <div v-if="hasAnySchedule(day)" class="day-badges">
-                  <span v-if="day.schedules.phone.enabled" class="day-badge phone">تلفنی</span>
-                  <span v-if="day.schedules.chat.enabled" class="day-badge chat">چت</span>
-                  <span v-if="day.schedules.inperson.enabled" class="day-badge inperson">حضوری</span>
+                  <span v-if="typeMasterEnabled.phone && day.schedules.phone.enabled" class="day-badge phone">تلفنی</span>
+                  <span v-if="typeMasterEnabled.chat && day.schedules.chat.enabled" class="day-badge chat">چت</span>
+                  <span v-if="typeMasterEnabled.inperson && day.schedules.inperson.enabled" class="day-badge inperson">حضوری</span>
                 </div>
                 <span v-else class="day-empty">تعطیل</span>
               </div>
@@ -81,9 +104,9 @@
             <!-- Day Content -->
             <Transition name="slide">
               <div v-if="expandedDays.includes(index)" class="day-content">
-                <!-- Consultation Types -->
+                <!-- Consultation Types (فقط نوع‌های فعال در بالا) -->
                 <div 
-                  v-for="type in consultationTypes" 
+                  v-for="type in activeConsultationTypes" 
                   :key="type.key"
                   class="schedule-type"
                 >
@@ -224,6 +247,27 @@ const globalBuffer = ref(10);
 
 const weeklySchedule = ref([]);
 
+/** سوئیچ‌های کلی نوع مشاوره: وقتی خاموش باشد آن نوع در همه روزها غیرفعال و در لیست روزها نمایش داده نمی‌شود */
+const typeMasterEnabled = ref({ phone: true, chat: true, inperson: true });
+
+/** فقط نوع‌هایی که در بالا فعال شده‌اند در کارت هر روز نمایش داده می‌شوند */
+const activeConsultationTypes = computed(() =>
+  consultationTypes.filter((t) => typeMasterEnabled.value[t.key])
+);
+
+function onMasterTypeChange(typeKey, enabled) {
+  typeMasterEnabled.value[typeKey] = enabled;
+  if (!enabled) {
+    weeklySchedule.value.forEach((day) => {
+      day.schedules[typeKey] = {
+        enabled: false,
+        start_time: "",
+        end_time: "",
+      };
+    });
+  }
+}
+
 // Watch for changes
 watch(weeklySchedule, () => {
   hasChanges.value = true;
@@ -252,7 +296,7 @@ function toggleDay(index) {
 }
 
 function hasAnySchedule(day) {
-  return consultationTypes.some(type => day.schedules[type.key].enabled);
+  return activeConsultationTypes.value.some((type) => day.schedules[type.key].enabled);
 }
 
 function getTimeError(day, typeKey) {
@@ -355,7 +399,18 @@ async function fetchSchedule() {
 
       return { ...day, schedules };
     });
-    
+
+    // هم‌گام‌سازی سوئیچ‌های نوع مشاوره با دادهٔ بارگذاری‌شده
+    typeMasterEnabled.value = {
+      phone: weeklySchedule.value.some((d) => d.schedules.phone?.enabled),
+      chat: weeklySchedule.value.some((d) => d.schedules.chat?.enabled),
+      inperson: weeklySchedule.value.some((d) => d.schedules.inperson?.enabled),
+    };
+    // اگر هیچ نوعی فعال نبود، هر سه را روشن نگه می‌داریم تا وکیل انتخاب کند
+    if (!Object.values(typeMasterEnabled.value).some(Boolean)) {
+      typeMasterEnabled.value = { phone: true, chat: true, inperson: true };
+    }
+
     hasChanges.value = false;
   } catch (error) {
     console.error("Failed to fetch schedule:", error);
@@ -448,6 +503,47 @@ fetchSchedule();
 
 .option-btn:not(.active):hover {
   @apply bg-gray-100;
+}
+
+/* فعال/غیرفعال نوع مشاوره */
+.consultation-types-master {
+  @apply p-4 mb-6 rounded-xl border border-gray-100 bg-gray-50/80;
+}
+
+.consultation-types-master-label {
+  @apply text-sm font-medium text-gray-700 mb-3 block;
+}
+
+.consultation-types-master-switches {
+  @apply space-y-3;
+}
+
+.consultation-type-master-row {
+  @apply flex items-center justify-between gap-4 p-3 rounded-lg bg-white border border-gray-100;
+}
+
+.consultation-type-master-info {
+  @apply flex flex-col gap-0.5;
+}
+
+.consultation-type-master-badge {
+  @apply text-sm font-medium text-gray-900;
+}
+
+.consultation-type-master-badge.phone {
+  @apply text-green-700;
+}
+
+.consultation-type-master-badge.chat {
+  @apply text-blue-700;
+}
+
+.consultation-type-master-badge.inperson {
+  @apply text-purple-700;
+}
+
+.consultation-type-master-hint {
+  @apply text-xs text-gray-500;
 }
 
 /* Days List */

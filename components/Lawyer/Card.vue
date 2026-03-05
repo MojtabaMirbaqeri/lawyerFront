@@ -62,17 +62,17 @@
       </div>
     </div>
 
-    <!-- Consultation Types -->
+    <!-- Consultation Types (از lawyer_info یا بر اساس قیمت/دادهٔ موجود) -->
     <div class="consult-types">
-      <div v-if="lawyerInfo?.lawyer_info?.is_chat_enabled" class="consult-badge consult-badge--chat">
+      <div v-if="isChatEnabled" class="consult-badge consult-badge--chat">
         <UIcon name="heroicons:chat-bubble-left-right-solid" class="size-4!" />
         چت
       </div>
-      <div v-if="lawyerInfo?.lawyer_info?.is_phone_enabled" class="consult-badge consult-badge--phone">
+      <div v-if="isPhoneEnabled" class="consult-badge consult-badge--phone">
         <UIcon name="heroicons:phone-solid" class="size-4!" />
         تلفنی
       </div>
-      <div v-if="lawyerInfo?.lawyer_info?.is_in_person_enabled" class="consult-badge consult-badge--inperson">
+      <div v-if="isInPersonEnabled" class="consult-badge consult-badge--inperson">
         <UIcon name="heroicons:building-office-2-solid" class="size-4!" />
         حضوری
       </div>
@@ -106,6 +106,28 @@ const props = defineProps({
 const isVerified = computed(() =>
   props.lawyerInfo?.site_verified === true || props.lawyerInfo?.lawyer_info?.site_verified === true
 );
+
+/** فعال بودن هر نوع مشاوره: اول از lawyer_info، در غیر این صورت از وجود قیمت */
+const isChatEnabled = computed(() => {
+  const info = props.lawyerInfo?.lawyer_info;
+  if (info && typeof info.is_chat_enabled === 'boolean') return info.is_chat_enabled;
+  const price = props.lawyerInfo?.consultation_price_chat ?? props.lawyerInfo?.lawyer_info?.consultation_price_chat;
+  return Number(price) > 0;
+});
+
+const isPhoneEnabled = computed(() => {
+  const info = props.lawyerInfo?.lawyer_info;
+  if (info && typeof info.is_phone_enabled === 'boolean') return info.is_phone_enabled;
+  const price = props.lawyerInfo?.consultation_price_phone ?? props.lawyerInfo?.lawyer_info?.consultation_price_phone;
+  return Number(price) > 0;
+});
+
+const isInPersonEnabled = computed(() => {
+  const info = props.lawyerInfo?.lawyer_info;
+  if (info && typeof info.is_in_person_enabled === 'boolean') return info.is_in_person_enabled;
+  const price = props.lawyerInfo?.consultation_price_inperson ?? props.lawyerInfo?.lawyer_info?.consultation_price_inperson;
+  return Number(price) > 0;
+});
 </script>
 
 <style scoped>

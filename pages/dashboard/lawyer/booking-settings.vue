@@ -38,7 +38,7 @@
           <UIcon name="lucide:credit-card" class="section-icon" />
           <div>
             <h2 class="section-title">شیوه پرداخت</h2>
-            <p class="section-desc">نحوه دریافت مبلغ مشاوره (فقط حضوری، پیش‌پرداخت یا پرداخت کامل آنلاین).</p>
+            <p class="section-desc">نحوه دریافت مبلغ مشاوره (پیش‌پرداخت یا پرداخت کامل آنلاین). قابلیت پرداخت حضوری با چک‌باکس زیر قابل فعال‌سازی است.</p>
           </div>
         </div>
         <div class="card-dashboard-body p-6 pt-0 space-y-5">
@@ -47,12 +47,18 @@
             <UICSelect
               v-model="form.payment_policy"
               :items="[
-                { id: 'offline_only', label: 'بدون پرداخت آنلاین (فقط حضوری)' },
                 { id: 'deposit_required', label: 'پیش‌پرداخت لازم' },
                 { id: 'full_payment_required', label: 'پرداخت کامل لازم' },
               ]"
               class="max-w-sm"
             />
+          </div>
+          <div class="setting-row">
+            <div>
+              <span class="setting-label">قابلیت پرداخت حضوری (فقط برای مشاوره حضوری)</span>
+              <p class="setting-hint">در صورت فعال بودن، در صفحه رزرو مشاوره حضوری گزینه «پرداخت در محل» به کاربر نمایش داده می‌شود.</p>
+            </div>
+            <USwitch v-model="form.allow_in_person_payment" />
           </div>
           <template v-if="form.payment_policy === 'deposit_required'">
             <div class="grid gap-4 sm:grid-cols-2">
@@ -169,7 +175,8 @@ useHead({ title: 'تنظیمات رزرو | وکیل وکیل' });
 const toast = useToast();
 const form = ref({
   auto_accept: true,
-  payment_policy: 'offline_only',
+  payment_policy: 'deposit_required',
+  allow_in_person_payment: true,
   deposit_type: null,
   deposit_value: null,
   buffer_before_minutes: 0,
@@ -187,7 +194,8 @@ const fetchSettings = async () => {
       const d = res.data.data;
       form.value = {
         auto_accept: !!d.auto_accept,
-        payment_policy: d.payment_policy || 'offline_only',
+        payment_policy: (d.payment_policy === 'offline_only' ? 'deposit_required' : d.payment_policy) || 'deposit_required',
+        allow_in_person_payment: d.allow_in_person_payment !== false,
         deposit_type: d.deposit_type,
         deposit_value: d.deposit_value,
         buffer_before_minutes: d.buffer_before_minutes ?? 0,
