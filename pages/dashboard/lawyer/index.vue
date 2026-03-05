@@ -39,14 +39,14 @@
       </div>
     </div>
 
-    <!-- Stats Cards -->
+    <!-- Stats Cards (اتصال به API: lawyer/dashboard → data.stats) -->
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-card-icon">
           <Icon name="lucide:calendar-check" class="w-6 h-6 text-white" />
         </div>
         <div class="stat-content">
-          <span class="stat-card-value">{{ dashboardRes?.data?.stats?.total_appointments || 0 }}</span>
+          <span class="stat-card-value">{{ statsTotalAppointments }}</span>
           <span class="stat-card-label">کل نوبت‌ها</span>
         </div>
       </div>
@@ -56,7 +56,7 @@
           <Icon name="lucide:wallet" class="w-6 h-6 text-white" />
         </div>
         <div class="stat-content">
-          <span class="stat-card-value">{{ formatCurrency(dashboardRes?.data?.stats?.total_income || 0) }}</span>
+          <span class="stat-card-value">{{ formatCurrency(statsTotalIncome) }}</span>
           <span class="stat-card-label">درآمد کل</span>
         </div>
       </div>
@@ -66,7 +66,7 @@
           <Icon name="lucide:star" class="w-6 h-6 text-white" />
         </div>
         <div class="stat-content">
-          <span class="stat-card-value">{{ dashboardRes?.data?.stats?.average_rating || '0.0' }}</span>
+          <span class="stat-card-value">{{ statsAverageRating }}</span>
           <span class="stat-card-label">میانگین امتیاز</span>
         </div>
       </div>
@@ -76,7 +76,7 @@
           <Icon name="lucide:message-circle" class="w-6 h-6 text-white" />
         </div>
         <div class="stat-content">
-          <span class="stat-card-value">{{ dashboardRes?.data?.stats?.total_reviews || 0 }}</span>
+          <span class="stat-card-value">{{ statsTotalReviews }}</span>
           <span class="stat-card-label">نظرات</span>
         </div>
       </div>
@@ -251,6 +251,36 @@ const profileCompletionInput = computed(() => {
 });
 const { completionPercentage } = useProfileCompletion(profileCompletionInput);
 const comProfile = completionPercentage;
+
+// مقادیر آمار از API (data.stats) با fallback به ساختار قبلی
+const dashboardData = computed(() => {
+  const res = dashboardRes?.value ?? dashboardRes;
+  return res?.data ?? {};
+});
+const statsTotalAppointments = computed(() => {
+  const s = dashboardData.value?.stats;
+  if (s && typeof s.total_appointments === 'number') return s.total_appointments;
+  const a = dashboardData.value?.appointments;
+  if (a) return (a.total_completed ?? 0) + (a.total_pending ?? 0) + (a.total_cancelled ?? 0);
+  return 0;
+});
+const statsTotalIncome = computed(() => {
+  const s = dashboardData.value?.stats;
+  if (s != null && typeof s.total_income === 'number') return s.total_income;
+  return dashboardData.value?.income?.total_earned ?? dashboardData.value?.summary?.total_income ?? 0;
+});
+const statsAverageRating = computed(() => {
+  const s = dashboardData.value?.stats;
+  if (s != null && (typeof s.average_rating === 'number' || typeof s.average_rating === 'string')) return Number(s.average_rating).toFixed(1);
+  const r = dashboardData.value?.reviews?.average_rating;
+  if (r != null) return Number(r).toFixed(1);
+  return '0.0';
+});
+const statsTotalReviews = computed(() => {
+  const s = dashboardData.value?.stats;
+  if (s != null && typeof s.total_reviews === 'number') return s.total_reviews;
+  return dashboardData.value?.reviews?.total_reviews ?? dashboardData.value?.summary?.total_reviews ?? 0;
+});
 
 // Helpers
 const formatCurrency = (value) => {
