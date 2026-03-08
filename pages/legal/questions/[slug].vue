@@ -1,6 +1,18 @@
 <template>
-  <main class="legal-detail-page">
-    <div class="container py-6 lg:py-10">
+  <main class="legal-detail-page flex flex-col min-h-screen relative">
+    <!-- Animated Hero Header -->
+    <header class="relative overflow-hidden bg-slate-900 border-b border-slate-800 shrink-0">
+      <div class="absolute inset-0 z-0">
+        <div class="absolute -top-24 -right-12 w-96 h-96 bg-[var(--accent)]/30 rounded-full blur-[100px] animate-pulse"></div>
+        <div class="absolute -bottom-24 -left-12 w-80 h-80 bg-blue-500/20 rounded-full blur-[100px] animate-pulse" style="animation-delay: 2s;"></div>
+      </div>
+      <div class="relative z-10 w-full px-4 sm:px-6 lg:px-8 py-10 md:py-16 flex flex-col items-center justify-center text-center">
+        <h1 class="text-2xl md:text-4xl font-extrabold text-white mb-3 tracking-tight drop-shadow-md">مشاوره و پرسش و پاسخ حقوقی</h1>
+        <p class="text-sm md:text-base text-slate-300 max-w-xl mx-auto leading-relaxed drop-shadow-sm">پاسخ‌های تخصصی وکلای پایه یک دادگستری را در اینجا مطالعه کنید</p>
+      </div>
+    </header>
+
+    <div class="w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-6 lg:py-10 grow">
       <div v-if="pending" class="legal-detail-loading">
         <UIcon name="lucide:loader-2" class="size-10 animate-spin text-gray-400" />
         <p class="mt-3 text-sm text-gray-500">در حال بارگذاری...</p>
@@ -17,7 +29,7 @@
         </NuxtLink>
       </div>
 
-      <div v-else class="legal-detail-wrapper w-full max-w-7xl mx-auto flex flex-col gap-1">
+      <div v-else class="legal-detail-wrapper w-full mx-auto flex flex-col gap-1">
         <nav class="legal-breadcrumb" aria-label="مسیر">
           <NuxtLink to="/legal/questions" class="legal-breadcrumb-link">سوال و جواب حقوقی</NuxtLink>
           <span class="legal-breadcrumb-sep">/</span>
@@ -429,7 +441,8 @@ await fetchQuestion();
   @apply mt-3 inline-flex rounded-lg bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600;
 }
 .legal-detail-body {
-  @apply mt-6 text-right;
+  @apply mt-6 text-right break-words overflow-hidden w-full;
+  word-break: break-word;
 }
 .legal-detail-body :deep(br) {
   @apply block mt-2;
@@ -495,7 +508,8 @@ await fetchQuestion();
   @apply flex flex-col;
 }
 .legal-answer-body {
-  @apply text-right;
+  @apply text-right break-words overflow-hidden w-full;
+  word-break: break-word;
 }
 .legal-answer-body :deep(br) {
   @apply block mt-1;
