@@ -17,7 +17,7 @@
         </NuxtLink>
       </div>
 
-      <article v-else class="legal-detail-article">
+      <div v-else class="legal-detail-wrapper w-full max-w-7xl mx-auto flex flex-col gap-1">
         <nav class="legal-breadcrumb" aria-label="مسیر">
           <NuxtLink to="/legal/questions" class="legal-breadcrumb-link">سوال و جواب حقوقی</NuxtLink>
           <span class="legal-breadcrumb-sep">/</span>
@@ -51,7 +51,9 @@
           </button>
         </div>
 
-        <div class="legal-detail-card">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start mt-4">
+          <aside class="lg:col-span-5 xl:col-span-4 flex flex-col gap-6 lg:sticky lg:top-24 z-10 w-full">
+            <div class="legal-detail-card">
           <header class="legal-detail-header">
             <h1 class="legal-detail-title">{{ question.title }}</h1>
             <div class="legal-detail-meta">
@@ -98,8 +100,15 @@
             <p>پاسخ‌ها صرفاً اطلاع‌رسانی عمومی هستند و جایگزین مشاوره حقوقی نیستند.</p>
           </div>
         </div>
+        
+        <NuxtLink to="/legal/questions" class="legal-btn legal-btn--outline md:hidden flex justify-center w-full">
+          <UIcon name="lucide:arrow-right" class="size-4 scale-x-[-1]" />
+          بازگشت به لیست سوالات
+        </NuxtLink>
+        </aside>
 
-        <section class="legal-answers-section">
+        <div class="lg:col-span-7 xl:col-span-8 flex flex-col lg:mt-0 mt-4 w-full">
+          <section class="legal-answers-section !mt-0">
           <h2 class="legal-answers-title">
             <UIcon name="lucide:message-square" class="size-5" />
             پاسخ‌ها ({{ question.answers?.length ?? 0 }})
@@ -188,14 +197,16 @@
             </div>
           </div>
         </section>
+        </div>
+        </div>
 
-        <footer class="legal-detail-footer">
+        <footer class="legal-detail-footer hidden md:flex items-center">
           <NuxtLink to="/legal/questions" class="legal-btn legal-btn--outline">
             <UIcon name="lucide:arrow-right" class="size-4 scale-x-[-1]" />
             بازگشت به لیست سوالات
           </NuxtLink>
         </footer>
-      </article>
+      </div>
     </div>
   </main>
 </template>
@@ -378,8 +389,8 @@ await fetchQuestion();
   @apply mb-4 rounded-full bg-gray-100 p-6;
 }
 
-.legal-detail-article {
-  @apply max-w-3xl mx-auto;
+.legal-detail-wrapper {
+  @apply w-full;
 }
 
 .legal-breadcrumb {
@@ -400,7 +411,7 @@ await fetchQuestion();
 }
 
 .legal-detail-card {
-  @apply rounded-2xl border border-gray-200 bg-white p-6 md:p-8 shadow-sm;
+  @apply rounded-3xl border border-gray-200/80 bg-white p-6 md:p-8 shadow-md transition-all hover:shadow-lg;
 }
 .legal-detail-header {
   @apply border-b border-gray-100 pb-6;
@@ -441,7 +452,7 @@ await fetchQuestion();
 }
 
 .legal-answer-form-card {
-  @apply mb-6 rounded-2xl border border-gray-200 bg-gray-50/50 p-5 md:p-6;
+  @apply mb-6 rounded-2xl border border-blue-100/50 bg-blue-50/30 p-5 md:p-6 shadow-sm;
 }
 .legal-answer-form-title {
   @apply text-base font-semibold text-gray-900;
@@ -466,7 +477,7 @@ await fetchQuestion();
   @apply space-y-4;
 }
 .legal-answer-card {
-  @apply rounded-2xl border border-gray-200 bg-white p-5 shadow-sm;
+  @apply rounded-2xl border border-gray-200/80 bg-white p-5 overflow-hidden relative shadow-sm transition-colors hover:border-[var(--accent)]/50 hover:shadow;
 }
 .legal-answer-card--best {
   @apply border-emerald-200 bg-emerald-50/50 shadow-sm;

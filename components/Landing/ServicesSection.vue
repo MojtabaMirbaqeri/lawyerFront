@@ -63,17 +63,17 @@ const services = [
     featured: true,
     features: ['پاسخ فوری', 'مکالمه ۳۰ دقیقه‌ای', 'ضبط مکالمه']
   },
-  {
-    id: 'video',
-    title: 'مشاوره ویدیویی',
-    description: 'جلسه ویدیویی آنلاین با وکیل',
-    icon: 'heroicons:video-camera-solid',
-    gradient: 'linear-gradient(135deg, #f59e0b, #d97706)',
-    price: '120,000',
-    featured: false,
-    comingSoon: true,
-    features: ['جلسه ۴۵ دقیقه‌ای', 'اشتراک صفحه', 'ضبط جلسه']
-  },
+  // {
+  //   id: 'video',
+  //   title: 'مشاوره ویدیویی',
+  //   description: 'جلسه ویدیویی آنلاین با وکیل',
+  //   icon: 'heroicons:video-camera-solid',
+  //   gradient: 'linear-gradient(135deg, #f59e0b, #d97706)',
+  //   price: '120,000',
+  //   featured: false,
+  //   comingSoon: true,
+  //   features: ['جلسه ۴۵ دقیقه‌ای', 'اشتراک صفحه', 'ضبط جلسه']
+  // },
   {
     id: 'inperson',
     title: 'مشاوره حضوری',
@@ -83,10 +83,24 @@ const services = [
     price: '200,000',
     featured: false,
     features: ['جلسه ۶۰ دقیقه‌ای', 'بررسی اسناد', 'مشاوره تخصصی']
+  },
+  {
+    id: 'qa',
+    title: 'پرسش و پاسخ حقوقی',
+    description: 'سوال خود را بپرسید، پاسخ وکلای متخصص را بخوانید و در صورت نیاز مشاوره رزرو کنید',
+    icon: 'heroicons:chat-bubble-left-right-solid',
+    gradient: 'linear-gradient(135deg, #6366f1, #4f46e5)',
+    price: '',
+    featured: false,
+    features: ['ثبت سوال رایگان', 'پاسخ وکلای متخصص', 'مشاهده قبل از رزرو']
   }
 ];
 
 const selectService = (id) => {
+  if (id === 'qa') {
+    navigateTo('/legal/questions');
+    return;
+  }
   navigateTo(`/lawyers?service=${id}`);
 };
 </script>

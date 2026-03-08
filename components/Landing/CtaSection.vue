@@ -18,6 +18,10 @@
             <UIcon name="heroicons:calendar-days-solid" class="size-5!" />
             رزرو وقت مشاوره
           </button>
+          <NuxtLink to="/legal/ask" class="cta-btn cta-btn--primary cta-btn--outline no-underline">
+            <UIcon name="heroicons:chat-bubble-left-right-solid" class="size-5!" />
+            ثبت سوال حقوقی
+          </NuxtLink>
           <button class="cta-btn cta-btn--secondary" @click="navigateTo('tel:+982110014488')">
             <UIcon name="heroicons:phone-solid" class="size-5!" />
             تماس با پشتیبانی
@@ -92,6 +96,18 @@
 .cta-btn--primary:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 30px rgba(251, 191, 36, 0.5);
+}
+
+.cta-btn--primary.cta-btn--outline {
+  color: #fbbf24;
+  background: transparent;
+  border: 2px solid rgba(251, 191, 36, 0.8);
+  box-shadow: none;
+}
+
+.cta-btn--primary.cta-btn--outline:hover {
+  background: rgba(251, 191, 36, 0.15);
+  border-color: #fbbf24;
 }
 
 .cta-btn--secondary {

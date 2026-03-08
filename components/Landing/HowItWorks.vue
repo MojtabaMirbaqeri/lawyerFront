@@ -40,6 +40,12 @@
           </div>
         </div>
       </div>
+
+      <p class="how-qa-hint">
+        همچنین می‌توانید از بخش
+        <NuxtLink to="/legal/questions" class="how-qa-link">پرسش و پاسخ حقوقی</NuxtLink>
+        سوال بپرسید و پس از مطالعه پاسخ‌ها در صورت نیاز مشاوره رزرو کنید.
+      </p>
     </div>
   </section>
 </template>
@@ -158,5 +164,13 @@ const steps = [
 
 .step-description {
   @apply text-sm text-gray-400 leading-relaxed;
+}
+
+.how-qa-hint {
+  @apply text-center text-gray-400 text-sm lg:text-base mt-10 max-w-2xl mx-auto;
+}
+
+.how-qa-link {
+  @apply text-amber-400 font-semibold underline underline-offset-2 hover:text-amber-300;
 }
 </style>
