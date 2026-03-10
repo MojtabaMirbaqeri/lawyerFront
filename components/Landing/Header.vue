@@ -107,6 +107,10 @@
               <UIcon name="heroicons:squares-2x2-solid" class="size-5!" />
               مشاهده همه وکلا
             </button>
+            <NuxtLink to="/legal/ask" class="quick-btn no-underline">
+              <UIcon name="heroicons:chat-bubble-left-right-solid" class="size-5!" />
+              ثبت سوال
+            </NuxtLink>
             <button class="quick-btn" @click="navigateTo('tel:+982110014488')">
               <UIcon name="heroicons:phone-solid" class="size-5!" />
               تماس با پشتیبانی

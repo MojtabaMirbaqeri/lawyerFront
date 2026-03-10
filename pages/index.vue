@@ -17,6 +17,9 @@
     <!-- Services Section -->
     <LandingServicesSection />
 
+    <!-- Legal Q&A Section -->
+    <LandingLegalQaSection />
+
     <!-- Why Choose Us -->
     <LandingWhyChooseUs />
 

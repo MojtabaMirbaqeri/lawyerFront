@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }
 
   // مسیرهای محافظت‌شده
-  const protectedPrefixes = ["/dashboard", "/reserve"];
+  const protectedPrefixes = ["/dashboard", "/reserve", "/legal/ask"];
   const protectedExact = [];
 
   const matchesPrefix = protectedPrefixes.some(
