@@ -40,6 +40,13 @@
           <UIcon name="lucide:clock" class="size-5 shrink-0" />
           <p>سوال شما در انتظار تایید ادمین است و پس از تایید برای همه نمایش داده می‌شود.</p>
         </div>
+        <div v-if="question.status === 'rejected'" class="legal-rejected-notice">
+          <UIcon name="lucide:x-circle" class="size-5 shrink-0" />
+          <div>
+            <p class="font-medium">سوال شما رد شده است.</p>
+            <p v-if="question.rejection_reason" class="mt-1 text-sm opacity-90">دلیل رد: {{ question.rejection_reason }}</p>
+          </div>
+        </div>
 
         <div v-if="isAdmin" class="legal-admin-actions">
           <button
@@ -420,6 +427,9 @@ await fetchQuestion();
 
 .legal-pending-notice {
   @apply mb-6 flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800;
+}
+.legal-rejected-notice {
+  @apply mb-6 flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800;
 }
 
 .legal-detail-card {

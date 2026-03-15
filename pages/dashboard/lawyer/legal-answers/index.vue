@@ -44,6 +44,9 @@
               <td>
                 <span :class="['legal-answers-badge', statusClass(row.status)]">{{ statusLabel(row.status) }}</span>
                 <span v-if="row.is_best" class="legal-answers-badge legal-answers-badge--best">بهترین</span>
+                <p v-if="row.status === 'rejected' && row.rejection_reason" class="mt-1.5 text-sm text-red-600 bg-red-50 rounded-lg px-2 py-1.5">
+                  دلیل رد: {{ row.rejection_reason }}
+                </p>
               </td>
               <td class="legal-answers-muted">{{ row.created_at_formatted }}</td>
               <td>
