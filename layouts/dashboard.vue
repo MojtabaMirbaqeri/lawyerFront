@@ -36,12 +36,74 @@
               </div>
 
               <!-- Notifications -->
-              <button class="header-icon-btn relative">
-                <Icon name="lucide:bell" class="w-5 h-5" />
-                <span v-if="notificationCount > 0" class="notification-badge">{{
-                  notificationCount
-                }}</span>
-              </button>
+              <UPopover
+                v-model:open="notificationPopoverOpen"
+                :content="{ align: 'end', side: 'bottom', sideOffset: 8 }"
+                :open-delay="0"
+                mode="click">
+                <button class="header-icon-btn relative" type="button">
+                  <Icon name="lucide:bell" class="w-5 h-5" />
+                  <span v-if="notificationStore.unreadCount > 0" class="notification-badge">{{
+                    notificationStore.unreadCount > 99 ? '99+' : notificationStore.unreadCount
+                  }}</span>
+                </button>
+                <template #content>
+                  <div class="notifications-dropdown">
+                    <div class="notifications-dropdown-header">
+                      <span class="font-semibold text-gray-800">اعلان‌ها</span>
+                    </div>
+                    <div class="notifications-dropdown-list">
+                      <div
+                        v-if="notificationStore.loadingRecent"
+                        class="flex items-center justify-center py-8 text-gray-500">
+                        <Icon name="lucide:loader-2" class="w-6 h-6 animate-spin" />
+                      </div>
+                      <template v-else-if="notificationStore.recent.length === 0">
+                        <div class="py-8 text-center text-sm text-gray-500">
+                          اعلانی وجود ندارد
+                        </div>
+                      </template>
+                      <template v-else>
+                        <button
+                          v-for="n in notificationStore.recent"
+                          :key="n.id"
+                          type="button"
+                          class="notification-item"
+                          :class="[
+                            { 'notification-item--unread': !n.read_at },
+                            `notification-item--${severityClass(n.severity)}`
+                          ]"
+                          @click="onNotificationClick(n)">
+                          <span class="notification-item-icon" :class="`notification-item-icon--${severityClass(n.severity)}`">
+                            <Icon :name="severityIcon(n.severity)" class="w-4 h-4" />
+                          </span>
+                          <div class="notification-item-content">
+                            <span class="notification-item-title">{{ n.title }}</span>
+                            <p class="notification-item-message">{{ (n.message || '').slice(0, 80) }}{{ (n.message || '').length > 80 ? '…' : '' }}</p>
+                            <span class="notification-item-time">{{ timeAgo(n.created_at) }}</span>
+                          </div>
+                          <span v-if="!n.read_at" class="notification-item-dot" :class="`notification-item-dot--${severityClass(n.severity)}`" />
+                        </button>
+                      </template>
+                    </div>
+                    <div class="notifications-dropdown-footer">
+                      <button
+                        type="button"
+                        class="notifications-footer-btn"
+                        :disabled="notificationStore.unreadCount === 0"
+                        @click="markAllReadAndClose">
+                        همه را بخوان
+                      </button>
+                      <NuxtLink
+                        to="/dashboard/notifications"
+                        class="notifications-footer-link"
+                        @click="notificationPopoverOpen = false">
+                        مشاهده همه اعلان‌ها
+                      </NuxtLink>
+                    </div>
+                  </div>
+                </template>
+              </UPopover>
 
               <!-- User Menu -->
               <div class="user-menu">
@@ -135,9 +197,54 @@
 const dashboardStore = useDashboardStore();
 const authStore = useAuthStore();
 const chatStore = useChatStore();
+const notificationStore = useNotificationStore();
 const route = useRoute();
 
 defineProps(["chatItems"]);
+
+const notificationPopoverOpen = ref(false);
+
+function timeAgo(dateStr) {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  const now = new Date();
+  const s = Math.floor((now - date) / 1000);
+  if (s < 60) return 'همین الان';
+  if (s < 3600) return `${Math.floor(s / 60)} دقیقه پیش`;
+  if (s < 86400) return `${Math.floor(s / 3600)} ساعت پیش`;
+  if (s < 604800) return `${Math.floor(s / 86400)} روز پیش`;
+  return date.toLocaleDateString('fa-IR');
+}
+
+async function onNotificationClick(n) {
+  notificationPopoverOpen.value = false;
+  if (!n.read_at) await notificationStore.markAsRead(n.id);
+  if (n.action_url) {
+    navigateTo(n.action_url);
+  } else {
+    navigateTo('/dashboard/notifications');
+  }
+}
+
+async function markAllReadAndClose() {
+  await notificationStore.markAllAsRead();
+  notificationPopoverOpen.value = false;
+  useToast().add({ title: 'همه اعلان‌ها خوانده شدند', color: 'success' });
+}
+
+function severityClass(severity) {
+  const s = (severity || 'info').toLowerCase();
+  return ['info', 'success', 'warning', 'error'].includes(s) ? s : 'info';
+}
+
+function severityIcon(severity) {
+  const map = { info: 'lucide:info', success: 'lucide:check-circle', warning: 'lucide:alert-triangle', error: 'lucide:alert-circle' };
+  return map[severityClass(severity)] || map.info;
+}
+
+watch(notificationPopoverOpen, (open) => {
+  if (open) notificationStore.fetchRecent(10);
+});
 
 const IMPERSONATE_KEYS = {
   token: "adminRestoreToken",
@@ -171,7 +278,6 @@ function exitImpersonation() {
 // Sidebar state
 const sidebarCollapsed = ref(false);
 const mobileSidebarOpen = ref(false);
-const notificationCount = ref(3); // TODO: Connect to real notifications
 
 const toggleSidebar = () => {
   sidebarCollapsed.value = !sidebarCollapsed.value;
@@ -252,6 +358,12 @@ onMounted(() => {
   if (chatStore.selectedRoom !== 0) {
     console.log("Room ID exists:", chatStore.selectedRoom);
   }
+  notificationStore.fetchUnreadCount(false);
+  notificationStore.startPolling();
+});
+
+onUnmounted(() => {
+  notificationStore.stopPolling();
 });
 
 watch(
@@ -444,5 +556,106 @@ watch(
   .notification-badge {
     @apply w-3.5 h-3.5 text-[8px];
   }
+}
+
+/* Notifications dropdown */
+.notifications-dropdown {
+  @apply w-80 max-h-[min(24rem,70vh)] flex flex-col bg-white rounded-xl shadow-lg border border-gray-100;
+}
+.notifications-dropdown-header {
+  @apply px-4 py-3 border-b border-gray-100;
+}
+.notifications-dropdown-list {
+  @apply overflow-y-auto flex-1 min-h-0;
+}
+.notification-item {
+  @apply w-full flex items-start gap-2 px-4 py-3 text-right border-b border-gray-50 transition-colors;
+  border-right-width: 3px;
+  border-right-style: solid;
+}
+.notification-item:hover {
+  @apply bg-gray-50/80;
+}
+.notification-item--unread {
+  @apply font-medium;
+}
+.notification-item--severity-info {
+  border-right-color: #3b82f6;
+  @apply bg-blue-50/30;
+}
+.notification-item--severity-info:hover {
+  @apply bg-blue-50/50;
+}
+.notification-item--severity-success {
+  border-right-color: #10b981;
+  @apply bg-emerald-50/30;
+}
+.notification-item--severity-success:hover {
+  @apply bg-emerald-50/50;
+}
+.notification-item--severity-warning {
+  border-right-color: #f59e0b;
+  @apply bg-amber-50/30;
+}
+.notification-item--severity-warning:hover {
+  @apply bg-amber-50/50;
+}
+.notification-item--severity-error {
+  border-right-color: #ef4444;
+  @apply bg-red-50/30;
+}
+.notification-item--severity-error:hover {
+  @apply bg-red-50/50;
+}
+.notification-item-icon {
+  @apply shrink-0 mt-0.5 rounded-full p-1.5;
+}
+.notification-item-icon--info {
+  @apply bg-blue-100 text-blue-600;
+}
+.notification-item-icon--success {
+  @apply bg-emerald-100 text-emerald-600;
+}
+.notification-item-icon--warning {
+  @apply bg-amber-100 text-amber-600;
+}
+.notification-item-icon--error {
+  @apply bg-red-100 text-red-600;
+}
+.notification-item-content {
+  @apply flex-1 min-w-0;
+}
+.notification-item-title {
+  @apply block text-sm font-medium text-gray-800 truncate;
+}
+.notification-item-message {
+  @apply text-xs text-gray-500 mt-0.5 line-clamp-2;
+}
+.notification-item-time {
+  @apply block text-[10px] text-gray-400 mt-1;
+}
+.notification-item-dot {
+  @apply w-2 h-2 rounded-full shrink-0 mt-1.5;
+}
+.notification-item-dot--info {
+  @apply bg-blue-500;
+}
+.notification-item-dot--success {
+  @apply bg-emerald-500;
+}
+.notification-item-dot--warning {
+  @apply bg-amber-500;
+}
+.notification-item-dot--error {
+  @apply bg-red-500;
+}
+.notifications-dropdown-footer {
+  @apply flex items-center justify-between gap-2 px-4 py-2 border-t border-gray-100 bg-gray-50/50 rounded-b-xl;
+}
+.notifications-footer-btn {
+  @apply text-xs font-medium text-blue-600 hover:text-blue-700 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+.notifications-footer-link {
+  @apply text-xs font-medium text-gray-600 hover:text-gray-800;
 }
 </style>
