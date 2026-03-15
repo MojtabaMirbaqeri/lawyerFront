@@ -88,6 +88,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       icon: "lucide:send",
     },
     {
+      title: "مدیریت اعلان‌ها",
+      url: "/dashboard/admin/notifications",
+      icon: "lucide:bell-ring",
+    },
+    {
       title: "تنظیمات",
       url: "/dashboard/admin/settings",
       icon: "lucide:settings",
