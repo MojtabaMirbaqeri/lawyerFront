@@ -11,7 +11,8 @@
       <LandingLawyersSection
         ref="lawyersSectionRef"
         link="lawyer/"
-        :titlebtn="'رزرو مشاوره'" />
+        :titlebtn="'رزرو مشاوره'"
+        :show-filters="false" />
     </div>
 
     <!-- Services Section -->

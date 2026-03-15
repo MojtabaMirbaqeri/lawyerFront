@@ -14,7 +14,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-05-15",
   devtools: { enabled: true },
   image: {
-    provider: "none", // مسیر مستقیم تصاویر؛ IPX روی سرور درست کار نمی‌کند
+ // مسیر مستقیم تصاویر؛ IPX روی سرور درست کار نمی‌کند
     domains: getImageDomains(),
     quality: 85,
     format: "webp",

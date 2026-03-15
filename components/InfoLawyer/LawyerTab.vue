@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-const props = defineProps(["dis", "pos", "sch"]);
+const props = defineProps(["dis", "pos", "sch", "lawyerId", "lawyerFullName", "initialReviews", "initialReviewsLastPage"]);
 const newDis = ref('')
 
 if (props.dis) {
@@ -23,7 +23,7 @@ if (props.dis) {
     .replace(/\n/g, "<br/>");
 }
 
-const items = ref([
+const items = computed(() => [
   {
     label: "درباره من",
     value: "about",
@@ -32,16 +32,19 @@ const items = ref([
     slot: "about",
   },
   {
-    label: "موقعیت وکیل",
-    value: "position",
-    slot: "position",
-    pos: props.pos,
-  },
-  {
     label: "زمان مشاوره",
     value: "visit",
     slot: "visit",
     sch: props.sch,
+  },
+  {
+    label: "دیدگاه‌ها",
+    value: "comment",
+    slot: "comment",
+    lawyerId: props.lawyerId,
+    lawyerFullName: props.lawyerFullName,
+    initialReviews: props.initialReviews,
+    initialReviewsLastPage: props.initialReviewsLastPage,
   },
 ]);
 
