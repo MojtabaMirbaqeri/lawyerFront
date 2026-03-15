@@ -1,3 +1,5 @@
+import { useRequestId } from "./useRequestId";
+
 export async function useGet(
   request = {
     url: "",

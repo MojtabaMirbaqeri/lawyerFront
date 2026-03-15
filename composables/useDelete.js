@@ -1,4 +1,6 @@
 // composables/useDelete.js
+import { useRequestId } from "./useRequestId";
+
 export async function useDelete(
   request = {
     url: "",

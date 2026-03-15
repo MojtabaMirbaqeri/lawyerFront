@@ -104,6 +104,7 @@ const refetch = async (page: number | null = null, total = false) => {
     
     return {
       id: law.lawyer_info?.id,
+      user_id: law.user_id ?? law.user?.id,
       national_code: law.lawyer_info?.national_code,
       phone: law.phone,
       fullName: `${name} ${family}`,
@@ -151,6 +152,7 @@ const searchRefetch = async (query, start, page) => {
     
     return {
       id: law?.id,
+      user_id: law?.user_id,
       national_code: law?.national_code,
       phone: law.phone,
       fullName: `${name} ${family}`,
@@ -179,6 +181,7 @@ const lawyersRef = ref((await useGet({ url: "lawyers", includeAuthHeader: true }
 
 type Lawyer = {
   id: string;
+  user_id?: number;
   national_code: string;
   fullName: string;
   slug: string;
@@ -198,6 +201,7 @@ const data = ref(
     
     return {
       id: law.lawyer_info?.id,
+      user_id: law.user_id ?? law.user?.id,
       national_code: law.lawyer_info?.national_code,
       phone: law.phone,
       fullName: `${name} ${family}`,
@@ -225,8 +229,8 @@ function getInitials(name: string) {
     .substring(0, 2);
 }
 
-function getRowActions(row: any) {
-  return [
+function getRowActions(row: Lawyer) {
+  const actions: Array<{ label?: string; icon?: string; type?: "separator"; onSelect?: () => void; class?: string }> = [
     {
       label: "ویرایش",
       onSelect() {
@@ -248,8 +252,19 @@ function getRowActions(row: any) {
       },
       icon: "lucide:log-in",
     },
+  ];
+  if (row.user_id) {
+    actions.push({
+      label: "ارسال نوتیفیکیشن",
+      icon: "lucide:bell",
+      onSelect() {
+        openSendNotificationModal(row);
+      },
+    });
+  }
+  actions.push(
     {
-      type: "separator" as const,
+      type: "separator",
     },
     {
       label: row.is_active ? "غیرفعال کردن" : "فعال کردن",
@@ -279,8 +294,10 @@ function getRowActions(row: any) {
       async onSelect() {
         if (!confirm("آیا از حذف این وکیل اطمینان دارید؟ وکیل به صورت موقت حذف می‌شود و در لیست نمایش داده نخواهد شد؛ امکان بازیابی از دیتابیس وجود دارد.")) return;
         const res = await useDelete({
-          url: `lawyers/${row.original.edit_id}`,
+          url: `lawyers/${row.edit_id}`,
           includeAuthHeader: true,
+          query: {},
+          body: null,
         });
         if (res.status) {
           useToast().add({ title: "وکیل با موفقیت حذف شد (قابل بازیابی)", color: "success" });
@@ -290,10 +307,64 @@ function getRowActions(row: any) {
         }
       },
     },
-  ];
+  );
+  return actions;
 }
 
 const globalFilter = ref("");
+
+// Send notification modal (to lawyer)
+const showSendNotificationModal = ref(false);
+const sendNotificationRecipientIds = ref<number[]>([]);
+const sendNotificationRecipientName = ref("");
+const sendNotificationLoading = ref(false);
+const sendForm = ref({
+  title: "",
+  message: "",
+  category: "system",
+  severity: "info",
+  action_url: "",
+});
+
+function openSendNotificationModal(lawyer: Lawyer) {
+  if (!lawyer?.user_id) {
+    useToast().add({ title: "امکان ارسال اعلان برای این وکیل وجود ندارد", color: "warning" });
+    return;
+  }
+  sendNotificationRecipientIds.value = [lawyer.user_id];
+  sendNotificationRecipientName.value = lawyer.fullName || "";
+  sendForm.value = { title: "", message: "", category: "system", severity: "info", action_url: "" };
+  showSendNotificationModal.value = true;
+}
+
+async function submitSendNotification() {
+  if (!sendForm.value.title.trim() || !sendForm.value.message.trim()) return;
+  if (sendNotificationRecipientIds.value.length === 0) {
+    useToast().add({ title: "لطفاً حداقل یک گیرنده انتخاب کنید", color: "error" });
+    return;
+  }
+  sendNotificationLoading.value = true;
+  try {
+    const res = await usePost({
+      url: "admin/notifications/send",
+      includeAuthHeader: true,
+      body: {
+        user_ids: sendNotificationRecipientIds.value,
+        title: sendForm.value.title.trim(),
+        message: sendForm.value.message.trim(),
+        category: sendForm.value.category,
+        severity: sendForm.value.severity,
+        action_url: sendForm.value.action_url?.trim() || undefined,
+      },
+    });
+    if (res.status && res.data?.data !== undefined) {
+      useToast().add({ title: "اعلان با موفقیت ارسال شد", color: "success" });
+      showSendNotificationModal.value = false;
+    }
+  } finally {
+    sendNotificationLoading.value = false;
+  }
+}
 
 const pagination = ref({
   pageIndex: 1,
@@ -554,16 +625,108 @@ const exportToExcel = () => {
               ><Icon name="lucide:phone" class="w-3.5 h-3.5" /> {{ lawyer.phone }}</span
             >
           </div>
-          <button
-            type="button"
-            class="mt-2 w-full flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-100"
-            @click.stop="enterLawyerPanel(lawyer.edit_id)">
-            <Icon name="lucide:log-in" class="w-3.5 h-3.5" />
-            ورود به پنل وکیل
-          </button>
+          <div class="mt-2 flex gap-2">
+            <button
+              type="button"
+              class="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-100"
+              @click.stop="enterLawyerPanel(lawyer.edit_id)">
+              <Icon name="lucide:log-in" class="w-3.5 h-3.5" />
+              ورود به پنل
+            </button>
+            <button
+              v-if="lawyer.user_id"
+              type="button"
+              class="flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-100"
+              title="ارسال نوتیفیکیشن"
+              @click.stop="openSendNotificationModal(lawyer)">
+              <Icon name="lucide:bell" class="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Send Notification Modal -->
+    <UModal v-model:open="showSendNotificationModal" title="ارسال اعلان">
+      <template #body>
+        <div class="modal-content">
+          <div class="modal-body">
+            <p v-if="sendNotificationRecipientName" class="text-sm text-gray-600 mb-4">
+              ارسال به: <strong>{{ sendNotificationRecipientName }}</strong>
+            </p>
+            <form class="space-y-4" @submit.prevent="submitSendNotification">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">عنوان (الزامی)</label>
+                <input
+                  v-model="sendForm.title"
+                  type="text"
+                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                  placeholder="عنوان اعلان"
+                  maxlength="255"
+                  required
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">متن (الزامی)</label>
+                <textarea
+                  v-model="sendForm.message"
+                  rows="3"
+                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                  placeholder="متن اعلان"
+                  maxlength="2000"
+                  required
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">دسته</label>
+                <select
+                  v-model="sendForm.category"
+                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm">
+                  <option value="system">سیستمی</option>
+                  <option value="admin">ادمین</option>
+                  <option value="booking">نوبت</option>
+                  <option value="lawyer">وکیل</option>
+                  <option value="payment">پرداخت</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">سطح</label>
+                <select
+                  v-model="sendForm.severity"
+                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm">
+                  <option value="info">اطلاع</option>
+                  <option value="success">موفقیت</option>
+                  <option value="warning">هشدار</option>
+                  <option value="error">خطا</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">لینک (اختیاری)</label>
+                <input
+                  v-model="sendForm.action_url"
+                  type="text"
+                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                  placeholder="/dashboard/notifications یا آدرس کامل"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" @click="showSendNotificationModal = false" class="btn-secondary">
+              انصراف
+            </button>
+            <button
+              type="button"
+              class="btn-primary"
+              :disabled="sendNotificationLoading || !sendForm.title.trim() || !sendForm.message.trim()"
+              @click="submitSendNotification">
+              <Icon v-if="sendNotificationLoading" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
+              <span v-else>ارسال</span>
+            </button>
+          </div>
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>
 
