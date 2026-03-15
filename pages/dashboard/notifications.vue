@@ -118,7 +118,7 @@ useHead({
   title: 'اعلان‌ها | داشبورد',
 });
 
-const notificationStore = useNotificationStore();
+const notificationStore = useNotificationsStore();
 const filter = ref('all');
 const page = ref(1);
 const markingAll = ref(false);

@@ -218,6 +218,8 @@ async function submitSend() {
 }
 
 .btn-primary {
-  @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed;
+  background-color: var(--ui-primary);
+  color: white;
 }
 </style>

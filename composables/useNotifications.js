@@ -3,7 +3,7 @@
  * Uses the notifications Pinia store; use from dashboard layout for polling.
  */
 export function useNotifications() {
-  const store = useNotificationStore();
+  const store = useNotificationsStore();
 
   return {
     unreadCount: store.unreadCount,

@@ -8,7 +8,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
   const auth = useAuthStore();
 
   const commonRoutes = [
-    { title: "اعلان‌ها", url: "/dashboard/notifications", icon: "lucide:bell" },
+
   ];
 
   const adminRoutes = [

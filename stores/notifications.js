@@ -3,7 +3,7 @@ import { ref, computed } from "vue";
 
 const POLL_INTERVAL_MS = 45000;
 
-export const useNotificationStore = defineStore("notifications", () => {
+export const useNotificationsStore = defineStore("notifications", () => {
   const unreadCount = ref(0);
   const list = ref([]);
   const recent = ref([]);

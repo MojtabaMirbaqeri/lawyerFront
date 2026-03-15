@@ -197,7 +197,7 @@
 const dashboardStore = useDashboardStore();
 const authStore = useAuthStore();
 const chatStore = useChatStore();
-const notificationStore = useNotificationStore();
+const notificationStore = useNotificationsStore();
 const route = useRoute();
 
 defineProps(["chatItems"]);
