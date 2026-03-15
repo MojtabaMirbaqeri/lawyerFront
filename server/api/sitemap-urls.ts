@@ -26,6 +26,11 @@ export default defineEventHandler(async (event) => {
     priority: 0.8,
     changefreq: "daily",
   });
+  urls.push({
+    loc: "/legal-calculators",
+    priority: 0.85,
+    changefreq: "weekly",
+  });
 
   // Legal Q&A: categories and published questions
   try {
@@ -49,6 +54,25 @@ export default defineEventHandler(async (event) => {
     }
   } catch (e) {
     console.error("Sitemap: Failed to fetch legal Q&A", e);
+  }
+
+  // Legal calculators (per-slug)
+  try {
+    const calcRes = await $fetch<{ data?: { slug: string }[] }>(
+      `${apiEndpoint}legal-calculators`
+    );
+    const list = calcRes?.data ?? [];
+    if (Array.isArray(list)) {
+      list.forEach((c) => {
+        urls.push({
+          loc: `/legal-calculators/${c.slug}`,
+          priority: 0.8,
+          changefreq: "monthly",
+        });
+      });
+    }
+  } catch (e) {
+    console.error("Sitemap: Failed to fetch legal calculators", e);
   }
 
   // 1. Add Provinces

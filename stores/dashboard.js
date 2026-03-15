@@ -112,6 +112,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/admin/logs/access",
       icon: "lucide:door-open",
     },
+    {
+      title: "ماشین‌حساب‌های حقوقی",
+      url: "/dashboard/admin/legal-calculators",
+      icon: "lucide:calculator",
+    },
     { 
       title: "چت", 
       url: "/chat", 
