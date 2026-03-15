@@ -11,6 +11,7 @@ export async function useDelete(
   const jwtToken = useCookie("jwtToken");
 
   const headers = {
+    "X-Request-Id": useRequestId(),
     ...(request.includeAuthHeader && jwtToken.value
       ? { Authorization: `Bearer ${jwtToken.value}` }
       : {}),

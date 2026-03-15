@@ -97,6 +97,21 @@ export const useDashboardStore = defineStore("dashboard", () => {
       url: "/dashboard/admin/settings",
       icon: "lucide:settings",
     },
+    {
+      title: "لاگ حسابرسی",
+      url: "/dashboard/admin/logs/audit",
+      icon: "lucide:clipboard-list",
+    },
+    {
+      title: "لاگ امنیتی",
+      url: "/dashboard/admin/logs/security",
+      icon: "lucide:shield-alert",
+    },
+    {
+      title: "لاگ دسترسی",
+      url: "/dashboard/admin/logs/access",
+      icon: "lucide:door-open",
+    },
     { 
       title: "چت", 
       url: "/chat", 
