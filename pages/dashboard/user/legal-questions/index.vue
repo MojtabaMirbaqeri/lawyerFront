@@ -34,6 +34,9 @@
             </td>
             <td class="p-3">
               <span :class="['badge', statusBadgeClass(row.status)]">{{ statusLabel(row.status) }}</span>
+              <p v-if="row.status === 'rejected' && row.rejection_reason" class="mt-1.5 text-sm text-red-600 bg-red-50 rounded-lg px-2 py-1.5">
+                دلیل رد: {{ row.rejection_reason }}
+              </p>
             </td>
             <td class="p-3 text-sm text-gray-500">{{ row.created_at_formatted }}</td>
             <td class="p-3">

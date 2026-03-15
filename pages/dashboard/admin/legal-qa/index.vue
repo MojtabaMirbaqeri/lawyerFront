@@ -110,7 +110,7 @@
                       type="button"
                       class="btn-danger text-sm! py-1.5! px-3!"
                       :disabled="actionLoading === row.id"
-                      @click="setQuestionStatus(row.id, 'rejected')"
+                      @click="openRejectModal('question', row.id)"
                     >
                       <UIcon name="lucide:x" class="size-4" />
                       رد
@@ -296,7 +296,7 @@
                       type="button"
                       class="btn-danger text-sm! py-1.5! px-3!"
                       :disabled="actionLoading === row.id"
-                      @click="setAnswerStatus(row.id, 'rejected')"
+                      @click="openRejectModal('answer', row.id)"
                     >
                       <UIcon name="lucide:x" class="size-4" />
                       رد
@@ -313,6 +313,47 @@
         </div>
       </template>
     </div>
+
+    <!-- مودال دلیل رد -->
+    <Teleport to="body">
+      <div
+        v-if="rejectModal.open"
+        class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="reject-modal-title"
+        @click.self="closeRejectModal"
+      >
+        <div class="legal-qa-reject-modal bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
+          <h2 id="reject-modal-title" class="text-lg font-semibold text-gray-900 mb-2">
+            {{ rejectModal.type === 'question' ? 'رد سوال' : 'رد پاسخ' }}
+          </h2>
+          <p class="text-sm text-gray-500 mb-4">
+            دلیل رد را وارد کنید (اختیاری). این متن به {{ rejectModal.type === 'question' ? 'کاربر' : 'وکیل' }} نمایش داده می‌شود.
+          </p>
+          <textarea
+            v-model="rejectModal.reason"
+            class="legal-qa-reject-textarea w-full rounded-xl border border-gray-200 px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] outline-none resize-y min-h-[100px]"
+            placeholder="مثال: محتوای سوال با قوانین سایت مطابقت ندارد."
+            rows="4"
+            maxlength="1000"
+          />
+          <div class="flex justify-end gap-2 mt-4">
+            <button type="button" class="btn-secondary" @click="closeRejectModal">
+              انصراف
+            </button>
+            <button
+              type="button"
+              class="btn-danger"
+              :disabled="rejectSubmitting"
+              @click="confirmReject"
+            >
+              {{ rejectSubmitting ? 'در حال ارسال...' : 'رد و ارسال' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </section>
 </template>
 
@@ -324,6 +365,51 @@ const questionsHidden = ref([]);
 const answers = ref([]);
 const loading = ref(false);
 const actionLoading = ref(null);
+const rejectSubmitting = ref(false);
+const rejectModal = ref({
+  open: false,
+  type: 'question',
+  id: null,
+  reason: '',
+});
+
+function openRejectModal(type, id) {
+  rejectModal.value = { open: true, type, id, reason: '' };
+}
+function closeRejectModal() {
+  rejectModal.value.open = false;
+  rejectModal.value.reason = '';
+}
+async function confirmReject() {
+  const { type, id, reason } = rejectModal.value;
+  if (!id) return;
+  actionLoading.value = id;
+  rejectSubmitting.value = true;
+  try {
+    const body = { status: 'rejected', rejection_reason: reason?.trim() || null };
+    if (type === 'question') {
+      await usePatch({
+        url: `admin/legal/questions/${id}/status`,
+        includeAuthHeader: true,
+        body,
+      });
+      if (tab.value === 'questionsPending') await fetchQuestionsPending();
+      if (tab.value === 'questionsPublished') await fetchQuestionsPublished();
+      if (tab.value === 'questionsHidden') await fetchQuestionsHidden();
+    } else {
+      await usePatch({
+        url: `admin/legal/answers/${id}/status`,
+        includeAuthHeader: true,
+        body,
+      });
+      await fetchAnswers();
+    }
+    closeRejectModal();
+  } finally {
+    rejectSubmitting.value = false;
+    actionLoading.value = null;
+  }
+}
 
 function statusQ(s) {
   const map = { draft: "پیش‌نویس", pending: "در انتظار", published: "منتشر شده", closed: "بسته", rejected: "رد شده", hidden: "مخفی" };
@@ -363,13 +449,15 @@ async function fetchQuestionsHidden() {
   questionsHidden.value = res.data?.data ?? [];
 }
 
-async function setQuestionStatus(id, status) {
+async function setQuestionStatus(id, status, rejectionReason = null) {
   actionLoading.value = id;
   try {
+    const body = { status };
+    if (status === 'rejected' && rejectionReason != null) body.rejection_reason = rejectionReason;
     await usePatch({
       url: `admin/legal/questions/${id}/status`,
       includeAuthHeader: true,
-      body: { status },
+      body,
     });
     if (tab.value === 'questionsPending') await fetchQuestionsPending();
     if (tab.value === 'questionsPublished') await fetchQuestionsPublished();
@@ -408,13 +496,15 @@ async function fetchAnswers() {
   answers.value = res.data?.data ?? [];
 }
 
-async function setAnswerStatus(id, status) {
+async function setAnswerStatus(id, status, rejectionReason = null) {
   actionLoading.value = id;
   try {
+    const body = { status };
+    if (status === 'rejected' && rejectionReason != null) body.rejection_reason = rejectionReason;
     await usePatch({
       url: `admin/legal/answers/${id}/status`,
       includeAuthHeader: true,
-      body: { status },
+      body,
     });
     await fetchAnswers();
   } finally {
