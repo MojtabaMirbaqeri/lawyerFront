@@ -121,7 +121,7 @@
                     base: 'flex-col gap-1.5 rounded-xl border py-3 transition min-w-0 flex-1',
                     active: 'border-[#0EA5E9]! bg-sky-50/50! text-[#0EA5E9]!',
                   }" />
-                <template v-if="paymentMethod === 'online'">
+                <template v-if="paymentMethod === 'gateway'">
                   <div class="mt-4">
                     <div class="flex gap-2 items-center mb-2">
                       <UIcon name="solar:card-outline" class="size-5! text-slate-500" />
@@ -136,6 +136,26 @@
                       }" />
                   </div>
                 </template>
+                <div v-if="(paymentMethod === 'wallet' || paymentMethod === 'wallet_gateway') && balanceNum > 0" class="mt-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <p class="text-sm font-medium text-slate-700 mb-1">موجودی کیف پول</p>
+                  <p class="text-lg font-bold text-[#0EA5E9]">{{ Number(balanceNum).toLocaleString('fa-IR') }} تومان</p>
+                  <p class="text-xs text-slate-500 mt-1">کیف پول شما فقط در همین حساب قابل استفاده است.</p>
+                </div>
+                <div v-if="paymentMethod === 'wallet_gateway'" class="mt-4 space-y-2 rounded-xl border border-sky-100 bg-sky-50/50 p-4">
+                  <p class="text-sm font-medium text-slate-700">تفکیک مبلغ</p>
+                  <div class="flex justify-between text-sm">
+                    <span class="text-slate-600">از کیف پول:</span>
+                    <span class="font-medium">{{ splitFromWalletDisplay }}</span>
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span class="text-slate-600">از درگاه:</span>
+                    <span class="font-medium">{{ splitFromGatewayDisplay }}</span>
+                  </div>
+                  <div class="flex justify-between text-sm pt-1 border-t border-sky-200">
+                    <span class="font-bold text-slate-800">جمع کل:</span>
+                    <span class="font-bold text-[#0EA5E9]">{{ Number(payableNum).toLocaleString('fa-IR') }} تومان</span>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="my-4 border-t border-slate-200" />
@@ -234,6 +254,9 @@ const props = withDefaults(
     isDeposit?: boolean;
     amountToPayNowDisplay?: string;
     remainingAtVenueDisplay?: string | null;
+    walletBalance?: number;
+    payableAmountNum?: number;
+    walletIsFrozen?: boolean;
   }>(),
   {
     lawyerName: "",
@@ -244,6 +267,9 @@ const props = withDefaults(
     isDeposit: false,
     amountToPayNowDisplay: "",
     remainingAtVenueDisplay: null,
+    walletBalance: 0,
+    payableAmountNum: 0,
+    walletIsFrozen: false,
   }
 );
 
@@ -255,7 +281,14 @@ const emit = defineEmits<{
   applyDiscount: [];
   back: [];
   next: [];
-  confirmPayment: [payload?: { payment_method: "online" | "in_person"; gateway?: string }];
+  confirmPayment: [
+    payload?: {
+      payment_method: "online" | "in_person";
+      payment_channel?: "gateway" | "wallet" | "wallet_gateway";
+      gateway?: string;
+      wallet_amount?: number;
+    },
+  ];
 }>();
 
 const fileInputRef = ref<HTMLInputElement | null>(null);
@@ -266,20 +299,43 @@ const bookingDetailsAccordionItems = [
   { label: "جزئیات رزرو شما", icon: "solar:info-circle-outline" },
 ];
 
-const paymentMethod = ref("online");
+const paymentMethod = ref("gateway");
 
-const allPaymentMethodOptions = [
-  { id: "online", title: "آنلاین", icon: "solar:wallet-linear" },
-  { id: "in_person", title: "حضوری", icon: "hugeicons:building-04" },
-];
+const payableNum = computed(() => Number(props.payableAmountNum) || 0);
+const balanceNum = computed(() => Number(props.walletBalance) || 0);
+const allowWalletOnly = computed(
+  () => !props.walletIsFrozen && balanceNum.value >= payableNum.value && payableNum.value > 0
+);
+const allowWalletGateway = computed(
+  () =>
+    !props.walletIsFrozen &&
+    balanceNum.value > 0 &&
+    payableNum.value > balanceNum.value
+);
+const maxWalletUsable = computed(() => Math.min(balanceNum.value, payableNum.value));
 
-const paymentMethodItems = computed(() => {
-  const items = [...allPaymentMethodOptions];
-  if (!props.allowInPersonPayment) {
-    return items.filter((o) => o.id !== "in_person");
+const allPaymentMethodOptions = computed(() => {
+  const options: { id: string; title: string; icon: string }[] = [
+    { id: "gateway", title: "پرداخت از طریق زرین‌پال", icon: "solar:wallet-linear" },
+    { id: "in_person", title: "پرداخت حضوری", icon: "hugeicons:building-04" },
+  ];
+  if (allowWalletOnly.value) {
+    options.push({ id: "wallet", title: "پرداخت با کیف پول", icon: "solar:wallet-money-linear" });
   }
-  return items;
+  if (allowWalletGateway.value) {
+    options.push({
+      id: "wallet_gateway",
+      title: "پرداخت ترکیبی (کیف پول + درگاه)",
+      icon: "solar:wallet-money-linear",
+    });
+  }
+  if (!props.allowInPersonPayment) {
+    return options.filter((o) => o.id !== "in_person");
+  }
+  return options;
 });
+
+const paymentMethodItems = computed(() => allPaymentMethodOptions.value);
 
 watch(
   () => paymentMethodItems.value,
@@ -291,6 +347,32 @@ watch(
   },
   { immediate: true }
 );
+
+const walletAmountForSplit = ref(0);
+watch(
+  () => [paymentMethod.value, maxWalletUsable.value],
+  () => {
+    if (paymentMethod.value === "wallet_gateway") {
+      walletAmountForSplit.value = Math.floor(maxWalletUsable.value);
+    }
+  },
+  { immediate: true }
+);
+const gatewayAmountForSplit = computed(() =>
+  paymentMethod.value === "wallet_gateway"
+    ? Math.max(0, payableNum.value - walletAmountForSplit.value)
+    : paymentMethod.value === "wallet"
+      ? 0
+      : payableNum.value
+);
+const splitFromWalletDisplay = computed(() => {
+  const n = paymentMethod.value === "wallet" ? payableNum.value : paymentMethod.value === "wallet_gateway" ? walletAmountForSplit.value : 0;
+  return n > 0 ? Number(n).toLocaleString("fa-IR") + " تومان" : "—";
+});
+const splitFromGatewayDisplay = computed(() => {
+  const n = gatewayAmountForSplit.value;
+  return n > 0 ? Number(n).toLocaleString("fa-IR") + " تومان" : "—";
+});
 
 const selectedGateway = ref("zarinpal");
 const gatewayItems = [
@@ -336,8 +418,16 @@ function onDiscountCodeInput(e: Event) {
 }
 
 function onConfirmPayment() {
-  const method = paymentMethod.value === "in_person" ? "in_person" : "online";
-  const gateway = method === "online" ? selectedGateway.value : undefined;
-  emit("confirmPayment", { payment_method: method, gateway });
+  const isInPerson = paymentMethod.value === "in_person";
+  const method = isInPerson ? "in_person" : "online";
+  const channel = isInPerson ? undefined : (paymentMethod.value as "gateway" | "wallet" | "wallet_gateway");
+  const walletAmount =
+    channel === "wallet_gateway" ? Math.floor(walletAmountForSplit.value) : undefined;
+  emit("confirmPayment", {
+    payment_method: method,
+    payment_channel: channel,
+    gateway: channel === "gateway" ? selectedGateway.value : undefined,
+    wallet_amount: walletAmount,
+  });
 }
 </script>

@@ -11,11 +11,15 @@
 
     <template v-else>
       <section class="bg-white border border-slate-200 rounded-lg p-6 mb-6">
-        <h2 class="text-lg font-semibold mb-4">خلاصه</h2>
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+          <h2 class="text-lg font-semibold">خلاصه</h2>
+          <span v-if="summary.is_frozen" class="text-amber-600 text-sm font-medium">مسدود</span>
+          <span v-else class="text-green-600 text-sm font-medium">فعال</span>
+        </div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div class="p-4 bg-slate-50 rounded-lg">
-            <p class="text-sm text-slate-600">موجودی</p>
-            <p class="text-xl font-bold text-slate-900">{{ summary.balance?.toLocaleString('fa-IR') ?? 0 }} تومان</p>
+            <p class="text-sm text-slate-600">موجودی کیف پول</p>
+            <p class="text-2xl font-bold text-slate-900">{{ summary.balance?.toLocaleString('fa-IR') ?? 0 }} تومان</p>
           </div>
           <div class="p-4 bg-slate-50 rounded-lg">
             <p class="text-sm text-slate-600">مجموع واریزها</p>
@@ -26,7 +30,19 @@
             <p class="text-xl font-bold text-slate-900">{{ summary.total_debited?.toLocaleString('fa-IR') ?? 0 }} تومان</p>
           </div>
         </div>
-        <p v-if="summary.is_frozen" class="mt-3 text-amber-600 text-sm">کیف پول شما در حال حاضر مسدود است.</p>
+        <p class="text-slate-500 text-sm mt-3">می‌توانید از کیف پول برای پرداخت رزروها استفاده کنید.</p>
+        <p v-if="summary.is_frozen" class="mt-2 text-amber-600 text-sm">کیف پول شما در حال حاضر مسدود است.</p>
+        <div class="mt-4">
+          <button
+            type="button"
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0EA5E9] text-white font-medium rounded-xl hover:bg-sky-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            :disabled="summary.is_frozen"
+            @click="topUpModalOpen = true"
+          >
+            <Icon name="lucide:plus-circle" class="w-5 h-5" />
+            شارژ کیف پول
+          </button>
+        </div>
       </section>
 
       <section class="bg-white border border-slate-200 rounded-lg p-6">
@@ -68,11 +84,14 @@
           </button>
         </div>
       </section>
+
+      <DashboardWalletTopUpModal v-model:open="topUpModalOpen" />
     </template>
   </div>
 </template>
 
 <script setup>
+const topUpModalOpen = ref(false);
 const loading = ref(true);
 const summary = ref({ balance: 0, total_credited: 0, total_debited: 0, is_frozen: false });
 const transactions = ref([]);
@@ -86,7 +105,7 @@ function formatDate(iso) {
 }
 
 function isCredit(type) {
-  return ['credit', 'refund_credit', 'adjustment_credit'].includes(type);
+  return ['credit', 'refund_credit', 'adjustment_credit', 'topup'].includes(type);
 }
 
 async function fetchSummary() {

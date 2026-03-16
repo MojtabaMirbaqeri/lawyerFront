@@ -42,6 +42,9 @@
       :is-deposit="isDeposit"
       :amount-to-pay-now-display="amountToPayNowDisplay"
       :remaining-at-venue-display="remainingAtVenueDisplay"
+      :wallet-balance="userWalletBalance"
+      :payable-amount-num="amountToPayNowNum"
+      :wallet-is-frozen="userWalletFrozen"
       :can-reserve="canReserve"
       @update:open="onReserveModalOpenChange"
       @apply-discount="applyDiscount"
@@ -170,13 +173,27 @@ async function confirmPayment(payload = {}) {
     const hasPayment = !!appointment?.payment;
 
     if (status === "awaiting_payment" && hasPayment && appointment?.id) {
+      const payChannel = payload?.payment_channel ?? "gateway";
+      const walletAmount = payload?.wallet_amount ?? null;
+      const payBody = { appointment_id: appointment.id, payment_method: payChannel };
+      if (payChannel === "wallet_gateway" && walletAmount != null) payBody.wallet_amount = walletAmount;
       try {
         const payRes = await usePost({
           url: "payments",
           includeAuthHeader: true,
-          body: { appointment_id: appointment.id },
+          body: payBody,
         }, false);
         const payPayload = payRes.data?.data ?? payRes.data;
+        const completed = payPayload?.completed === true;
+        if (completed) {
+          useToast().add({
+            title: "پرداخت با کیف پول با موفقیت انجام شد.",
+            icon: "hugeicons:appointment-02",
+            color: "success",
+          });
+          navigateTo("/dashboard/appointments");
+          return;
+        }
         const redirectUrl = payPayload?.redirect_url ?? payPayload?.gateway_url;
         if (redirectUrl) {
           if (typeof window !== "undefined") window.location.href = redirectUrl;
@@ -627,6 +644,25 @@ const allowInPersonPayment = computed(() => {
 const paymentPolicyType = computed(() => bookingPolicy.value?.policy ?? "offline_only");
 
 const isDeposit = computed(() => !!bookingPolicy.value?.is_deposit);
+
+const userWalletSummary = ref(null);
+const userWalletBalance = computed(() => (userWalletSummary.value?.balance ?? 0));
+const userWalletFrozen = computed(() => !!userWalletSummary.value?.is_frozen);
+
+watch(
+  () => [reserveStep.value, reserveModalOpen.value],
+  async () => {
+    if (reserveStep.value === 2 && reserveModalOpen.value) {
+      try {
+        const res = await useGet({ url: "user/wallet", includeAuthHeader: true }, false);
+        userWalletSummary.value = res.data?.data ?? res.data ?? null;
+      } catch {
+        userWalletSummary.value = null;
+      }
+    }
+  },
+  { immediate: true }
+);
 
 const payableNowDisplay = computed(() => {
   if (bookingPolicy.value?.payment_required) return amountToPayNowDisplay.value;

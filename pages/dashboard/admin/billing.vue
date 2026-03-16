@@ -5,12 +5,20 @@
         <h1 class="text-xl font-bold">امور مالی</h1>
         <p class="text-slate-600 text-sm mt-1">خلاصه مالی پلتفرم و مدیریت کیف پول‌ها</p>
       </div>
-      <NuxtLink
-        to="/dashboard/admin/finance/wallets"
-        class="px-4 py-2 bg-slate-800 text-white rounded-lg text-sm hover:bg-slate-700"
-      >
-        لیست کیف پول‌ها
-      </NuxtLink>
+      <div class="flex gap-2">
+        <NuxtLink
+          to="/dashboard/admin/finance/topups"
+          class="px-4 py-2 border border-slate-300 rounded-lg text-sm hover:bg-slate-50"
+        >
+          شارژهای کیف پول
+        </NuxtLink>
+        <NuxtLink
+          to="/dashboard/admin/finance/wallets"
+          class="px-4 py-2 bg-slate-800 text-white rounded-lg text-sm hover:bg-slate-700"
+        >
+          لیست کیف پول‌ها
+        </NuxtLink>
+      </div>
     </div>
 
     <div v-if="loading" class="flex justify-center py-12">
