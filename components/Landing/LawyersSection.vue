@@ -9,11 +9,11 @@
     </div>
 
     <!-- Type Filter -->
-    <div v-if="showFilters" class="type-filter">
+    <!-- <div v-if="showFilters" class="type-filter">
       <UICSelectButton
         v-model="filtersStore.selectedFilters.lawyerType"
         :items="lawyerTypes" />
-    </div>
+    </div> -->
 
     <!-- Phone-only Filter Trigger -->
     <div class="sm:hidden">

@@ -18,7 +18,7 @@
             <UIcon name="heroicons:calendar-days-solid" class="size-5!" />
             رزرو وقت مشاوره
           </button>
-          <button class="cta-btn cta-btn--secondary" @click="navigateTo('tel:+982110014488')">
+          <button class="cta-btn cta-btn--secondary" @click="navigateTo('tel:+982191091350')">
             <UIcon name="heroicons:phone-solid" class="size-5!" />
             تماس با پشتیبانی
           </button>

@@ -61,7 +61,7 @@
         </UPopover>
         <NuxtLink to="/faq" class="nav-link">سوالات متداول</NuxtLink>
         <NuxtLink to="/articles" class="nav-link">مقالات</NuxtLink>
-        <a href="tel:+982110014488" class="nav-link">تماس با ما</a>
+        <a href="tel:+982191091350" class="nav-link">تماس با ما</a>
       </nav>
 
       <!-- Spacer: keeps logo+nav right, actions left (RTL) -->
@@ -239,7 +239,7 @@ const menuItems = ref([
     {
       label: "تماس با ما",
       icon: "lucide:phone",
-      to: "tel:+982110014488",
+      to: "tel:+982191091350",
     },
   ],
 ]);

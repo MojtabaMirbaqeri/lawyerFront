@@ -107,7 +107,7 @@
               <UIcon name="heroicons:squares-2x2-solid" class="size-5!" />
               مشاهده همه وکلا
             </button>
-            <button class="quick-btn" @click="navigateTo('tel:+982110014488')">
+            <button class="quick-btn" @click="navigateTo('tel:+982191091350')">
               <UIcon name="heroicons:phone-solid" class="size-5!" />
               تماس با پشتیبانی
             </button>
