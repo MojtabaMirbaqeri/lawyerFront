@@ -162,7 +162,17 @@
                 تخفیف اعمال شده: {{ offerValueDisplay }}
               </p>
               <div class="my-2 border-t border-dashed border-slate-300" />
-              <div class="flex items-center justify-between">
+              <template v-if="isDeposit && amountToPayNowDisplay">
+                <div class="flex items-center justify-between text-sm text-slate-600">
+                  <span>مبلغ پرداختی موقت (پیش‌پرداخت):</span>
+                  <span class="font-medium">{{ amountToPayNowDisplay }}</span>
+                </div>
+                <div v-if="remainingAtVenueDisplay" class="flex items-center justify-between text-sm text-slate-500 mt-1">
+                  <span>مبلغ باقی‌مانده در محل:</span>
+                  <span>{{ remainingAtVenueDisplay }}</span>
+                </div>
+              </template>
+              <div class="flex items-center justify-between mt-2">
                 <span class="text-base font-bold text-slate-800">مبلغ قابل پرداخت:</span>
                 <span class="text-base font-extrabold text-[#0EA5E9]">{{ finalPriceDisplay }}</span>
               </div>
@@ -187,7 +197,7 @@
           </button>
           <button v-else type="button"
             class="group flex w-full items-center justify-center gap-2 rounded-xl bg-[#0EA5E9] px-8 py-3 font-bold text-white shadow-lg shadow-sky-200 transition-all hover:-translate-y-0.5 hover:bg-sky-600 sm:w-auto disabled:pointer-events-none disabled:opacity-60"
-            :disabled="!canReserve" @click="$emit('confirmPayment')">
+            :disabled="!canReserve" @click="onConfirmPayment">
             <UIcon name="solar:card-linear" class="size-5! group-hover:animate-pulse" />
             پرداخت و نهایی کردن رزرو
           </button>
@@ -219,8 +229,22 @@ const props = withDefaults(
     caseDescription: string;
     reserveFiles: File[];
     discountCode: string;
+    allowInPersonPayment?: boolean;
+    paymentPolicy?: string;
+    isDeposit?: boolean;
+    amountToPayNowDisplay?: string;
+    remainingAtVenueDisplay?: string | null;
   }>(),
-  { lawyerName: "", visitTypeTitle: "", offerValueDisplay: null }
+  {
+    lawyerName: "",
+    visitTypeTitle: "",
+    offerValueDisplay: null,
+    allowInPersonPayment: false,
+    paymentPolicy: "offline_only",
+    isDeposit: false,
+    amountToPayNowDisplay: "",
+    remainingAtVenueDisplay: null,
+  }
 );
 
 const emit = defineEmits<{
@@ -231,7 +255,7 @@ const emit = defineEmits<{
   applyDiscount: [];
   back: [];
   next: [];
-  confirmPayment: [];
+  confirmPayment: [payload?: { payment_method: "online" | "in_person"; gateway?: string }];
 }>();
 
 const fileInputRef = ref<HTMLInputElement | null>(null);
@@ -243,11 +267,30 @@ const bookingDetailsAccordionItems = [
 ];
 
 const paymentMethod = ref("online");
-const paymentMethodItems = [
+
+const allPaymentMethodOptions = [
   { id: "online", title: "آنلاین", icon: "solar:wallet-linear" },
   { id: "in_person", title: "حضوری", icon: "hugeicons:building-04" },
-  { id: "wallet", title: "کیف پول", icon: "solar:wallet-money-linear" },
 ];
+
+const paymentMethodItems = computed(() => {
+  const items = [...allPaymentMethodOptions];
+  if (!props.allowInPersonPayment) {
+    return items.filter((o) => o.id !== "in_person");
+  }
+  return items;
+});
+
+watch(
+  () => paymentMethodItems.value,
+  (items) => {
+    const hasCurrent = items.some((o) => o.id === paymentMethod.value);
+    if (!hasCurrent && items.length) {
+      paymentMethod.value = items[0].id;
+    }
+  },
+  { immediate: true }
+);
 
 const selectedGateway = ref("zarinpal");
 const gatewayItems = [
@@ -290,5 +333,11 @@ function onCaseDescriptionInput(e: Event) {
 function onDiscountCodeInput(e: Event) {
   const target = e.target as HTMLInputElement | null;
   emit("update:discountCode", target?.value ?? "");
+}
+
+function onConfirmPayment() {
+  const method = paymentMethod.value === "in_person" ? "in_person" : "online";
+  const gateway = method === "online" ? selectedGateway.value : undefined;
+  emit("confirmPayment", { payment_method: method, gateway });
 }
 </script>

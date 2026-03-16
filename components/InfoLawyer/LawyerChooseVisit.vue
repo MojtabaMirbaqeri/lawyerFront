@@ -35,14 +35,19 @@
       :summary-duration-text="summaryDurationText"
       :visit-type-title="selectedItem?.title"
       :display-price="mainPriceDisplay"
-      :final-price-display="finalPriceDisplay"
+      :final-price-display="payableNowDisplay"
       :offer-value-display="offerValueDisplay"
+      :allow-in-person-payment="allowInPersonPayment"
+      :payment-policy="paymentPolicyType"
+      :is-deposit="isDeposit"
+      :amount-to-pay-now-display="amountToPayNowDisplay"
+      :remaining-at-venue-display="remainingAtVenueDisplay"
       :can-reserve="canReserve"
       @update:open="onReserveModalOpenChange"
       @apply-discount="applyDiscount"
       @back="reserveModalBack"
       @next="reserveModalNext"
-      @confirm-payment="confirmPayment" />
+      @confirm-payment="(payload) => confirmPayment(payload)" />
   </div>
 </template>
 
@@ -136,8 +141,10 @@ function reserveModalNext() {
   reserveStep.value++;
 }
 
-async function confirmPayment() {
+async function confirmPayment(payload = {}) {
   if (!canReserve.value) return;
+
+  const paymentMethod = payload?.payment_method ?? "online";
 
   const body = {
     lawyer_id: props.lawyerId,
@@ -147,6 +154,7 @@ async function confirmPayment() {
     duration: +duration.value,
     description: caseDescription.value,
     coupon_code: discountCode.value?.trim() || "",
+    payment_method: paymentMethod,
   };
 
   const res = await usePost({
@@ -157,6 +165,34 @@ async function confirmPayment() {
 
   if (res.statusCode === 200 || res.statusCode === 201) {
     reserveModalOpen.value = false;
+    const appointment = res.data?.data ?? res.data;
+    const status = appointment?.status;
+    const hasPayment = !!appointment?.payment;
+
+    if (status === "awaiting_payment" && hasPayment && appointment?.id) {
+      try {
+        const payRes = await usePost({
+          url: "payments",
+          includeAuthHeader: true,
+          body: { appointment_id: appointment.id },
+        }, false);
+        const payPayload = payRes.data?.data ?? payRes.data;
+        const redirectUrl = payPayload?.redirect_url ?? payPayload?.gateway_url;
+        if (redirectUrl) {
+          if (typeof window !== "undefined") window.location.href = redirectUrl;
+          return;
+        }
+      } catch (e) {
+        useToast().add({
+          title: "نوبت ثبت شد. برای پرداخت به بخش نوبت‌ها بروید.",
+          icon: "hugeicons:appointment-02",
+          color: "warning",
+        });
+        navigateTo(`/dashboard/appointments?pay=${appointment.id}`);
+        return;
+      }
+    }
+
     useToast().add({
       title: "نوبت شما با موفقیت ثبت شد.",
       icon: "hugeicons:appointment-02",
@@ -165,7 +201,7 @@ async function confirmPayment() {
     navigateTo("/dashboard/appointments");
   } else if (res.statusCode === 422) {
     useToast().add({
-      title: "در این بازه زمانی وکیل نوبت دیگری دارد.",
+      title: res.data?.message ?? "در این بازه زمانی وکیل نوبت دیگری دارد.",
       icon: "hugeicons:appointment-02",
       color: "error",
     });
@@ -199,6 +235,7 @@ watch(
 // ——— منطق برنامه‌هفتگی و روز/زمان ———
 const scheduleLoaded = ref(false);
 const scheduleUnavailable = ref(false);
+const bookingPolicy = ref(null);
 const availableDays = ref({});
 const bookingData = ref([]);
 const bookings = ref([]);
@@ -480,11 +517,14 @@ async function loadSchedule() {
       end: toMinutes(addTimeAndDuration(b.time, b.duration)),
     }));
 
+    bookingPolicy.value = resData.data.booking_policy ?? null;
+
     scheduleLoaded.value = true;
     fetchHolidays();
   } catch {
     scheduleLoaded.value = false;
     scheduleUnavailable.value = true;
+    bookingPolicy.value = null;
   }
 }
 
@@ -540,6 +580,58 @@ const offerValueDisplay = computed(() => {
   const v = calculatedPrice.value?.offerValue ?? 0;
   if (!v || v <= 0) return null;
   return Number(v).toLocaleString("fa-IR") + " تومان";
+});
+
+const finalPriceNum = computed(() => {
+  const p = calculatedPrice.value?.price ?? calculatedPrice.value?.mainPrice ?? (selectedDuration.value / 30) * basePriceNum.value;
+  return Number(p) || 0;
+});
+
+const amountToPayNowNum = computed(() => {
+  const policy = bookingPolicy.value;
+  const fullPrice = finalPriceNum.value;
+  if (!policy?.payment_required || fullPrice <= 0) return 0;
+  if (policy.policy === "full_payment_required") return fullPrice;
+  if (policy.policy === "deposit_required" && policy.is_deposit) {
+    const depositType = policy.deposit_type ?? "fixed";
+    const depositValue = Number(policy.deposit_value) || 0;
+    const amount = depositType === "percent"
+      ? Math.round(fullPrice * depositValue / 100)
+      : depositValue;
+    return Math.min(Math.max(amount, 0), fullPrice);
+  }
+  const sample = Number(policy.amount_to_pay_now) || 0;
+  const slots = selectedDuration.value / 30;
+  return Math.round(sample * slots);
+});
+
+const amountToPayNowDisplay = computed(() => {
+  const n = amountToPayNowNum.value;
+  if (n == null || Number.isNaN(n)) return "—";
+  return Number(n).toLocaleString("fa-IR") + " تومان";
+});
+
+const remainingAtVenueDisplay = computed(() => {
+  if (!bookingPolicy.value?.is_deposit) return null;
+  const full = finalPriceNum.value;
+  const payNow = amountToPayNowNum.value;
+  const rem = Math.max(0, full - payNow);
+  return Number(rem).toLocaleString("fa-IR") + " تومان";
+});
+
+const allowInPersonPayment = computed(() => {
+  const policy = bookingPolicy.value;
+  return !!(policy?.allow_in_person_payment && activeVisitType.value === "inperson");
+});
+
+const paymentPolicyType = computed(() => bookingPolicy.value?.policy ?? "offline_only");
+
+const isDeposit = computed(() => !!bookingPolicy.value?.is_deposit);
+
+const payableNowDisplay = computed(() => {
+  if (bookingPolicy.value?.payment_required) return amountToPayNowDisplay.value;
+  if (allowInPersonPayment.value) return "پرداخت در محل";
+  return finalPriceDisplay.value;
 });
 
 async function applyDiscount() {
