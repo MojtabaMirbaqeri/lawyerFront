@@ -167,11 +167,11 @@ const lawyerData = computed(() => {
 
 const li = computed(() => lawyerData.value?.lawyer_info || {});
 
-const getInitialState = () => {
-  const data = lawyerData.value || {};
-  const info = data.lawyer_info || {};
+const getInitialStateFromData = (data) => {
+  const d = data || {};
+  const info = d.lawyer_info || {};
   return {
-    full_name: `${data.name || ""} ${data.family || ""}`.trim(),
+    full_name: `${d.name || ""} ${d.family || ""}`.trim(),
     gender: info.gender || "male",
     father_name: info.father_name || "",
     birth_date: info.birth_date
@@ -182,9 +182,23 @@ const getInitialState = () => {
   };
 };
 
-const state = reactive(getInitialState());
+const getInitialState = () => getInitialStateFromData(lawyerData.value);
+
+const state = reactive(getInitialStateFromData(lawyerData.value));
 
 const initialState = reactive({ ...state });
+
+// وقتی دادهٔ وکیل از سرور عوض شد (مثلاً بعد از ذخیره یا بار اول)، state فرم را با آن همگام کن
+watch(
+  () => lawyerData.value,
+  (newData) => {
+    if (!newData) return;
+    const next = getInitialStateFromData(newData);
+    Object.assign(state, next);
+    Object.assign(initialState, next);
+  },
+  { deep: true }
+);
 
 const isChanged = computed(() => {
   return ["gender", "father_name", "birth_date", "province_id", "city_id"].some(

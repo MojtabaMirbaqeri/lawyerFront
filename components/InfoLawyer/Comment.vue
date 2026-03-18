@@ -38,6 +38,11 @@
         </div>
         <USeparator class="py-3" />
         <div class="comments">
+          <p
+            v-if="!comments.length"
+            class="py-6 text-center text-slate-500">
+            دیدگاهی وجود ندارد
+          </p>
           <div
             v-for="comment in comments"
             :key="comment.id"
@@ -125,6 +130,7 @@
         </div>
       </div>
       <UICSecondaryBtn
+        v-if="comments.length > 0"
         :disabled="currentPageComment == lastPage"
         :class="{
           'bg-gray-500! cursor-no-drop!': currentPageComment == lastPage,

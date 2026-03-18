@@ -52,6 +52,7 @@
                 <th>مدرک</th>
                 <th>رشته</th>
                 <th>دانشگاه</th>
+                <th>بازه زمانی</th>
                 <th>محل تحصیل</th>
                 <th class="w-20"></th>
               </tr>
@@ -66,6 +67,7 @@
                 <td>{{ item.degree_text }}</td>
                 <td>{{ item.field_of_study }}</td>
                 <td>{{ item.university }}</td>
+                <td>{{ formatYearRange(item.start_year, item.end_year) }}</td>
                 <td>{{ item.place_of_study }}</td>
                 <td>
                   <div class="flex items-center gap-1 justify-end">
@@ -100,6 +102,12 @@
             <div class="mobile-card-row">
               <span class="mobile-card-label">دانشگاه</span>
               <span class="mobile-card-value">{{ item.university }}</span>
+            </div>
+            <div class="mobile-card-row">
+              <span class="mobile-card-label">بازه زمانی</span>
+              <span class="mobile-card-value">{{
+                formatYearRange(item.start_year, item.end_year)
+              }}</span>
             </div>
             <div class="mobile-card-row">
               <span class="mobile-card-label">محل تحصیل</span>
@@ -149,6 +157,7 @@
                 <th>سمت</th>
                 <th>سابقه</th>
                 <th>ارگان / شرکت</th>
+                <th>بازه زمانی</th>
                 <th>محل کار</th>
                 <th class="w-20"></th>
               </tr>
@@ -161,6 +170,7 @@
                 <td>{{ item.position }}</td>
                 <td>{{ item.experience_years_text }}</td>
                 <td>{{ item.organization }}</td>
+                <td>{{ formatYearRange(item.start_year, item.end_year) }}</td>
                 <td>{{ item.work_place }}</td>
                 <td>
                   <div class="flex items-center gap-1 justify-end">
@@ -195,6 +205,12 @@
             <div class="mobile-card-row">
               <span class="mobile-card-label">ارگان / شرکت</span>
               <span class="mobile-card-value">{{ item.organization }}</span>
+            </div>
+            <div class="mobile-card-row">
+              <span class="mobile-card-label">بازه زمانی</span>
+              <span class="mobile-card-value">{{
+                formatYearRange(item.start_year, item.end_year)
+              }}</span>
             </div>
             <div class="mobile-card-row">
               <span class="mobile-card-label">محل کار</span>
@@ -244,6 +260,7 @@
               <tr>
                 <th>نام افتخار</th>
                 <th>صادر کننده</th>
+                <th>سال</th>
                 <th>تصویر</th>
                 <th class="w-20"></th>
               </tr>
@@ -255,6 +272,7 @@
                 :class="{ 'highlighted-row': highlightedItem === `award-${item.id}` }">
                 <td>{{ item.award_name }}</td>
                 <td>{{ item.issuing_organization }}</td>
+                <td>{{ item.award_year || "—" }}</td>
                 <td>
                   <button
                     v-if="item.image_url"
@@ -288,6 +306,10 @@
             <div class="mobile-card-row">
               <span class="mobile-card-label">عنوان جایزه</span>
               <span class="mobile-card-value">{{ item.award_name }}</span>
+            </div>
+            <div class="mobile-card-row">
+              <span class="mobile-card-label">سال</span>
+              <span class="mobile-card-value">{{ item.award_year || "—" }}</span>
             </div>
             <div class="mobile-card-row">
               <span class="mobile-card-label">سازمان اعطا کننده</span>
@@ -362,6 +384,31 @@
                   placeholder="شهر یا کشور"
                   required />
               </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="form-field">
+                  <UICInput
+                    v-model="educationState.start_year"
+                    name="start_year"
+                    label="سال شروع"
+                    type="number"
+                    placeholder="مثال: ۱۳۹۸" />
+                </div>
+                <div class="form-field">
+                  <UICInput
+                    v-model="educationState.end_year"
+                    name="end_year"
+                    label="سال پایان"
+                    type="number"
+                    placeholder="مثال: ۱۴۰۲" />
+                </div>
+              </div>
+              <div class="form-field">
+                <UICInput
+                  v-model="educationState.description"
+                  name="description"
+                  label="توضیحات (اختیاری)"
+                  placeholder="توضیح کوتاه درباره سوابق تحصیلی" />
+              </div>
             </div>
             <div class="modal-footer">
               <button
@@ -434,6 +481,31 @@
                   placeholder="شهر یا آدرس"
                   required />
               </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="form-field">
+                  <UICInput
+                    v-model="workState.start_year"
+                    name="start_year"
+                    label="سال شروع"
+                    type="number"
+                    placeholder="مثال: ۱۳۹۶" />
+                </div>
+                <div class="form-field">
+                  <UICInput
+                    v-model="workState.end_year"
+                    name="end_year"
+                    label="سال پایان"
+                    type="number"
+                    placeholder="مثال: ۱۴۰۴" />
+                </div>
+              </div>
+              <div class="form-field">
+                <UICInput
+                  v-model="workState.description"
+                  name="description"
+                  label="شرح کوتاه (اختیاری)"
+                  placeholder="شرح کوتاه از مسئولیت‌ها یا حوزه فعالیت" />
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" @click="showWorkModal = false" class="btn-secondary">
@@ -483,6 +555,23 @@
                   label="ارگان صادر کننده"
                   placeholder="نام سازمان صادر کننده"
                   required />
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="form-field">
+                  <UICInput
+                    v-model="awardState.award_year"
+                    name="award_year"
+                    label="سال دریافت (اختیاری)"
+                    type="number"
+                    placeholder="مثال: ۱۴۰۳" />
+                </div>
+                <div class="form-field">
+                  <UICInput
+                    v-model="awardState.description"
+                    name="description"
+                    label="توضیحات (اختیاری)"
+                    placeholder="توضیح کوتاه" />
+                </div>
               </div>
               <div class="form-field">
                 <label class="form-label"
@@ -589,6 +678,9 @@ const educationState = reactive({
   field_of_study: "",
   university: "",
   place_of_study: "",
+  start_year: null,
+  end_year: null,
+  description: "",
 });
 
 const workState = reactive({
@@ -596,11 +688,16 @@ const workState = reactive({
   experience_years: "1-3",
   organization: "",
   work_place: "",
+  start_year: null,
+  end_year: null,
+  description: "",
 });
 
 const awardState = reactive({
   award_name: "",
   issuing_organization: "",
+  award_year: null,
+  description: "",
   image: null,
 });
 
@@ -626,6 +723,7 @@ const educationSchema = object({
   field_of_study: string().required("رشته تحصیلی الزامی است"),
   university: string().required("نام دانشگاه الزامی است"),
   place_of_study: string().required("محل تحصیل الزامی است"),
+  description: string().max(2000, "حداکثر ۲۰۰۰ کاراکتر"),
 });
 
 const workSchema = object({
@@ -633,12 +731,14 @@ const workSchema = object({
   experience_years: string().required("سابقه کاری الزامی است"),
   organization: string().required("نام ارگان الزامی است"),
   work_place: string().required("محل کار الزامی است"),
+  description: string().max(2000, "حداکثر ۲۰۰۰ کاراکتر"),
 });
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const awardSchema = object({
   award_name: string().required("عنوان افتخار الزامی است"),
   issuing_organization: string().required("نام ارگان صادر کننده الزامی است"),
+  description: string().max(2000, "حداکثر ۲۰۰۰ کاراکتر"),
   image: mixed()
     .required("تصویر لوح افتخار الزامی است")
     .test(
@@ -647,6 +747,12 @@ const awardSchema = object({
       (file) => file && file.size <= MAX_FILE_SIZE,
     ),
 });
+
+function formatYearRange(startYear, endYear) {
+  if (!startYear && !endYear) return "—";
+  if (startYear && endYear) return `${startYear} تا ${endYear}`;
+  return `${startYear || endYear}`;
+}
 
 // Computed
 const deleteConfirmMessage = computed(() => {
@@ -701,6 +807,9 @@ function openEducationModal(item = null) {
       field_of_study: item.field_of_study || "",
       university: item.university || "",
       place_of_study: item.place_of_study || "",
+      start_year: item.start_year || null,
+      end_year: item.end_year || null,
+      description: item.description || "",
     });
   } else {
     Object.assign(educationState, {
@@ -708,6 +817,9 @@ function openEducationModal(item = null) {
       field_of_study: "",
       university: "",
       place_of_study: "",
+      start_year: null,
+      end_year: null,
+      description: "",
     });
   }
   showEducationModal.value = true;
@@ -732,6 +844,9 @@ async function onEducationSubmit(event) {
         field_of_study: "",
         university: "",
         place_of_study: "",
+        start_year: null,
+        end_year: null,
+        description: "",
       });
       await reFetchLawyer?.();
     } else {
@@ -754,6 +869,9 @@ function openWorkModal(item = null) {
       experience_years: item.experience_years || "1-3",
       organization: item.organization || "",
       work_place: item.work_place || "",
+      start_year: item.start_year || null,
+      end_year: item.end_year || null,
+      description: item.description || "",
     });
   } else {
     Object.assign(workState, {
@@ -761,6 +879,9 @@ function openWorkModal(item = null) {
       experience_years: "1-3",
       organization: "",
       work_place: "",
+      start_year: null,
+      end_year: null,
+      description: "",
     });
   }
   showWorkModal.value = true;
@@ -785,6 +906,9 @@ async function onWorkSubmit(event) {
         experience_years: "1-3",
         organization: "",
         work_place: "",
+        start_year: null,
+        end_year: null,
+        description: "",
       });
     } else {
       toast.add({ description: "خطا در افزودن سابقه کاری.", color: "error" });
@@ -799,7 +923,13 @@ async function onWorkSubmit(event) {
 
 // Awards
 function openAwardModal() {
-  Object.assign(awardState, { award_name: "", issuing_organization: "", image: null });
+  Object.assign(awardState, {
+    award_name: "",
+    issuing_organization: "",
+    award_year: null,
+    description: "",
+    image: null,
+  });
   showAwardModal.value = true;
 }
 
@@ -813,9 +943,12 @@ function handleAwardImageChange(e) {
 async function onAwardSubmit(event) {
   isAwardLoading.value = true;
   const fd = new FormData();
-  fd.append("award_name", event.data.award_name);
-  fd.append("issuing_organization", event.data.issuing_organization);
-  fd.append("image", event.data.image);
+  fd.append("award_name", event.data.award_name ?? awardState.award_name);
+  fd.append("issuing_organization", event.data.issuing_organization ?? awardState.issuing_organization);
+  if (event.data.award_year ?? awardState.award_year) fd.append("award_year", String(event.data.award_year ?? awardState.award_year));
+  if (event.data.description ?? awardState.description) fd.append("description", event.data.description ?? awardState.description);
+  const imageFile = event.data?.image ?? awardState.image;
+  if (imageFile instanceof File) fd.append("image", imageFile);
 
   try {
     const res = await usePost({
@@ -824,14 +957,17 @@ async function onAwardSubmit(event) {
       body: fd,
     });
 
-    if (res.status && res.data && res.data.data) {
+    const award = res.data?.data ?? res.data;
+    if ((res.statusCode === 201 || res.statusCode === 200) && award) {
       toast.add({ description: "افتخار با موفقیت افزوده شد.", color: "success" });
-      awardsHistory.value.push(res.data.data);
-      highlightNewItem("award", res.data.data.id);
+      awardsHistory.value.push(award);
+      highlightNewItem("award", award.id);
       showAwardModal.value = false;
       Object.assign(awardState, {
         award_name: "",
         issuing_organization: "",
+        award_year: null,
+        description: "",
         image: null,
       });
     } else {

@@ -80,6 +80,15 @@
           }" />
       </div>
       <div class="space-y-3">
+        <h1 class="font-semibold">لینک‌های عمومی</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <UInput v-model="formData.website_url" placeholder="وب‌سایت (اختیاری)" />
+          <UInput v-model="formData.linkedin_url" placeholder="لینکدین (اختیاری)" />
+          <UInput v-model="formData.instagram_url" placeholder="اینستاگرام (اختیاری)" />
+          <UInput v-model="formData.telegram_url" placeholder="تلگرام (اختیاری)" />
+        </div>
+      </div>
+      <div class="space-y-3">
         <h1 class="font-semibold">نمایش در سایت</h1>
         <label class="flex items-center gap-2 cursor-pointer">
           <input
@@ -155,6 +164,10 @@ const formData = reactive({
   specialties: [],
   services: [],
   about: "",
+  website_url: "",
+  linkedin_url: "",
+  instagram_url: "",
+  telegram_url: "",
   profile_image: null,
   show_phone_on_site: true,
 });
@@ -167,6 +180,10 @@ const initialData = reactive({
   specialties: [],
   services: [],
   about: "",
+  website_url: "",
+  linkedin_url: "",
+  instagram_url: "",
+  telegram_url: "",
   show_phone_on_site: true,
 });
 
@@ -176,11 +193,19 @@ function syncFromProp() {
   const specs = [...specialtiesIds.value];
   const srvs = [...servicesIds.value];
   const about = aboutText.value;
+  const website_url = lawyerInfo.value?.website_url || "";
+  const linkedin_url = lawyerInfo.value?.linkedin_url || "";
+  const instagram_url = lawyerInfo.value?.instagram_url || "";
+  const telegram_url = lawyerInfo.value?.telegram_url || "";
   const showPhone = showPhoneOnSiteDefault.value;
   formData.base = base;
   formData.specialties = specs;
   formData.services = srvs;
   formData.about = about;
+  formData.website_url = website_url;
+  formData.linkedin_url = linkedin_url;
+  formData.instagram_url = instagram_url;
+  formData.telegram_url = telegram_url;
   formData.show_phone_on_site = showPhone;
   Object.assign(initialData, {
     name: formData.name,
@@ -189,6 +214,10 @@ function syncFromProp() {
     specialties: specs,
     services: srvs,
     about,
+    website_url,
+    linkedin_url,
+    instagram_url,
+    telegram_url,
     show_phone_on_site: showPhone,
   });
 }
@@ -228,6 +257,10 @@ const hasChanges = computed(() => {
     JSON.stringify([...formData.services].sort()) !==
       JSON.stringify([...initialData.services].sort()) ||
     formData.about !== initialData.about ||
+    formData.website_url !== initialData.website_url ||
+    formData.linkedin_url !== initialData.linkedin_url ||
+    formData.instagram_url !== initialData.instagram_url ||
+    formData.telegram_url !== initialData.telegram_url ||
     formData.show_phone_on_site !== initialData.show_phone_on_site ||
     formData.profile_image !== null
   );
@@ -263,6 +296,10 @@ const updateProfile = async () => {
     formDataToSend.append("family", formData.family);
     formDataToSend.append("base", formData.base.toString());
     formDataToSend.append("about", formData.about);
+    formDataToSend.append("website_url", formData.website_url || "");
+    formDataToSend.append("linkedin_url", formData.linkedin_url || "");
+    formDataToSend.append("instagram_url", formData.instagram_url || "");
+    formDataToSend.append("telegram_url", formData.telegram_url || "");
     formDataToSend.append(
       "show_phone_on_site",
       formData.show_phone_on_site ? "1" : "0",
@@ -289,6 +326,10 @@ const updateProfile = async () => {
         specialties: [...formData.specialties].map(Number),
         services: [...formData.services].map(Number),
         about: formData.about,
+        website_url: formData.website_url,
+        linkedin_url: formData.linkedin_url,
+        instagram_url: formData.instagram_url,
+        telegram_url: formData.telegram_url,
         show_phone_on_site: formData.show_phone_on_site,
       });
 
