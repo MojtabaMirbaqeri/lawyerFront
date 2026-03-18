@@ -82,8 +82,16 @@
     <div
       v-if="lawyer?.is_active"
       class="fixed bottom-0 left-0 right-0 z-30 border-t border-slate-200 bg-white/95 p-3 lg:hidden">
-      <UICMainBtn class="w-full" @click="scrollToBooking">رزرو مشاوره</UICMainBtn>
-      <p class="mt-1 text-center text-[11px] text-slate-500">پاسخ‌گویی توسط وکیل</p>
+      <div
+        v-if="!hasWorkingHours"
+        class="rounded-xl border border-amber-200 bg-amber-50/90 py-3 text-center">
+        <p class="font-medium text-amber-800">رزرو وکیل غیرفعال هست</p>
+        <p class="mt-0.5 text-xs text-amber-700">این وکیل هنوز ساعت کاری ثبت نکرده است.</p>
+      </div>
+      <template v-else>
+        <UICMainBtn class="w-full" @click="scrollToBooking">رزرو مشاوره</UICMainBtn>
+        <p class="mt-1 text-center text-[11px] text-slate-500">پاسخ‌گویی توسط وکیل</p>
+      </template>
     </div>
   </main>
 </template>

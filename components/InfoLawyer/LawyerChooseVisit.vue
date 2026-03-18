@@ -1,6 +1,14 @@
 <template>
   <div>
+    <!-- وقتی وکیل ساعت کاری ثبت نکرده، فقط پیام نمایش داده شود -->
+    <div
+      v-if="!hasWorkingHours"
+      class="rounded-2xl border border-amber-200 bg-amber-50/80 p-4 text-center">
+      <p class="font-medium text-amber-800">رزرو وکیل غیرفعال هست</p>
+      <p class="mt-1 text-sm text-amber-700">این وکیل هنوز ساعت کاری ثبت نکرده است.</p>
+    </div>
     <InfoLawyerBookingCard
+      v-else
       :duration-options="durationOptions"
       :duration="duration"
       :items="items"
@@ -61,6 +69,7 @@ const props = defineProps({
   lawyerId: { type: [String, Number], default: null },
   lawyerName: { type: String, default: "" },
   active: { type: Boolean, default: true },
+  hasWorkingHours: { type: Boolean, default: true },
 });
 
 /** اسکرول افقی با درگ ماوس — هر بار یک مجموعه هندلر برای یک باکس برمی‌گرداند */
@@ -712,6 +721,7 @@ async function applyDiscount() {
 
 const canReserve = computed(
   () =>
+    props.hasWorkingHours &&
     activeVisitType.value &&
     activeDay.value &&
     defVisitTime.value &&
