@@ -25,7 +25,7 @@
       :is-verified="isVerified"
       :rate-display="rateDisplay"
       :review-count="reviewCount"
-      :years="lawyer?.years_of_experience ?? 0"
+      :publication-count="publications.length"
       @book="scrollToBooking"
       @share="shareContent" />
 

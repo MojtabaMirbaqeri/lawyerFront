@@ -30,7 +30,7 @@
               <UIcon name="material-symbols:location-on-rounded" class="size-4" />
               {{ locationLine }}
             </p>
-            <!-- امتیاز، سابقه فعالیت، دیدگاه، محل فعالیت — کنار نام وکیل -->
+            <!-- امتیاز، مقالات، دیدگاه، وضعیت پروفایل — کنار نام وکیل -->
             <div class="mt-4 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:gap-4">
               <div class="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-sm">
                 <UIcon name="solar:star-bold" class="size-5 text-amber-500 shrink-0" />
@@ -40,10 +40,10 @@
                 </div>
               </div>
               <div class="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-sm">
-                <UIcon name="solar:calendar-bold" class="size-5 text-slate-500 shrink-0" />
+                <UIcon name="solar:document-text-bold" class="size-5 text-slate-500 shrink-0" />
                 <div>
-                  <p class="text-xs text-slate-500">سابقه فعالیت</p>
-                  <p class="text-sm font-semibold text-slate-800">{{ years }} سال</p>
+                  <p class="text-xs text-slate-500">مقالات</p>
+                  <p class="text-sm font-semibold text-slate-800">{{ publicationCount }}</p>
                 </div>
               </div>
               <div class="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-sm">
@@ -96,7 +96,7 @@ const props = defineProps({
   avatarUrl: { type: String, required: true },
   rateDisplay: { type: String, default: '—' },
   reviewCount: { type: Number, default: 0 },
-  years: { type: Number, default: 0 },
+  publicationCount: { type: Number, default: 0 },
 });
 
 defineEmits(["book", "share", "questions"]);
